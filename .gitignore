@@ -1,0 +1,4 @@
+ENV/
+__test__.jar
+test.py
+*.pyc
