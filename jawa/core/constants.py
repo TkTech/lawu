@@ -65,10 +65,24 @@ class ConstantFieldRef(Constant):
 
     @property
     def klass(self):
+        """
+        Resolves this constants `klass_index` and returns the associated
+        :py:class:`jawa.core.constants.ConstantClass`.
+
+        .. note::
+            Resolved on each access, caching of the result is recommended.
+        """
         return self._p.get(self._ki)
 
     @property
     def name_and_type(self):
+        """
+        Resolves this constants `name_and_type_index` and returns the
+        associated :py:class:`jawa.core.constants.ConstantNameAndType`.
+
+        .. note::
+            Resolved on each access, caching of the result is recommended.
+        """
         return self._p.get(self._nti)
 
 
@@ -86,10 +100,24 @@ class ConstantMethodRef(Constant):
 
     @property
     def klass(self):
+        """
+        Resolves this constants `klass_index` and returns the associated
+        :py:class:`jawa.core.constants.ConstantClass`.
+
+        .. note::
+            Resolved on each access, caching of the result is recommended.
+        """
         return self._p.get(self._ki)
 
     @property
     def name_and_type(self):
+        """
+        Resolves this constants `name_and_type_index` and returns the
+        associated :py:class:`jawa.core.constants.ConstantNameAndType`.
+
+        .. note::
+            Resolved on each access, caching of the result is recommended.
+        """
         return self._p.get(self._nti)
 
 
@@ -108,7 +136,8 @@ class ConstantInterfaceMethodRef(Constant):
     @property
     def klass(self):
         """
-        Resolves this constants `klass_index` and returns the name of the class.
+        Resolves this constants `klass_index` and returns the associated
+        :py:class:`jawa.core.constants.ConstantClass`.
 
         .. note::
             Resolved on each access, caching of the result is recommended.
@@ -117,6 +146,13 @@ class ConstantInterfaceMethodRef(Constant):
 
     @property
     def name_and_type(self):
+        """
+        Resolves this constants `name_and_type_index` and returns the
+        associated :py:class:`jawa.core.constants.ConstantNameAndType`.
+
+        .. note::
+            Resolved on each access, caching of the result is recommended.
+        """
         return self._p.get(self._nti)
 
 
@@ -236,8 +272,14 @@ class ConstantPool(object):
             value.
         """
         if index is not None:
+            if index < 1:
+                raise ValueError('index must be greater than 0.')
             self._pool[index] = constant
             return index
+
+        if not self._pool:
+            self._pool[1] = constant
+            return 1
 
         existing = self._pool.keys()
         existing.sort()
