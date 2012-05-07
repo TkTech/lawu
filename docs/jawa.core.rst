@@ -21,5 +21,4 @@ core Package
 -----------------------
 .. automodule:: jawa.core.constants
     :members:
-    :undoc-members:
     :show-inheritance:
