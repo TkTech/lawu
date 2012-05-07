@@ -164,7 +164,7 @@ class ConstantPool(object):
         count = unpack('>H', read(2))[0]
         iterable = xrange(1, count).__iter__()
         for index in iterable:
-            tag = unpack('>B', read(1))[0]
+            tag = ord(read(1))
             # CONSTANT_Class_info
             if tag == 7:
                 constants[index] = ConstantClass(self,
