@@ -1,0 +1,355 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>core Package &mdash; Jawa 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Jawa 0.1.0 documentation" href="index.html" />
+    <link rel="next" title="util Package" href="jawa.util.html" />
+    <link rel="prev" title="Jawa" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="jawa.util.html" title="util Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Jawa"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Jawa 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="core-package">
+<h1>core Package<a class="headerlink" href="#core-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">core</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-jawa.core"></span></div>
+<div class="section" id="module-jawa.core.cf">
+<span id="cf-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">cf</span></tt> Module<a class="headerlink" href="#module-jawa.core.cf" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="jawa.core.cf.ClassFile">
+<em class="property">class </em><tt class="descname">ClassFile</tt><big>(</big><em>io=None</em><big>)</big><a class="reference internal" href="_modules/jawa/core/cf.html#ClassFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.cf.ClassFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Creates a new ClassFile, optionally loading the JVM class at <cite>io</cite>, where
+<cite>io</cite> is a file-like object providing <cite>read()</cite> or a file-system path.</p>
+<dl class="classmethod">
+<dt id="jawa.core.cf.ClassFile.from_str">
+<em class="property">classmethod </em><tt class="descname">from_str</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="_modules/jawa/core/cf.html#ClassFile.from_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.cf.ClassFile.from_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a new <a class="reference internal" href="#jawa.core.cf.ClassFile" title="jawa.core.cf.ClassFile"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.cf.ClassFile</span></tt></a> from a string buffer.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">jawa.util.jf</span> <span class="kn">import</span> <span class="n">JarFile</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">jawa.core.cf</span> <span class="kn">import</span> <span class="n">ClassFile</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">JarFile</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">as</span> <span class="n">jf</span><span class="p">:</span>
+<span class="gp">... </span>   <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">jf</span><span class="o">.</span><span class="n">namelist</span><span class="p">():</span>
+<span class="gp">... </span>       <span class="n">cf</span> <span class="o">=</span> <span class="n">ClassFile</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="n">jf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-jawa.core.constants">
+<span id="constants-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">constants</span></tt> Module<a class="headerlink" href="#module-jawa.core.constants" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="jawa.core.constants.Constant">
+<em class="property">class </em><tt class="descname">Constant</tt><a class="reference internal" href="_modules/jawa/core/constants.html#Constant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.Constant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>The base type for all other <tt class="docutils literal"><span class="pre">Constant*</span></tt> types. Its primary purpose is
+to enable <cite>isinstance(x, Constant)</cite>.</p>
+<dl class="attribute">
+<dt id="jawa.core.constants.Constant.pool">
+<tt class="descname">pool</tt><a class="reference internal" href="_modules/jawa/core/constants.html#Constant.pool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.Constant.pool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the <a class="reference internal" href="#jawa.core.constants.ConstantPool" title="jawa.core.constants.ConstantPool"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.constants.ConstantPool</span></tt></a> that owns
+this <tt class="docutils literal"><span class="pre">Constant</span></tt>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.core.constants.ConstantClass">
+<em class="property">class </em><tt class="descname">ConstantClass</tt><big>(</big><em>pool</em>, <em>name_index</em><big>)</big><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.core.constants.Constant" title="jawa.core.constants.Constant"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.constants.Constant</span></tt></a></p>
+<p>Represents the <cite>CONSTANT_Class_info</cite> structure from the
+ClassFile specification.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.core.constants.ConstantDouble">
+<em class="property">class </em><tt class="descname">ConstantDouble</tt><big>(</big><em>pool</em>, <em>value</em><big>)</big><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantDouble"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantDouble" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.core.constants.Constant" title="jawa.core.constants.Constant"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.constants.Constant</span></tt></a></p>
+<p>Represents the <cite>CONSTANT_Double_info</cite> structure from the ClassFile
+specification.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><strong>value</strong> &#8211; The value of this constant.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.core.constants.ConstantFieldRef">
+<em class="property">class </em><tt class="descname">ConstantFieldRef</tt><big>(</big><em>pool</em>, <em>klass_index</em>, <em>name_and_type_index</em><big>)</big><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantFieldRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantFieldRef" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.core.constants.Constant" title="jawa.core.constants.Constant"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.constants.Constant</span></tt></a></p>
+<p>Represents the <cite>CONSTANT_FieldRef_info</cite> structure from the ClassFile
+specification.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.core.constants.ConstantFloat">
+<em class="property">class </em><tt class="descname">ConstantFloat</tt><big>(</big><em>pool</em>, <em>value</em><big>)</big><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantFloat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantFloat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.core.constants.Constant" title="jawa.core.constants.Constant"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.constants.Constant</span></tt></a></p>
+<p>Represents the <cite>CONSTANT_Float_info</cite> structure from the ClassFile
+specification.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><strong>value</strong> &#8211; The value of this constant.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.core.constants.ConstantInteger">
+<em class="property">class </em><tt class="descname">ConstantInteger</tt><big>(</big><em>pool</em>, <em>value</em><big>)</big><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantInteger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantInteger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.core.constants.Constant" title="jawa.core.constants.Constant"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.constants.Constant</span></tt></a></p>
+<p>Represents the <cite>CONSTANT_Integer_info</cite> structure from the ClassFile
+specification.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><strong>value</strong> &#8211; The value of this constant.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.core.constants.ConstantInterfaceMethodRef">
+<em class="property">class </em><tt class="descname">ConstantInterfaceMethodRef</tt><big>(</big><em>pool</em>, <em>klass_index</em>, <em>name_and_type_index</em><big>)</big><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantInterfaceMethodRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantInterfaceMethodRef" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.core.constants.Constant" title="jawa.core.constants.Constant"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.constants.Constant</span></tt></a></p>
+<p>Represents the <cite>CONSTANT_InterfaceMethodRef_info</cite> structure from the
+ClassFile specification.</p>
+<dl class="attribute">
+<dt id="jawa.core.constants.ConstantInterfaceMethodRef.klass">
+<tt class="descname">klass</tt><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantInterfaceMethodRef.klass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantInterfaceMethodRef.klass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resolves this constants <cite>klass_index</cite> and returns the associated
+<a class="reference internal" href="#jawa.core.constants.ConstantClass" title="jawa.core.constants.ConstantClass"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.constants.ConstantClass</span></tt></a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Resolved on each access, caching of the result is recommended.</p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.core.constants.ConstantInterfaceMethodRef.name_and_type">
+<tt class="descname">name_and_type</tt><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantInterfaceMethodRef.name_and_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantInterfaceMethodRef.name_and_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resolves this constants <cite>name_and_type_index</cite> and returns the
+associated <a class="reference internal" href="#jawa.core.constants.ConstantNameAndType" title="jawa.core.constants.ConstantNameAndType"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.constants.ConstantNameAndType</span></tt></a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Resolved on each access, caching of the result is recommended.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.core.constants.ConstantLong">
+<em class="property">class </em><tt class="descname">ConstantLong</tt><big>(</big><em>pool</em>, <em>value</em><big>)</big><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantLong"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantLong" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.core.constants.Constant" title="jawa.core.constants.Constant"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.constants.Constant</span></tt></a></p>
+<p>Represents the <cite>CONSTANT_Long_info</cite> structure from the ClassFile
+specification.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><strong>value</strong> &#8211; The value of this constant.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.core.constants.ConstantMethodRef">
+<em class="property">class </em><tt class="descname">ConstantMethodRef</tt><big>(</big><em>pool</em>, <em>klass_index</em>, <em>name_and_type_index</em><big>)</big><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantMethodRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantMethodRef" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.core.constants.Constant" title="jawa.core.constants.Constant"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.constants.Constant</span></tt></a></p>
+<p>Represents the <cite>CONSTANT_MethodRef_info</cite> structure from the ClassFile
+specification.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.core.constants.ConstantNameAndType">
+<em class="property">class </em><tt class="descname">ConstantNameAndType</tt><big>(</big><em>pool</em>, <em>name_index</em>, <em>descriptor_index</em><big>)</big><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantNameAndType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantNameAndType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.core.constants.Constant" title="jawa.core.constants.Constant"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.constants.Constant</span></tt></a></p>
+<p>Represents the <cite>CONSTANT_NameAndType_info</cite> structure from the ClassFile
+specification.</p>
+<dl class="attribute">
+<dt id="jawa.core.constants.ConstantNameAndType.descriptor">
+<tt class="descname">descriptor</tt><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantNameAndType.descriptor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantNameAndType.descriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resolves this constants <cite>descriptor_index</cite> and returns the descriptor
+for this type.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Resolved on each access, caching of the result is recommended.</p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.core.constants.ConstantNameAndType.name">
+<tt class="descname">name</tt><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantNameAndType.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantNameAndType.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resolves this constants <cite>name_index</cite> and returns the name of the type.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Resolved on each access, caching of the result is recommended.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.core.constants.ConstantPool">
+<em class="property">class </em><tt class="descname">ConstantPool</tt><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantPool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantPool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Implements a container around the Constant Pool as described in the JVM
+ClassFile specification.</p>
+<dl class="method">
+<dt id="jawa.core.constants.ConstantPool.get">
+<tt class="descname">get</tt><big>(</big><em>index</em>, <em>default=None</em><big>)</big><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantPool.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantPool.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the <tt class="docutils literal"><span class="pre">Constant</span></tt> at <cite>index</cite>, or <cite>default</cite> if it does not exist.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.core.constants.ConstantPool.insert">
+<tt class="descname">insert</tt><big>(</big><em>constant</em>, <em>index=None</em><big>)</big><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantPool.insert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantPool.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inserts the value of <cite>constant</cite> to <cite>index</cite>, potentially overwritting an
+existing value. If <cite>index</cite> is <tt class="docutils literal"><span class="pre">None</span></tt>, the first free index is used.
+Returns the final <cite>index</cite>.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This does <em>not</em> invalidate <tt class="docutils literal"><span class="pre">Constant</span></tt> whose indexes point to the
+overwritten value. They will instead resolve to the newly inserted
+value.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.core.constants.ConstantString">
+<em class="property">class </em><tt class="descname">ConstantString</tt><big>(</big><em>pool</em>, <em>string_index</em><big>)</big><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.core.constants.Constant" title="jawa.core.constants.Constant"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.constants.Constant</span></tt></a></p>
+<p>Represents the <cite>CONSTANT_String_info</cite> structure from the
+ClassFile specification.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">core Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">core</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-jawa.core.cf"><tt class="docutils literal"><span class="pre">cf</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-jawa.core.constants"><tt class="docutils literal"><span class="pre">constants</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Jawa</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="jawa.util.html"
+                        title="next chapter">util Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/jawa.core.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="jawa.util.html" title="util Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Jawa"
+             >previous</a> |</li>
+        <li><a href="index.html">Jawa 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Tyler Kennedy.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

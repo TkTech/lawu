@@ -1,0 +1,201 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>util Package &mdash; Jawa 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Jawa 0.1.0 documentation" href="index.html" />
+    <link rel="prev" title="core Package" href="jawa.core.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="jawa.core.html" title="core Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Jawa 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="util-package">
+<h1>util Package<a class="headerlink" href="#util-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">util</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-jawa.util"></span><p>Various utility classes and methods to make life a little bit easier.</p>
+</div>
+<div class="section" id="module-jawa.util.jf">
+<span id="jf-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">jf</span></tt> Module<a class="headerlink" href="#module-jawa.util.jf" title="Permalink to this headline">¶</a></h2>
+<p>Tools for working with JVM <cite>.jar</cite> archives, which are simply ZIP archives with
+some mandatory structure.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If <a class="reference external" href="http://pypi.python.org/pypi/czipfile">czipfile</a> is available,
+decompression will be noticably faster.</p>
+</div>
+<dl class="class">
+<dt id="jawa.util.jf.JarFile">
+<em class="property">class </em><tt class="descname">JarFile</tt><big>(</big><em>io=None</em><big>)</big><a class="reference internal" href="_modules/jawa/util/jf.html#JarFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.jf.JarFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>A light wrapper around the python <tt class="xref py py-class docutils literal"><span class="pre">zipfile.ZipFile</span></tt> that
+enables in-memory modification.</p>
+<p>If <cite>io</cite> is provided, its contents are loaded. <cite>io</cite> may be a file-system
+path or a file-like object.</p>
+<p>As of 0.1.0, <a class="reference internal" href="#jawa.util.jf.JarFile" title="jawa.util.jf.JarFile"><tt class="xref py py-class docutils literal"><span class="pre">jawa.util.jf.JarFile</span></tt></a> is also a context manager.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">jawa.util.jf</span> <span class="kn">import</span> <span class="n">JarFile</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">JarFile</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">as</span> <span class="n">jf</span><span class="p">:</span>
+<span class="gp">... </span>   <span class="k">print</span><span class="p">(</span><span class="n">jf</span><span class="o">.</span><span class="n">namelist</span><span class="p">())</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="jawa.util.jf.JarFile.close">
+<tt class="descname">close</tt><big>(</big><em>*exc_info</em><big>)</big><a class="headerlink" href="#jawa.util.jf.JarFile.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Closes the JarFile and any underlying objects.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.util.jf.JarFile.namelist">
+<tt class="descname">namelist</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/jawa/util/jf.html#JarFile.namelist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.jf.JarFile.namelist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all paths in this JarFile.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.util.jf.JarFile.read">
+<tt class="descname">read</tt><big>(</big><em>path</em><big>)</big><a class="reference internal" href="_modules/jawa/util/jf.html#JarFile.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.jf.JarFile.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the contents of <cite>path</cite>, if it exists, otherwise <cite>None</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.util.jf.JarFile.regex">
+<tt class="descname">regex</tt><big>(</big><em>regex</em><big>)</big><a class="reference internal" href="_modules/jawa/util/jf.html#JarFile.regex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.jf.JarFile.regex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an iterator over every path that matches <cite>regex</cite>. For example,
+to get all files ending in .class that aren&#8217;t in a sub-directory:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">jf</span><span class="o">.</span><span class="n">regex</span><span class="p">(</span><span class="s">&#39;[^/]+\.class&#39;</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="k">print</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.util.jf.JarFile.remove">
+<tt class="descname">remove</tt><big>(</big><em>path</em><big>)</big><a class="reference internal" href="_modules/jawa/util/jf.html#JarFile.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.jf.JarFile.remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes a file from the JarFile.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">jf</span><span class="o">.</span><span class="n">namelist</span><span class="p">()</span>
+<span class="go">[&#39;my_file.txt&#39;, &#39;that_other_file.txt&#39;, ...]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">jf</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s">&#39;my_file.txt&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">jf</span><span class="o">.</span><span class="n">namelist</span><span class="p">()</span>
+<span class="go">[&#39;that_other_file.txt&#39;, ...]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.util.jf.JarFile.save">
+<tt class="descname">save</tt><big>(</big><em>path</em><big>)</big><a class="reference internal" href="_modules/jawa/util/jf.html#JarFile.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.jf.JarFile.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the JarFile to <cite>path</cite>, which can be a file-system path or a
+file-like object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.util.jf.JarFile.write">
+<tt class="descname">write</tt><big>(</big><em>path</em>, <em>data</em><big>)</big><a class="reference internal" href="_modules/jawa/util/jf.html#JarFile.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.jf.JarFile.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes <cite>data</cite> to <cite>path</cite>, overwritting any existing content.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">util Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">util</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-jawa.util.jf"><tt class="docutils literal"><span class="pre">jf</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="jawa.core.html"
+                        title="previous chapter">core Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/jawa.util.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="jawa.core.html" title="core Package"
+             >previous</a> |</li>
+        <li><a href="index.html">Jawa 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Tyler Kennedy.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

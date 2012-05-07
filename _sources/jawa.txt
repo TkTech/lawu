@@ -1,0 +1,19 @@
+jawa Package
+============
+
+:mod:`jawa` Package
+-------------------
+
+.. automodule:: jawa.__init__
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    jawa.core
+    jawa.util
+
