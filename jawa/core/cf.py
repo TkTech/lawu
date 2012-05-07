@@ -23,28 +23,28 @@ class ClassFile(object):
             self._load_from_io(io)
         else:
             # We need to construct a default name and superclass.
-            self.set_this("HelloWorld")
-            self.set_superclass("java/lang/Object")
+            self.build_this("HelloWorld")
+            self.build_superclass("java/lang/Object")
 
-    def set_this(self, name):
+    def build_this(self, name):
         """
         A helper to set the name of this ``ClassFile``. It generates the
         required ``Constants*`` and inserts them into the pool.
         """
         pool = self.constants
-        klass = const.ConstantClass(pool, pool.insert(name))
-        pool.insert(klass)
-        self._this = klass
+        class_ = const.ConstantClass(pool, pool.insert(name))
+        pool.insert(class_)
+        self._this = class_
 
-    def set_superclass(self, name):
+    def build_superclass(self, name):
         """
         A helper to set the superclass of this ``ClassFile``. It generates the
         required ``Constants*`` and inserts them into the pool.
         """
         pool = self.constants
-        klass = const.ConstantClass(pool, pool.insert(name))
-        pool.insert(klass)
-        self._super = klass
+        class_ = const.ConstantClass(pool, pool.insert(name))
+        pool.insert(class_)
+        self._super = class_
 
     @property
     def this(self):

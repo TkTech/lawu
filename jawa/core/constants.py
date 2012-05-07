@@ -58,15 +58,15 @@ class ConstantFieldRef(Constant):
     """
     __slots__ = ('_p', '_ki', '_nti')
 
-    def __init__(self, pool, klass_index, name_and_type_index):
+    def __init__(self, pool, class_index, name_and_type_index):
         self._p = pool
-        self._ki = klass_index
+        self._ki = class_index
         self._nti = name_and_type_index
 
     @property
-    def klass(self):
+    def class_(self):
         """
-        Resolves this constants `klass_index` and returns the associated
+        Resolves this constants `class_index` and returns the associated
         :py:class:`jawa.core.constants.ConstantClass`.
 
         .. note::
@@ -93,15 +93,15 @@ class ConstantMethodRef(Constant):
     """
     __slots__ = ('_p', '_ki', '_nti')
 
-    def __init__(self, pool, klass_index, name_and_type_index):
+    def __init__(self, pool, class_index, name_and_type_index):
         self._p = pool
-        self._ki = klass_index
+        self._ki = class_index
         self._nti = name_and_type_index
 
     @property
-    def klass(self):
+    def class_(self):
         """
-        Resolves this constants `klass_index` and returns the associated
+        Resolves this constants `class_index` and returns the associated
         :py:class:`jawa.core.constants.ConstantClass`.
 
         .. note::
@@ -128,15 +128,15 @@ class ConstantInterfaceMethodRef(Constant):
     """
     __slots__ = ('_p', '_ki', '_nti')
 
-    def __init__(self, pool, klass_index, name_and_type_index):
+    def __init__(self, pool, class_index, name_and_type_index):
         self._p = pool
-        self._ki = klass_index
+        self._ki = class_index
         self._nti = name_and_type_index
 
     @property
-    def klass(self):
+    def class_(self):
         """
-        Resolves this constants `klass_index` and returns the associated
+        Resolves this constants `class_index` and returns the associated
         :py:class:`jawa.core.constants.ConstantClass`.
 
         .. note::
@@ -293,6 +293,22 @@ class ConstantPool(object):
 
     __getitem__ = get
     __setitem__ = insert
+
+    def remove(self, obj_or_index):
+        """
+        Removes `obj_or_index` from the pool. If `obj_or_index` is a subclass
+        of :py:class:`jawa.core.constants.Constant` then it is removed by
+        identity, otherwise it is deleted by index.
+        """
+        if isinstance(obj_or_index, (Constant, basestring)):
+            for k, v in self._pool.items():
+                if v is obj_or_index:
+                    del self._pool[k]
+                    break
+            else:
+                raise KeyError('constant not in pool.')
+        else:
+            del self._pool[obj_or_index]
 
     def _load_from_io(self, io):
         """
