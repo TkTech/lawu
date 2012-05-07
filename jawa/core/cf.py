@@ -28,23 +28,17 @@ class ClassFile(object):
 
     def build_this(self, name):
         """
-        A helper to set the name of this ``ClassFile``. It generates the
+        A helper to set the class of this ``ClassFile``. It generates the
         required ``Constants*`` and inserts them into the pool.
         """
-        pool = self.constants
-        class_ = const.ConstantClass(pool, pool.insert(name))
-        pool.insert(class_)
-        self._this = class_
+        _, self._this = self.constants.build_class(name)
 
     def build_superclass(self, name):
         """
         A helper to set the superclass of this ``ClassFile``. It generates the
         required ``Constants*`` and inserts them into the pool.
         """
-        pool = self.constants
-        class_ = const.ConstantClass(pool, pool.insert(name))
-        pool.insert(class_)
-        self._super = class_
+        _, self._super = self.constants.build_class(name)
 
     @property
     def this(self):
@@ -74,6 +68,15 @@ class ClassFile(object):
             raise TypeError('superclass must be a ConstantClass.')
         self._super = value
 
+    @property
+    def interfaces(self):
+        """
+        Returns a list of :py:class:`jawa.core.constants.ConstantClass`
+        objects, one for each direct superinterface of this class or
+        interface.
+        """
+        return self._interfaces
+
     @classmethod
     def from_str(cls, data):
         """
@@ -102,7 +105,12 @@ class ClassFile(object):
         self.version = (maxv, minv)
         self.constants._load_from_io(io)
 
-        flags, this, super_ = unpack('>HHH', io.read(6))
+        flags, this, super_, if_count = unpack('>HHHH', io.read(8))
         self.access_flags = flags
         self._this = self.constants[this]
         self._super = self.constants[super_]
+
+        # Parse the interface list.
+        interfaces = unpack('>%sH' % if_count, io.read(if_count * 2))
+        interfaces = [self.constants.get(i) for i in interfaces]
+        self._interfaces = interfaces

@@ -1,12 +1,15 @@
 # -*- coding: utf8 -*-
 from struct import unpack
-import array
 
 
 class Constant(object):
     """
     The base type for all other ``Constant*`` types. Its primary purpose is
     to enable `isinstance(x, Constant)`.
+
+    .. note::
+        There is no ``Constant*`` type for CONSTANT_Utf8_info due to
+        performance constraints.
     """
     __slots__ = ()
 
@@ -34,6 +37,9 @@ class ConstantClass(Constant):
     def name(self):
         return self._p.get(self._ni)
 
+    def __repr__(self):
+        return '<ConstantClass(name=%r)>' % self.name
+
 
 class ConstantString(Constant):
     """
@@ -49,6 +55,9 @@ class ConstantString(Constant):
     @property
     def string(self):
         return self._p.get(self._si)
+
+    def __repr__(self):
+        return '<ConstantString(string=%r)>' % self.string
 
 
 class ConstantFieldRef(Constant):
@@ -85,6 +94,10 @@ class ConstantFieldRef(Constant):
         """
         return self._p.get(self._nti)
 
+    def __repr__(self):
+        return '<ConstantFieldRef(class_=%r, name_and_type=%r)>' % (
+            self.class_, self.name_and_type)
+
 
 class ConstantMethodRef(Constant):
     """
@@ -119,6 +132,10 @@ class ConstantMethodRef(Constant):
             Resolved on each access, caching of the result is recommended.
         """
         return self._p.get(self._nti)
+
+    def __repr__(self):
+        return '<ConstantMethodRef(class_=%r, name_and_type=%r)>' % (
+            self.class_, self.name_and_type)
 
 
 class ConstantInterfaceMethodRef(Constant):
@@ -155,6 +172,10 @@ class ConstantInterfaceMethodRef(Constant):
         """
         return self._p.get(self._nti)
 
+    def __repr__(self):
+        return '<ConstantInterfaceMethodRef(class_=%r, name_and_type=%r)>' % (
+            self.class_, self.name_and_type)
+
 
 class ConstantInteger(Constant):
     """
@@ -168,6 +189,9 @@ class ConstantInteger(Constant):
     def __init__(self, pool, value):
         self._p = pool
         self.value = value
+
+    def __repr__(self):
+        return '<ConstantInteger(value=%r)>' % self.value
 
 
 class ConstantFloat(Constant):
@@ -183,6 +207,9 @@ class ConstantFloat(Constant):
         self._p = pool
         self.value = value
 
+    def __repr__(self):
+        return '<ConstantFloat(value=%r)>' % self.value
+
 
 class ConstantLong(Constant):
     """
@@ -197,6 +224,9 @@ class ConstantLong(Constant):
         self._p = pool
         self.value = value
 
+    def __repr__(self):
+        return '<ConstantLong(value=%r)>' % self.value
+
 
 class ConstantDouble(Constant):
     """
@@ -210,6 +240,9 @@ class ConstantDouble(Constant):
     def __init__(self, pool, value):
         self._p = pool
         self.value = value
+
+    def __repr__(self):
+        return '<ConstantDouble(value=%r)>' % self.value
 
 
 class ConstantNameAndType(Constant):
@@ -245,6 +278,10 @@ class ConstantNameAndType(Constant):
         """
         return self._p.get(self._di)
 
+    def __repr__(self):
+        return '<ConstantNameAndType(name=%r, descriptor=%r)>' % (
+            self.name, self.descriptor)
+
 
 class ConstantPool(object):
     """
@@ -267,9 +304,9 @@ class ConstantPool(object):
         Returns the final `index`.
 
         .. warning::
-            This does *not* invalidate ``Constant`` whose indexes point to the
-            overwritten value. They will instead resolve to the newly inserted
-            value.
+            This does *not* invalidate a ``Constant`` whose indexes point to
+            the overwritten value. They will instead resolve to the newly
+            inserted value.
         """
         if index is not None:
             if index < 1:
@@ -309,6 +346,25 @@ class ConstantPool(object):
                 raise KeyError('constant not in pool.')
         else:
             del self._pool[obj_or_index]
+
+    def find_index(self, constant):
+        """
+        Returns the index for `constant` in the pool, or ``None`` if it is
+        not in the pool.
+        """
+        for k, v in self._pool.items():
+            if v is constant:
+                return k
+        return None
+
+    def build_class(self, class_name):
+        """
+        Builds a new :py:class:`jawa.core.constants.ConstantClass` with
+        the name `class_name` in the pool and returns a tuple of the index
+        it was inserted at and the ``ConstantClass`` itself.
+        """
+        class_ = ConstantClass(self, self.insert(class_name))
+        return self.insert(class_), class_
 
     def _load_from_io(self, io):
         """
