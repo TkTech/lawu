@@ -16,3 +16,10 @@ core Package
     :members:
     :undoc-members:
     :show-inheritance:
+
+:mod:`constants` Module
+-----------------------
+.. automodule:: jawa.core.constants
+    :members:
+    :undoc-members:
+    :show-inheritance:

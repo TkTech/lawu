@@ -4,26 +4,7 @@ except ImportError:
     from StringIO import StringIO
 
 from struct import unpack
-
-
-class ConstantType(object):
-    """
-    Tag values for working with Constants.
-    """
-    Class = 7
-    FieldRef = 9
-    MethodRef = 10
-    InterfaceMethodref = 11
-    String = 8
-    Integer = 3
-    Float = 4
-    Long = 5
-    Double = 6
-    NameAndType = 12
-    Utf8 = 1
-    MethodHandle = 15
-    MethodType = 16
-    InvokeDynamic = 18
+import jawa.core.constants as const
 
 
 class ClassFile(object):
@@ -32,6 +13,7 @@ class ClassFile(object):
     `io` is a file-like object providing `read()` or a file-system path.
     """
     def __init__(self, io=None):
+        self.constants = const.ConstantPool()
         if io and isinstance(io, basestring):
             fin = open(io, 'rb')
             self._load_from_io(fin)
@@ -63,57 +45,6 @@ class ClassFile(object):
         if unpack('>I', io.read(4))[0] != 0xCAFEBABE:
             raise IOError('Not a ClassFile!')
 
-        minv, maxv, count = unpack('>3H', io.read(6))
+        minv, maxv = unpack('>HH', io.read(4))
         self.version = (maxv, minv)
-
-        # Loads the constant pool.
-        constants = []
-        i = 1
-        while i < count:
-            tag = unpack('>B', io.read(1))[0]
-            # CONSTANT_Class_info
-            if tag == 7:
-                constants.append((tag,
-                    unpack('>H', io.read(2))
-                ))
-            # CONSTANT_*ref_info
-            # Faster than "in", if uglier.
-            elif tag == 9 or tag == 10 or tag == 11:
-                constants.append((tag,
-                    unpack('>HH', io.read(4))
-                ))
-            # CONSTANT_String_info
-            elif tag == 8:
-                constants.append((tag,
-                    unpack('>H', io.read(2))
-                ))
-            # CONSTANT_Integer_info
-            elif tag == 3:
-                constants.append((tag,
-                    unpack('>i', io.read(4))
-                ))
-            # CONSTANT_Float_info
-            elif tag == 4:
-                constants.append((tag,
-                    unpack('>f', io.read(4))
-                ))
-            # CONSTANT_Long_info
-            elif tag == 5:
-                constants.append((tag,
-                    unpack('>q', io.read(8))
-                ))
-            # CONSTANT_Double_info
-            elif tag == 6:
-                constants.append((tag,
-                    unpack('>d', io.read(8))
-                ))
-            # CONSTANT_NameAndType_info
-            elif tag == 12:
-                constants.append((tag, unpack('>HH', io.read(4))))
-            # CONSTANT_Utf8_info
-            elif tag == 1:
-                length = unpack('>H', io.read(2))[0]
-                constants.append((tag,
-                    unpack('>%ss' % length, io.read(length))
-                ))
-            i += 2 if tag == 5 or tag == 6 else 1
+        self.constants._load_from_io(io)
