@@ -375,7 +375,7 @@ class ConstantPool(object):
         constants = self._pool
 
         count = unpack('>H', read(2))[0]
-        iterable = xrange(1, count).__iter__()
+        iterable = iter(xrange(1, count))
         for index in iterable:
             tag = ord(read(1))
             # CONSTANT_Utf8_info
