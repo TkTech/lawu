@@ -14,6 +14,10 @@ class ClassFile(object):
     """
     def __init__(self, io=None):
         self.constants = const.ConstantPool()
+        self._interfaces = []
+        self._super = None
+        self._this = None
+        self._version = (0, 0)
 
         if io and isinstance(io, basestring):
             fin = open(io, 'rb')
@@ -93,6 +97,17 @@ class ClassFile(object):
         sio.close()
         return tmp
 
+    @property
+    def version(self):
+        """
+        The class file version as a tuple in the form (major, minor).
+        """
+        return self._version
+
+    @version.setter
+    def version(self, value):
+        self._version = value
+
     def _load_from_io(self, io):
         """
         Parses a raw `ClassFile` given a file-like object `io` providing
@@ -102,7 +117,7 @@ class ClassFile(object):
             raise IOError('Not a ClassFile!')
 
         minv, maxv = unpack('>HH', io.read(4))
-        self.version = (maxv, minv)
+        self._version = (maxv, minv)
         self.constants._load_from_io(io)
 
         flags, this, super_, if_count = unpack('>HHHH', io.read(8))
