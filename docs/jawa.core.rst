@@ -36,3 +36,10 @@ core Package
     :members:
     :undoc-members:
     :show-inheritance:
+
+:mod:`descriptor` Module
+------------------------
+.. automodule:: jawa.core.descriptor
+    :members:
+    :undoc-members:
+    :show-inheritance:
