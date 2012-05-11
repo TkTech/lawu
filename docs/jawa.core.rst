@@ -22,3 +22,17 @@ core Package
 .. automodule:: jawa.core.constants
     :members:
     :show-inheritance:
+
+:mod:`fields` Module
+--------------------
+.. automodule:: jawa.core.fields
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`attributes` Module
+------------------------
+.. automodule:: jawa.core.attributes
+    :members:
+    :undoc-members:
+    :show-inheritance:
