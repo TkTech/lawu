@@ -80,6 +80,16 @@ required <tt class="docutils literal"><span class="pre">Constants*</span></tt> a
 required <tt class="docutils literal"><span class="pre">Constants*</span></tt> and inserts them into the pool.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="jawa.core.cf.ClassFile.constants">
+<tt class="descname">constants</tt><a class="headerlink" href="#jawa.core.cf.ClassFile.constants" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.core.cf.ClassFile.fields">
+<tt class="descname">fields</tt><a class="headerlink" href="#jawa.core.cf.ClassFile.fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="classmethod">
 <dt id="jawa.core.cf.ClassFile.from_str">
 <em class="property">classmethod </em><tt class="descname">from_str</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="_modules/jawa/core/cf.html#ClassFile.from_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.cf.ClassFile.from_str" title="Permalink to this definition">¶</a></dt>
@@ -113,6 +123,12 @@ superclass of this <tt class="docutils literal"><span class="pre">ClassFile</spa
 <tt class="descname">this</tt><a class="headerlink" href="#jawa.core.cf.ClassFile.this" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the <a class="reference internal" href="#jawa.core.constants.ConstantClass" title="jawa.core.constants.ConstantClass"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.constants.ConstantClass</span></tt></a> for this
 <tt class="docutils literal"><span class="pre">ClassFile</span></tt>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.core.cf.ClassFile.version">
+<tt class="descname">version</tt><a class="headerlink" href="#jawa.core.cf.ClassFile.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>The class file version as a tuple in the form (major, minor).</p>
 </dd></dl>
 
 </dd></dl>
@@ -391,6 +407,110 @@ ClassFile specification.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-jawa.core.fields">
+<span id="fields-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">fields</span></tt> Module<a class="headerlink" href="#module-jawa.core.fields" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="jawa.core.fields.Field">
+<em class="property">class </em><tt class="descname">Field</tt><big>(</big><em>class_file</em>, <em>flags=0</em>, <em>name_i=None</em>, <em>descriptor_i=None</em>, <em>attributes=None</em><big>)</big><a class="reference internal" href="_modules/jawa/core/fields.html#Field"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.fields.Field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="attribute">
+<dt id="jawa.core.fields.Field.access_flags">
+<tt class="descname">access_flags</tt><a class="reference internal" href="_modules/jawa/core/fields.html#Field.access_flags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.fields.Field.access_flags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the access flags for this field.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.core.fields.Field.attributes">
+<tt class="descname">attributes</tt><a class="reference internal" href="_modules/jawa/core/fields.html#Field.attributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.fields.Field.attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the <a class="reference internal" href="#jawa.core.attributes.AttributeTable" title="jawa.core.attributes.AttributeTable"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.attributes.AttributeTable</span></tt></a> for this
+field.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.core.fields.Field.descriptor">
+<tt class="descname">descriptor</tt><a class="reference internal" href="_modules/jawa/core/fields.html#Field.descriptor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.fields.Field.descriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the JVM type descriptor string as described in section 4.3 of
+the JVM specification.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.core.fields.Field.name">
+<tt class="descname">name</tt><a class="reference internal" href="_modules/jawa/core/fields.html#Field.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.fields.Field.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the name of this field.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.core.fields.Field.type_">
+<tt class="descname">type_</tt><a class="reference internal" href="_modules/jawa/core/fields.html#Field.type_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.fields.Field.type_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a human-readable type for this field as parsed from the field&#8217;s
+descriptor.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.core.fields.FieldTable">
+<em class="property">class </em><tt class="descname">FieldTable</tt><big>(</big><em>class_file</em><big>)</big><a class="reference internal" href="_modules/jawa/core/fields.html#FieldTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.fields.FieldTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>A field table represents all of the fields of a <tt class="docutils literal"><span class="pre">ClassFile</span></tt>, as defined
+in section 4.5 of the JVM specification.</p>
+<dl class="attribute">
+<dt id="jawa.core.fields.FieldTable.class_file">
+<tt class="descname">class_file</tt><a class="reference internal" href="_modules/jawa/core/fields.html#FieldTable.class_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.fields.FieldTable.class_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the <tt class="xref py py-class docutils literal"><span class="pre">jawa.core.classfile.ClassFile</span></tt> associated with
+this <tt class="docutils literal"><span class="pre">FieldTable</span></tt>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-jawa.core.attributes">
+<span id="attributes-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">attributes</span></tt> Module<a class="headerlink" href="#module-jawa.core.attributes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="jawa.core.attributes.AttributeTable">
+<em class="property">class </em><tt class="descname">AttributeTable</tt><a class="reference internal" href="_modules/jawa/core/attributes.html#AttributeTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.attributes.AttributeTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-jawa.core.descriptor">
+<span id="descriptor-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">descriptor</span></tt> Module<a class="headerlink" href="#module-jawa.core.descriptor" title="Permalink to this headline">¶</a></h2>
+<p>Methods for parsing standard JVM type descriptors for fields and methods.
+It does not depend on any other modules.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This module has not yet been optimized for performance and is not
+in its final form.</p>
+</div>
+<dl class="exception">
+<dt id="jawa.core.descriptor.DescriptorError">
+<em class="property">exception </em><tt class="descname">DescriptorError</tt><a class="reference internal" href="_modules/jawa/core/descriptor.html#DescriptorError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.descriptor.DescriptorError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<p>Raised when any generic error occurs while parsing a field or method
+descriptor.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jawa.core.descriptor.field_descriptor">
+<tt class="descname">field_descriptor</tt><big>(</big><em>descriptor</em><big>)</big><a class="reference internal" href="_modules/jawa/core/descriptor.html#field_descriptor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.descriptor.field_descriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a field descriptor, returning the type of the field.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jawa.core.descriptor.method_descriptor">
+<tt class="descname">method_descriptor</tt><big>(</big><em>descriptor</em><big>)</big><a class="reference internal" href="_modules/jawa/core/descriptor.html#method_descriptor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.descriptor.method_descriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a method descriptor, returning a tuple in the form of
+<tt class="docutils literal"><span class="pre">(&lt;method</span> <span class="pre">parameter</span> <span class="pre">types&gt;,</span> <span class="pre">&lt;method</span> <span class="pre">return</span> <span class="pre">types&gt;)</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jawa.core.descriptor.split_descriptor">
+<tt class="descname">split_descriptor</tt><big>(</big><em>descriptor</em><big>)</big><a class="reference internal" href="_modules/jawa/core/descriptor.html#split_descriptor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.descriptor.split_descriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a descriptor in a manner compliant with section 4.4.1 of the
+Java5 ClassFile Format Specification.</p>
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -405,6 +525,9 @@ ClassFile specification.</p>
 <li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">core</span></tt> Package</a></li>
 <li><a class="reference internal" href="#module-jawa.core.cf"><tt class="docutils literal"><span class="pre">cf</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-jawa.core.constants"><tt class="docutils literal"><span class="pre">constants</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-jawa.core.fields"><tt class="docutils literal"><span class="pre">fields</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-jawa.core.attributes"><tt class="docutils literal"><span class="pre">attributes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-jawa.core.descriptor"><tt class="docutils literal"><span class="pre">descriptor</span></tt> Module</a></li>
 </ul>
 </li>
 </ul>
