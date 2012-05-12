@@ -112,18 +112,34 @@ class ClassFile(object):
 
     @property
     def constants(self):
+        """
+        Returns the :py:class:`jawa.core.constants.ConstantPool` for this
+        ``ClassFile``.
+        """
         return self._constants
 
     @property
     def fields(self):
+        """
+        Returns the :py:class:`jawa.core.fields.FieldTable` for this
+        ``ClassFile``.
+        """
         return self._fields
 
     @property
     def methods(self):
+        """
+        Returns the :py:class:`jawa.core.methods.MethodTable` for this
+        ``ClassFile``.
+        """
         return self._methods
 
     @property
     def attributes(self):
+        """
+        Returns the :py:class:`jawa.core.attributes.AttributeTable` for this
+        ``ClassFile``.
+        """
         return self._attributes
 
     @version.setter

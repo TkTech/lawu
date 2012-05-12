@@ -2,6 +2,9 @@
 from struct import unpack
 
 
+from jawa.core.descriptor import method_descriptor, field_descriptor
+
+
 class Constant(object):
     """
     The base type for all other ``Constant*`` types. Its primary purpose is
@@ -278,6 +281,43 @@ class ConstantNameAndType(Constant):
         """
         return self._p.get(self._di)
 
+    @property
+    def type_(self):
+        """
+        Returns a human-readable type for this ``ConstantNameAndType`` as
+        parsed from the descriptor. If this descriptor is not for a ``Field``
+        ``None`` will be returned instead.
+        """
+        descriptor = self.descriptor
+        # Try to make sure this is actually a field descriptor.
+        if ')' in descriptor:
+            return None
+        return field_descriptor(descriptor)
+
+    @property
+    def args(self):
+        """
+        Returns a tuple of human-readable method argument types for this
+        ``ConstantNameAndType`` as parsed from the descriptor. If this
+        descriptor is not for a ``Method`` ``None`` will be returned instead.
+        """
+        descriptor = self.descriptor
+        if '(' not in descriptor:
+            return None
+        return method_descriptor(descriptor)[0]
+
+    @property
+    def returns(self):
+        """
+        Returns a the human-readable method return type for this
+        ``ConstantNameAndType`` as parsed from the descriptor. If this
+        descriptor is not for a ``Method`` ``None`` will be returned instead.
+        """
+        descriptor = self.descriptor
+        if '(' not in  descriptor:
+            return None
+        return method_descriptor(descriptor)[1]
+
     def __repr__(self):
         return '<ConstantNameAndType(name=%r, descriptor=%r)>' % (
             self.name, self.descriptor)
@@ -356,6 +396,16 @@ class ConstantPool(object):
             if v is constant:
                 return k
         return None
+
+    def find(self, type_=None, f=None):
+        for v in self._pool.itervalues():
+            if type_ is not None and not isinstance(v, type_):
+                continue
+
+            if f is not None and not f(v):
+                continue
+
+            yield v
 
     def build_class(self, class_name):
         """
