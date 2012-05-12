@@ -7,6 +7,9 @@ from jawa.core.descriptor import field_descriptor
 
 
 class Field(object):
+    """
+    Represents a single Field of a JVM class.
+    """
     def __init__(self, class_file, flags=0, name_i=None, descriptor_i=None,
             attributes=None):
         self._cf = class_file
@@ -18,14 +21,14 @@ class Field(object):
     @property
     def access_flags(self):
         """
-        Returns the access flags for this field.
+        Returns the access flags for this ``Field``.
         """
         return self._flags
 
     @property
     def name(self):
         """
-        Returns the name of this field.
+        Returns the name of this ``Field``.
         """
         return self._cf.constants.get(self._name_i)
 
@@ -40,8 +43,8 @@ class Field(object):
     @property
     def type_(self):
         """
-        Returns a human-readable type for this field as parsed from the field's
-        descriptor.
+        Returns a human-readable type for this ``Field`` as parsed from the
+        field's descriptor.
         """
         return field_descriptor(self.descriptor)
 
@@ -49,7 +52,7 @@ class Field(object):
     def attributes(self):
         """
         Returns the :py:class:`jawa.core.attributes.AttributeTable` for this
-        field.
+        ``Field``.
         """
         return self._attributes
 
@@ -57,6 +60,14 @@ class Field(object):
         return '<Field(name=%r, descriptor=%r, flags=%r)>' % (
             self.name, self.descriptor, self.access_flags
         )
+
+    @property
+    def class_file(self):
+        """
+        Returns the :py:class:`jawa.core.cf.ClassFile` associated with this
+        ``Field``.
+        """
+        return self._cf
 
 
 class FieldTable(object):
@@ -71,7 +82,7 @@ class FieldTable(object):
     @property
     def class_file(self):
         """
-        Returns the :py:class:`jawa.core.classfile.ClassFile` associated with
+        Returns the :py:class:`jawa.core.cf.ClassFile` associated with
         this ``FieldTable``.
         """
         return self._cf
@@ -86,6 +97,6 @@ class FieldTable(object):
         count = unpack('>H', read(2))[0]
         for _ in repeat(None, count):
             args = unpack('>3H', read(6))
-            attr = AttributeTable()
+            attr = AttributeTable(self._cf)
             attr._load_from_io(io)
             append(Field(self._cf, *args, attributes=attr))

@@ -30,6 +30,13 @@ core Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`methods` Module
+---------------------
+.. automodule:: jawa.core.methods
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`attributes` Module
 ------------------------
 .. automodule:: jawa.core.attributes

@@ -6,6 +6,8 @@ except ImportError:
 from struct import unpack
 import jawa.core.constants as const
 import jawa.core.fields as fields
+import jawa.core.methods as methods
+import jawa.core.attributes as attributes
 
 
 class ClassFile(object):
@@ -16,6 +18,8 @@ class ClassFile(object):
     def __init__(self, io=None):
         self._constants = const.ConstantPool()
         self._fields = fields.FieldTable(self)
+        self._methods = methods.MethodTable(self)
+        self._attributes = attributes.AttributeTable(self)
         self._interfaces = []
         self._super = None
         self._this = None
@@ -114,6 +118,14 @@ class ClassFile(object):
     def fields(self):
         return self._fields
 
+    @property
+    def methods(self):
+        return self._methods
+
+    @property
+    def attributes(self):
+        return self._attributes
+
     @version.setter
     def version(self, value):
         self._version = value
@@ -135,9 +147,10 @@ class ClassFile(object):
         self._this = self.constants[this]
         self._super = self.constants[super_]
 
-        # Parse the interface list.
         interfaces = unpack('>%sH' % if_count, io.read(if_count * 2))
         interfaces = [self.constants.get(i) for i in interfaces]
         self._interfaces = interfaces
 
         self.fields._load_from_io(io)
+        self.methods._load_from_io(io)
+        self.attributes._load_from_io(io)

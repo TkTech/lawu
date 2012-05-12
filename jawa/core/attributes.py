@@ -4,8 +4,17 @@ from itertools import repeat
 
 
 class AttributeTable(object):
-    def __init__(self):
+    def __init__(self, class_file):
         self._table = []
+        self._cf = class_file
+
+    @property
+    def class_file(self):
+        """
+        Returns the :py:class:`jawa.core.cf.ClassFile` associated with
+        this ``AttributeTable``.
+        """
+        return self._cf
 
     def _load_from_io(self, io):
         """
