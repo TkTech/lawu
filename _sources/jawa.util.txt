@@ -9,6 +9,14 @@ util Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`ezip` Module
+------------------
+
+.. automodule:: jawa.util.ezip
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`jf` Module
 ----------------
 

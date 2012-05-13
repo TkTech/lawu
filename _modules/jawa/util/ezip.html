@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>jawa.util.jf &mdash; jawa  documentation</title>
+    <title>jawa.util.ezip &mdash; jawa  documentation</title>
     
     <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -48,16 +48,7 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <h1>Source code for jawa.util.jf</h1><div class="highlight"><pre>
-<span class="c"># -*- coding: utf8 -*-</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Tools for working with JVM `.jar` archives, which are simply ZIP archives with</span>
-<span class="sd">some mandatory structure.</span>
-
-<span class="sd">.. note::</span>
-<span class="sd">    If `czipfile &lt;http://pypi.python.org/pypi/czipfile&gt;`_ is available,</span>
-<span class="sd">    decompression will be noticably faster.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+  <h1>Source code for jawa.util.ezip</h1><div class="highlight"><pre>
 <span class="kn">import</span> <span class="nn">re</span>
 
 <span class="c"># czipfile offers a noticable improvement, especially when working with</span>
@@ -68,19 +59,30 @@
     <span class="kn">from</span> <span class="nn">zipfile</span> <span class="kn">import</span> <span class="n">ZipFile</span>
 
 
-<div class="viewcode-block" id="JarFile"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.jf.JarFile">[docs]</a><span class="k">class</span> <span class="nc">JarFile</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="ZipPathResult"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.ezip.ZipPathResult">[docs]</a><span class="k">class</span> <span class="nc">ZipPathResult</span><span class="p">(</span><span class="nb">unicode</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A very useful helper when iterating results from a</span>
+<span class="sd">    :py:class:`jawa.utils.jf.JarFile` that acts like a normal string, but</span>
+<span class="sd">    additionally provides a ``read()`` method.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jar</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">unicode</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jar</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ZipPathResult</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__jar_file</span> <span class="o">=</span> <span class="n">jar</span>
+
+<div class="viewcode-block" id="ZipPathResult.read"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.ezip.ZipPathResult.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__jar_file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+</div></div>
+<div class="viewcode-block" id="EditableZipFile"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.ezip.EditableZipFile">[docs]</a><span class="k">class</span> <span class="nc">EditableZipFile</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A light wrapper around the python :py:class:`zipfile.ZipFile` that</span>
 <span class="sd">    enables in-memory modification.</span>
 
 <span class="sd">    If `io` is provided, its contents are loaded. `io` may be a file-system</span>
 <span class="sd">    path or a file-like object.</span>
-
-<span class="sd">    As of 0.1.0, :py:class:`jawa.util.jf.JarFile` is also a context manager.</span>
-
-<span class="sd">    &gt;&gt;&gt; from jawa.util.jf import JarFile</span>
-<span class="sd">    &gt;&gt;&gt; with JarFile(sys.argv[1]) as jf:</span>
-<span class="sd">    ...    print(jf.namelist())</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">ZipFile</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">io</span> <span class="k">else</span> <span class="bp">None</span>
@@ -90,13 +92,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_namelist</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">namelist</span><span class="p">()</span> <span class="k">if</span> <span class="n">io</span> <span class="k">else</span> <span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_o_namelist</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_namelist</span><span class="p">)</span>
 
-<div class="viewcode-block" id="JarFile.namelist"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.jf.JarFile.namelist">[docs]</a>    <span class="k">def</span> <span class="nf">namelist</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="EditableZipFile.namelist"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.ezip.EditableZipFile.namelist">[docs]</a>    <span class="k">def</span> <span class="nf">namelist</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of all paths in this JarFile.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_namelist</span>
 </div>
-<div class="viewcode-block" id="JarFile.read"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.jf.JarFile.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<div class="viewcode-block" id="EditableZipFile.read"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.ezip.EditableZipFile.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the contents of `path`, if it exists, otherwise `None`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -108,7 +111,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">None</span>
 </div>
-<div class="viewcode-block" id="JarFile.write"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.jf.JarFile.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="EditableZipFile.write"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.ezip.EditableZipFile.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Writes `data` to `path`, overwritting any existing content.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -117,7 +120,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_namelist</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="JarFile.save"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.jf.JarFile.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<div class="viewcode-block" id="EditableZipFile.save"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.ezip.EditableZipFile.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Saves the JarFile to `path`, which can be a file-system path or a</span>
 <span class="sd">        file-like object.</span>
@@ -127,7 +130,7 @@
             <span class="n">zp_out</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="n">zp_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">zp_name</span><span class="p">))</span>
         <span class="n">zp_out</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </div>
-<div class="viewcode-block" id="JarFile.remove"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.jf.JarFile.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<div class="viewcode-block" id="EditableZipFile.remove"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.ezip.EditableZipFile.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Removes a file from the JarFile.</span>
 
@@ -150,7 +153,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">io</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-<div class="viewcode-block" id="JarFile.regex"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.jf.JarFile.regex">[docs]</a>    <span class="k">def</span> <span class="nf">regex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regex</span><span class="p">):</span>
+<div class="viewcode-block" id="EditableZipFile.regex"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.ezip.EditableZipFile.regex">[docs]</a>    <span class="k">def</span> <span class="nf">regex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regex</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns an iterator over every path that matches `regex`. For example,</span>
 <span class="sd">        to get all files ending in .class that aren&#39;t in a sub-directory:</span>
@@ -158,7 +161,9 @@
 <span class="sd">        &gt;&gt;&gt; for path in jf.regex(&#39;[^/]+\.class&#39;):</span>
 <span class="sd">        ...    print(path)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_namelist</span> <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_namelist</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">ZipPathResult</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
 </div>
     <span class="n">close</span> <span class="o">=</span> <span class="n">__exit__</span></div>
 </pre></div>
