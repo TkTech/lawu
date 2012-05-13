@@ -17,6 +17,23 @@ except ImportError:
     from zipfile import ZipFile
 
 
+class JarPathResult(unicode):
+    """
+    A very useful helper when iterating results from a
+    :py:class:`jawa.utils.jf.JarFile` that acts like a normal string, but
+    additionally provides a ``read()`` method.
+    """
+    def __new__(self, jar, *args):
+        return unicode.__new__(self, *args)
+
+    def __init__(self, jar, *args, **kwargs):
+        super(JarPathResult, self).__init__(*args, **kwargs)
+        self.__jar_file = jar
+
+    def read(self):
+        return self.__jar_file.read(self)
+
+
 class JarFile(object):
     """
     A light wrapper around the python :py:class:`zipfile.ZipFile` that
@@ -107,6 +124,8 @@ class JarFile(object):
         >>> for path in jf.regex('[^/]+\.class'):
         ...    print(path)
         """
-        return (p for p in self._namelist if re.match(regex, p))
+        for p in self._namelist:
+            if re.match(regex, p):
+                yield JarPathResult(self, p)
 
     close = __exit__

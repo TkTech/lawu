@@ -26,9 +26,14 @@ class ClassFile(object):
         self._version = (0, 0)
 
         if io and isinstance(io, basestring):
-            fin = open(io, 'rb')
-            self._load_from_io(fin)
-            fin.close()
+            if hasattr(io, 'read'):
+                fin = StringIO(io.read())
+                self._load_from_io(fin)
+                fin.close()
+            else:
+                fin = open(io, 'rb')
+                self._load_from_io(fin)
+                fin.close()
         elif io:
             self._load_from_io(io)
         else:
