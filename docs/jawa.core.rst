@@ -9,6 +9,14 @@ core Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`attributes` Module
+------------------------
+
+.. automodule:: jawa.core.attributes
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`cf` Module
 ----------------
 
@@ -19,12 +27,23 @@ core Package
 
 :mod:`constants` Module
 -----------------------
+
 .. automodule:: jawa.core.constants
     :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`descriptor` Module
+------------------------
+
+.. automodule:: jawa.core.descriptor
+    :members:
+    :undoc-members:
     :show-inheritance:
 
 :mod:`fields` Module
 --------------------
+
 .. automodule:: jawa.core.fields
     :members:
     :undoc-members:
@@ -32,21 +51,9 @@ core Package
 
 :mod:`methods` Module
 ---------------------
+
 .. automodule:: jawa.core.methods
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`attributes` Module
-------------------------
-.. automodule:: jawa.core.attributes
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`descriptor` Module
-------------------------
-.. automodule:: jawa.core.descriptor
-    :members:
-    :undoc-members:
-    :show-inheritance:

@@ -57,8 +57,8 @@ _HUMAN_NAMES = {
 def parse_descriptor(descriptor):
     """
     Uses a tiny state machine to parse JVM descriptors. To get useful wrappers
-    around the results, use :py:method:`jawa.core.descriptor.method_descriptor`
-    or :py:method:`jawa.core.descriptor.field_descriptor`.
+    around the results, use :py:func:`jawa.core.descriptor.method_descriptor`
+    or :py:func:`jawa.core.descriptor.field_descriptor`.
     """
     # States:
     #   10 == NORMAL,
