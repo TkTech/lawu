@@ -398,6 +398,13 @@ class ConstantPool(object):
         return None
 
     def find(self, type_=None, f=None):
+        """
+        Iterates over the pool, yielding each matching ``Constant``. Calling
+        without any arguments is equivelent to iterating over the pool.
+
+         * `type_` must be a subclass of ``Constant``.
+         * `f` must be callable which takes one value (the constant)
+        """
         for v in self._pool.itervalues():
             if type_ is not None and not isinstance(v, type_):
                 continue
