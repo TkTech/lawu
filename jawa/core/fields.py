@@ -100,3 +100,26 @@ class FieldTable(object):
             attr = AttributeTable(self._cf)
             attr._load_from_io(io)
             append(Field(self._cf, *args, attributes=attr))
+
+    def find(self, f=None):
+        for field in self._table:
+            if f and not f(field):
+                continue
+            yield field
+
+    def find_one(self, name=None, f=None):
+        for field in self._table:
+            if name and not field.name == name:
+                continue
+
+            if f and not f(field):
+                continue
+
+            return field
+
+    @property
+    def count(self):
+        """
+        Returns the number of ``Field`` objects in the table.
+        """
+        return len(self._table)

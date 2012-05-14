@@ -1,0 +1,274 @@
+#!/usr/bin/env python
+# -*- coding: utf8 -*-
+"""
+Copyright (c) 2012, Tyler Kennedy <tk@tkte.ch>
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+"""
+import re
+import cmd
+import sys
+import getopt
+import functools
+
+try:
+    # Try to enable ANSI color codes if we're running on windows.
+    from colorama import init
+    init()
+except ImportError:
+    pass
+
+from jawa.util.jf import JarFile
+
+
+def err(msg):
+    """
+    Helper to print consistent error messages.
+    """
+    print('[%s!%s] %s' % (C.RED, C.RESET, msg))
+
+
+def output(msg):
+    """
+    Helper to print consistent OK messages.
+    """
+    print('[%s*%s] %s' % (C.CYAN, C.RESET, msg))
+
+
+def helper(func):
+    """
+    Utility decorator to print consistent help messages.
+    """
+    @functools.wraps(func)
+    def func_(self, *args):
+        msg = func(self, *args)
+        for line in msg.split('\n'):
+            print('[%s?%s] %s' % (C.BLUE, C.RESET, line))
+    return func_
+
+
+def classfield(func):
+    @functools.wraps(func)
+    def func_(self, *args):
+        label, msg = func(self, *args)
+        print('[%s.%s] => %s' % (
+            class_(self._cf.this.name),
+            label,
+            msg
+        ))
+    return func_
+
+
+def classloaded(func):
+    """
+    Utility decorator that only runs the wrapped function if a ClassFile
+    has been loaded into the prompt.
+    """
+    @functools.wraps(func)
+    def func_(self, *args):
+        if not self._cf:
+            err('This command requires a loaded ClassFile.')
+            err('Use the "open <file>" command.')
+            return
+        return func(self, *args)
+    return func_
+
+
+def class_(class_name):
+    """
+    Helper to always print class names in a consistent and visible
+    manner.
+    """
+    return '%s%s%s%s' % (
+        C.MAGENTA,
+        C.UNDERLINE,
+        class_name,
+        C.RESET
+    )
+
+
+class C(object):
+    BLACK = '\033[90m'
+    RED = '\033[91m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    BLUE = '\033[94m'
+    MAGENTA = '\033[95m'
+    CYAN = '\033[96m'
+    RESET = '\033[0m'
+    UNDERLINE = '\033[4m'
+
+
+class JawaShell(cmd.Cmd, object):
+    def __init__(self, jar, cf=None):
+        cmd.Cmd.__init__(self)
+        self._jar = jar
+        self._cf = None
+
+    def do_open(self, path):
+        if self._jar:
+            if path not in self._jar.namelist:
+                err('There is no such file.')
+                return
+            self._cf = self._jar.open_class(path)
+
+    def complete_open(self, text, line, begidx, endidx):
+        mline = line.partition(' ')[2]
+        offset = len(mline) - len(text)
+        if self._jar:
+            cl = self._jar.regex(r'.*\.class')
+            return [s[offset:] for s in cl if s.startswith(mline)]
+
+    @helper
+    def help_open(self):
+        return (
+            'Loads a ClassFile into the prompt.\n'
+            '-- Supports filename completion. --')
+
+    @classloaded
+    @classfield
+    def do_superclass(self, *args):
+        return 'superclass', class_(self._cf.superclass.name)
+
+    @helper
+    def help_superclass(self):
+        return (
+            'Prints the (object) name of the currently loaded class\'s '
+            'superclass.')
+
+    @classloaded
+    @classfield
+    def do_this(self, *args):
+        return 'this', class_(self._cf.this.name)
+
+    @helper
+    def help_this(self):
+        return (
+            'Prints the (object) name of the currently '
+            'loaded class.')
+
+    @classloaded
+    def do_interfaces(self, *args):
+        if not self._cf.interfaces:
+            err('This class has no interfaces.')
+            return
+
+        for interface in self._cf.interfaces:
+            print(' => %s' % class_(interface.name))
+
+    @helper
+    def help_interfaces(self):
+        return (
+            'Prints a list of direct interfaces implemented by the loaded '
+            'class.')
+
+    @classloaded
+    def do_fields(self, field_name=None):
+        if not self._cf.fields.count:
+            err('This class has no fields.')
+            return
+
+        def print_field(field):
+            # Create a pretty field name.
+            pretty_name = []
+            if field.type_[2] == 'reference':
+                pretty_name.append(class_(field.type_[0]))
+            else:
+                pretty_name.append(field.type_[2])
+            pretty_name.append('[]' * field.type_[1])
+
+            print(' => %s %s' % (''.join(pretty_name), field.name))
+            print('  |- flags = 0x%X' % field.access_flags)
+
+        if field_name:
+            field = self._cf.fields.find_one(name=field_name)
+            if not field:
+                err('There is no such field in this class.')
+                return
+            print_field(field)
+        else:
+            for field in self._cf.fields.find():
+                print_field(field)
+
+    @helper
+    def help_fields(self):
+        return (
+            'Displays details for each field in the class. If a field name\n'
+            'is provided only that field is displayed.\n'
+            '-- Supports field name completion. --')
+
+    def complete_fields(self, text, line, *args):
+        mline = line.partition(' ')[2]
+        offset = len(mline) - len(text)
+        if self._jar:
+            fields = self._cf.fields.find(f=lambda x: x.name.startswith(mline))
+            return [s.name[offset:] for s in fields]
+
+    def do_quit(self, *args):
+        return True
+
+    @helper
+    def help_quit(self):
+        return 'Exits the shell.'
+
+    do_exit = do_quit
+    help_exit = help_quit
+
+    intro = '\n'.join([
+    '-- Jawa (C) 2012 Tyler Kennedy <tk@tkte.ch> --',
+    'Type "help" for a list of commands.',
+    'Type "guide" for a short introduction.',
+    '--'
+    ])
+
+    @property
+    def prompt(self):
+        if self._cf:
+            return '[%s] => ' % class_(self._cf.this.name)
+        return '=> '
+
+
+def main(argv):
+    try:
+        opts, args = getopt.gnu_getopt(argv[1:], '', [
+            'help',
+            'jar='
+        ])
+    except getopt.GetoptError, e:
+        print(str(e))
+        return 1
+
+    jar = None
+    for o, a in opts:
+        if o == '--jar':
+            jar = JarFile(a)
+        else:
+            print('Unknown option %r', o)
+            return 1
+    try:
+        JawaShell(jar).cmdloop()
+    except KeyboardInterrupt:
+        print()
+        return 0
+
+if __name__ == '__main__':
+    sys.exit(main(sys.argv))

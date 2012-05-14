@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
-from distutils.core import setup, find_packages
+from setuptools import setup, find_packages
 
 setup(
     name="jawa",
@@ -18,5 +18,8 @@ setup(
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Disassemblers"
+    ],
+    scripts=[
+        'scripts/jawa-shell'
     ]
 )
