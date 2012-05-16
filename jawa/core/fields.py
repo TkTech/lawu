@@ -3,7 +3,7 @@ from struct import unpack
 from itertools import repeat
 
 from jawa.core.attributes import AttributeTable
-from jawa.core.descriptor import field_descriptor
+from jawa.util.descriptor import field_descriptor
 
 
 class Field(object):

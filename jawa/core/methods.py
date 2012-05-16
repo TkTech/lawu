@@ -3,7 +3,7 @@ from struct import unpack
 from itertools import repeat
 
 from jawa.core.attributes import AttributeTable
-from jawa.core.descriptor import method_descriptor
+from jawa.util.descriptor import method_descriptor
 
 
 class Method(object):

@@ -2,7 +2,7 @@
 from struct import unpack
 
 
-from jawa.core.descriptor import method_descriptor, field_descriptor
+from jawa.util.descriptor import method_descriptor, field_descriptor
 
 
 class Constant(object):
