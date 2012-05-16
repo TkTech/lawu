@@ -24,7 +24,6 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
-import re
 import cmd
 import sys
 import getopt
@@ -81,13 +80,28 @@ def classfield(func):
 def classloaded(func):
     """
     Utility decorator that only runs the wrapped function if a ClassFile
-    has been loaded into the prompt.
+    has been loaded into the shell.
     """
     @functools.wraps(func)
     def func_(self, *args):
         if not self._cf:
             err('This command requires a loaded ClassFile.')
             err('Use the "open <file>" command.')
+            return
+        return func(self, *args)
+    return func_
+
+
+def jarloaded(func):
+    """
+    Utility decorator that only runs the wrapped function if a JarFile
+    has been loaded into the shell.
+    """
+    @functools.wraps(func)
+    def func_(self, *args):
+        if not self._jar:
+            err('This command requires a loaded JarFile.')
+            err('Use the "jar <file>" command.')
             return
         return func(self, *args)
     return func_
@@ -124,11 +138,14 @@ class JawaShell(cmd.Cmd, object):
         self._jar = jar
         self._cf = None
 
+    @jarloaded
     def do_open(self, path):
-        if self._jar:
-            if path not in self._jar.namelist:
+        if path not in self._jar.namelist:
+            if '%s.class' % path not in self._jar.namelist:
                 err('There is no such file.')
-                return
+            else:
+                self._cf = self._jar.open_class(path)
+        else:
             self._cf = self._jar.open_class(path)
 
     def complete_open(self, text, line, begidx, endidx):
@@ -138,10 +155,21 @@ class JawaShell(cmd.Cmd, object):
             cl = self._jar.regex(r'.*\.class')
             return [s[offset:] for s in cl if s.startswith(mline)]
 
+    def do_jar(self, path):
+        if not path.strip():
+            err('Need a path to open.')
+            return
+        self._cf = None
+        self._jar = JarFile(path)
+
+    @helper
+    def help_jar(self):
+        return 'Loads a JarFile into the shell.'
+
     @helper
     def help_open(self):
         return (
-            'Loads a ClassFile into the prompt.\n'
+            'Loads a ClassFile into the shell.\n'
             '-- Supports filename completion. --')
 
     @classloaded
