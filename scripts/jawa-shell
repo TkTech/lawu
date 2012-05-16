@@ -261,11 +261,9 @@ class JawaShell(cmd.Cmd, object):
     do_exit = do_quit
     help_exit = help_quit
 
-    intro = '\n'.join([
-    '-- Jawa (C) 2012 Tyler Kennedy <tk@tkte.ch> --',
-    'Type "help" for a list of commands.',
-    'Type "guide" for a short introduction.',
-    '--'
+    intro = ''.join([
+        C.CYAN, 'jawa', C.RESET, ' & ', C.CYAN, 'jawa-shell', C.RESET,
+        ' (C) 2012 Tyler Kennedy <tk@tkte.ch>',
     ])
 
     @property
