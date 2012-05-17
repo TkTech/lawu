@@ -118,6 +118,14 @@ class CodeAttribute(Attribute):
         """
         return self._ex_table
 
+    @property
+    def attributes(self):
+        """
+        Returns the :py:class:`jawa.core.attributes.AttributeTable` for this
+        method.
+        """
+        return self._attribs
+
     @classmethod
     def _load_from_io(cls, class_file, name_i, length, io):
         read = io.read
