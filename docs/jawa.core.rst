@@ -33,18 +33,18 @@ core Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`descriptor` Module
-------------------------
-
-.. automodule:: jawa.core.descriptor
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 :mod:`fields` Module
 --------------------
 
 .. automodule:: jawa.core.fields
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`jf` Module
+----------------
+
+.. automodule:: jawa.core.jf
     :members:
     :undoc-members:
     :show-inheritance:
@@ -56,4 +56,11 @@ core Package
     :members:
     :undoc-members:
     :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    jawa.core.attribs
 
