@@ -5,8 +5,8 @@ from jawa.core.attribs.attribute import Attribute
 
 class SourceFileAttribute(Attribute):
     """
-    An unknown attribute (one whose name did not match the list
-    of registered attributes) which cannot be parsed.
+    Provides the name (and possibly path) of the file used to generate
+    a class, useful for debugging purposes.
     """
     NAME = 'SourceFile'
 

@@ -414,6 +414,16 @@ class ConstantPool(object):
 
             yield v
 
+    def find_one(self, *args, **kwargs):
+        """
+        Same as ``find()`` but returns only the first result, or `None` if
+        nothing was found.
+        """
+        try:
+            return next(self.find(*args, **kwargs))
+        except StopIteration:
+            return None
+
     def build_class(self, class_name):
         """
         Builds a new :py:class:`jawa.core.constants.ConstantClass` with

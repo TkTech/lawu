@@ -77,6 +77,14 @@ class Method(object):
         """
         return self._cf
 
+    @property
+    def code(self):
+        """
+        The :py:class:`jawa.core.attribs.code.CodeAttribute` for this method
+        if one exists, otherwise `None`.
+        """
+        return self.attributes.find_one(name='Code')
+
 
 class MethodTable(object):
     def __init__(self, class_file):
@@ -105,3 +113,25 @@ class MethodTable(object):
             attr = AttributeTable(self._cf)
             attr._load_from_io(io)
             append(Method(self._cf, *args, attributes=attr))
+
+    def find(self, has_code=None, f=None):
+        for method in self._table:
+            if has_code is True and not method.code:
+                continue
+            elif has_code is False and method.code:
+                continue
+
+            if f and not f(method):
+                continue
+
+            yield method
+
+    def find_one(self, *args, **kwargs):
+        """
+        Same as ``find()`` but returns only the first result, or `None` if
+        nothing was found.
+        """
+        try:
+            return next(self.find(*args, **kwargs))
+        except StopIteration:
+            return None

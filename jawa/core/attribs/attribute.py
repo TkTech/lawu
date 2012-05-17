@@ -1,4 +1,11 @@
 class Attribute(object):
+    """
+    The base attribute. All other attributes must subclass ``Attribute``.
+
+    .. Note:
+        This is not the default attribute, which is provided by
+        :py:class:`jawa.core.attribs.unknown.UnknownAttribute`.
+    """
     NAME = None
 
     def __init__(self, class_file, name_i=None):
@@ -20,5 +27,8 @@ class Attribute(object):
 
     @classmethod
     def _load_from_io(cls, class_file, name_i, length, io):
-        """Load the attribute from the file-like object `io`."""
+        """
+        Load the attribute from the file-like object `io`. All of `length`
+        bytes must be consumed, or parsing the class will fail.
+        """
         raise NotImplementedError()

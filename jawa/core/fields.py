@@ -101,13 +101,7 @@ class FieldTable(object):
             attr._load_from_io(io)
             append(Field(self._cf, *args, attributes=attr))
 
-    def find(self, f=None):
-        for field in self._table:
-            if f and not f(field):
-                continue
-            yield field
-
-    def find_one(self, name=None, f=None):
+    def find(self, name=None, f=None):
         for field in self._table:
             if name and not field.name == name:
                 continue
@@ -115,7 +109,17 @@ class FieldTable(object):
             if f and not f(field):
                 continue
 
-            return field
+            yield field
+
+    def find_one(self, *args, **kwargs):
+        """
+        Same as ``find()`` but returns only the first result, or `None` if
+        nothing was found.
+        """
+        try:
+            return next(self.find(*args, **kwargs))
+        except StopIteration:
+            return None
 
     @property
     def count(self):
