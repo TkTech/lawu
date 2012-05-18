@@ -2,12 +2,14 @@
 from struct import unpack
 from itertools import repeat
 
+from jawa.core.attribs.unknown import UnknownAttribute
+
 
 class AttributeTable(object):
     def __init__(self, class_file, attrib_map=None):
         self._table = []
         self._cf = class_file
-        self._map = attrib_map or _DEFAULT_ATTRIBUTES
+        self._map = attrib_map or AttributeTable._get_defaults()
 
     @property
     def class_file(self):
@@ -58,12 +60,14 @@ class AttributeTable(object):
         except StopIteration:
             return None
 
+    @staticmethod
+    def _get_defaults():
+        # Neccessary due to circular imports. Attributes can have attributes
+        # and attribute tables.
+        from jawa.core.attribs.sourcefile import SourceFileAttribute
+        from jawa.core.attribs.code import CodeAttribute
 
-from jawa.core.attribs.unknown import UnknownAttribute
-from jawa.core.attribs.sourcefile import SourceFileAttribute
-from jawa.core.attribs.code import CodeAttribute
-
-_DEFAULT_ATTRIBUTES = {
-    'Code': CodeAttribute,
-    'SourceFile': SourceFileAttribute
-}
+        return {
+            'Code': CodeAttribute,
+            'SourceFile': SourceFileAttribute
+        }

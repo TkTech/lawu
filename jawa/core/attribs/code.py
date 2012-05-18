@@ -1,8 +1,14 @@
 from struct import unpack
 from itertools import repeat
 
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
+
 from jawa.core.attributes import AttributeTable
 from jawa.core.attribs.attribute import Attribute
+from jawa.util.bytecode import StreamDisassembler
 
 
 class CodeException(object):
@@ -150,3 +156,12 @@ class CodeAttribute(Attribute):
             ex_table=ex_table,
             attribs=attribs
         )
+
+    def n(self):
+        sd = StreamDisassembler()
+        sio = StringIO(self._raw_code)
+        while True:
+            try:
+                print sd.get_single(sio)
+            except IOError:
+                return
