@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,15 +7,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>jawa.core.fields &mdash; jawa  documentation</title>
+    <title>jawa.core.fields &mdash; jawa 0.1.2 documentation</title>
     
-    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '',
+        VERSION:     '0.1.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +24,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="jawa  documentation" href="../../../index.html" />
+    <link rel="top" title="jawa 0.1.2 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" /> 
   </head>
   <body>
@@ -38,7 +37,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">jawa  documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">jawa 0.1.2 documentation</a> &raquo;</li>
           <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -54,9 +53,13 @@
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">repeat</span>
 
 <span class="kn">from</span> <span class="nn">jawa.core.attributes</span> <span class="kn">import</span> <span class="n">AttributeTable</span>
+<span class="kn">from</span> <span class="nn">jawa.util.descriptor</span> <span class="kn">import</span> <span class="n">field_descriptor</span>
 
 
 <div class="viewcode-block" id="Field"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.fields.Field">[docs]</a><span class="k">class</span> <span class="nc">Field</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a single Field of a JVM class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_file</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name_i</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">descriptor_i</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
             <span class="n">attributes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span> <span class="o">=</span> <span class="n">class_file</span>
@@ -68,14 +71,14 @@
     <span class="nd">@property</span>
 <div class="viewcode-block" id="Field.access_flags"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.fields.Field.access_flags">[docs]</a>    <span class="k">def</span> <span class="nf">access_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the access flags for this field.</span>
+<span class="sd">        Returns the access flags for this ``Field``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flags</span>
 </div>
     <span class="nd">@property</span>
 <div class="viewcode-block" id="Field.name"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.fields.Field.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the name of this field.</span>
+<span class="sd">        Returns the name of this ``Field``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name_i</span><span class="p">)</span>
 </div>
@@ -90,16 +93,16 @@
     <span class="nd">@property</span>
 <div class="viewcode-block" id="Field.type_"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.fields.Field.type_">[docs]</a>    <span class="k">def</span> <span class="nf">type_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns a human-readable type for this field as parsed from the field&#39;s</span>
-<span class="sd">        descriptor.</span>
+<span class="sd">        Returns a human-readable type for this ``Field`` as parsed from the</span>
+<span class="sd">        field&#39;s descriptor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">type_</span>
+        <span class="k">return</span> <span class="n">field_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">descriptor</span><span class="p">)</span>
 </div>
     <span class="nd">@property</span>
 <div class="viewcode-block" id="Field.attributes"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.fields.Field.attributes">[docs]</a>    <span class="k">def</span> <span class="nf">attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the :py:class:`jawa.core.attributes.AttributeTable` for this</span>
-<span class="sd">        field.</span>
+<span class="sd">        ``Field``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span>
 </div>
@@ -108,7 +111,15 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">descriptor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_flags</span>
         <span class="p">)</span>
 
-</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Field.class_file"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.fields.Field.class_file">[docs]</a>    <span class="k">def</span> <span class="nf">class_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the :py:class:`jawa.core.cf.ClassFile` associated with this</span>
+<span class="sd">        ``Field``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span>
+
+</div></div>
 <div class="viewcode-block" id="FieldTable"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.fields.FieldTable">[docs]</a><span class="k">class</span> <span class="nc">FieldTable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A field table represents all of the fields of a ``ClassFile``, as defined</span>
@@ -121,7 +132,7 @@
     <span class="nd">@property</span>
 <div class="viewcode-block" id="FieldTable.class_file"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.fields.FieldTable.class_file">[docs]</a>    <span class="k">def</span> <span class="nf">class_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the :py:class:`jawa.core.classfile.ClassFile` associated with</span>
+<span class="sd">        Returns the :py:class:`jawa.core.cf.ClassFile` associated with</span>
 <span class="sd">        this ``FieldTable``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span>
@@ -136,9 +147,36 @@
         <span class="n">count</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">repeat</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">count</span><span class="p">):</span>
             <span class="n">args</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&#39;&gt;3H&#39;</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
-            <span class="n">attr</span> <span class="o">=</span> <span class="n">AttributeTable</span><span class="p">()</span>
+            <span class="n">attr</span> <span class="o">=</span> <span class="n">AttributeTable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="p">)</span>
             <span class="n">attr</span><span class="o">.</span><span class="n">_load_from_io</span><span class="p">(</span><span class="n">io</span><span class="p">)</span>
-            <span class="n">append</span><span class="p">(</span><span class="n">Field</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attr</span><span class="p">))</span></div>
+            <span class="n">append</span><span class="p">(</span><span class="n">Field</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attr</span><span class="p">))</span>
+
+<div class="viewcode-block" id="FieldTable.find"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.fields.FieldTable.find">[docs]</a>    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">field</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">f</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">f</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="k">yield</span> <span class="n">field</span>
+</div>
+<div class="viewcode-block" id="FieldTable.find_one"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.fields.FieldTable.find_one">[docs]</a>    <span class="k">def</span> <span class="nf">find_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Same as ``find()`` but returns only the first result, or `None` if</span>
+<span class="sd">        nothing was found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="FieldTable.count"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.fields.FieldTable.count">[docs]</a>    <span class="k">def</span> <span class="nf">count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the number of ``Field`` objects in the table.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_table</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>
@@ -172,12 +210,12 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">jawa  documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">jawa 0.1.2 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2012, Author.
+        &copy; Copyright 2012, Tyler Kennedy &lt;tk@tkte.ch&gt;.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

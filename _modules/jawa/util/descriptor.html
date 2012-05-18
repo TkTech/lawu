@@ -1,0 +1,178 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>jawa.util.descriptor &mdash; jawa 0.1.2 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="jawa 0.1.2 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">jawa 0.1.2 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for jawa.util.descriptor</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: utf8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Methods for parsing standard JVM type descriptors for fields and methods.</span>
+<span class="sd">It does not depend on any other modules.</span>
+
+<span class="sd">.. note::</span>
+<span class="sd">    This module has not yet been optimized for performance and is not</span>
+<span class="sd">    in its final form.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="DescriptorError"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.descriptor.DescriptorError">[docs]</a><span class="k">class</span> <span class="nc">DescriptorError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+</div>
+<div class="viewcode-block" id="method_descriptor"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.descriptor.method_descriptor">[docs]</a><span class="k">def</span> <span class="nf">method_descriptor</span><span class="p">(</span><span class="n">descriptor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parses a Method descriptor as described in section 4.3.3 of the JVM</span>
+<span class="sd">    specification. Returns the method argument types and return type.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;(&#39;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">DescriptorError</span><span class="p">(</span><span class="s">&#39;missing opening bracket&#39;</span><span class="p">)</span>
+    <span class="n">end_para</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;)&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">end_para</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">DescriptorError</span><span class="p">(</span><span class="s">&#39;missing closing bracket&#39;</span><span class="p">)</span>
+
+    <span class="n">method_args</span> <span class="o">=</span> <span class="n">parse_descriptor</span><span class="p">(</span><span class="n">descriptor</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">end_para</span><span class="p">])</span>
+    <span class="n">return_args</span> <span class="o">=</span> <span class="n">parse_descriptor</span><span class="p">(</span><span class="n">descriptor</span><span class="p">[</span><span class="n">end_para</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:])</span>
+
+    <span class="k">return</span> <span class="n">method_args</span><span class="p">,</span> <span class="n">return_args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+</div>
+<div class="viewcode-block" id="field_descriptor"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.descriptor.field_descriptor">[docs]</a><span class="k">def</span> <span class="nf">field_descriptor</span><span class="p">(</span><span class="n">descriptor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parses a Field descriptor as described in section 4.3.2 of the JVM</span>
+<span class="sd">    specification. Returns the simple type of the field.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">parse_descriptor</span><span class="p">(</span><span class="n">descriptor</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+
+<span class="c"># JVM Descriptor &quot;BaseType&quot; characters to their</span>
+<span class="c"># full simple type.</span></div>
+<span class="n">_HUMAN_NAMES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;L&#39;</span><span class="p">:</span> <span class="s">&#39;reference&#39;</span><span class="p">,</span>
+    <span class="s">&#39;B&#39;</span><span class="p">:</span> <span class="s">&#39;byte&#39;</span><span class="p">,</span>
+    <span class="s">&#39;C&#39;</span><span class="p">:</span> <span class="s">&#39;char&#39;</span><span class="p">,</span>
+    <span class="s">&#39;D&#39;</span><span class="p">:</span> <span class="s">&#39;double&#39;</span><span class="p">,</span>
+    <span class="s">&#39;F&#39;</span><span class="p">:</span> <span class="s">&#39;float&#39;</span><span class="p">,</span>
+    <span class="s">&#39;I&#39;</span><span class="p">:</span> <span class="s">&#39;int&#39;</span><span class="p">,</span>
+    <span class="s">&#39;J&#39;</span><span class="p">:</span> <span class="s">&#39;long&#39;</span><span class="p">,</span>
+    <span class="s">&#39;S&#39;</span><span class="p">:</span> <span class="s">&#39;short&#39;</span><span class="p">,</span>
+    <span class="s">&#39;Z&#39;</span><span class="p">:</span> <span class="s">&#39;boolean&#39;</span><span class="p">,</span>
+    <span class="s">&#39;V&#39;</span><span class="p">:</span> <span class="s">&#39;void&#39;</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="parse_descriptor"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.descriptor.parse_descriptor">[docs]</a><span class="k">def</span> <span class="nf">parse_descriptor</span><span class="p">(</span><span class="n">descriptor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses a tiny state machine to parse JVM descriptors. To get useful wrappers</span>
+<span class="sd">    around the results, use :py:func:`jawa.core.descriptor.method_descriptor`</span>
+<span class="sd">    or :py:func:`jawa.core.descriptor.field_descriptor`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># States:</span>
+    <span class="c">#   10 == NORMAL,</span>
+    <span class="c">#   20 == OBJECT REFERENCE</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">tokens</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">token</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">dimensions</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">descriptor</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="mi">10</span> <span class="ow">and</span> <span class="n">char</span> <span class="o">==</span> <span class="s">&#39;L&#39;</span><span class="p">:</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="k">elif</span> <span class="n">state</span> <span class="o">==</span> <span class="mi">10</span> <span class="ow">and</span> <span class="n">char</span> <span class="o">==</span> <span class="s">&#39;[&#39;</span><span class="p">:</span>
+            <span class="n">dimensions</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">state</span> <span class="o">==</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="n">tokens</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">char</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">_HUMAN_NAMES</span><span class="p">[</span><span class="n">char</span><span class="p">]))</span>
+            <span class="n">dimensions</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="n">state</span> <span class="o">==</span> <span class="mi">20</span> <span class="ow">and</span> <span class="n">char</span> <span class="o">==</span> <span class="s">&#39;;&#39;</span><span class="p">:</span>
+            <span class="n">tokens</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">token</span><span class="p">),</span> <span class="n">dimensions</span><span class="p">,</span> <span class="s">&#39;reference&#39;</span><span class="p">))</span>
+            <span class="n">dimensions</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="mi">10</span>
+            <span class="k">del</span> <span class="n">token</span><span class="p">[:]</span>
+        <span class="k">elif</span> <span class="n">state</span> <span class="o">==</span> <span class="mi">20</span><span class="p">:</span>
+            <span class="n">token</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">char</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tokens</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">jawa 0.1.2 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Tyler Kennedy &lt;tk@tkte.ch&gt;.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

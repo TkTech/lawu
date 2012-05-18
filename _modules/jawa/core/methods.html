@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,15 +7,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>jawa.core.methods &mdash; jawa  documentation</title>
+    <title>jawa.core.methods &mdash; jawa 0.1.2 documentation</title>
     
-    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '',
+        VERSION:     '0.1.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +24,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="jawa  documentation" href="../../../index.html" />
+    <link rel="top" title="jawa 0.1.2 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" /> 
   </head>
   <body>
@@ -38,7 +37,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">jawa  documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">jawa 0.1.2 documentation</a> &raquo;</li>
           <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -54,10 +53,13 @@
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">repeat</span>
 
 <span class="kn">from</span> <span class="nn">jawa.core.attributes</span> <span class="kn">import</span> <span class="n">AttributeTable</span>
-<span class="kn">from</span> <span class="nn">jawa.core.descriptor</span> <span class="kn">import</span> <span class="n">method_descriptor</span>
+<span class="kn">from</span> <span class="nn">jawa.util.descriptor</span> <span class="kn">import</span> <span class="n">method_descriptor</span>
 
 
 <div class="viewcode-block" id="Method"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.methods.Method">[docs]</a><span class="k">class</span> <span class="nc">Method</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a single Method of a JVM class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_file</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name_i</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">descriptor_i</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
             <span class="n">attributes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span> <span class="o">=</span> <span class="n">class_file</span>
@@ -113,8 +115,8 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span>
 </div>
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s">&#39;&lt;Method(name=</span><span class="si">%r</span><span class="s">, descriptor=</span><span class="si">%r</span><span class="s">, flags=</span><span class="si">%r</span><span class="s">)&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">descriptor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_flags</span>
+        <span class="k">return</span> <span class="s">&#39;&lt;Method(name=</span><span class="si">%r</span><span class="s">, returns=</span><span class="si">%r</span><span class="s">, args=</span><span class="si">%r</span><span class="s">, flags=</span><span class="si">%r</span><span class="s">)&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">returns</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_flags</span>
         <span class="p">)</span>
 
     <span class="nd">@property</span>
@@ -124,6 +126,14 @@
 <span class="sd">        ``Method``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Method.code"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.methods.Method.code">[docs]</a>    <span class="k">def</span> <span class="nf">code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The :py:class:`jawa.core.attribs.code.CodeAttribute` for this method</span>
+<span class="sd">        if one exists, otherwise `None`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">find_one</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;Code&#39;</span><span class="p">)</span>
 
 </div></div>
 <div class="viewcode-block" id="MethodTable"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.methods.MethodTable">[docs]</a><span class="k">class</span> <span class="nc">MethodTable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -150,9 +160,31 @@
         <span class="n">count</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">repeat</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">count</span><span class="p">):</span>
             <span class="n">args</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&#39;&gt;3H&#39;</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
-            <span class="n">attr</span> <span class="o">=</span> <span class="n">AttributeTable</span><span class="p">()</span>
+            <span class="n">attr</span> <span class="o">=</span> <span class="n">AttributeTable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="p">)</span>
             <span class="n">attr</span><span class="o">.</span><span class="n">_load_from_io</span><span class="p">(</span><span class="n">io</span><span class="p">)</span>
-            <span class="n">append</span><span class="p">(</span><span class="n">Method</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attr</span><span class="p">))</span></div>
+            <span class="n">append</span><span class="p">(</span><span class="n">Method</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attr</span><span class="p">))</span>
+
+<div class="viewcode-block" id="MethodTable.find"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.methods.MethodTable.find">[docs]</a>    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">has_code</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">has_code</span> <span class="ow">is</span> <span class="bp">True</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">method</span><span class="o">.</span><span class="n">code</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">elif</span> <span class="n">has_code</span> <span class="ow">is</span> <span class="bp">False</span> <span class="ow">and</span> <span class="n">method</span><span class="o">.</span><span class="n">code</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">f</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">f</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="k">yield</span> <span class="n">method</span>
+</div>
+<div class="viewcode-block" id="MethodTable.find_one"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.methods.MethodTable.find_one">[docs]</a>    <span class="k">def</span> <span class="nf">find_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Same as ``find()`` but returns only the first result, or `None` if</span>
+<span class="sd">        nothing was found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span></div></div>
 </pre></div>
 
           </div>
@@ -186,12 +218,12 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">jawa  documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">jawa 0.1.2 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2012, Author.
+        &copy; Copyright 2012, Tyler Kennedy &lt;tk@tkte.ch&gt;.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

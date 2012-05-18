@@ -9,18 +9,18 @@ util Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`ezip` Module
-------------------
+:mod:`descriptor` Module
+------------------------
 
-.. automodule:: jawa.util.ezip
+.. automodule:: jawa.util.descriptor
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`jf` Module
-----------------
+:mod:`ezip` Module
+------------------
 
-.. automodule:: jawa.util.jf
+.. automodule:: jawa.util.ezip
     :members:
     :undoc-members:
     :show-inheritance:

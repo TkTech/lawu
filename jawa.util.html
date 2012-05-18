@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,15 +7,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>util Package &mdash; jawa  documentation</title>
+    <title>util Package &mdash; jawa 0.1.2 documentation</title>
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '',
+        VERSION:     '0.1.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,9 +24,9 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="jawa  documentation" href="index.html" />
+    <link rel="top" title="jawa 0.1.2 documentation" href="index.html" />
     <link rel="up" title="jawa Package" href="jawa.html" />
-    <link rel="prev" title="core Package" href="jawa.core.html" /> 
+    <link rel="prev" title="attribs Package" href="jawa.core.attribs.html" /> 
   </head>
   <body>
     <div class="related">
@@ -40,9 +39,9 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="jawa.core.html" title="core Package"
+          <a href="jawa.core.attribs.html" title="attribs Package"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">jawa  documentation</a> &raquo;</li>
+        <li><a href="index.html">jawa 0.1.2 documentation</a> &raquo;</li>
           <li><a href="jawa.html" accesskey="U">jawa Package</a> &raquo;</li> 
       </ul>
     </div>  
@@ -57,6 +56,44 @@
 <div class="section" id="id1">
 <h2><tt class="xref py py-mod docutils literal"><span class="pre">util</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-jawa.util"></span><p>Various utility classes and methods to make life a little bit easier.</p>
+</div>
+<div class="section" id="module-jawa.util.descriptor">
+<span id="descriptor-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">descriptor</span></tt> Module<a class="headerlink" href="#module-jawa.util.descriptor" title="Permalink to this headline">¶</a></h2>
+<p>Methods for parsing standard JVM type descriptors for fields and methods.
+It does not depend on any other modules.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This module has not yet been optimized for performance and is not
+in its final form.</p>
+</div>
+<dl class="exception">
+<dt id="jawa.util.descriptor.DescriptorError">
+<em class="property">exception </em><tt class="descclassname">jawa.util.descriptor.</tt><tt class="descname">DescriptorError</tt><a class="reference internal" href="_modules/jawa/util/descriptor.html#DescriptorError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.descriptor.DescriptorError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jawa.util.descriptor.field_descriptor">
+<tt class="descclassname">jawa.util.descriptor.</tt><tt class="descname">field_descriptor</tt><big>(</big><em>descriptor</em><big>)</big><a class="reference internal" href="_modules/jawa/util/descriptor.html#field_descriptor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.descriptor.field_descriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a Field descriptor as described in section 4.3.2 of the JVM
+specification. Returns the simple type of the field.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jawa.util.descriptor.method_descriptor">
+<tt class="descclassname">jawa.util.descriptor.</tt><tt class="descname">method_descriptor</tt><big>(</big><em>descriptor</em><big>)</big><a class="reference internal" href="_modules/jawa/util/descriptor.html#method_descriptor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.descriptor.method_descriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a Method descriptor as described in section 4.3.3 of the JVM
+specification. Returns the method argument types and return type.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jawa.util.descriptor.parse_descriptor">
+<tt class="descclassname">jawa.util.descriptor.</tt><tt class="descname">parse_descriptor</tt><big>(</big><em>descriptor</em><big>)</big><a class="reference internal" href="_modules/jawa/util/descriptor.html#parse_descriptor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.descriptor.parse_descriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses a tiny state machine to parse JVM descriptors. To get useful wrappers
+around the results, use <tt class="xref py py-func docutils literal"><span class="pre">jawa.core.descriptor.method_descriptor()</span></tt>
+or <tt class="xref py py-func docutils literal"><span class="pre">jawa.core.descriptor.field_descriptor()</span></tt>.</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-jawa.util.ezip">
 <span id="ezip-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">ezip</span></tt> Module<a class="headerlink" href="#module-jawa.util.ezip" title="Permalink to this headline">¶</a></h2>
@@ -140,42 +177,6 @@ additionally provides a <tt class="docutils literal"><span class="pre">read()</s
 </dd></dl>
 
 </div>
-<div class="section" id="module-jawa.util.jf">
-<span id="jf-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">jf</span></tt> Module<a class="headerlink" href="#module-jawa.util.jf" title="Permalink to this headline">¶</a></h2>
-<p>Tools for working with JVM <cite>.jar</cite> archives, which are simply ZIP archives with
-some mandatory structure.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">If <a class="reference external" href="http://pypi.python.org/pypi/czipfile">czipfile</a> is available,
-decompression will be noticably faster.</p>
-</div>
-<dl class="class">
-<dt id="jawa.util.jf.JarFile">
-<em class="property">class </em><tt class="descclassname">jawa.util.jf.</tt><tt class="descname">JarFile</tt><big>(</big><em>io=None</em><big>)</big><a class="reference internal" href="_modules/jawa/util/jf.html#JarFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.jf.JarFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#jawa.util.ezip.EditableZipFile" title="jawa.util.ezip.EditableZipFile"><tt class="xref py py-class docutils literal"><span class="pre">jawa.util.ezip.EditableZipFile</span></tt></a></p>
-<p>Provides Jawa-specific helpers around EditableZipFile.</p>
-<p>As of 0.1.0, <a class="reference internal" href="#jawa.util.jf.JarFile" title="jawa.util.jf.JarFile"><tt class="xref py py-class docutils literal"><span class="pre">jawa.util.jf.JarFile</span></tt></a> is also a context manager.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">jawa.util.jf</span> <span class="kn">import</span> <span class="n">JarFile</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">JarFile</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">as</span> <span class="n">jf</span><span class="p">:</span>
-<span class="gp">... </span>   <span class="k">print</span><span class="p">(</span><span class="n">jf</span><span class="o">.</span><span class="n">namelist</span><span class="p">())</span>
-</pre></div>
-</div>
-<dl class="method">
-<dt id="jawa.util.jf.JarFile.all_classes">
-<tt class="descname">all_classes</tt><big>(</big><big>)</big><a class="headerlink" href="#jawa.util.jf.JarFile.all_classes" title="Permalink to this definition">¶</a></dt>
-<dd><p>An iterator that yields a <a class="reference internal" href="jawa.core.html#jawa.core.cf.ClassFile" title="jawa.core.cf.ClassFile"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.cf.ClassFile</span></tt></a> for each
-path ending in <cite>.class</cite> in this JarFile.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="jawa.util.jf.JarFile.open_class">
-<tt class="descname">open_class</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#jawa.util.jf.JarFile.open_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return&#8217;s a <a class="reference internal" href="jawa.core.html#jawa.core.cf.ClassFile" title="jawa.core.cf.ClassFile"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.cf.ClassFile</span></tt></a> for the given <cite>path</cite>.</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
 </div>
 
 
@@ -188,15 +189,15 @@ path ending in <cite>.class</cite> in this JarFile.</p>
   <ul>
 <li><a class="reference internal" href="#">util Package</a><ul>
 <li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">util</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-jawa.util.descriptor"><tt class="docutils literal"><span class="pre">descriptor</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-jawa.util.ezip"><tt class="docutils literal"><span class="pre">ezip</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-jawa.util.jf"><tt class="docutils literal"><span class="pre">jf</span></tt> Module</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="jawa.core.html"
-                        title="previous chapter">core Package</a></p>
+  <p class="topless"><a href="jawa.core.attribs.html"
+                        title="previous chapter">attribs Package</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/jawa.util.txt"
@@ -229,14 +230,14 @@ path ending in <cite>.class</cite> in this JarFile.</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="jawa.core.html" title="core Package"
+          <a href="jawa.core.attribs.html" title="attribs Package"
              >previous</a> |</li>
-        <li><a href="index.html">jawa  documentation</a> &raquo;</li>
+        <li><a href="index.html">jawa 0.1.2 documentation</a> &raquo;</li>
           <li><a href="jawa.html" >jawa Package</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2012, Author.
+        &copy; Copyright 2012, Tyler Kennedy &lt;tk@tkte.ch&gt;.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

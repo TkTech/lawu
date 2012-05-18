@@ -1,0 +1,245 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>jawa.core.attribs.code &mdash; jawa 0.1.2 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.1.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="jawa 0.1.2 documentation" href="../../../../index.html" />
+    <link rel="up" title="Module code" href="../../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">jawa 0.1.2 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for jawa.core.attribs.code</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">struct</span> <span class="kn">import</span> <span class="n">unpack</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">repeat</span>
+
+<span class="kn">from</span> <span class="nn">jawa.core.attributes</span> <span class="kn">import</span> <span class="n">AttributeTable</span>
+<span class="kn">from</span> <span class="nn">jawa.core.attribs.attribute</span> <span class="kn">import</span> <span class="n">Attribute</span>
+
+
+<div class="viewcode-block" id="CodeException"><a class="viewcode-back" href="../../../../jawa.core.attribs.html#jawa.core.attribs.code.CodeException">[docs]</a><span class="k">class</span> <span class="nc">CodeException</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;_start_pc&#39;</span><span class="p">,</span> <span class="s">&#39;_end_pc&#39;</span><span class="p">,</span> <span class="s">&#39;_handler_pc&#39;</span><span class="p">,</span> <span class="s">&#39;_catch_type&#39;</span><span class="p">,</span> <span class="s">&#39;_cf&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_file</span><span class="p">,</span> <span class="n">start_pc</span><span class="p">,</span> <span class="n">end_pc</span><span class="p">,</span> <span class="n">handler_pc</span><span class="p">,</span> <span class="n">catch_type</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span> <span class="o">=</span> <span class="n">class_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start_pc</span> <span class="o">=</span> <span class="n">start_pc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_end_pc</span> <span class="o">=</span> <span class="n">end_pc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_handler_pc</span> <span class="o">=</span> <span class="n">handler_pc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_catch_type</span> <span class="o">=</span> <span class="n">catch_type</span>
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="CodeException.start_pc"><a class="viewcode-back" href="../../../../jawa.core.attribs.html#jawa.core.attribs.code.CodeException.start_pc">[docs]</a>    <span class="k">def</span> <span class="nf">start_pc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The starting IP of the try block (inclusive).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_pc</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="CodeException.end_pc"><a class="viewcode-back" href="../../../../jawa.core.attribs.html#jawa.core.attribs.code.CodeException.end_pc">[docs]</a>    <span class="k">def</span> <span class="nf">end_pc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The ending IP of the try block (exclusive).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_end_pc</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="CodeException.bounds"><a class="viewcode-back" href="../../../../jawa.core.attribs.html#jawa.core.attribs.code.CodeException.bounds">[docs]</a>    <span class="k">def</span> <span class="nf">bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_pc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_pc</span><span class="p">)</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="CodeException.handler_pc"><a class="viewcode-back" href="../../../../jawa.core.attribs.html#jawa.core.attribs.code.CodeException.handler_pc">[docs]</a>    <span class="k">def</span> <span class="nf">handler_pc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The IP of the exception handler.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handler_pc</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="CodeException.catch_type"><a class="viewcode-back" href="../../../../jawa.core.attribs.html#jawa.core.attribs.code.CodeException.catch_type">[docs]</a>    <span class="k">def</span> <span class="nf">catch_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the ``ConstantClass`` for the class that should trigger this</span>
+<span class="sd">        exception. As a special case, a value of 0 is returned if any exception</span>
+<span class="sd">        should be caught (used to implement `finally`).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_catch_type</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_catch_type</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">0</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="CodeException.class_file"><a class="viewcode-back" href="../../../../jawa.core.attribs.html#jawa.core.attribs.code.CodeException.class_file">[docs]</a>    <span class="k">def</span> <span class="nf">class_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The :py:class:`jawa.core.cf.ClassFile` this ``CodeException`` is</span>
+<span class="sd">        associated with.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span>
+</div>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="s">&#39;&lt;CodeException(start_pc=</span><span class="si">%r</span><span class="s">, end_pc=</span><span class="si">%r</span><span class="s">, handler_pc=</span><span class="si">%r</span><span class="s">,&#39;</span>
+            <span class="s">&#39; catch_type=</span><span class="si">%r</span><span class="s">)&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">start_pc</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">end_pc</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handler_pc</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">catch_type</span>
+        <span class="p">))</span>
+
+</div>
+<div class="viewcode-block" id="CodeAttribute"><a class="viewcode-back" href="../../../../jawa.core.attribs.html#jawa.core.attribs.code.CodeAttribute">[docs]</a><span class="k">class</span> <span class="nc">CodeAttribute</span><span class="p">(</span><span class="n">Attribute</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The body of a method.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s">&#39;Code&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_file</span><span class="p">,</span> <span class="n">name_i</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">max_stack</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+            <span class="n">max_locals</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">raw_code</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ex_table</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">attribs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CodeAttribute</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">class_file</span><span class="p">,</span> <span class="n">name_i</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_stack</span> <span class="o">=</span> <span class="n">max_stack</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_locals</span> <span class="o">=</span> <span class="n">max_locals</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raw_code</span> <span class="o">=</span> <span class="n">raw_code</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ex_table</span> <span class="o">=</span> <span class="n">ex_table</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attribs</span> <span class="o">=</span> <span class="n">attribs</span> <span class="ow">or</span> <span class="n">AttributeTable</span><span class="p">(</span><span class="n">class_file</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_code</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="CodeAttribute.max_stack"><a class="viewcode-back" href="../../../../jawa.core.attribs.html#jawa.core.attribs.code.CodeAttribute.max_stack">[docs]</a>    <span class="k">def</span> <span class="nf">max_stack</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The maximum size of the operand stack at any time. May be out of date</span>
+<span class="sd">        if the code has been modified since loading.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_stack</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="CodeAttribute.max_locals"><a class="viewcode-back" href="../../../../jawa.core.attribs.html#jawa.core.attribs.code.CodeAttribute.max_locals">[docs]</a>    <span class="k">def</span> <span class="nf">max_locals</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The size of the method&#39;s locals array. May be out of date</span>
+<span class="sd">        if the code has been modified since loading.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_locals</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="CodeAttribute.raw_code"><a class="viewcode-back" href="../../../../jawa.core.attribs.html#jawa.core.attribs.code.CodeAttribute.raw_code">[docs]</a>    <span class="k">def</span> <span class="nf">raw_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The raw bytecode for this method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_code</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_code</span><span class="o">.</span><span class="n">assemble</span><span class="p">(</span><span class="n">cache</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_code</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="CodeAttribute.exceptions"><a class="viewcode-back" href="../../../../jawa.core.attribs.html#jawa.core.attribs.code.CodeAttribute.exceptions">[docs]</a>    <span class="k">def</span> <span class="nf">exceptions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The exception table for this method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ex_table</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="CodeAttribute.attributes"><a class="viewcode-back" href="../../../../jawa.core.attribs.html#jawa.core.attribs.code.CodeAttribute.attributes">[docs]</a>    <span class="k">def</span> <span class="nf">attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the :py:class:`jawa.core.attributes.AttributeTable` for this</span>
+<span class="sd">        method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attribs</span>
+</div>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_load_from_io</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">class_file</span><span class="p">,</span> <span class="n">name_i</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">io</span><span class="p">):</span>
+        <span class="n">read</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read</span>
+
+        <span class="n">max_stack</span><span class="p">,</span> <span class="n">max_locals</span><span class="p">,</span> <span class="n">code_length</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&#39;&gt;HHI&#39;</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">code_length</span><span class="p">)</span>
+        <span class="n">ex_table_length</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">ex_table</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">repeat</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">ex_table_length</span><span class="p">):</span>
+            <span class="n">ex_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">CodeException</span><span class="p">(</span><span class="n">class_file</span><span class="p">,</span>
+                <span class="o">*</span><span class="n">unpack</span><span class="p">(</span><span class="s">&#39;&gt;HHHH&#39;</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+            <span class="p">))</span>
+        <span class="n">attribs</span> <span class="o">=</span> <span class="n">AttributeTable</span><span class="p">(</span><span class="n">class_file</span><span class="p">)</span>
+        <span class="n">attribs</span><span class="o">.</span><span class="n">_load_from_io</span><span class="p">(</span><span class="n">io</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">CodeAttribute</span><span class="p">(</span>
+            <span class="n">class_file</span><span class="p">,</span>
+            <span class="n">name_i</span><span class="p">,</span>
+            <span class="n">max_stack</span><span class="o">=</span><span class="n">max_stack</span><span class="p">,</span>
+            <span class="n">max_locals</span><span class="o">=</span><span class="n">max_locals</span><span class="p">,</span>
+            <span class="n">raw_code</span><span class="o">=</span><span class="n">code</span><span class="p">,</span>
+            <span class="n">ex_table</span><span class="o">=</span><span class="n">ex_table</span><span class="p">,</span>
+            <span class="n">attribs</span><span class="o">=</span><span class="n">attribs</span>
+        <span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">jawa 0.1.2 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Tyler Kennedy &lt;tk@tkte.ch&gt;.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

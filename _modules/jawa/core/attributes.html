@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,15 +7,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>jawa.core.attributes &mdash; jawa  documentation</title>
+    <title>jawa.core.attributes &mdash; jawa 0.1.2 documentation</title>
     
-    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '',
+        VERSION:     '0.1.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +24,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="jawa  documentation" href="../../../index.html" />
+    <link rel="top" title="jawa 0.1.2 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" /> 
   </head>
   <body>
@@ -38,7 +37,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">jawa  documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">jawa 0.1.2 documentation</a> &raquo;</li>
           <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -55,9 +54,19 @@
 
 
 <div class="viewcode-block" id="AttributeTable"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.attributes.AttributeTable">[docs]</a><span class="k">class</span> <span class="nc">AttributeTable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_file</span><span class="p">,</span> <span class="n">attrib_map</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_table</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span> <span class="o">=</span> <span class="n">class_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_map</span> <span class="o">=</span> <span class="n">attrib_map</span> <span class="ow">or</span> <span class="n">_DEFAULT_ATTRIBUTES</span>
 
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="AttributeTable.class_file"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.attributes.AttributeTable.class_file">[docs]</a>    <span class="k">def</span> <span class="nf">class_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the :py:class:`jawa.core.cf.ClassFile` associated with</span>
+<span class="sd">        this ``AttributeTable``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span>
+</div>
     <span class="k">def</span> <span class="nf">_load_from_io</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load an AttributeTable from a ClassFile. It should never be called</span>
@@ -65,11 +74,49 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">read</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read</span>
         <span class="n">append</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table</span><span class="o">.</span><span class="n">append</span>
+        <span class="n">cf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span>
+        <span class="n">map_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span>
 
         <span class="n">count</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">repeat</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">count</span><span class="p">):</span>
             <span class="n">name_i</span><span class="p">,</span> <span class="n">attr_length</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&#39;&gt;HI&#39;</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&#39;&gt;</span><span class="si">%s</span><span class="s">s&#39;</span> <span class="o">%</span> <span class="n">attr_length</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="n">attr_length</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span></div>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name_i</span><span class="p">)</span>
+            <span class="n">append</span><span class="p">(</span><span class="n">map_</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">UnknownAttribute</span><span class="p">)</span><span class="o">.</span><span class="n">_load_from_io</span><span class="p">(</span>
+                <span class="n">cf</span><span class="p">,</span>
+                <span class="n">name_i</span><span class="p">,</span>
+                <span class="n">attr_length</span><span class="p">,</span>
+                <span class="n">io</span>
+            <span class="p">))</span>
+
+<div class="viewcode-block" id="AttributeTable.find"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.attributes.AttributeTable.find">[docs]</a>    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">attrib</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">and</span> <span class="n">attrib</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="n">name</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">f</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">f</span><span class="p">(</span><span class="n">attrib</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="k">yield</span> <span class="n">attrib</span>
+</div>
+<div class="viewcode-block" id="AttributeTable.find_one"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.attributes.AttributeTable.find_one">[docs]</a>    <span class="k">def</span> <span class="nf">find_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Same as ``find()`` but returns only the first result, or `None` if</span>
+<span class="sd">        nothing was found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+
+</div></div>
+<span class="kn">from</span> <span class="nn">jawa.core.attribs.unknown</span> <span class="kn">import</span> <span class="n">UnknownAttribute</span>
+<span class="kn">from</span> <span class="nn">jawa.core.attribs.sourcefile</span> <span class="kn">import</span> <span class="n">SourceFileAttribute</span>
+<span class="kn">from</span> <span class="nn">jawa.core.attribs.code</span> <span class="kn">import</span> <span class="n">CodeAttribute</span>
+
+<span class="n">_DEFAULT_ATTRIBUTES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;Code&#39;</span><span class="p">:</span> <span class="n">CodeAttribute</span><span class="p">,</span>
+    <span class="s">&#39;SourceFile&#39;</span><span class="p">:</span> <span class="n">SourceFileAttribute</span>
+<span class="p">}</span>
 </pre></div>
 
           </div>
@@ -103,12 +150,12 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">jawa  documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">jawa 0.1.2 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2012, Author.
+        &copy; Copyright 2012, Tyler Kennedy &lt;tk@tkte.ch&gt;.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

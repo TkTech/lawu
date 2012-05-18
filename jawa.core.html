@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,15 +7,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>core Package &mdash; jawa  documentation</title>
+    <title>core Package &mdash; jawa 0.1.2 documentation</title>
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '',
+        VERSION:     '0.1.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,9 +24,9 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="jawa  documentation" href="index.html" />
+    <link rel="top" title="jawa 0.1.2 documentation" href="index.html" />
     <link rel="up" title="jawa Package" href="jawa.html" />
-    <link rel="next" title="util Package" href="jawa.util.html" />
+    <link rel="next" title="attribs Package" href="jawa.core.attribs.html" />
     <link rel="prev" title="jawa Package" href="jawa.html" /> 
   </head>
   <body>
@@ -41,12 +40,12 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="jawa.util.html" title="util Package"
+          <a href="jawa.core.attribs.html" title="attribs Package"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="jawa.html" title="jawa Package"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">jawa  documentation</a> &raquo;</li>
+        <li><a href="index.html">jawa 0.1.2 documentation</a> &raquo;</li>
           <li><a href="jawa.html" accesskey="U">jawa Package</a> &raquo;</li> 
       </ul>
     </div>  
@@ -65,13 +64,25 @@
 <span id="attributes-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">attributes</span></tt> Module<a class="headerlink" href="#module-jawa.core.attributes" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="jawa.core.attributes.AttributeTable">
-<em class="property">class </em><tt class="descclassname">jawa.core.attributes.</tt><tt class="descname">AttributeTable</tt><big>(</big><em>class_file</em><big>)</big><a class="reference internal" href="_modules/jawa/core/attributes.html#AttributeTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.attributes.AttributeTable" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">jawa.core.attributes.</tt><tt class="descname">AttributeTable</tt><big>(</big><em>class_file</em>, <em>attrib_map=None</em><big>)</big><a class="reference internal" href="_modules/jawa/core/attributes.html#AttributeTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.attributes.AttributeTable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <dl class="attribute">
 <dt id="jawa.core.attributes.AttributeTable.class_file">
-<tt class="descname">class_file</tt><a class="headerlink" href="#jawa.core.attributes.AttributeTable.class_file" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">class_file</tt><a class="reference internal" href="_modules/jawa/core/attributes.html#AttributeTable.class_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.attributes.AttributeTable.class_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the <a class="reference internal" href="#jawa.core.cf.ClassFile" title="jawa.core.cf.ClassFile"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.cf.ClassFile</span></tt></a> associated with
 this <tt class="docutils literal"><span class="pre">AttributeTable</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.core.attributes.AttributeTable.find">
+<tt class="descname">find</tt><big>(</big><em>name=None</em>, <em>f=None</em><big>)</big><a class="reference internal" href="_modules/jawa/core/attributes.html#AttributeTable.find"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.attributes.AttributeTable.find" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jawa.core.attributes.AttributeTable.find_one">
+<tt class="descname">find_one</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/jawa/core/attributes.html#AttributeTable.find_one"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.attributes.AttributeTable.find_one" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <tt class="docutils literal"><span class="pre">find()</span></tt> but returns only the first result, or <cite>None</cite> if
+nothing was found.</p>
 </dd></dl>
 
 </dd></dl>
@@ -87,35 +98,35 @@ this <tt class="docutils literal"><span class="pre">AttributeTable</span></tt>.<
 <cite>io</cite> is a file-like object providing <cite>read()</cite> or a file-system path.</p>
 <dl class="attribute">
 <dt id="jawa.core.cf.ClassFile.attributes">
-<tt class="descname">attributes</tt><a class="headerlink" href="#jawa.core.cf.ClassFile.attributes" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">attributes</tt><a class="reference internal" href="_modules/jawa/core/cf.html#ClassFile.attributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.cf.ClassFile.attributes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the <a class="reference internal" href="#jawa.core.attributes.AttributeTable" title="jawa.core.attributes.AttributeTable"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.attributes.AttributeTable</span></tt></a> for this
 <tt class="docutils literal"><span class="pre">ClassFile</span></tt>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="jawa.core.cf.ClassFile.build_superclass">
-<tt class="descname">build_superclass</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#jawa.core.cf.ClassFile.build_superclass" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">build_superclass</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="_modules/jawa/core/cf.html#ClassFile.build_superclass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.cf.ClassFile.build_superclass" title="Permalink to this definition">¶</a></dt>
 <dd><p>A helper to set the superclass of this <tt class="docutils literal"><span class="pre">ClassFile</span></tt>. It generates the
 required <tt class="docutils literal"><span class="pre">Constants*</span></tt> and inserts them into the pool.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="jawa.core.cf.ClassFile.build_this">
-<tt class="descname">build_this</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#jawa.core.cf.ClassFile.build_this" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">build_this</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="_modules/jawa/core/cf.html#ClassFile.build_this"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.cf.ClassFile.build_this" title="Permalink to this definition">¶</a></dt>
 <dd><p>A helper to set the class of this <tt class="docutils literal"><span class="pre">ClassFile</span></tt>. It generates the
 required <tt class="docutils literal"><span class="pre">Constants*</span></tt> and inserts them into the pool.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="jawa.core.cf.ClassFile.constants">
-<tt class="descname">constants</tt><a class="headerlink" href="#jawa.core.cf.ClassFile.constants" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">constants</tt><a class="reference internal" href="_modules/jawa/core/cf.html#ClassFile.constants"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.cf.ClassFile.constants" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the <a class="reference internal" href="#jawa.core.constants.ConstantPool" title="jawa.core.constants.ConstantPool"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.constants.ConstantPool</span></tt></a> for this
 <tt class="docutils literal"><span class="pre">ClassFile</span></tt>.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="jawa.core.cf.ClassFile.fields">
-<tt class="descname">fields</tt><a class="headerlink" href="#jawa.core.cf.ClassFile.fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">fields</tt><a class="reference internal" href="_modules/jawa/core/cf.html#ClassFile.fields"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.cf.ClassFile.fields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the <a class="reference internal" href="#jawa.core.fields.FieldTable" title="jawa.core.fields.FieldTable"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.fields.FieldTable</span></tt></a> for this
 <tt class="docutils literal"><span class="pre">ClassFile</span></tt>.</p>
 </dd></dl>
@@ -135,7 +146,7 @@ required <tt class="docutils literal"><span class="pre">Constants*</span></tt> a
 
 <dl class="attribute">
 <dt id="jawa.core.cf.ClassFile.interfaces">
-<tt class="descname">interfaces</tt><a class="headerlink" href="#jawa.core.cf.ClassFile.interfaces" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">interfaces</tt><a class="reference internal" href="_modules/jawa/core/cf.html#ClassFile.interfaces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.cf.ClassFile.interfaces" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of <a class="reference internal" href="#jawa.core.constants.ConstantClass" title="jawa.core.constants.ConstantClass"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.constants.ConstantClass</span></tt></a>
 objects, one for each direct superinterface of this class or
 interface.</p>
@@ -143,28 +154,28 @@ interface.</p>
 
 <dl class="attribute">
 <dt id="jawa.core.cf.ClassFile.methods">
-<tt class="descname">methods</tt><a class="headerlink" href="#jawa.core.cf.ClassFile.methods" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">methods</tt><a class="reference internal" href="_modules/jawa/core/cf.html#ClassFile.methods"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.cf.ClassFile.methods" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the <a class="reference internal" href="#jawa.core.methods.MethodTable" title="jawa.core.methods.MethodTable"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.methods.MethodTable</span></tt></a> for this
 <tt class="docutils literal"><span class="pre">ClassFile</span></tt>.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="jawa.core.cf.ClassFile.superclass">
-<tt class="descname">superclass</tt><a class="headerlink" href="#jawa.core.cf.ClassFile.superclass" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">superclass</tt><a class="reference internal" href="_modules/jawa/core/cf.html#ClassFile.superclass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.cf.ClassFile.superclass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the <a class="reference internal" href="#jawa.core.constants.ConstantClass" title="jawa.core.constants.ConstantClass"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.constants.ConstantClass</span></tt></a> for the
 superclass of this <tt class="docutils literal"><span class="pre">ClassFile</span></tt>.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="jawa.core.cf.ClassFile.this">
-<tt class="descname">this</tt><a class="headerlink" href="#jawa.core.cf.ClassFile.this" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">this</tt><a class="reference internal" href="_modules/jawa/core/cf.html#ClassFile.this"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.cf.ClassFile.this" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the <a class="reference internal" href="#jawa.core.constants.ConstantClass" title="jawa.core.constants.ConstantClass"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.constants.ConstantClass</span></tt></a> for this
 <tt class="docutils literal"><span class="pre">ClassFile</span></tt>.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="jawa.core.cf.ClassFile.version">
-<tt class="descname">version</tt><a class="headerlink" href="#jawa.core.cf.ClassFile.version" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">version</tt><a class="reference internal" href="_modules/jawa/core/cf.html#ClassFile.version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.cf.ClassFile.version" title="Permalink to this definition">¶</a></dt>
 <dd><p>The class file version as a tuple in the form (major, minor).</p>
 </dd></dl>
 
@@ -235,7 +246,7 @@ specification.</p>
 specification.</p>
 <dl class="attribute">
 <dt id="jawa.core.constants.ConstantFieldRef.class_">
-<tt class="descname">class_</tt><a class="headerlink" href="#jawa.core.constants.ConstantFieldRef.class_" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">class_</tt><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantFieldRef.class_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantFieldRef.class_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resolves this constants <cite>class_index</cite> and returns the associated
 <a class="reference internal" href="#jawa.core.constants.ConstantClass" title="jawa.core.constants.ConstantClass"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.constants.ConstantClass</span></tt></a>.</p>
 <div class="admonition note">
@@ -307,7 +318,7 @@ specification.</p>
 ClassFile specification.</p>
 <dl class="attribute">
 <dt id="jawa.core.constants.ConstantInterfaceMethodRef.class_">
-<tt class="descname">class_</tt><a class="headerlink" href="#jawa.core.constants.ConstantInterfaceMethodRef.class_" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">class_</tt><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantInterfaceMethodRef.class_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantInterfaceMethodRef.class_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resolves this constants <cite>class_index</cite> and returns the associated
 <a class="reference internal" href="#jawa.core.constants.ConstantClass" title="jawa.core.constants.ConstantClass"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.constants.ConstantClass</span></tt></a>.</p>
 <div class="admonition note">
@@ -358,7 +369,7 @@ specification.</p>
 specification.</p>
 <dl class="attribute">
 <dt id="jawa.core.constants.ConstantMethodRef.class_">
-<tt class="descname">class_</tt><a class="headerlink" href="#jawa.core.constants.ConstantMethodRef.class_" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">class_</tt><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantMethodRef.class_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantMethodRef.class_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resolves this constants <cite>class_index</cite> and returns the associated
 <a class="reference internal" href="#jawa.core.constants.ConstantClass" title="jawa.core.constants.ConstantClass"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.constants.ConstantClass</span></tt></a>.</p>
 <div class="admonition note">
@@ -388,7 +399,7 @@ associated <a class="reference internal" href="#jawa.core.constants.ConstantName
 specification.</p>
 <dl class="attribute">
 <dt id="jawa.core.constants.ConstantNameAndType.args">
-<tt class="descname">args</tt><a class="headerlink" href="#jawa.core.constants.ConstantNameAndType.args" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">args</tt><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantNameAndType.args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantNameAndType.args" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a tuple of human-readable method argument types for this
 <tt class="docutils literal"><span class="pre">ConstantNameAndType</span></tt> as parsed from the descriptor. If this
 descriptor is not for a <tt class="docutils literal"><span class="pre">Method</span></tt> <tt class="docutils literal"><span class="pre">None</span></tt> will be returned instead.</p>
@@ -417,7 +428,7 @@ for this type.</p>
 
 <dl class="attribute">
 <dt id="jawa.core.constants.ConstantNameAndType.returns">
-<tt class="descname">returns</tt><a class="headerlink" href="#jawa.core.constants.ConstantNameAndType.returns" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">returns</tt><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantNameAndType.returns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantNameAndType.returns" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a the human-readable method return type for this
 <tt class="docutils literal"><span class="pre">ConstantNameAndType</span></tt> as parsed from the descriptor. If this
 descriptor is not for a <tt class="docutils literal"><span class="pre">Method</span></tt> <tt class="docutils literal"><span class="pre">None</span></tt> will be returned instead.</p>
@@ -425,7 +436,7 @@ descriptor is not for a <tt class="docutils literal"><span class="pre">Method</s
 
 <dl class="attribute">
 <dt id="jawa.core.constants.ConstantNameAndType.type_">
-<tt class="descname">type_</tt><a class="headerlink" href="#jawa.core.constants.ConstantNameAndType.type_" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">type_</tt><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantNameAndType.type_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantNameAndType.type_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a human-readable type for this <tt class="docutils literal"><span class="pre">ConstantNameAndType</span></tt> as
 parsed from the descriptor. If this descriptor is not for a <tt class="docutils literal"><span class="pre">Field</span></tt>
 <tt class="docutils literal"><span class="pre">None</span></tt> will be returned instead.</p>
@@ -441,7 +452,7 @@ parsed from the descriptor. If this descriptor is not for a <tt class="docutils 
 ClassFile specification.</p>
 <dl class="method">
 <dt id="jawa.core.constants.ConstantPool.build_class">
-<tt class="descname">build_class</tt><big>(</big><em>class_name</em><big>)</big><a class="headerlink" href="#jawa.core.constants.ConstantPool.build_class" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">build_class</tt><big>(</big><em>class_name</em><big>)</big><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantPool.build_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantPool.build_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>Builds a new <a class="reference internal" href="#jawa.core.constants.ConstantClass" title="jawa.core.constants.ConstantClass"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.constants.ConstantClass</span></tt></a> with
 the name <cite>class_name</cite> in the pool and returns a tuple of the index
 it was inserted at and the <tt class="docutils literal"><span class="pre">ConstantClass</span></tt> itself.</p>
@@ -449,7 +460,7 @@ it was inserted at and the <tt class="docutils literal"><span class="pre">Consta
 
 <dl class="method">
 <dt id="jawa.core.constants.ConstantPool.find">
-<tt class="descname">find</tt><big>(</big><em>type_=None</em>, <em>f=None</em><big>)</big><a class="headerlink" href="#jawa.core.constants.ConstantPool.find" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">find</tt><big>(</big><em>type_=None</em>, <em>f=None</em><big>)</big><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantPool.find"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantPool.find" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterates over the pool, yielding each matching <tt class="docutils literal"><span class="pre">Constant</span></tt>. Calling
 without any arguments is equivelent to iterating over the pool.</p>
 <blockquote>
@@ -462,9 +473,16 @@ without any arguments is equivelent to iterating over the pool.</p>
 
 <dl class="method">
 <dt id="jawa.core.constants.ConstantPool.find_index">
-<tt class="descname">find_index</tt><big>(</big><em>constant</em><big>)</big><a class="headerlink" href="#jawa.core.constants.ConstantPool.find_index" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">find_index</tt><big>(</big><em>constant</em><big>)</big><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantPool.find_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantPool.find_index" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the index for <cite>constant</cite> in the pool, or <tt class="docutils literal"><span class="pre">None</span></tt> if it is
 not in the pool.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.core.constants.ConstantPool.find_one">
+<tt class="descname">find_one</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantPool.find_one"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantPool.find_one" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <tt class="docutils literal"><span class="pre">find()</span></tt> but returns only the first result, or <cite>None</cite> if
+nothing was found.</p>
 </dd></dl>
 
 <dl class="method">
@@ -489,7 +507,7 @@ inserted value.</p>
 
 <dl class="method">
 <dt id="jawa.core.constants.ConstantPool.remove">
-<tt class="descname">remove</tt><big>(</big><em>obj_or_index</em><big>)</big><a class="headerlink" href="#jawa.core.constants.ConstantPool.remove" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">remove</tt><big>(</big><em>obj_or_index</em><big>)</big><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantPool.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantPool.remove" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes <cite>obj_or_index</cite> from the pool. If <cite>obj_or_index</cite> is a subclass
 of <a class="reference internal" href="#jawa.core.constants.Constant" title="jawa.core.constants.Constant"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.constants.Constant</span></tt></a> then it is removed by
 identity, otherwise it is deleted by index.</p>
@@ -508,44 +526,6 @@ ClassFile specification.</p>
 <tt class="descname">string</tt><a class="reference internal" href="_modules/jawa/core/constants.html#ConstantString.string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.constants.ConstantString.string" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</dd></dl>
-
-</div>
-<div class="section" id="module-jawa.core.descriptor">
-<span id="descriptor-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">descriptor</span></tt> Module<a class="headerlink" href="#module-jawa.core.descriptor" title="Permalink to this headline">¶</a></h2>
-<p>Methods for parsing standard JVM type descriptors for fields and methods.
-It does not depend on any other modules.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">This module has not yet been optimized for performance and is not
-in its final form.</p>
-</div>
-<dl class="exception">
-<dt id="jawa.core.descriptor.DescriptorError">
-<em class="property">exception </em><tt class="descclassname">jawa.core.descriptor.</tt><tt class="descname">DescriptorError</tt><a class="reference internal" href="_modules/jawa/core/descriptor.html#DescriptorError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.descriptor.DescriptorError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
-</dd></dl>
-
-<dl class="function">
-<dt id="jawa.core.descriptor.field_descriptor">
-<tt class="descclassname">jawa.core.descriptor.</tt><tt class="descname">field_descriptor</tt><big>(</big><em>descriptor</em><big>)</big><a class="reference internal" href="_modules/jawa/core/descriptor.html#field_descriptor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.descriptor.field_descriptor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parses a Field descriptor as described in section 4.3.2 of the JVM
-specification. Returns the simple type of the field.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="jawa.core.descriptor.method_descriptor">
-<tt class="descclassname">jawa.core.descriptor.</tt><tt class="descname">method_descriptor</tt><big>(</big><em>descriptor</em><big>)</big><a class="reference internal" href="_modules/jawa/core/descriptor.html#method_descriptor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.descriptor.method_descriptor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parses a Method descriptor as described in section 4.3.3 of the JVM
-specification. Returns the method argument types and return type.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="jawa.core.descriptor.parse_descriptor">
-<tt class="descclassname">jawa.core.descriptor.</tt><tt class="descname">parse_descriptor</tt><big>(</big><em>descriptor</em><big>)</big><a class="headerlink" href="#jawa.core.descriptor.parse_descriptor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses a tiny state machine to parse JVM descriptors. To get useful wrappers
-around the results, use <a class="reference internal" href="#jawa.core.descriptor.method_descriptor" title="jawa.core.descriptor.method_descriptor"><tt class="xref py py-func docutils literal"><span class="pre">jawa.core.descriptor.method_descriptor()</span></tt></a>
-or <a class="reference internal" href="#jawa.core.descriptor.field_descriptor" title="jawa.core.descriptor.field_descriptor"><tt class="xref py py-func docutils literal"><span class="pre">jawa.core.descriptor.field_descriptor()</span></tt></a>.</p>
 </dd></dl>
 
 </div>
@@ -571,7 +551,7 @@ or <a class="reference internal" href="#jawa.core.descriptor.field_descriptor" t
 
 <dl class="attribute">
 <dt id="jawa.core.fields.Field.class_file">
-<tt class="descname">class_file</tt><a class="headerlink" href="#jawa.core.fields.Field.class_file" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">class_file</tt><a class="reference internal" href="_modules/jawa/core/fields.html#Field.class_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.fields.Field.class_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the <a class="reference internal" href="#jawa.core.cf.ClassFile" title="jawa.core.cf.ClassFile"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.cf.ClassFile</span></tt></a> associated with this
 <tt class="docutils literal"><span class="pre">Field</span></tt>.</p>
 </dd></dl>
@@ -609,6 +589,60 @@ in section 4.5 of the JVM specification.</p>
 <tt class="descname">class_file</tt><a class="reference internal" href="_modules/jawa/core/fields.html#FieldTable.class_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.fields.FieldTable.class_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the <a class="reference internal" href="#jawa.core.cf.ClassFile" title="jawa.core.cf.ClassFile"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.cf.ClassFile</span></tt></a> associated with
 this <tt class="docutils literal"><span class="pre">FieldTable</span></tt>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.core.fields.FieldTable.count">
+<tt class="descname">count</tt><a class="reference internal" href="_modules/jawa/core/fields.html#FieldTable.count"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.fields.FieldTable.count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of <tt class="docutils literal"><span class="pre">Field</span></tt> objects in the table.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.core.fields.FieldTable.find">
+<tt class="descname">find</tt><big>(</big><em>name=None</em>, <em>f=None</em><big>)</big><a class="reference internal" href="_modules/jawa/core/fields.html#FieldTable.find"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.fields.FieldTable.find" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jawa.core.fields.FieldTable.find_one">
+<tt class="descname">find_one</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/jawa/core/fields.html#FieldTable.find_one"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.fields.FieldTable.find_one" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <tt class="docutils literal"><span class="pre">find()</span></tt> but returns only the first result, or <cite>None</cite> if
+nothing was found.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-jawa.core.jf">
+<span id="jf-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">jf</span></tt> Module<a class="headerlink" href="#module-jawa.core.jf" title="Permalink to this headline">¶</a></h2>
+<p>Tools for working with JVM <cite>.jar</cite> archives, which are simply ZIP archives with
+some mandatory structure.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If <a class="reference external" href="http://pypi.python.org/pypi/czipfile">czipfile</a> is available,
+decompression will be noticably faster.</p>
+</div>
+<dl class="class">
+<dt id="jawa.core.jf.JarFile">
+<em class="property">class </em><tt class="descclassname">jawa.core.jf.</tt><tt class="descname">JarFile</tt><big>(</big><em>io=None</em><big>)</big><a class="reference internal" href="_modules/jawa/core/jf.html#JarFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.jf.JarFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="jawa.util.html#jawa.util.ezip.EditableZipFile" title="jawa.util.ezip.EditableZipFile"><tt class="xref py py-class docutils literal"><span class="pre">jawa.util.ezip.EditableZipFile</span></tt></a></p>
+<p>Provides Jawa-specific helpers around EditableZipFile.</p>
+<p>As of 0.1.0, <tt class="xref py py-class docutils literal"><span class="pre">jawa.util.jf.JarFile</span></tt> is also a context manager.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">jawa.util.jf</span> <span class="kn">import</span> <span class="n">JarFile</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">JarFile</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">as</span> <span class="n">jf</span><span class="p">:</span>
+<span class="gp">... </span>   <span class="k">print</span><span class="p">(</span><span class="n">jf</span><span class="o">.</span><span class="n">namelist</span><span class="p">())</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="jawa.core.jf.JarFile.all_classes">
+<tt class="descname">all_classes</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/jawa/core/jf.html#JarFile.all_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.jf.JarFile.all_classes" title="Permalink to this definition">¶</a></dt>
+<dd><p>An iterator that yields a <a class="reference internal" href="#jawa.core.cf.ClassFile" title="jawa.core.cf.ClassFile"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.cf.ClassFile</span></tt></a> for each
+path ending in <cite>.class</cite> in this JarFile.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.core.jf.JarFile.open_class">
+<tt class="descname">open_class</tt><big>(</big><em>path</em><big>)</big><a class="reference internal" href="_modules/jawa/core/jf.html#JarFile.open_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.jf.JarFile.open_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return&#8217;s a <a class="reference internal" href="#jawa.core.cf.ClassFile" title="jawa.core.cf.ClassFile"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.cf.ClassFile</span></tt></a> for the given <cite>path</cite>.</p>
 </dd></dl>
 
 </dd></dl>
@@ -649,6 +683,13 @@ this <tt class="docutils literal"><span class="pre">FieldTable</span></tt>.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="jawa.core.methods.Method.code">
+<tt class="descname">code</tt><a class="reference internal" href="_modules/jawa/core/methods.html#Method.code"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.methods.Method.code" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference internal" href="jawa.core.attribs.html#jawa.core.attribs.code.CodeAttribute" title="jawa.core.attribs.code.CodeAttribute"><tt class="xref py py-class docutils literal"><span class="pre">jawa.core.attribs.code.CodeAttribute</span></tt></a> for this method
+if one exists, otherwise <cite>None</cite>.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="jawa.core.methods.Method.descriptor">
 <tt class="descname">descriptor</tt><a class="reference internal" href="_modules/jawa/core/methods.html#Method.descriptor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.methods.Method.descriptor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the JVM type descriptor string as described in section 4.3 of
@@ -681,8 +722,34 @@ the method&#8217;s descriptor.</p>
 <tt class="docutils literal"><span class="pre">MethodTable</span></tt>.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="jawa.core.methods.MethodTable.find">
+<tt class="descname">find</tt><big>(</big><em>has_code=None</em>, <em>f=None</em><big>)</big><a class="reference internal" href="_modules/jawa/core/methods.html#MethodTable.find"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.methods.MethodTable.find" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jawa.core.methods.MethodTable.find_one">
+<tt class="descname">find_one</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/jawa/core/methods.html#MethodTable.find_one"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.methods.MethodTable.find_one" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <tt class="docutils literal"><span class="pre">find()</span></tt> but returns only the first result, or <cite>None</cite> if
+nothing was found.</p>
 </dd></dl>
 
+</dd></dl>
+
+</div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="jawa.core.attribs.html">attribs Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="jawa.core.attribs.html#module-jawa.core.attribs.attribute"><tt class="docutils literal"><span class="pre">attribute</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jawa.core.attribs.html#module-jawa.core.attribs.code"><tt class="docutils literal"><span class="pre">code</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jawa.core.attribs.html#module-jawa.core.attribs.sourcefile"><tt class="docutils literal"><span class="pre">sourcefile</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jawa.core.attribs.html#module-jawa.core.attribs.unknown"><tt class="docutils literal"><span class="pre">unknown</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</div>
 </div>
 </div>
 
@@ -699,9 +766,12 @@ the method&#8217;s descriptor.</p>
 <li><a class="reference internal" href="#module-jawa.core.attributes"><tt class="docutils literal"><span class="pre">attributes</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-jawa.core.cf"><tt class="docutils literal"><span class="pre">cf</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-jawa.core.constants"><tt class="docutils literal"><span class="pre">constants</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-jawa.core.descriptor"><tt class="docutils literal"><span class="pre">descriptor</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-jawa.core.fields"><tt class="docutils literal"><span class="pre">fields</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-jawa.core.jf"><tt class="docutils literal"><span class="pre">jf</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-jawa.core.methods"><tt class="docutils literal"><span class="pre">methods</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -710,8 +780,8 @@ the method&#8217;s descriptor.</p>
   <p class="topless"><a href="jawa.html"
                         title="previous chapter">jawa Package</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="jawa.util.html"
-                        title="next chapter">util Package</a></p>
+  <p class="topless"><a href="jawa.core.attribs.html"
+                        title="next chapter">attribs Package</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/jawa.core.txt"
@@ -744,17 +814,17 @@ the method&#8217;s descriptor.</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="jawa.util.html" title="util Package"
+          <a href="jawa.core.attribs.html" title="attribs Package"
              >next</a> |</li>
         <li class="right" >
           <a href="jawa.html" title="jawa Package"
              >previous</a> |</li>
-        <li><a href="index.html">jawa  documentation</a> &raquo;</li>
+        <li><a href="index.html">jawa 0.1.2 documentation</a> &raquo;</li>
           <li><a href="jawa.html" >jawa Package</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2012, Author.
+        &copy; Copyright 2012, Tyler Kennedy &lt;tk@tkte.ch&gt;.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
