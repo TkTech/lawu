@@ -9,6 +9,14 @@ util Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`bytecode` Module
+----------------------
+
+.. automodule:: jawa.util.bytecode
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`descriptor` Module
 ------------------------
 

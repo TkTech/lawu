@@ -1,4 +1,5 @@
 from struct import unpack, calcsize
+from itertools import repeat
 
 
 class BytecodeError(Exception):
@@ -325,13 +326,19 @@ _opcodes = {
 
 
 class StreamDisassembler(object):
-    def __init__(self):
-        pass
+    """
+    Disassembles a stream of JVM instructions without caching or otherwise
+    doing anything with them. Once the stream has been consumed, it cannot
+    be re-iterated.
+    """
+    def __init__(self, io):
+        self._io = io
 
-    def get_single(self, io):
+    @staticmethod
+    def get_single(io):
         """
         Parses and returns a single opcode and its operands from the stream
-        `io`.
+        `io`. `io` must support a blocking `read()` and `tell()`.
         """
         read = io.read
         start_pos = io.tell()
@@ -350,10 +357,54 @@ class StreamDisassembler(object):
             for struct_fmt, operand_type in operands:
                 f_operands.append(operand_type(
                     unpack(struct_fmt, read(calcsize(struct_fmt))
-                )))
+                )[0]))
         # Special case the Lookupswitch instruction.
         elif op == 0xAB:
-            padding = 4 - (io.tell() % 4)
-            read(padding)
-
+            padding = 4 - (start_pos + 1) % 4
+            if padding != 4:
+                read(padding)
+            default, npairs = unpack('>ii', read(8))
+            f_operands.append(BranchOperand(default))
+            # TODO: Unroll.
+            for _ in repeat(None, npairs):
+                match, offset = unpack('>ii', read(8))
+                f_operands.append(LiteralOperand(match))
+                f_operands.append(BranchOperand(offset))
+        # Special case for the Tableswitch instruction.
+        elif op == 0xAA:
+            padding = 4 - (start_pos + 1) % 4
+            if padding != 4:
+                read(padding)
+            default, low, high = unpack('>iii', read(12))
+            count = high - low + 1
+            f_operands.append(BranchOperand(default))
+            f_operands.append(LiteralOperand(low))
+            f_operands.append(LiteralOperand(high))
+            # TODO: Unroll.
+            for _ in repeat(None, count):
+                f_operands.append(BranchOperand(
+                    unpack('>i', read(4))[0]
+                ))
+        # Special case for the wide prefix.
+        elif op == 0xC4:
+            real_opcode = ord(read(1))
+            name, operands = _opcodes[real_opcode][:2]
+            f_operands.append(LocalIndexOperand(
+                unpack('>H', read(2))[0]
+            ))
+            if real_opcode == 0x84:
+                f_operands.append(LiteralOperand(
+                    unpack('>h', read(2))[0]
+                ))
         return Opcode(op, f_operands, idx=start_pos)
+
+    def __iter__(self):
+        """
+        Iterates and yields each instruction in the stream until no more
+        can be read.
+        """
+        while True:
+            try:
+                yield StreamDisassembler.get_single(self._io)
+            except IOError:
+                raise StopIteration()

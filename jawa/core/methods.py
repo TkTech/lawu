@@ -17,6 +17,7 @@ class Method(object):
         self._name_i = name_i
         self._descriptor_i = descriptor_i
         self._attributes = attributes
+        self._bytecode = None
 
     @property
     def access_flags(self):
