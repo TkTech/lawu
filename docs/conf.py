@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# jawa documentation build configuration file, created by
-# sphinx-quickstart on Sun May 13 18:49:28 2012.
+# Jawa documentation build configuration file, created by
+# sphinx-quickstart on Fri Jun 29 02:34:59 2012.
 #
 # This file is execfile()d with the current directory set to its containing dir.
 #
@@ -16,8 +16,8 @@ import sys, os
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath('..'))
+
 # -- General configuration -----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -25,7 +25,7 @@ sys.path.insert(0, os.path.abspath('..'))
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.viewcode']
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.todo', 'sphinx.ext.coverage', 'sphinx.ext.viewcode']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -40,8 +40,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'jawa'
-copyright = u'2012, Tyler Kennedy <tk@tkte.ch>'
+project = u'Jawa'
+copyright = u'2012, Tyler Kennedy'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -91,7 +91,7 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'nature'
+html_theme = 'default'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -144,7 +144,7 @@ html_static_path = ['_static']
 #html_use_index = True
 
 # If true, the index is split into individual pages for each letter.
-html_split_index = False
+#html_split_index = False
 
 # If true, links to the reST sources are added to the pages.
 #html_show_sourcelink = True
@@ -164,7 +164,7 @@ html_split_index = False
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'jawadoc'
+htmlhelp_basename = 'Jawadoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -183,8 +183,8 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'jawa.tex', u'jawa Documentation',
-   u'Author', 'manual'),
+  ('index', 'Jawa.tex', u'Jawa Documentation',
+   u'Tyler Kennedy', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -213,8 +213,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'jawa', u'jawa Documentation',
-     [u'Author'], 1)
+    ('index', 'jawa', u'Jawa Documentation',
+     [u'Tyler Kennedy'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -227,8 +227,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'jawa', u'jawa Documentation',
-   u'Author', 'jawa', 'One line description of project.',
+  ('index', 'Jawa', u'Jawa Documentation',
+   u'Tyler Kennedy', 'Jawa', 'One line description of project.',
    'Miscellaneous'),
 ]
 
@@ -240,46 +240,3 @@ texinfo_documents = [
 
 # How to display URL addresses: 'footnote', 'no', or 'inline'.
 #texinfo_show_urls = 'footnote'
-
-
-# -- Options for Epub output ---------------------------------------------------
-
-# Bibliographic Dublin Core info.
-epub_title = u'jawa'
-epub_author = u'Author'
-epub_publisher = u'Author'
-epub_copyright = u'2012, Author'
-
-# The language of the text. It defaults to the language option
-# or en if the language is not set.
-#epub_language = ''
-
-# The scheme of the identifier. Typical schemes are ISBN or URL.
-#epub_scheme = ''
-
-# The unique identifier of the text. This can be a ISBN number
-# or the project homepage.
-#epub_identifier = ''
-
-# A unique identification for the text.
-#epub_uid = ''
-
-# A tuple containing the cover image and cover page html template filenames.
-#epub_cover = ()
-
-# HTML files that should be inserted before the pages created by sphinx.
-# The format is a list of tuples containing the path and title.
-#epub_pre_files = []
-
-# HTML files shat should be inserted after the pages created by sphinx.
-# The format is a list of tuples containing the path and title.
-#epub_post_files = []
-
-# A list of files that should not be packed into the epub file.
-#epub_exclude_files = []
-
-# The depth of the table of contents in toc.ncx.
-#epub_tocdepth = 3
-
-# Allow duplicate toc entries.
-#epub_tocdup = True
