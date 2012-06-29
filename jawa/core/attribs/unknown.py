@@ -22,4 +22,4 @@ class UnknownAttribute(Attribute):
 
     @classmethod
     def _load_from_io(cls, class_file, name_i, length, io):
-        return UnknownAttribute(class_file, name_i, data=io.read(length)[0])
+        return UnknownAttribute(class_file, name_i, data=io.read(length))
