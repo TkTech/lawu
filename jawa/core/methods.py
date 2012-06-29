@@ -118,7 +118,7 @@ class MethodTable(object):
     def find(self, has_code=None, f=None):
         """
         Finds methods that match the given criteria, yielding each in turn.
-        When given no arguments, all entires in the MethodTable are returned.
+        When given no arguments, all entries in the MethodTable are returned.
 
         >>> for method in methods.find():
         ...    # Results in all methods in the method table.
