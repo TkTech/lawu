@@ -725,7 +725,35 @@ the method&#8217;s descriptor.</p>
 <dl class="method">
 <dt id="jawa.core.methods.MethodTable.find">
 <tt class="descname">find</tt><big>(</big><em>has_code=None</em>, <em>f=None</em><big>)</big><a class="reference internal" href="_modules/jawa/core/methods.html#MethodTable.find"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.methods.MethodTable.find" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Finds methods that match the given criteria, yielding each in turn.
+When given no arguments, all entires in the MethodTable are returned.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">methods</span><span class="o">.</span><span class="n">find</span><span class="p">():</span>
+<span class="gp">... </span>   <span class="c"># Results in all methods in the method table.</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">methods</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">returns</span> <span class="o">==</span> <span class="s">&#39;void&#39;</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="c"># Results in all methods that return void.</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">methods</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">args</span> <span class="o">==</span> <span class="p">(</span><span class="s">&#39;double&#39;</span><span class="p">,)):</span>
+<span class="gp">... </span>   <span class="c"># Results in all methods that take exactly one double.</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>has_code</strong> &#8211; If <cite>True</cite>, only returns methods that have a <cite>Code</cite>
+attribute attached to them.</li>
+<li><strong>f</strong> &#8211; A callable that takes one argument (the method object) to
+further filter the results before returning them</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="jawa.core.methods.MethodTable.find_one">

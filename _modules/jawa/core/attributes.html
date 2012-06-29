@@ -52,12 +52,14 @@
 <span class="kn">from</span> <span class="nn">struct</span> <span class="kn">import</span> <span class="n">unpack</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">repeat</span>
 
+<span class="kn">from</span> <span class="nn">jawa.core.attribs.unknown</span> <span class="kn">import</span> <span class="n">UnknownAttribute</span>
+
 
 <div class="viewcode-block" id="AttributeTable"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.attributes.AttributeTable">[docs]</a><span class="k">class</span> <span class="nc">AttributeTable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_file</span><span class="p">,</span> <span class="n">attrib_map</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_table</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span> <span class="o">=</span> <span class="n">class_file</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_map</span> <span class="o">=</span> <span class="n">attrib_map</span> <span class="ow">or</span> <span class="n">_DEFAULT_ATTRIBUTES</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_map</span> <span class="o">=</span> <span class="n">attrib_map</span> <span class="ow">or</span> <span class="n">AttributeTable</span><span class="o">.</span><span class="n">_get_defaults</span><span class="p">()</span>
 
     <span class="nd">@property</span>
 <div class="viewcode-block" id="AttributeTable.class_file"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.attributes.AttributeTable.class_file">[docs]</a>    <span class="k">def</span> <span class="nf">class_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -107,16 +109,18 @@
             <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
         <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">None</span>
+</div>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_defaults</span><span class="p">():</span>
+        <span class="c"># Neccessary due to circular imports. Attributes can have attributes</span>
+        <span class="c"># and attribute tables.</span>
+        <span class="kn">from</span> <span class="nn">jawa.core.attribs.sourcefile</span> <span class="kn">import</span> <span class="n">SourceFileAttribute</span>
+        <span class="kn">from</span> <span class="nn">jawa.core.attribs.code</span> <span class="kn">import</span> <span class="n">CodeAttribute</span>
 
-</div></div>
-<span class="kn">from</span> <span class="nn">jawa.core.attribs.unknown</span> <span class="kn">import</span> <span class="n">UnknownAttribute</span>
-<span class="kn">from</span> <span class="nn">jawa.core.attribs.sourcefile</span> <span class="kn">import</span> <span class="n">SourceFileAttribute</span>
-<span class="kn">from</span> <span class="nn">jawa.core.attribs.code</span> <span class="kn">import</span> <span class="n">CodeAttribute</span>
-
-<span class="n">_DEFAULT_ATTRIBUTES</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">&#39;Code&#39;</span><span class="p">:</span> <span class="n">CodeAttribute</span><span class="p">,</span>
-    <span class="s">&#39;SourceFile&#39;</span><span class="p">:</span> <span class="n">SourceFileAttribute</span>
-<span class="p">}</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s">&#39;Code&#39;</span><span class="p">:</span> <span class="n">CodeAttribute</span><span class="p">,</span>
+            <span class="s">&#39;SourceFile&#39;</span><span class="p">:</span> <span class="n">SourceFileAttribute</span>
+        <span class="p">}</span></div>
 </pre></div>
 
           </div>

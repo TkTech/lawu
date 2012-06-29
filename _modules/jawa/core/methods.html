@@ -67,6 +67,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_name_i</span> <span class="o">=</span> <span class="n">name_i</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_descriptor_i</span> <span class="o">=</span> <span class="n">descriptor_i</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span> <span class="o">=</span> <span class="n">attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bytecode</span> <span class="o">=</span> <span class="bp">None</span>
 
     <span class="nd">@property</span>
 <div class="viewcode-block" id="Method.access_flags"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.methods.Method.access_flags">[docs]</a>    <span class="k">def</span> <span class="nf">access_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -165,6 +166,24 @@
             <span class="n">append</span><span class="p">(</span><span class="n">Method</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attr</span><span class="p">))</span>
 
 <div class="viewcode-block" id="MethodTable.find"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.methods.MethodTable.find">[docs]</a>    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">has_code</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Finds methods that match the given criteria, yielding each in turn.</span>
+<span class="sd">        When given no arguments, all entires in the MethodTable are returned.</span>
+
+<span class="sd">        &gt;&gt;&gt; for method in methods.find():</span>
+<span class="sd">        ...    # Results in all methods in the method table.</span>
+
+<span class="sd">        &gt;&gt;&gt; for method in methods.find(f=lambda m: m.returns == &#39;void&#39;):</span>
+<span class="sd">        ...    # Results in all methods that return void.</span>
+
+<span class="sd">        &gt;&gt;&gt; for method in methods.find(f=lambda m: m.args == (&#39;double&#39;,)):</span>
+<span class="sd">        ...    # Results in all methods that take exactly one double.</span>
+
+<span class="sd">        :param has_code: If `True`, only returns methods that have a `Code`</span>
+<span class="sd">            attribute attached to them.</span>
+<span class="sd">        :param f: A callable that takes one argument (the method object) to</span>
+<span class="sd">            further filter the results before returning them</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">has_code</span> <span class="ow">is</span> <span class="bp">True</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">method</span><span class="o">.</span><span class="n">code</span><span class="p">:</span>
                 <span class="k">continue</span>

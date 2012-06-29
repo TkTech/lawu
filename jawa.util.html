@@ -57,6 +57,118 @@
 <h2><tt class="xref py py-mod docutils literal"><span class="pre">util</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-jawa.util"></span><p>Various utility classes and methods to make life a little bit easier.</p>
 </div>
+<div class="section" id="module-jawa.util.bytecode">
+<span id="bytecode-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">bytecode</span></tt> Module<a class="headerlink" href="#module-jawa.util.bytecode" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="jawa.util.bytecode.BranchOperand">
+<em class="property">class </em><tt class="descclassname">jawa.util.bytecode.</tt><tt class="descname">BranchOperand</tt><big>(</big><em>offset</em><big>)</big><a class="reference internal" href="_modules/jawa/util/bytecode.html#BranchOperand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.BranchOperand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.util.bytecode.Operand" title="jawa.util.bytecode.Operand"><tt class="xref py py-class docutils literal"><span class="pre">jawa.util.bytecode.Operand</span></tt></a></p>
+<dl class="attribute">
+<dt id="jawa.util.bytecode.BranchOperand.offset">
+<tt class="descname">offset</tt><a class="reference internal" href="_modules/jawa/util/bytecode.html#BranchOperand.offset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.BranchOperand.offset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="jawa.util.bytecode.BytecodeError">
+<em class="property">exception </em><tt class="descclassname">jawa.util.bytecode.</tt><tt class="descname">BytecodeError</tt><a class="reference internal" href="_modules/jawa/util/bytecode.html#BytecodeError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.BytecodeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.util.bytecode.ConstantIndexOperand">
+<em class="property">class </em><tt class="descclassname">jawa.util.bytecode.</tt><tt class="descname">ConstantIndexOperand</tt><big>(</big><em>index</em><big>)</big><a class="reference internal" href="_modules/jawa/util/bytecode.html#ConstantIndexOperand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.ConstantIndexOperand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.util.bytecode.Operand" title="jawa.util.bytecode.Operand"><tt class="xref py py-class docutils literal"><span class="pre">jawa.util.bytecode.Operand</span></tt></a></p>
+<dl class="attribute">
+<dt id="jawa.util.bytecode.ConstantIndexOperand.index">
+<tt class="descname">index</tt><a class="reference internal" href="_modules/jawa/util/bytecode.html#ConstantIndexOperand.index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.ConstantIndexOperand.index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.util.bytecode.LiteralOperand">
+<em class="property">class </em><tt class="descclassname">jawa.util.bytecode.</tt><tt class="descname">LiteralOperand</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/jawa/util/bytecode.html#LiteralOperand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.LiteralOperand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.util.bytecode.Operand" title="jawa.util.bytecode.Operand"><tt class="xref py py-class docutils literal"><span class="pre">jawa.util.bytecode.Operand</span></tt></a></p>
+<dl class="attribute">
+<dt id="jawa.util.bytecode.LiteralOperand.value">
+<tt class="descname">value</tt><a class="reference internal" href="_modules/jawa/util/bytecode.html#LiteralOperand.value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.LiteralOperand.value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.util.bytecode.LocalIndexOperand">
+<em class="property">class </em><tt class="descclassname">jawa.util.bytecode.</tt><tt class="descname">LocalIndexOperand</tt><big>(</big><em>index</em><big>)</big><a class="reference internal" href="_modules/jawa/util/bytecode.html#LocalIndexOperand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.LocalIndexOperand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.util.bytecode.Operand" title="jawa.util.bytecode.Operand"><tt class="xref py py-class docutils literal"><span class="pre">jawa.util.bytecode.Operand</span></tt></a></p>
+<dl class="attribute">
+<dt id="jawa.util.bytecode.LocalIndexOperand.index">
+<tt class="descname">index</tt><a class="reference internal" href="_modules/jawa/util/bytecode.html#LocalIndexOperand.index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.LocalIndexOperand.index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.util.bytecode.Opcode">
+<em class="property">class </em><tt class="descclassname">jawa.util.bytecode.</tt><tt class="descname">Opcode</tt><big>(</big><em>op</em>, <em>operands=None</em>, <em>idx=None</em><big>)</big><a class="reference internal" href="_modules/jawa/util/bytecode.html#Opcode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.Opcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="attribute">
+<dt id="jawa.util.bytecode.Opcode.fmt">
+<tt class="descname">fmt</tt><a class="reference internal" href="_modules/jawa/util/bytecode.html#Opcode.fmt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.Opcode.fmt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.util.bytecode.Opcode.index">
+<tt class="descname">index</tt><a class="reference internal" href="_modules/jawa/util/bytecode.html#Opcode.index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.Opcode.index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.util.bytecode.Opcode.name">
+<tt class="descname">name</tt><a class="reference internal" href="_modules/jawa/util/bytecode.html#Opcode.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.Opcode.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.util.bytecode.Opcode.opcode">
+<tt class="descname">opcode</tt><a class="reference internal" href="_modules/jawa/util/bytecode.html#Opcode.opcode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.Opcode.opcode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.util.bytecode.Opcode.operands">
+<tt class="descname">operands</tt><a class="reference internal" href="_modules/jawa/util/bytecode.html#Opcode.operands"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.Opcode.operands" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.util.bytecode.Operand">
+<em class="property">class </em><tt class="descclassname">jawa.util.bytecode.</tt><tt class="descname">Operand</tt><a class="reference internal" href="_modules/jawa/util/bytecode.html#Operand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.Operand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.util.bytecode.PaddingOperand">
+<em class="property">class </em><tt class="descclassname">jawa.util.bytecode.</tt><tt class="descname">PaddingOperand</tt><big>(</big><em>pad=0</em><big>)</big><a class="reference internal" href="_modules/jawa/util/bytecode.html#PaddingOperand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.PaddingOperand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.util.bytecode.Operand" title="jawa.util.bytecode.Operand"><tt class="xref py py-class docutils literal"><span class="pre">jawa.util.bytecode.Operand</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.util.bytecode.StreamDisassembler">
+<em class="property">class </em><tt class="descclassname">jawa.util.bytecode.</tt><tt class="descname">StreamDisassembler</tt><big>(</big><em>io</em><big>)</big><a class="reference internal" href="_modules/jawa/util/bytecode.html#StreamDisassembler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.StreamDisassembler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Disassembles a stream of JVM instructions without caching or otherwise
+doing anything with them. Once the stream has been consumed, it cannot
+be re-iterated.</p>
+<dl class="staticmethod">
+<dt id="jawa.util.bytecode.StreamDisassembler.get_single">
+<em class="property">static </em><tt class="descname">get_single</tt><big>(</big><em>io</em><big>)</big><a class="reference internal" href="_modules/jawa/util/bytecode.html#StreamDisassembler.get_single"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.StreamDisassembler.get_single" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses and returns a single opcode and its operands from the stream
+<cite>io</cite>. <cite>io</cite> must support a blocking <cite>read()</cite> and <cite>tell()</cite>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-jawa.util.descriptor">
 <span id="descriptor-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">descriptor</span></tt> Module<a class="headerlink" href="#module-jawa.util.descriptor" title="Permalink to this headline">¶</a></h2>
 <p>Methods for parsing standard JVM type descriptors for fields and methods.
@@ -108,13 +220,13 @@ path or a file-like object.</p>
 <dl class="method">
 <dt id="jawa.util.ezip.EditableZipFile.close">
 <tt class="descname">close</tt><big>(</big><em>*exc_info</em><big>)</big><a class="headerlink" href="#jawa.util.ezip.EditableZipFile.close" title="Permalink to this definition">¶</a></dt>
-<dd><p>Closes the JarFile and any underlying objects.</p>
+<dd><p>Closes the ZipFile and any underlying objects.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="jawa.util.ezip.EditableZipFile.namelist">
 <tt class="descname">namelist</tt><a class="reference internal" href="_modules/jawa/util/ezip.html#EditableZipFile.namelist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.ezip.EditableZipFile.namelist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list of all paths in this JarFile.</p>
+<dd><p>Returns a list of all paths in this ZipFile.</p>
 </dd></dl>
 
 <dl class="method">
@@ -137,7 +249,7 @@ to get all files ending in .class that aren&#8217;t in a sub-directory:</p>
 <dl class="method">
 <dt id="jawa.util.ezip.EditableZipFile.remove">
 <tt class="descname">remove</tt><big>(</big><em>path</em><big>)</big><a class="reference internal" href="_modules/jawa/util/ezip.html#EditableZipFile.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.ezip.EditableZipFile.remove" title="Permalink to this definition">¶</a></dt>
-<dd><p>Removes a file from the JarFile.</p>
+<dd><p>Removes a file from the ZipFile.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">jf</span><span class="o">.</span><span class="n">namelist</span><span class="p">()</span>
 <span class="go">[&#39;my_file.txt&#39;, &#39;that_other_file.txt&#39;, ...]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">jf</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s">&#39;my_file.txt&#39;</span><span class="p">)</span>
@@ -150,7 +262,7 @@ to get all files ending in .class that aren&#8217;t in a sub-directory:</p>
 <dl class="method">
 <dt id="jawa.util.ezip.EditableZipFile.save">
 <tt class="descname">save</tt><big>(</big><em>path</em><big>)</big><a class="reference internal" href="_modules/jawa/util/ezip.html#EditableZipFile.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.ezip.EditableZipFile.save" title="Permalink to this definition">¶</a></dt>
-<dd><p>Saves the JarFile to <cite>path</cite>, which can be a file-system path or a
+<dd><p>Saves the ZipFile to <cite>path</cite>, which can be a file-system path or a
 file-like object.</p>
 </dd></dl>
 
@@ -164,11 +276,11 @@ file-like object.</p>
 
 <dl class="class">
 <dt id="jawa.util.ezip.ZipPathResult">
-<em class="property">class </em><tt class="descclassname">jawa.util.ezip.</tt><tt class="descname">ZipPathResult</tt><big>(</big><em>jar</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/jawa/util/ezip.html#ZipPathResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.ezip.ZipPathResult" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">jawa.util.ezip.</tt><tt class="descname">ZipPathResult</tt><big>(</big><em>zip_</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/jawa/util/ezip.html#ZipPathResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.ezip.ZipPathResult" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unicode</span></tt></p>
 <p>A very useful helper when iterating results from a
-<tt class="xref py py-class docutils literal"><span class="pre">jawa.utils.jf.JarFile</span></tt> that acts like a normal string, but
-additionally provides a <tt class="docutils literal"><span class="pre">read()</span></tt> method.</p>
+<tt class="xref py py-class docutils literal"><span class="pre">jawa.utils.ezip.EditableZipFile</span></tt> that acts like a normal string,
+but additionally provides a <tt class="docutils literal"><span class="pre">read()</span></tt> method.</p>
 <dl class="method">
 <dt id="jawa.util.ezip.ZipPathResult.read">
 <tt class="descname">read</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/jawa/util/ezip.html#ZipPathResult.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.ezip.ZipPathResult.read" title="Permalink to this definition">¶</a></dt>
@@ -189,6 +301,7 @@ additionally provides a <tt class="docutils literal"><span class="pre">read()</s
   <ul>
 <li><a class="reference internal" href="#">util Package</a><ul>
 <li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">util</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-jawa.util.bytecode"><tt class="docutils literal"><span class="pre">bytecode</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-jawa.util.descriptor"><tt class="docutils literal"><span class="pre">descriptor</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-jawa.util.ezip"><tt class="docutils literal"><span class="pre">ezip</span></tt> Module</a></li>
 </ul>
