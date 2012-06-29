@@ -116,6 +116,24 @@ class MethodTable(object):
             append(Method(self._cf, *args, attributes=attr))
 
     def find(self, has_code=None, f=None):
+        """
+        Finds methods that match the given criteria, yielding each in turn.
+        When given no arguments, all entires in the MethodTable are returned.
+
+        >>> for method in methods.find():
+        ...    # Results in all methods in the method table.
+
+        >>> for method in methods.find(f=lambda m: m.returns == 'void'):
+        ...    # Results in all methods that return void.
+
+        >>> for method in methods.find(f=lambda m: m.args == ('double',)):
+        ...    # Results in all methods that take exactly one double.
+
+        :param has_code: If `True`, only returns methods that have a `Code`
+            attribute attached to them.
+        :param f: A callable that takes one argument (the method object) to
+            further filter the results before returning them
+        """
         for method in self._table:
             if has_code is True and not method.code:
                 continue
