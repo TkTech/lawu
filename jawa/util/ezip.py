@@ -11,18 +11,18 @@ except ImportError:
 class ZipPathResult(unicode):
     """
     A very useful helper when iterating results from a
-    :py:class:`jawa.utils.jf.JarFile` that acts like a normal string, but
-    additionally provides a ``read()`` method.
+    :py:class:`jawa.utils.ezip.EditableZipFile` that acts like a normal string,
+    but additionally provides a ``read()`` method.
     """
-    def __new__(self, jar, *args):
+    def __new__(self, zip_, *args):
         return unicode.__new__(self, *args)
 
-    def __init__(self, jar, *args, **kwargs):
+    def __init__(self, zip_, *args, **kwargs):
         super(ZipPathResult, self).__init__(*args, **kwargs)
-        self.__jar_file = jar
+        self.__zip_file = zip_
 
     def read(self):
-        return self.__jar_file.read(self)
+        return self.__zip_file.read(self)
 
 
 class EditableZipFile(object):
@@ -44,7 +44,7 @@ class EditableZipFile(object):
     @property
     def namelist(self):
         """
-        Returns a list of all paths in this JarFile.
+        Returns a list of all paths in this ZipFile.
         """
         return self._namelist
 
@@ -71,7 +71,7 @@ class EditableZipFile(object):
 
     def save(self, path):
         """
-        Saves the JarFile to `path`, which can be a file-system path or a
+        Saves the ZipFile to `path`, which can be a file-system path or a
         file-like object.
         """
         zp_out = ZipFile(path, 'w')
@@ -81,7 +81,7 @@ class EditableZipFile(object):
 
     def remove(self, path):
         """
-        Removes a file from the JarFile.
+        Removes a file from the ZipFile.
 
         >>> print jf.namelist()
         ['my_file.txt', 'that_other_file.txt', ...]
@@ -97,7 +97,7 @@ class EditableZipFile(object):
 
     def __exit__(self, *exc_info):
         """
-        Closes the JarFile and any underlying objects.
+        Closes the ZipFile and any underlying objects.
         """
         if self.io:
             self.io.close()
