@@ -6,10 +6,16 @@ Jawa - JVM ClassFile Library
 Jawa_ is a pure-python library for examining and disassembling JVM (Java)
 class files.
 
-Contents:
+.. note:: This documentation is up to date as of |today|.
+
+Jawa API
+--------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
+
+   jawa.core
+   jawa.util
 
 
 
