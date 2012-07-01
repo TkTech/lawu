@@ -63,4 +63,3 @@ Subpackages
 .. toctree::
 
     jawa.core.attribs
-

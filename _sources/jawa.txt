@@ -16,4 +16,3 @@ Subpackages
 
     jawa.core
     jawa.util
-
