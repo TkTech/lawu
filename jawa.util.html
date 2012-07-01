@@ -207,10 +207,6 @@ or <tt class="xref py py-func docutils literal"><span class="pre">jawa.core.desc
 <dt id="jawa.util.ezip.EditableZipFile">
 <em class="property">class </em><tt class="descclassname">jawa.util.ezip.</tt><tt class="descname">EditableZipFile</tt><big>(</big><em>io=None</em><big>)</big><a class="reference internal" href="_modules/jawa/util/ezip.html#EditableZipFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.ezip.EditableZipFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>A light wrapper around the python <tt class="xref py py-class docutils literal"><span class="pre">zipfile.ZipFile</span></tt> that
-enables in-memory modification.</p>
-<p>If <cite>io</cite> is provided, its contents are loaded. <cite>io</cite> may be a file-system
-path or a file-like object.</p>
 <dl class="method">
 <dt id="jawa.util.ezip.EditableZipFile.close">
 <tt class="descname">close</tt><big>(</big><em>*exc_info</em><big>)</big><a class="headerlink" href="#jawa.util.ezip.EditableZipFile.close" title="Permalink to this definition">¶</a></dt>
@@ -226,31 +222,20 @@ path or a file-like object.</p>
 <dl class="method">
 <dt id="jawa.util.ezip.EditableZipFile.read">
 <tt class="descname">read</tt><big>(</big><em>path</em><big>)</big><a class="reference internal" href="_modules/jawa/util/ezip.html#EditableZipFile.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.ezip.EditableZipFile.read" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the contents of <cite>path</cite>, if it exists, otherwise <cite>None</cite>.</p>
+<dd><p>Returns the contents of <cite>path</cite> if it exists, returning <cite>None</cite> if it
+does not.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="jawa.util.ezip.EditableZipFile.regex">
 <tt class="descname">regex</tt><big>(</big><em>regex</em><big>)</big><a class="reference internal" href="_modules/jawa/util/ezip.html#EditableZipFile.regex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.ezip.EditableZipFile.regex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns an iterator over every path that matches <cite>regex</cite>. For example,
-to get all files ending in .class that aren&#8217;t in a sub-directory:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">jf</span><span class="o">.</span><span class="n">regex</span><span class="p">(</span><span class="s">&#39;[^/]+\.class&#39;</span><span class="p">):</span>
-<span class="gp">... </span>   <span class="k">print</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-</pre></div>
-</div>
+<dd><p>Returns an iterator over every path that matches <cite>regex</cite>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="jawa.util.ezip.EditableZipFile.remove">
 <tt class="descname">remove</tt><big>(</big><em>path</em><big>)</big><a class="reference internal" href="_modules/jawa/util/ezip.html#EditableZipFile.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.ezip.EditableZipFile.remove" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes a file from the ZipFile.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">jf</span><span class="o">.</span><span class="n">namelist</span><span class="p">()</span>
-<span class="go">[&#39;my_file.txt&#39;, &#39;that_other_file.txt&#39;, ...]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">jf</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s">&#39;my_file.txt&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">jf</span><span class="o">.</span><span class="n">namelist</span><span class="p">()</span>
-<span class="go">[&#39;that_other_file.txt&#39;, ...]</span>
-</pre></div>
-</div>
 </dd></dl>
 
 <dl class="method">

@@ -62,8 +62,8 @@
 
 <div class="viewcode-block" id="ClassFile"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.cf.ClassFile">[docs]</a><span class="k">class</span> <span class="nc">ClassFile</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Creates a new ClassFile, optionally loading the JVM class at `io`, where</span>
-<span class="sd">    `io` is a file-like object providing `read()` or a file-system path.</span>
+<span class="sd">    Creates a new JVM ClassFile, optionally loading the JVM class at `io`,</span>
+<span class="sd">    where `io` is a file-like object providing `read()` or a file-system path.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_constants</span> <span class="o">=</span> <span class="n">const</span><span class="o">.</span><span class="n">ConstantPool</span><span class="p">()</span>
@@ -76,11 +76,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">io</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+            <span class="c"># The paths returned by EditableZipFile&#39;s query methods are</span>
+            <span class="c"># strings, but also support an origin-aware read() method.</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="s">&#39;read&#39;</span><span class="p">):</span>
                 <span class="n">fin</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_load_from_io</span><span class="p">(</span><span class="n">fin</span><span class="p">)</span>
                 <span class="n">fin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
+                <span class="c"># ... or we just got a normal filesystem path.</span>
                 <span class="n">fin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_load_from_io</span><span class="p">(</span><span class="n">fin</span><span class="p">)</span>
                 <span class="n">fin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -108,7 +111,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">this</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the :py:class:`jawa.core.constants.ConstantClass` for this</span>
+<span class="sd">        Returns the :class:`~jawa.core.constants.ConstantClass` for this</span>
 <span class="sd">        ``ClassFile``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_this</span>
@@ -122,7 +125,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">superclass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the :py:class:`jawa.core.constants.ConstantClass` for the</span>
+<span class="sd">        Returns the :class:`~jawa.core.constants.ConstantClass` for the</span>
 <span class="sd">        superclass of this ``ClassFile``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_super</span>
@@ -136,7 +139,7 @@
     <span class="nd">@property</span>
 <div class="viewcode-block" id="ClassFile.interfaces"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.cf.ClassFile.interfaces">[docs]</a>    <span class="k">def</span> <span class="nf">interfaces</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns a list of :py:class:`jawa.core.constants.ConstantClass`</span>
+<span class="sd">        Returns a list of :class:`~jawa.core.constants.ConstantClass`</span>
 <span class="sd">        objects, one for each direct superinterface of this class or</span>
 <span class="sd">        interface.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -145,7 +148,7 @@
     <span class="nd">@classmethod</span>
 <div class="viewcode-block" id="ClassFile.from_str"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.cf.ClassFile.from_str">[docs]</a>    <span class="k">def</span> <span class="nf">from_str</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns a new :py:class:`jawa.core.cf.ClassFile` from a string buffer.</span>
+<span class="sd">        Returns a new :class:`~jawa.core.cf.ClassFile` from a string buffer.</span>
 
 <span class="sd">        &gt;&gt;&gt; from jawa.util.jf import JarFile</span>
 <span class="sd">        &gt;&gt;&gt; from jawa.core.cf import ClassFile</span>
@@ -168,7 +171,7 @@
     <span class="nd">@property</span>
 <div class="viewcode-block" id="ClassFile.constants"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.cf.ClassFile.constants">[docs]</a>    <span class="k">def</span> <span class="nf">constants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the :py:class:`jawa.core.constants.ConstantPool` for this</span>
+<span class="sd">        Returns the :class:`~jawa.core.constants.ConstantPool` for this</span>
 <span class="sd">        ``ClassFile``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_constants</span>
@@ -176,7 +179,7 @@
     <span class="nd">@property</span>
 <div class="viewcode-block" id="ClassFile.fields"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.cf.ClassFile.fields">[docs]</a>    <span class="k">def</span> <span class="nf">fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the :py:class:`jawa.core.fields.FieldTable` for this</span>
+<span class="sd">        Returns the :class:`~jawa.core.fields.FieldTable` for this</span>
 <span class="sd">        ``ClassFile``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span>
@@ -184,7 +187,7 @@
     <span class="nd">@property</span>
 <div class="viewcode-block" id="ClassFile.methods"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.cf.ClassFile.methods">[docs]</a>    <span class="k">def</span> <span class="nf">methods</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the :py:class:`jawa.core.methods.MethodTable` for this</span>
+<span class="sd">        Returns the :class:`~jawa.core.methods.MethodTable` for this</span>
 <span class="sd">        ``ClassFile``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_methods</span>
@@ -192,7 +195,7 @@
     <span class="nd">@property</span>
 <div class="viewcode-block" id="ClassFile.attributes"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.cf.ClassFile.attributes">[docs]</a>    <span class="k">def</span> <span class="nf">attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the :py:class:`jawa.core.attributes.AttributeTable` for this</span>
+<span class="sd">        Returns the :class:`~jawa.core.attributes.AttributeTable` for this</span>
 <span class="sd">        ``ClassFile``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span>

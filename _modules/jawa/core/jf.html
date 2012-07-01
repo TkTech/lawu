@@ -50,12 +50,14 @@
   <h1>Source code for jawa.core.jf</h1><div class="highlight"><pre>
 <span class="c"># -*- coding: utf8 -*-</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Tools for working with JVM `.jar` archives, which are simply ZIP archives with</span>
-<span class="sd">some mandatory structure.</span>
+<span class="sd">The :mod:`core.jf` module provides tools for working with JVM ``.jar``</span>
+<span class="sd">archives, which are simply ZIP_ archives with some mandatory structure.</span>
 
 <span class="sd">.. note::</span>
 <span class="sd">    If `czipfile &lt;http://pypi.python.org/pypi/czipfile&gt;`_ is available,</span>
 <span class="sd">    decompression will be noticably faster.</span>
+
+<span class="sd">.. _ZIP: http://en.wikipedia.org/wiki/Zip_(file_format)</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">jawa.util.ezip</span> <span class="kn">import</span> <span class="n">EditableZipFile</span>
 <span class="kn">from</span> <span class="nn">jawa.core.cf</span> <span class="kn">import</span> <span class="n">ClassFile</span>
@@ -63,24 +65,19 @@
 
 <div class="viewcode-block" id="JarFile"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.jf.JarFile">[docs]</a><span class="k">class</span> <span class="nc">JarFile</span><span class="p">(</span><span class="n">EditableZipFile</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Provides Jawa-specific helpers around EditableZipFile.</span>
-
-<span class="sd">    As of 0.1.0, :py:class:`jawa.util.jf.JarFile` is also a context manager.</span>
-
-<span class="sd">    &gt;&gt;&gt; from jawa.util.jf import JarFile</span>
-<span class="sd">    &gt;&gt;&gt; with JarFile(sys.argv[1]) as jf:</span>
-<span class="sd">    ...    print(jf.namelist())</span>
+<span class="sd">    Implements Jawa_-specific extensions over</span>
+<span class="sd">    :class:`~jawa.util.ezip.EditableZipFile`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="JarFile.open_class"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.jf.JarFile.open_class">[docs]</a>    <span class="k">def</span> <span class="nf">open_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return&#39;s a :py:class:`jawa.core.cf.ClassFile` for the given `path`.</span>
+<span class="sd">        Return&#39;s a :class:`~jawa.core.cf.ClassFile` for the given `path`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">ClassFile</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
 </div>
 <div class="viewcode-block" id="JarFile.all_classes"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.jf.JarFile.all_classes">[docs]</a>    <span class="k">def</span> <span class="nf">all_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        An iterator that yields a :py:class:`jawa.core.cf.ClassFile` for each</span>
-<span class="sd">        path ending in `.class` in this JarFile.</span>
+<span class="sd">        An iterator that yields a :class:`~jawa.core.cf.ClassFile` for each</span>
+<span class="sd">        path ending in ``.class`` in this JarFile.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># About 10ms faster for 1028 files than using self.regex()</span>
         <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">(</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;.class&#39;</span><span class="p">)):</span>

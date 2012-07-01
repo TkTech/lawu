@@ -1,10 +1,15 @@
 core Package
 ============
 
-:mod:`core.attributes` Module
------------------------------
+.. automodule:: jawa.core
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
-.. automodule:: jawa.core.attributes
+:mod:`core.jf` Module
+---------------------
+
+.. automodule:: jawa.core.jf
     :members:
     :undoc-members:
     :show-inheritance:
@@ -13,6 +18,14 @@ core Package
 ---------------------
 
 .. automodule:: jawa.core.cf
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`core.attributes` Module
+-----------------------------
+
+.. automodule:: jawa.core.attributes
     :members:
     :undoc-members:
     :show-inheritance:
@@ -29,14 +42,6 @@ core Package
 -------------------------
 
 .. automodule:: jawa.core.fields
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`core.jf` Module
----------------------
-
-.. automodule:: jawa.core.jf
     :members:
     :undoc-members:
     :show-inheritance:

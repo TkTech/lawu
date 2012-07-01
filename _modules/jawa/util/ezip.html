@@ -76,14 +76,14 @@
 
 </div></div>
 <div class="viewcode-block" id="EditableZipFile"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.ezip.EditableZipFile">[docs]</a><span class="k">class</span> <span class="nc">EditableZipFile</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A light wrapper around the python :py:class:`zipfile.ZipFile` that</span>
-<span class="sd">    enables in-memory modification.</span>
-
-<span class="sd">    If `io` is provided, its contents are loaded. `io` may be a file-system</span>
-<span class="sd">    path or a file-like object.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A light wrapper around the python :py:class:`zipfile.ZipFile` that</span>
+<span class="sd">        enables in-memory modification.</span>
+
+<span class="sd">        If `io` is provided, its contents are loaded. `io` may be a file-system</span>
+<span class="sd">        path or a file-like object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">ZipFile</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">io</span> <span class="k">else</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="c"># The ZipFile namelist() appears to re-scan on each call. Keeping track</span>
@@ -100,7 +100,8 @@
 </div>
 <div class="viewcode-block" id="EditableZipFile.read"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.ezip.EditableZipFile.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the contents of `path`, if it exists, otherwise `None`.</span>
+<span class="sd">        Returns the contents of `path` if it exists, returning `None` if it</span>
+<span class="sd">        does not.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_namelist</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">None</span>
@@ -132,12 +133,6 @@
 <div class="viewcode-block" id="EditableZipFile.remove"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.ezip.EditableZipFile.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Removes a file from the ZipFile.</span>
-
-<span class="sd">        &gt;&gt;&gt; print jf.namelist()</span>
-<span class="sd">        [&#39;my_file.txt&#39;, &#39;that_other_file.txt&#39;, ...]</span>
-<span class="sd">        &gt;&gt;&gt; jf.remove(&#39;my_file.txt&#39;)</span>
-<span class="sd">        &gt;&gt;&gt; print jf.namelist()</span>
-<span class="sd">        [&#39;that_other_file.txt&#39;, ...]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_namelist</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
@@ -154,11 +149,7 @@
 
 <div class="viewcode-block" id="EditableZipFile.regex"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.ezip.EditableZipFile.regex">[docs]</a>    <span class="k">def</span> <span class="nf">regex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regex</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns an iterator over every path that matches `regex`. For example,</span>
-<span class="sd">        to get all files ending in .class that aren&#39;t in a sub-directory:</span>
-
-<span class="sd">        &gt;&gt;&gt; for path in jf.regex(&#39;[^/]+\.class&#39;):</span>
-<span class="sd">        ...    print(path)</span>
+<span class="sd">        Returns an iterator over every path that matches `regex`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_namelist</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
