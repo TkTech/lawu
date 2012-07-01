@@ -18,6 +18,13 @@ Jawa API
    jawa.core.attribs
    jawa.util
 
+Examples
+--------
+
+.. toctree::
+   :maxdepth: 4
+
+   examples/jar
 
 
 Indices and tables
