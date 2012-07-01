@@ -15,11 +15,6 @@ class Context(object):
     """
     A :class:`~jawa.core.context.Context` object exists to mimic the Java
     CLASSPATH and other environment flags & settings.
-
-    There are important performance considerations to make when using
-    paths to ``.jar`` files. When doing a class lookup, paths ending in
-    ``.jar`` will be substituded with a :class:`~jawa.core.jf.JarFile` object
-    which will remain in memory until removed.
     """
     def __init__(self):
         self._classpath = []
@@ -39,8 +34,17 @@ class Context(object):
         * filesystem path to a ``.jar`` file,
         * filesystem path to a directory,
         * an in-memory :class:`~jawa.core.jf.JarFile`.
+
+        In the case of a ``.jar`` file, it will be opened and replaced by a
+        :class:`~jawa.core.jf.JarFile`.
         """
-        if path_or_jar not in self._classpath:
+        if path_or_jar in self._classpath:
+            pass
+        elif isinstance(path_or_jar, JarFile):
+            self._classpath.append(path_or_jar)
+        elif os.path.isfile(path_or_jar) and path_or_jar.endswith('.jar'):
+            self._classpath.append(JarFile(path_or_jar))
+        else:
             self._classpath.append(path_or_jar)
 
     def find_class(self, class_, no_inherit=False):
@@ -60,12 +64,7 @@ class Context(object):
                         class_,
                         context=None if no_inherit else self
                     )
-            elif os.path.isfile(path) and path.endswith('.jar'):
-                # The path is a filesystem path for un-opened .jar, so
-                # substitue the path and re-run ourself.
-                self._classpath[i] = JarFile(path)
-                return self.find_class(class_, no_inherit=no_inherit)
-            elif os.path.isdir(path):
+            else:
                 # The path is plain directory (usually an expanded .jar).
                 final_path = class_.replace('/', os.sep)
                 final_path = os.join(path, final_path)
@@ -74,10 +73,24 @@ class Context(object):
                         final_path,
                         context=None if no_inherit else self
                     )
-            else:
-                # We don't know what the hell this thing is.
-                raise ContextPathError(
-                    'path was not a .jar or a directory', path)
-
         # We couldn't find the class.
         return None
+
+    def all_classes(self, no_inherit=False):
+        """
+        Iterates over all classes available in the classpaths.
+
+        .. warning:: The classpaths can contain many thousands of classes,
+                     use this method sparingly.
+        """
+        for path in self._classpath:
+            # We have a JarFile which supports this already, use it.
+            if isinstance(path, JarFile):
+                for cf in path.all_classes():
+                    yield cf
+                continue
+
+            # We have a directory root of a package.
+            for root, dirs, files in os.walk(path):
+                for file_ in (f for f in files if f.endswith('.class')):
+                    yield ClassFile(file_)
