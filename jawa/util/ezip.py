@@ -26,14 +26,14 @@ class ZipPathResult(unicode):
 
 
 class EditableZipFile(object):
-    """
-    A light wrapper around the python :py:class:`zipfile.ZipFile` that
-    enables in-memory modification.
-
-    If `io` is provided, its contents are loaded. `io` may be a file-system
-    path or a file-like object.
-    """
     def __init__(self, io=None):
+        """
+        A light wrapper around the python :py:class:`zipfile.ZipFile` that
+        enables in-memory modification.
+
+        If `io` is provided, its contents are loaded. `io` may be a file-system
+        path or a file-like object.
+        """
         self.io = ZipFile(io, 'r') if io else None
         self._cache = {}
         # The ZipFile namelist() appears to re-scan on each call. Keeping track
@@ -50,7 +50,8 @@ class EditableZipFile(object):
 
     def read(self, path):
         """
-        Returns the contents of `path`, if it exists, otherwise `None`.
+        Returns the contents of `path` if it exists, returning `None` if it
+        does not.
         """
         if path not in self._namelist:
             return None
@@ -82,12 +83,6 @@ class EditableZipFile(object):
     def remove(self, path):
         """
         Removes a file from the ZipFile.
-
-        >>> print jf.namelist()
-        ['my_file.txt', 'that_other_file.txt', ...]
-        >>> jf.remove('my_file.txt')
-        >>> print jf.namelist()
-        ['that_other_file.txt', ...]
         """
         self._namelist.discard(path)
         self._cache.pop(path, None)
@@ -104,11 +99,7 @@ class EditableZipFile(object):
 
     def regex(self, regex):
         """
-        Returns an iterator over every path that matches `regex`. For example,
-        to get all files ending in .class that aren't in a sub-directory:
-
-        >>> for path in jf.regex('[^/]+\.class'):
-        ...    print(path)
+        Returns an iterator over every path that matches `regex`.
         """
         for p in self._namelist:
             if re.match(regex, p):

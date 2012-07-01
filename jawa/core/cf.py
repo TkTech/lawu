@@ -12,8 +12,8 @@ import jawa.core.attributes as attributes
 
 class ClassFile(object):
     """
-    Creates a new ClassFile, optionally loading the JVM class at `io`, where
-    `io` is a file-like object providing `read()` or a file-system path.
+    Creates a new JVM ClassFile, optionally loading the JVM class at `io`,
+    where `io` is a file-like object providing `read()` or a file-system path.
     """
     def __init__(self, io=None):
         self._constants = const.ConstantPool()
@@ -26,11 +26,14 @@ class ClassFile(object):
         self._version = (0, 0)
 
         if io and isinstance(io, basestring):
+            # The paths returned by EditableZipFile's query methods are
+            # strings, but also support an origin-aware read() method.
             if hasattr(io, 'read'):
                 fin = StringIO(io.read())
                 self._load_from_io(fin)
                 fin.close()
             else:
+                # ... or we just got a normal filesystem path.
                 fin = open(io, 'rb')
                 self._load_from_io(fin)
                 fin.close()
@@ -58,7 +61,7 @@ class ClassFile(object):
     @property
     def this(self):
         """
-        Returns the :py:class:`jawa.core.constants.ConstantClass` for this
+        Returns the :class:`~jawa.core.constants.ConstantClass` for this
         ``ClassFile``.
         """
         return self._this
@@ -72,7 +75,7 @@ class ClassFile(object):
     @property
     def superclass(self):
         """
-        Returns the :py:class:`jawa.core.constants.ConstantClass` for the
+        Returns the :class:`~jawa.core.constants.ConstantClass` for the
         superclass of this ``ClassFile``.
         """
         return self._super
@@ -86,7 +89,7 @@ class ClassFile(object):
     @property
     def interfaces(self):
         """
-        Returns a list of :py:class:`jawa.core.constants.ConstantClass`
+        Returns a list of :class:`~jawa.core.constants.ConstantClass`
         objects, one for each direct superinterface of this class or
         interface.
         """
@@ -95,7 +98,7 @@ class ClassFile(object):
     @classmethod
     def from_str(cls, data):
         """
-        Returns a new :py:class:`jawa.core.cf.ClassFile` from a string buffer.
+        Returns a new :class:`~jawa.core.cf.ClassFile` from a string buffer.
 
         >>> from jawa.util.jf import JarFile
         >>> from jawa.core.cf import ClassFile
@@ -118,7 +121,7 @@ class ClassFile(object):
     @property
     def constants(self):
         """
-        Returns the :py:class:`jawa.core.constants.ConstantPool` for this
+        Returns the :class:`~jawa.core.constants.ConstantPool` for this
         ``ClassFile``.
         """
         return self._constants
@@ -126,7 +129,7 @@ class ClassFile(object):
     @property
     def fields(self):
         """
-        Returns the :py:class:`jawa.core.fields.FieldTable` for this
+        Returns the :class:`~jawa.core.fields.FieldTable` for this
         ``ClassFile``.
         """
         return self._fields
@@ -134,7 +137,7 @@ class ClassFile(object):
     @property
     def methods(self):
         """
-        Returns the :py:class:`jawa.core.methods.MethodTable` for this
+        Returns the :class:`~jawa.core.methods.MethodTable` for this
         ``ClassFile``.
         """
         return self._methods
@@ -142,7 +145,7 @@ class ClassFile(object):
     @property
     def attributes(self):
         """
-        Returns the :py:class:`jawa.core.attributes.AttributeTable` for this
+        Returns the :class:`~jawa.core.attributes.AttributeTable` for this
         ``ClassFile``.
         """
         return self._attributes
