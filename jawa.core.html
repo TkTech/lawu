@@ -207,10 +207,6 @@ superclass of this <tt class="docutils literal"><span class="pre">ClassFile</spa
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>A <a class="reference internal" href="#jawa.core.context.Context" title="jawa.core.context.Context"><tt class="xref py py-class docutils literal"><span class="pre">Context</span></tt></a> object exists to mimic the Java
 CLASSPATH and other environment flags &amp; settings.</p>
-<p>There are important performance considerations to make when using
-paths to <tt class="docutils literal"><span class="pre">.jar</span></tt> files. When doing a class lookup, paths ending in
-<tt class="docutils literal"><span class="pre">.jar</span></tt> will be substituded with a <a class="reference internal" href="#jawa.core.jf.JarFile" title="jawa.core.jf.JarFile"><tt class="xref py py-class docutils literal"><span class="pre">JarFile</span></tt></a> object
-which will remain in memory until removed.</p>
 <dl class="method">
 <dt id="jawa.core.context.Context.add_classpath">
 <tt class="descname">add_classpath</tt><big>(</big><em>path_or_jar</em><big>)</big><a class="reference internal" href="_modules/jawa/core/context.html#Context.add_classpath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.context.Context.add_classpath" title="Permalink to this definition">¶</a></dt>
@@ -221,6 +217,19 @@ which will remain in memory until removed.</p>
 <li>filesystem path to a directory,</li>
 <li>an in-memory <a class="reference internal" href="#jawa.core.jf.JarFile" title="jawa.core.jf.JarFile"><tt class="xref py py-class docutils literal"><span class="pre">JarFile</span></tt></a>.</li>
 </ul>
+<p>In the case of a <tt class="docutils literal"><span class="pre">.jar</span></tt> file, it will be opened and replaced by a
+<a class="reference internal" href="#jawa.core.jf.JarFile" title="jawa.core.jf.JarFile"><tt class="xref py py-class docutils literal"><span class="pre">JarFile</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.core.context.Context.all_classes">
+<tt class="descname">all_classes</tt><big>(</big><em>no_inherit=False</em><big>)</big><a class="reference internal" href="_modules/jawa/core/context.html#Context.all_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.context.Context.all_classes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterates over all classes available in the classpaths.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The classpaths can contain many thousands of classes,
+use this method sparingly.</p>
+</div>
 </dd></dl>
 
 <dl class="attribute">

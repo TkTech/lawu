@@ -66,11 +66,6 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A :class:`~jawa.core.context.Context` object exists to mimic the Java</span>
 <span class="sd">    CLASSPATH and other environment flags &amp; settings.</span>
-
-<span class="sd">    There are important performance considerations to make when using</span>
-<span class="sd">    paths to ``.jar`` files. When doing a class lookup, paths ending in</span>
-<span class="sd">    ``.jar`` will be substituded with a :class:`~jawa.core.jf.JarFile` object</span>
-<span class="sd">    which will remain in memory until removed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_classpath</span> <span class="o">=</span> <span class="p">[]</span>
@@ -90,8 +85,17 @@
 <span class="sd">        * filesystem path to a ``.jar`` file,</span>
 <span class="sd">        * filesystem path to a directory,</span>
 <span class="sd">        * an in-memory :class:`~jawa.core.jf.JarFile`.</span>
+
+<span class="sd">        In the case of a ``.jar`` file, it will be opened and replaced by a</span>
+<span class="sd">        :class:`~jawa.core.jf.JarFile`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">path_or_jar</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_classpath</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">path_or_jar</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_classpath</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path_or_jar</span><span class="p">,</span> <span class="n">JarFile</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_classpath</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path_or_jar</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path_or_jar</span><span class="p">)</span> <span class="ow">and</span> <span class="n">path_or_jar</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;.jar&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_classpath</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">JarFile</span><span class="p">(</span><span class="n">path_or_jar</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_classpath</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path_or_jar</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="Context.find_class"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.context.Context.find_class">[docs]</a>    <span class="k">def</span> <span class="nf">find_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_</span><span class="p">,</span> <span class="n">no_inherit</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
@@ -111,12 +115,7 @@
                         <span class="n">class_</span><span class="p">,</span>
                         <span class="n">context</span><span class="o">=</span><span class="bp">None</span> <span class="k">if</span> <span class="n">no_inherit</span> <span class="k">else</span> <span class="bp">self</span>
                     <span class="p">)</span>
-            <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;.jar&#39;</span><span class="p">):</span>
-                <span class="c"># The path is a filesystem path for un-opened .jar, so</span>
-                <span class="c"># substitue the path and re-run ourself.</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_classpath</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">JarFile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_class</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">no_inherit</span><span class="o">=</span><span class="n">no_inherit</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">else</span><span class="p">:</span>
                 <span class="c"># The path is plain directory (usually an expanded .jar).</span>
                 <span class="n">final_path</span> <span class="o">=</span> <span class="n">class_</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span>
                 <span class="n">final_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">final_path</span><span class="p">)</span>
@@ -125,13 +124,27 @@
                         <span class="n">final_path</span><span class="p">,</span>
                         <span class="n">context</span><span class="o">=</span><span class="bp">None</span> <span class="k">if</span> <span class="n">no_inherit</span> <span class="k">else</span> <span class="bp">self</span>
                     <span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="c"># We don&#39;t know what the hell this thing is.</span>
-                <span class="k">raise</span> <span class="n">ContextPathError</span><span class="p">(</span>
-                    <span class="s">&#39;path was not a .jar or a directory&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
-
         <span class="c"># We couldn&#39;t find the class.</span>
-        <span class="k">return</span> <span class="bp">None</span></div></div>
+        <span class="k">return</span> <span class="bp">None</span>
+</div>
+<div class="viewcode-block" id="Context.all_classes"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.context.Context.all_classes">[docs]</a>    <span class="k">def</span> <span class="nf">all_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">no_inherit</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Iterates over all classes available in the classpaths.</span>
+
+<span class="sd">        .. warning:: The classpaths can contain many thousands of classes,</span>
+<span class="sd">                     use this method sparingly.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_classpath</span><span class="p">:</span>
+            <span class="c"># We have a JarFile which supports this already, use it.</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">JarFile</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">cf</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">all_classes</span><span class="p">():</span>
+                    <span class="k">yield</span> <span class="n">cf</span>
+                <span class="k">continue</span>
+
+            <span class="c"># We have a directory root of a package.</span>
+            <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">file_</span> <span class="ow">in</span> <span class="p">(</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;.class&#39;</span><span class="p">)):</span>
+                    <span class="k">yield</span> <span class="n">ClassFile</span><span class="p">(</span><span class="n">file_</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>
