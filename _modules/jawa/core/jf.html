@@ -69,20 +69,20 @@
 <span class="sd">    Implements Jawa_-specific extensions over</span>
 <span class="sd">    :class:`~jawa.util.ezip.EditableZipFile`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="JarFile.open_class"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.jf.JarFile.open_class">[docs]</a>    <span class="k">def</span> <span class="nf">open_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<div class="viewcode-block" id="JarFile.open_class"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.jf.JarFile.open_class">[docs]</a>    <span class="k">def</span> <span class="nf">open_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return&#39;s a :class:`~jawa.core.cf.ClassFile` for the given `path`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ClassFile</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">ClassFile</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="JarFile.all_classes"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.jf.JarFile.all_classes">[docs]</a>    <span class="k">def</span> <span class="nf">all_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="JarFile.all_classes"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.jf.JarFile.all_classes">[docs]</a>    <span class="k">def</span> <span class="nf">all_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        An iterator that yields a :class:`~jawa.core.cf.ClassFile` for each</span>
 <span class="sd">        path ending in ``.class`` in this JarFile.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># About 10ms faster for 1028 files than using self.regex()</span>
         <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">(</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;.class&#39;</span><span class="p">)):</span>
-            <span class="k">yield</span> <span class="n">ClassFile</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">))</span></div></div>
+            <span class="k">yield</span> <span class="n">ClassFile</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

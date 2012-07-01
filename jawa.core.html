@@ -75,14 +75,14 @@ decompression will be noticably faster.</p>
 <a class="reference internal" href="jawa.util.html#jawa.util.ezip.EditableZipFile" title="jawa.util.ezip.EditableZipFile"><tt class="xref py py-class docutils literal"><span class="pre">EditableZipFile</span></tt></a>.</p>
 <dl class="method">
 <dt id="jawa.core.jf.JarFile.all_classes">
-<tt class="descname">all_classes</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/jawa/core/jf.html#JarFile.all_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.jf.JarFile.all_classes" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">all_classes</tt><big>(</big><em>context=None</em><big>)</big><a class="reference internal" href="_modules/jawa/core/jf.html#JarFile.all_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.jf.JarFile.all_classes" title="Permalink to this definition">¶</a></dt>
 <dd><p>An iterator that yields a <a class="reference internal" href="#jawa.core.cf.ClassFile" title="jawa.core.cf.ClassFile"><tt class="xref py py-class docutils literal"><span class="pre">ClassFile</span></tt></a> for each
 path ending in <tt class="docutils literal"><span class="pre">.class</span></tt> in this JarFile.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="jawa.core.jf.JarFile.open_class">
-<tt class="descname">open_class</tt><big>(</big><em>path</em><big>)</big><a class="reference internal" href="_modules/jawa/core/jf.html#JarFile.open_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.jf.JarFile.open_class" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">open_class</tt><big>(</big><em>path</em>, <em>context=None</em><big>)</big><a class="reference internal" href="_modules/jawa/core/jf.html#JarFile.open_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.jf.JarFile.open_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return&#8217;s a <a class="reference internal" href="#jawa.core.cf.ClassFile" title="jawa.core.cf.ClassFile"><tt class="xref py py-class docutils literal"><span class="pre">ClassFile</span></tt></a> for the given <cite>path</cite>.</p>
 </dd></dl>
 
@@ -93,7 +93,7 @@ path ending in <tt class="docutils literal"><span class="pre">.class</span></tt>
 <span id="core-cf-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">core.cf</span></tt> Module<a class="headerlink" href="#module-jawa.core.cf" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="jawa.core.cf.ClassFile">
-<em class="property">class </em><tt class="descclassname">jawa.core.cf.</tt><tt class="descname">ClassFile</tt><big>(</big><em>io=None</em><big>)</big><a class="reference internal" href="_modules/jawa/core/cf.html#ClassFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.cf.ClassFile" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">jawa.core.cf.</tt><tt class="descname">ClassFile</tt><big>(</big><em>io=None</em>, <em>context=None</em><big>)</big><a class="reference internal" href="_modules/jawa/core/cf.html#ClassFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.cf.ClassFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Creates a new JVM ClassFile, optionally loading the JVM class at <cite>io</cite>,
 where <cite>io</cite> is a file-like object providing <cite>read()</cite> or a file-system path.</p>
@@ -126,6 +126,13 @@ required <tt class="docutils literal"><span class="pre">Constants*</span></tt> a
 </dd></dl>
 
 <dl class="attribute">
+<dt id="jawa.core.cf.ClassFile.context">
+<tt class="descname">context</tt><a class="reference internal" href="_modules/jawa/core/cf.html#ClassFile.context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.cf.ClassFile.context" title="Permalink to this definition">¶</a></dt>
+<dd><p>The currently active <a class="reference internal" href="#jawa.core.context.Context" title="jawa.core.context.Context"><tt class="xref py py-class docutils literal"><span class="pre">Context</span></tt></a> for
+this <tt class="docutils literal"><span class="pre">ClassFile</span></tt>.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="jawa.core.cf.ClassFile.fields">
 <tt class="descname">fields</tt><a class="reference internal" href="_modules/jawa/core/cf.html#ClassFile.fields"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.cf.ClassFile.fields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the <a class="reference internal" href="#jawa.core.fields.FieldTable" title="jawa.core.fields.FieldTable"><tt class="xref py py-class docutils literal"><span class="pre">FieldTable</span></tt></a> for this
@@ -134,7 +141,7 @@ required <tt class="docutils literal"><span class="pre">Constants*</span></tt> a
 
 <dl class="classmethod">
 <dt id="jawa.core.cf.ClassFile.from_str">
-<em class="property">classmethod </em><tt class="descname">from_str</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="_modules/jawa/core/cf.html#ClassFile.from_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.cf.ClassFile.from_str" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><tt class="descname">from_str</tt><big>(</big><em>data</em>, <em>context=None</em><big>)</big><a class="reference internal" href="_modules/jawa/core/cf.html#ClassFile.from_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.cf.ClassFile.from_str" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a new <a class="reference internal" href="#jawa.core.cf.ClassFile" title="jawa.core.cf.ClassFile"><tt class="xref py py-class docutils literal"><span class="pre">ClassFile</span></tt></a> from a string buffer.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">jawa.util.jf</span> <span class="kn">import</span> <span class="n">JarFile</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">jawa.core.cf</span> <span class="kn">import</span> <span class="n">ClassFile</span>
@@ -143,6 +150,15 @@ required <tt class="docutils literal"><span class="pre">Constants*</span></tt> a
 <span class="gp">... </span>       <span class="n">cf</span> <span class="o">=</span> <span class="n">ClassFile</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="n">jf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.core.cf.ClassFile.get_superclass">
+<tt class="descname">get_superclass</tt><big>(</big><em>context=None</em><big>)</big><a class="reference internal" href="_modules/jawa/core/cf.html#ClassFile.get_superclass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.cf.ClassFile.get_superclass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lookup and return a <a class="reference internal" href="#jawa.core.cf.ClassFile" title="jawa.core.cf.ClassFile"><tt class="xref py py-class docutils literal"><span class="pre">ClassFile</span></tt></a> for this class&#8217;s
+superclass using the currently active context. If <cite>context</cite> is provided
+it overrides the active context. If the superclass cannot be found,
+<tt class="docutils literal"><span class="pre">None</span></tt> is returned.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -180,6 +196,53 @@ superclass of this <tt class="docutils literal"><span class="pre">ClassFile</spa
 <dd><p>The class file version as a tuple in the form (major, minor).</p>
 </dd></dl>
 
+</dd></dl>
+
+</div>
+<div class="section" id="module-jawa.core.context">
+<span id="core-context-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">core.context</span></tt> Module<a class="headerlink" href="#module-jawa.core.context" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="jawa.core.context.Context">
+<em class="property">class </em><tt class="descclassname">jawa.core.context.</tt><tt class="descname">Context</tt><a class="reference internal" href="_modules/jawa/core/context.html#Context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.context.Context" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>A <a class="reference internal" href="#jawa.core.context.Context" title="jawa.core.context.Context"><tt class="xref py py-class docutils literal"><span class="pre">Context</span></tt></a> object exists to mimic the Java
+CLASSPATH and other environment flags &amp; settings.</p>
+<p>There are important performance considerations to make when using
+paths to <tt class="docutils literal"><span class="pre">.jar</span></tt> files. When doing a class lookup, paths ending in
+<tt class="docutils literal"><span class="pre">.jar</span></tt> will be substituded with a <a class="reference internal" href="#jawa.core.jf.JarFile" title="jawa.core.jf.JarFile"><tt class="xref py py-class docutils literal"><span class="pre">JarFile</span></tt></a> object
+which will remain in memory until removed.</p>
+<dl class="method">
+<dt id="jawa.core.context.Context.add_classpath">
+<tt class="descname">add_classpath</tt><big>(</big><em>path_or_jar</em><big>)</big><a class="reference internal" href="_modules/jawa/core/context.html#Context.add_classpath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.context.Context.add_classpath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new classpath to the current
+<a class="reference internal" href="#jawa.core.context.Context" title="jawa.core.context.Context"><tt class="xref py py-class docutils literal"><span class="pre">Context</span></tt></a>. The path may be a:</p>
+<ul class="simple">
+<li>filesystem path to a <tt class="docutils literal"><span class="pre">.jar</span></tt> file,</li>
+<li>filesystem path to a directory,</li>
+<li>an in-memory <a class="reference internal" href="#jawa.core.jf.JarFile" title="jawa.core.jf.JarFile"><tt class="xref py py-class docutils literal"><span class="pre">JarFile</span></tt></a>.</li>
+</ul>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.core.context.Context.classpath">
+<tt class="descname">classpath</tt><a class="reference internal" href="_modules/jawa/core/context.html#Context.classpath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.context.Context.classpath" title="Permalink to this definition">¶</a></dt>
+<dd><p>An iterator over the currently active classpaths.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.core.context.Context.find_class">
+<tt class="descname">find_class</tt><big>(</big><em>class_</em>, <em>no_inherit=False</em><big>)</big><a class="reference internal" href="_modules/jawa/core/context.html#Context.find_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.context.Context.find_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Searches for the given class in the active classpath, returning a
+<a class="reference internal" href="#jawa.core.cf.ClassFile" title="jawa.core.cf.ClassFile"><tt class="xref py py-class docutils literal"><span class="pre">ClassFile</span></tt></a> object or <tt class="docutils literal"><span class="pre">None</span></tt> if it was not
+found.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="jawa.core.context.ContextPathError">
+<em class="property">exception </em><tt class="descclassname">jawa.core.context.</tt><tt class="descname">ContextPathError</tt><big>(</big><em>msg</em>, <em>path</em><big>)</big><a class="reference internal" href="_modules/jawa/core/context.html#ContextPathError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.core.context.ContextPathError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
 </dd></dl>
 
 </div>
@@ -771,6 +834,7 @@ nothing was found.</p>
 <li><a class="reference internal" href="#">core Package</a><ul>
 <li><a class="reference internal" href="#module-jawa.core.jf"><tt class="docutils literal"><span class="pre">core.jf</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-jawa.core.cf"><tt class="docutils literal"><span class="pre">core.cf</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-jawa.core.context"><tt class="docutils literal"><span class="pre">core.context</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-jawa.core.attributes"><tt class="docutils literal"><span class="pre">core.attributes</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-jawa.core.constants"><tt class="docutils literal"><span class="pre">core.constants</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-jawa.core.fields"><tt class="docutils literal"><span class="pre">core.fields</span></tt> Module</a></li>

@@ -66,7 +66,7 @@
 <span class="sd">    Creates a new JVM ClassFile, optionally loading the JVM class at `io`,</span>
 <span class="sd">    where `io` is a file-like object providing `read()` or a file-system path.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_constants</span> <span class="o">=</span> <span class="n">const</span><span class="o">.</span><span class="n">ConstantPool</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">FieldTable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_methods</span> <span class="o">=</span> <span class="n">methods</span><span class="o">.</span><span class="n">MethodTable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -75,6 +75,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_super</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_this</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_context</span> <span class="o">=</span> <span class="n">context</span>
 
         <span class="k">if</span> <span class="n">io</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
             <span class="c"># The paths returned by EditableZipFile&#39;s query methods are</span>
@@ -137,6 +138,18 @@
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;superclass must be a ConstantClass.&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_super</span> <span class="o">=</span> <span class="n">value</span>
 </div>
+<div class="viewcode-block" id="ClassFile.get_superclass"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.cf.ClassFile.get_superclass">[docs]</a>    <span class="k">def</span> <span class="nf">get_superclass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lookup and return a :class:`~jawa.core.cf.ClassFile` for this class&#39;s</span>
+<span class="sd">        superclass using the currently active context. If `context` is provided</span>
+<span class="sd">        it overrides the active context. If the superclass cannot be found,</span>
+<span class="sd">        ``None`` is returned.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="n">context</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;java/lang/Object&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="n">context</span><span class="o">.</span><span class="n">find_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</div>
     <span class="nd">@property</span>
 <div class="viewcode-block" id="ClassFile.interfaces"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.cf.ClassFile.interfaces">[docs]</a>    <span class="k">def</span> <span class="nf">interfaces</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -147,7 +160,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interfaces</span>
 </div>
     <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="ClassFile.from_str"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.cf.ClassFile.from_str">[docs]</a>    <span class="k">def</span> <span class="nf">from_str</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="ClassFile.from_str"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.cf.ClassFile.from_str">[docs]</a>    <span class="k">def</span> <span class="nf">from_str</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a new :class:`~jawa.core.cf.ClassFile` from a string buffer.</span>
 
@@ -158,7 +171,7 @@
 <span class="sd">        ...        cf = ClassFile.from_str(jf.read(path))</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">sio</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="n">tmp</span> <span class="o">=</span> <span class="n">cls</span><span class="p">(</span><span class="n">io</span><span class="o">=</span><span class="n">sio</span><span class="p">)</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">cls</span><span class="p">(</span><span class="n">io</span><span class="o">=</span><span class="n">sio</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">)</span>
         <span class="n">sio</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">tmp</span>
 </div>
@@ -200,6 +213,14 @@
 <span class="sd">        ``ClassFile``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="ClassFile.context"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.cf.ClassFile.context">[docs]</a>    <span class="k">def</span> <span class="nf">context</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The currently active :class:`~jawa.core.context.Context` for</span>
+<span class="sd">        this ``ClassFile``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context</span>
 </div>
     <span class="nd">@version.setter</span>
 <div class="viewcode-block" id="ClassFile.version"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.cf.ClassFile.version">[docs]</a>    <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
