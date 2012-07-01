@@ -22,6 +22,14 @@ core Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`core.context` Module
+-----------------------------
+
+.. automodule:: jawa.core.context
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`core.attributes` Module
 -----------------------------
 

@@ -15,7 +15,7 @@ class ClassFile(object):
     Creates a new JVM ClassFile, optionally loading the JVM class at `io`,
     where `io` is a file-like object providing `read()` or a file-system path.
     """
-    def __init__(self, io=None):
+    def __init__(self, io=None, context=None):
         self._constants = const.ConstantPool()
         self._fields = fields.FieldTable(self)
         self._methods = methods.MethodTable(self)
@@ -24,6 +24,7 @@ class ClassFile(object):
         self._super = None
         self._this = None
         self._version = (0, 0)
+        self._context = context
 
         if io and isinstance(io, basestring):
             # The paths returned by EditableZipFile's query methods are
@@ -86,6 +87,18 @@ class ClassFile(object):
             raise TypeError('superclass must be a ConstantClass.')
         self._super = value
 
+    def get_superclass(self, context=None):
+        """
+        Lookup and return a :class:`~jawa.core.cf.ClassFile` for this class's
+        superclass using the currently active context. If `context` is provided
+        it overrides the active context. If the superclass cannot be found,
+        ``None`` is returned.
+        """
+        context = context or self.context
+        if self.superclass.name == 'java/lang/Object':
+            return None
+        return context.find_class(self.superclass.name)
+
     @property
     def interfaces(self):
         """
@@ -96,7 +109,7 @@ class ClassFile(object):
         return self._interfaces
 
     @classmethod
-    def from_str(cls, data):
+    def from_str(cls, data, context=None):
         """
         Returns a new :class:`~jawa.core.cf.ClassFile` from a string buffer.
 
@@ -107,7 +120,7 @@ class ClassFile(object):
         ...        cf = ClassFile.from_str(jf.read(path))
         """
         sio = StringIO(data)
-        tmp = cls(io=sio)
+        tmp = cls(io=sio, context=context)
         sio.close()
         return tmp
 
@@ -149,6 +162,14 @@ class ClassFile(object):
         ``ClassFile``.
         """
         return self._attributes
+
+    @property
+    def context(self):
+        """
+        The currently active :class:`~jawa.core.context.Context` for
+        this ``ClassFile``.
+        """
+        return self._context
 
     @version.setter
     def version(self, value):

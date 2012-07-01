@@ -18,17 +18,17 @@ class JarFile(EditableZipFile):
     Implements Jawa_-specific extensions over
     :class:`~jawa.util.ezip.EditableZipFile`.
     """
-    def open_class(self, path):
+    def open_class(self, path, context=None):
         """
         Return's a :class:`~jawa.core.cf.ClassFile` for the given `path`.
         """
-        return ClassFile.from_str(self.read(path))
+        return ClassFile.from_str(self.read(path), context=context)
 
-    def all_classes(self):
+    def all_classes(self, context=None):
         """
         An iterator that yields a :class:`~jawa.core.cf.ClassFile` for each
         path ending in ``.class`` in this JarFile.
         """
         # About 10ms faster for 1028 files than using self.regex()
         for path in (p for p in self.namelist if p.endswith('.class')):
-            yield ClassFile.from_str(self.read(path))
+            yield ClassFile.from_str(self.read(path), context=context)
