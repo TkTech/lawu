@@ -1,5 +1,6 @@
 # -*- coding: utf8 -*-
 import os
+import re
 
 from jawa.core.jf import JarFile
 from jawa.core.cf import ClassFile
@@ -86,11 +87,36 @@ class Context(object):
         for path in self._classpath:
             # We have a JarFile which supports this already, use it.
             if isinstance(path, JarFile):
-                for cf in path.all_classes():
+                for cf in path.all_classes(
+                    context=None if no_inherit else self):
                     yield cf
                 continue
 
             # We have a directory root of a package.
             for root, dirs, files in os.walk(path):
                 for file_ in (f for f in files if f.endswith('.class')):
-                    yield ClassFile(file_)
+                    yield ClassFile(
+                        os.path.join(root, file_),
+                        context=None if no_inherit else self
+                    )
+
+    def regex(self, regex, no_inherit=False):
+        """
+        Iterates over all classes available in the classpaths, whose path
+        matches `regex`.
+
+        .. warning:: The classpaths can contain many thousands of classes,
+                     use this method sparingly.
+        """
+        for path in self._classpath:
+            # We have a JarFile which supports this already, use it.
+            if isinstance(path, JarFile):
+                for file_ in path.regex(regex):
+                    yield path.open_class(
+                        file_, context=None if no_inherit else self)
+                continue
+
+            # We have a directory root of a package.
+            for root, dirs, files in os.walk(path):
+                for file_ in (f for f in files if f.endswith('.class')):
+                    raise NotImplementedError()
