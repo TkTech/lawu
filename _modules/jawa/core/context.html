@@ -56,12 +56,6 @@
 <span class="kn">from</span> <span class="nn">jawa.core.cf</span> <span class="kn">import</span> <span class="n">ClassFile</span>
 
 
-<div class="viewcode-block" id="ContextPathError"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.context.ContextPathError">[docs]</a><span class="k">class</span> <span class="nc">ContextPathError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">ContextPathError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
-
-</div>
 <div class="viewcode-block" id="Context"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.context.Context">[docs]</a><span class="k">class</span> <span class="nc">Context</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A :class:`~jawa.core.context.Context` object exists to mimic the Java</span>
@@ -137,14 +131,39 @@
         <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_classpath</span><span class="p">:</span>
             <span class="c"># We have a JarFile which supports this already, use it.</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">JarFile</span><span class="p">):</span>
-                <span class="k">for</span> <span class="n">cf</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">all_classes</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">cf</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">all_classes</span><span class="p">(</span>
+                    <span class="n">context</span><span class="o">=</span><span class="bp">None</span> <span class="k">if</span> <span class="n">no_inherit</span> <span class="k">else</span> <span class="bp">self</span><span class="p">):</span>
                     <span class="k">yield</span> <span class="n">cf</span>
                 <span class="k">continue</span>
 
             <span class="c"># We have a directory root of a package.</span>
             <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
                 <span class="k">for</span> <span class="n">file_</span> <span class="ow">in</span> <span class="p">(</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;.class&#39;</span><span class="p">)):</span>
-                    <span class="k">yield</span> <span class="n">ClassFile</span><span class="p">(</span><span class="n">file_</span><span class="p">)</span></div></div>
+                    <span class="k">yield</span> <span class="n">ClassFile</span><span class="p">(</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">file_</span><span class="p">),</span>
+                        <span class="n">context</span><span class="o">=</span><span class="bp">None</span> <span class="k">if</span> <span class="n">no_inherit</span> <span class="k">else</span> <span class="bp">self</span>
+                    <span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Context.regex"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.context.Context.regex">[docs]</a>    <span class="k">def</span> <span class="nf">regex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regex</span><span class="p">,</span> <span class="n">no_inherit</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Iterates over all classes available in the classpaths, whose path</span>
+<span class="sd">        matches `regex`.</span>
+
+<span class="sd">        .. warning:: The classpaths can contain many thousands of classes,</span>
+<span class="sd">                     use this method sparingly.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_classpath</span><span class="p">:</span>
+            <span class="c"># We have a JarFile which supports this already, use it.</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">JarFile</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">file_</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">regex</span><span class="p">(</span><span class="n">regex</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">path</span><span class="o">.</span><span class="n">open_class</span><span class="p">(</span>
+                        <span class="n">file_</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="bp">None</span> <span class="k">if</span> <span class="n">no_inherit</span> <span class="k">else</span> <span class="bp">self</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="c"># We have a directory root of a package.</span>
+            <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">file_</span> <span class="ow">in</span> <span class="p">(</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;.class&#39;</span><span class="p">)):</span>
+                    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
 </pre></div>
 
           </div>
