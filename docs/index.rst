@@ -15,6 +15,7 @@ Jawa API
    :maxdepth: 4
 
    jawa.core
+   jawa.core.attribs
    jawa.util
 
 
