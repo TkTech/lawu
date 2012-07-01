@@ -54,18 +54,28 @@ class Context(object):
 
         for i, path in enumerate(self._classpath):
             if isinstance(path, JarFile):
+                # The path is a .jar file already opened in our container.
                 if class_ in path.namelist:
                     return path.open_class(
-                        class_, context=None if no_inherit else self)
+                        class_,
+                        context=None if no_inherit else self
+                    )
             elif os.path.isfile(path) and path.endswith('.jar'):
+                # The path is a filesystem path for un-opened .jar, so
+                # substitue the path and re-run ourself.
                 self._classpath[i] = JarFile(path)
                 return self.find_class(class_, no_inherit=no_inherit)
             elif os.path.isdir(path):
+                # The path is plain directory (usually an expanded .jar).
                 final_path = class_.replace('/', os.sep)
                 final_path = os.join(path, final_path)
                 if os.path.isfile(final_path):
-                    return ClassFile(final_path)
+                    return ClassFile(
+                        final_path,
+                        context=None if no_inherit else self
+                    )
             else:
+                # We don't know what the hell this thing is.
                 raise ContextPathError(
                     'path was not a .jar or a directory', path)
 
