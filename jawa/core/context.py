@@ -1,15 +1,8 @@
 # -*- coding: utf8 -*-
 import os
-import re
 
 from jawa.core.jf import JarFile
 from jawa.core.cf import ClassFile
-
-
-class ContextPathError(Exception):
-    def __init__(self, msg, path):
-        super(ContextPathError, self).__init__(msg)
-        self.path = path
 
 
 class Context(object):
@@ -120,3 +113,20 @@ class Context(object):
             for root, dirs, files in os.walk(path):
                 for file_ in (f for f in files if f.endswith('.class')):
                     raise NotImplementedError()
+
+    def subclass_tree(self):
+        """
+        Builds a subclass tree, showing all subclasses and their superclasses
+        that are available in the classpath. Classes that cannot be found
+        are silently ignored.
+
+        .. warning:: The classpaths can contain many thousands of classes,
+                     use this method sparingly.
+        """
+        tree = {}
+        for cf in self.all_classes():
+            x = cf
+            while x is not None:
+                tree.setdefault(x.superclass.name, []).append(cf.this.name)
+                x = x.get_superclass()
+        return tree
