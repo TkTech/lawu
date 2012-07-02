@@ -163,7 +163,24 @@
             <span class="c"># We have a directory root of a package.</span>
             <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
                 <span class="k">for</span> <span class="n">file_</span> <span class="ow">in</span> <span class="p">(</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;.class&#39;</span><span class="p">)):</span>
-                    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+                    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Context.subclass_tree"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.context.Context.subclass_tree">[docs]</a>    <span class="k">def</span> <span class="nf">subclass_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Builds a subclass tree, showing all subclasses and their superclasses</span>
+<span class="sd">        that are available in the classpath. Classes that cannot be found</span>
+<span class="sd">        are silently ignored.</span>
+
+<span class="sd">        .. warning:: The classpaths can contain many thousands of classes,</span>
+<span class="sd">                     use this method sparingly.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">cf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_classes</span><span class="p">():</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">cf</span>
+            <span class="k">while</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">tree</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cf</span><span class="o">.</span><span class="n">this</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">get_superclass</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">tree</span></div></div>
 </pre></div>
 
           </div>
