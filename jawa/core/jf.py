@@ -32,3 +32,7 @@ class JarFile(EditableZipFile):
         # About 10ms faster for 1028 files than using self.regex()
         for path in (p for p in self.namelist if p.endswith('.class')):
             yield ClassFile.from_str(self.read(path), context=context)
+
+    @property
+    def class_count(self):
+        return len(p for p in self.namelist if p.endswith('.class'))

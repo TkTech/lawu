@@ -105,4 +105,26 @@ class EditableZipFile(object):
             if re.match(regex, p):
                 yield ZipPathResult(self, p)
 
+    def directory_tree(self):
+        """
+        Returns a (potentially multilevel) dict representing the file
+        hierarchy.
+        """
+        root = {}
+
+        # Sort the paths by depth with the shortest occuring first.
+        paths = [p.split('/') for p in self.namelist]
+        paths.sort(key=lambda x: len(x))
+
+        for path in paths:
+            complete_path = '/'.join(path)
+
+            path_root = root
+            while len(path) > 1:
+                path_part = path.pop(0)
+                path_root = path_root.setdefault(path_part, {})
+            path_root[path[0]] = complete_path
+
+        return root
+
     close = __exit__
