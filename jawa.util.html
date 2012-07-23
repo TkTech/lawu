@@ -218,6 +218,13 @@ or <tt class="xref py py-func docutils literal"><span class="pre">jawa.core.desc
 <dd><p>Closes the ZipFile and any underlying objects.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="jawa.util.ezip.EditableZipFile.directory_tree">
+<tt class="descname">directory_tree</tt><big>(</big><big>)</big><a class="headerlink" href="#jawa.util.ezip.EditableZipFile.directory_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a (potentially multilevel) dict representing the file
+hierarchy.</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="jawa.util.ezip.EditableZipFile.namelist">
 <tt class="descname">namelist</tt><a class="reference internal" href="_modules/jawa/util/ezip.html#EditableZipFile.namelist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.ezip.EditableZipFile.namelist" title="Permalink to this definition">¶</a></dt>
@@ -273,6 +280,22 @@ but additionally provides a <tt class="docutils literal"><span class="pre">read(
 </dd></dl>
 
 </div>
+<div class="section" id="module-jawa.util.keywords">
+<span id="util-keywords-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">util.keywords</span></tt> Module<a class="headerlink" href="#module-jawa.util.keywords" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="jawa.util.keywords.is_keyword">
+<tt class="descclassname">jawa.util.keywords.</tt><tt class="descname">is_keyword</tt><big>(</big><em>kw</em><big>)</big><a class="reference internal" href="_modules/jawa/util/keywords.html#is_keyword"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.keywords.is_keyword" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns <tt class="docutils literal"><span class="pre">True</span></tt> if <cite>kw</cite> is a Java language keyword, <tt class="docutils literal"><span class="pre">False</span></tt> otherwise.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="jawa.util.keywords.kwlist">
+<tt class="descclassname">jawa.util.keywords.</tt><tt class="descname">kwlist</tt><big>(</big><em>minimum_version=5</em><big>)</big><a class="reference internal" href="_modules/jawa/util/keywords.html#kwlist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.keywords.kwlist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of Java language keywords that are available from
+<cite>minimum_version</cite> and below.</p>
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -287,6 +310,7 @@ but additionally provides a <tt class="docutils literal"><span class="pre">read(
 <li><a class="reference internal" href="#module-jawa.util.bytecode"><tt class="docutils literal"><span class="pre">util.bytecode</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-jawa.util.descriptor"><tt class="docutils literal"><span class="pre">util.descriptor</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-jawa.util.ezip"><tt class="docutils literal"><span class="pre">util.ezip</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-jawa.util.keywords"><tt class="docutils literal"><span class="pre">util.keywords</span></tt> Module</a></li>
 </ul>
 </li>
 </ul>
