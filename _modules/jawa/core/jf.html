@@ -82,7 +82,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># About 10ms faster for 1028 files than using self.regex()</span>
         <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">(</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;.class&#39;</span><span class="p">)):</span>
-            <span class="k">yield</span> <span class="n">ClassFile</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">)</span></div></div>
+            <span class="k">yield</span> <span class="n">ClassFile</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">)</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="JarFile.class_count"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.jf.JarFile.class_count">[docs]</a>    <span class="k">def</span> <span class="nf">class_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;.class&#39;</span><span class="p">))</span></div></div>
 </pre></div>
 
           </div>
