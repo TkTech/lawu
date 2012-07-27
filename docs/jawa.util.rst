@@ -24,3 +24,11 @@ util Package
     :members:
     :undoc-members:
     :show-inheritance:
+
+:mod:`util.keywords` Module
+---------------------------
+
+.. automodule:: jawa.util.keywords
+    :members:
+    :undoc-members:
+    :show-inheritance:
