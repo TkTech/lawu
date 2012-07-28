@@ -10,6 +10,7 @@ _JAVA_KEYWORDS = (
     ('char', 5),
     ('class', 5),
     ('const', 5),
+    ('continue', 5),
     ('default', 5),
     ('do', 5),
     ('double', 5),
@@ -53,7 +54,7 @@ _JAVA_KEYWORDS = (
     ('var', 5),
     ('void', 5),
     ('volatile', 5),
-    ('whilecontinue', 5)
+    ('while', 5)
 )
 
 

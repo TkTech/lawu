@@ -424,6 +424,13 @@ class ConstantPool(object):
         except StopIteration:
             return None
 
+    @property
+    def count(self):
+        """
+        Returns the number of constants in the pool.
+        """
+        return len(self._pool)
+
     def build_class(self, class_name):
         """
         Builds a new :py:class:`jawa.core.constants.ConstantClass` with
