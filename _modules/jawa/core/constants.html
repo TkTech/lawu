@@ -475,6 +475,13 @@
         <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">None</span>
 </div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="ConstantPool.count"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.constants.ConstantPool.count">[docs]</a>    <span class="k">def</span> <span class="nf">count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the number of constants in the pool.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pool</span><span class="p">)</span>
+</div>
 <div class="viewcode-block" id="ConstantPool.build_class"><a class="viewcode-back" href="../../../jawa.core.html#jawa.core.constants.ConstantPool.build_class">[docs]</a>    <span class="k">def</span> <span class="nf">build_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Builds a new :py:class:`jawa.core.constants.ConstantClass` with</span>
@@ -589,7 +596,7 @@
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-11145163-12']);
+  _gaq.push(['_setAccount', 'UA-11145163-14']);
   _gaq.push(['_setDomainName', 'tkte.ch']);
   _gaq.push(['_trackPageview']);
 
