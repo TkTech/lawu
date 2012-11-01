@@ -1,5 +1,11 @@
 # -*- coding: utf8 -*-
-__all__ = ('AttributeTable', 'Attribute')
+__all__ = (
+    'AttributeTable',
+    'Attribute',
+    'UnknownAttribute',
+    'ConstantValueAttribute',
+    'SourceFileAttribute'
+)
 from struct import unpack_from, unpack, pack
 from itertools import repeat
 
@@ -73,8 +79,8 @@ class SourceFileAttribute(Attribute):
 
 
 _default_parsers = {
-    #'ConstantValue': ConstantValueAttribute,
-    #'SourceFile': SourceFileAttribute
+    'ConstantValue': ConstantValueAttribute,
+    'SourceFile': SourceFileAttribute
 }
 
 
