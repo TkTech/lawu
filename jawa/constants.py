@@ -48,35 +48,32 @@ class ConstantNumber(Constant):
 
 
 class ConstantUTF8(Constant):
+    TAG = 1
+
     def __init__(self, pool, index, value):
         super(ConstantUTF8, self).__init__(pool, index)
         self.value = value
 
-    def raw(self):
-        return (1, self.value)
-
 
 class ConstantInteger(ConstantNumber):
-    def raw(self):
-        return (3, self.value)
+    TAG = 3
 
 
 class ConstantFloat(ConstantNumber):
-    def raw(self):
-        return (4, self.value)
+    TAG = 4
 
 
 class ConstantLong(ConstantNumber):
-    def raw(self):
-        return (5, self.value)
+    TAG = 5
 
 
 class ConstantDouble(ConstantNumber):
-    def raw(self):
-        return (6, self.value)
+    TAG = 6
 
 
 class ConstantClass(Constant):
+    TAG = 7
+
     def __init__(self, pool, index, name_index):
         super(ConstantClass, self).__init__(pool, index)
         self._name_index = name_index
@@ -85,11 +82,10 @@ class ConstantClass(Constant):
     def name(self):
         return self.pool.get(self._name_index)
 
-    def raw(self):
-        return (7, self._name_index)
-
 
 class ConstantString(Constant):
+    TAG = 8
+
     def __init__(self, pool, index, string_index):
         super(ConstantString, self).__init__(pool, index)
         self._string_index = string_index
@@ -97,9 +93,6 @@ class ConstantString(Constant):
     @property
     def string(self):
         return self.pool.get(self._string_index)
-
-    def raw(self):
-        return (8, self._string_index)
 
 
 class ConstantRef(Constant):
@@ -118,21 +111,20 @@ class ConstantRef(Constant):
 
 
 class ConstantFieldRef(ConstantRef):
-    def raw(self):
-        return (9, self._class_index, self._name_and_type_index)
+    TAG = 9
 
 
 class ConstantMethodRef(ConstantRef):
-    def raw(self):
-        return (10, self._class_index, self._name_and_type_index)
+    TAG = 10
 
 
 class ConstantInterfaceMethodRef(ConstantRef):
-    def raw(self):
-        return (11, self._class_index, self._name_and_type_index)
+    TAG = 11
 
 
 class ConstantNameAndType(Constant):
+    TAG = 12
+
     def __init__(self, pool, index, name_index, descriptor_index):
         super(ConstantNameAndType, self).__init__(pool, index)
         self._name_index = name_index
@@ -145,9 +137,6 @@ class ConstantNameAndType(Constant):
     @property
     def descriptor(self):
         return self.pool.get(self._descriptor_index)
-
-    def raw(self):
-        return (12, self._name_index, self._descriptor_index)
 
 
 _constant_types = (
@@ -422,19 +411,58 @@ class ConstantPool(object):
 
     def _to_io(self, fout):
         write = fout.write
+        write(pack('>H', self.raw_count))
 
         for constant in self:
-            raw = constant.raw()
-            tag = raw[0]
-            write(pack('>B', tag))
-
-            if tag == 1:
-                length = len(raw[1])
-                write(pack('>H', length))
-                write(raw[1])
-            else:
-                fmt, _ = _constant_fmts[tag]
-                write(pack(fmt, *raw[1:]))
+            if constant.TAG == 1:
+                length = len(constant.value)
+                write(pack('>BH',
+                    constant.TAG,
+                    length
+                ))
+                write(constant.value)
+            elif isinstance(constant, ConstantInteger):
+                write(pack('>Bi',
+                    constant.TAG,
+                    constant.value
+                ))
+            elif isinstance(constant, ConstantFloat):
+                write(pack('>Bf',
+                    constant.TAG,
+                    constant.value
+                ))
+            elif isinstance(constant, ConstantLong):
+                write(pack('>Bq',
+                    constant.TAG,
+                    constant.value
+                ))
+            elif isinstance(constant, ConstantDouble):
+                write(pack('>Bd',
+                    constant.TAG,
+                    constant.value
+                ))
+            elif isinstance(constant, ConstantClass):
+                write(pack('>BH',
+                    constant.TAG,
+                    constant._name_index
+                ))
+            elif isinstance(constant, ConstantString):
+                write(pack('>BH',
+                    constant.TAG,
+                    constant._string_index
+                ))
+            elif isinstance(constant, ConstantRef):
+                write(pack('>BHH',
+                    constant.TAG,
+                    constant._class_index,
+                    constant._name_and_type_index
+                ))
+            elif isinstance(constant, ConstantNameAndType):
+                write(pack('>BHH',
+                    constant.TAG,
+                    constant._name_index,
+                    constant._descriptor_index
+                ))
 
     # -------------
     # Properties
