@@ -18,26 +18,7 @@ __all__ = (
 
 class Constant(object):
     """
-    The base class for all ``Constant*`` types. Making a change to a
-    Constant-derived type does **not** save that change unless
-    :meth:`~Constant.commit` is called. Alternatively, the constant can be
-    used as a context manager to automatically call :meth:`~Constant.commit`.
-
-    For example, the following does not work as :meth:`~Constant.commit`
-    is never called::
-
-        >>> cf = ClassFile.create('HelloWorld')
-        >>> cf.this.name.value = 'NotHelloWorld'
-        >>> print(cf.this.name.value)
-        "HelloWorld"
-
-    A working example:
-
-        >>> cf = ClassFile.create('HelloWorld')
-        >>> with cf.this.name as name:
-        ...    name.value = 'NotHelloWorld'
-        >>> print(cf.this.name.value)
-        "NotHelloWorld"
+    The base class for all ``Constant*`` types.
     """
     def __init__(self, pool, index):
         self._pool = pool
@@ -62,18 +43,6 @@ class Constant(object):
         Returns the packed tuple form of this constant.
         """
         raise NotImplementedError()
-
-    def commit(self):
-        """
-        Commits any changes to this constant back to the constant pool.
-        """
-        self.pool.raw_set(self.index, self.raw())
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, *exc_info):
-        self.commit()
 
 
 class ConstantNumber(Constant):
@@ -230,7 +199,10 @@ class ConstantPool(object):
         does not exist.
         """
         constant = self._pool[index]
-        return _constant_types[constant[0]](self, index, *constant[1:])
+        if not isinstance(constant, Constant):
+            constant = _constant_types[constant[0]](self, index, *constant[1:])
+            self._pool[index] = constant
+        return constant
 
     def __getitem__(self, idx):
         return self.get(idx)

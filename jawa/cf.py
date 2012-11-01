@@ -66,10 +66,9 @@ class ClassFile(object):
     To create a new ClassFile, use the helper :meth:`~ClassFile.create`::
 
         from jawa import ClassFile
-        if __name__ == '__main__':
-            cf = ClassFile.create('HelloWorld')
-            with open('HelloWorld.class', 'wb') as fout:
-                cf.save(fout)
+        cf = ClassFile.create('HelloWorld')
+        with open('HelloWorld.class', 'wb') as fout:
+            cf.save(fout)
 
     :meth:`~ClassFile.create` sets up some reasonable defaults equivelent to:
 
@@ -138,20 +137,18 @@ class ClassFile(object):
             self.constants.raw_count
         ))
 
-        for constant in self.constants._pool:
-            if constant is None:
-                continue
-
-            tag = constant[0]
+        for constant in self.constants:
+            raw = constant.raw()
+            tag = raw[0]
             write(pack('>B', tag))
 
             if tag == 1:
-                length = len(constant[1])
+                length = len(raw[1])
                 write(pack('>H', length))
-                write(constant[1])
+                write(raw[1])
             else:
                 fmt, _ = _constant_fmts[tag]
-                write(pack(fmt, *constant[1:]))
+                write(pack(fmt, *raw[1:]))
 
         write(self.access_flags.pack())
         write(pack('>HHH{0}H'.format(len(self._interfaces)),
