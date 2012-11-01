@@ -113,11 +113,10 @@ class ClassFile(object):
         """
         write = fout.write
 
-        write(pack('>IHHH',
+        write(pack('>IHH',
             ClassFile.MAGIC,
             self.version.minor,
-            self.version.major,
-            self.constants.raw_count
+            self.version.major
         ))
 
         self._constants._to_io(fout)

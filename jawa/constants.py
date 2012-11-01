@@ -183,13 +183,6 @@ class ConstantPool(object):
         """
         self._pool.append(constant)
 
-    def raw(self, index):
-        """
-        Returns the "raw" constant for `index`. Typically only useful for
-        calculating size-on-disk and for saving.
-        """
-        return self._pool[index]
-
     def __iter__(self):
         for index, constant in enumerate(self._pool):
             if constant is not None:
@@ -209,10 +202,7 @@ class ConstantPool(object):
     def __getitem__(self, idx):
         return self.get(idx)
 
-    def raw_set(self, idx, value):
-        """
-        Overwrites the 'raw' constant at `idx` with `value`.
-        """
+    def __setitem__(self, idx, value):
         self._pool[idx] = value
 
     def find(self, type_=None, f=None):
@@ -414,7 +404,7 @@ class ConstantPool(object):
         write(pack('>H', self.raw_count))
 
         for constant in self:
-            if constant.TAG == 1:
+            if isinstance(constant, ConstantUTF8):
                 length = len(constant.value)
                 write(pack('>BH',
                     constant.TAG,

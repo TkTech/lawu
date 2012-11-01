@@ -76,11 +76,18 @@ class FieldTable(object):
         """
         self._table = [fld for fld in self._table if fld is not field]
 
-    def create(self, name, descriptor, flags=None, attribs=None):
+    def create(self, name, descriptor):
         """
         Creates a new field from `name` and `descriptor`.
         """
-        self._cf.constants.add()
+        field = Field(self._cf)
+        name = self._cf.constants.create_utf8(name)
+        descriptor = self._cf.constants.create_utf8(descriptor)
+        field._name_index = name.index
+        field._descriptor_index = descriptor.index
+        field.access_flags.acc_public = True
+        self.append(field)
+        return field
 
     def __iter__(self):
         for field in self._table:
