@@ -63,6 +63,21 @@ class ClassFile(object):
         with open('HelloWorld.class', 'wb') as fout:
             cf.save(fout)
 
+    To create a new ClassFile, use the helper :meth:`~ClassFile.create`::
+
+        from jawa import ClassFile
+        if __name__ == '__main__':
+            cf = ClassFile.create('HelloWorld')
+            with open('HelloWorld.class', 'wb') as fout:
+                cf.save(fout)
+
+    :meth:`~ClassFile.create` sets up some reasonable defaults equivelent to:
+
+    .. code-block:: java
+
+        public class HelloWorld extends java.lang.Object{
+        }
+
     :param fio: any file-like object providing ``.read()``.
     """
     #: The JVM ClassFile magic number.
@@ -91,6 +106,24 @@ class ClassFile(object):
 
         if fio:
             self._from_io(fio)
+
+    @classmethod
+    def create(cls, this, super_='java/lang/Object'):
+        """
+        A utility method which sets up reasonable defaults for a new public
+        class.
+
+        :param this: The name of this class.
+        :param super_: The name of this class's superclass.
+        """
+        cf = ClassFile()
+        cf.access_flags.acc_public = True
+        cf.access_flags.acc_super = True
+
+        cf._this = cf.constants.create_class(this).index
+        cf._super = cf.constants.create_class(super_).index
+
+        return cf
 
     def save(self, fout):
         """

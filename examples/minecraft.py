@@ -3,10 +3,11 @@
 """
 A template for scripts that modify the Minecraft client.
 """
-if __name__ == '__main__':
-    import sys
-    from jawa import JarFile
+import sys
 
+from jawa import JarFile
+
+if __name__ == '__main__':
     with JarFile(sys.argv[1]) as jf:
         for path, cf in jf.all_classes():
 

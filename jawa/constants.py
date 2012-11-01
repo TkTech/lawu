@@ -7,7 +7,6 @@ __all__ = (
     'ConstantString',
     'ConstantFieldRef',
     'ConstantMethodRef',
-    'ConstantFieldRef',
     'ConstantInterfaceMethodRef',
     'ConstantInteger',
     'ConstantFloat',
@@ -18,22 +17,56 @@ __all__ = (
 
 
 class Constant(object):
+    """
+    The base class for all ``Constant*`` types. Making a change to a
+    Constant-derived type does **not** save that change unless
+    :meth:`~Constant.commit` is called. Alternatively, the constant can be
+    used as a context manager to automatically call :meth:`~Constant.commit`.
+
+    For example, the following does not work as :meth:`~Constant.commit`
+    is never called::
+
+        >>> cf = ClassFile.create('HelloWorld')
+        >>> cf.this.name.value = 'NotHelloWorld'
+        >>> print(cf.this.name.value)
+        "HelloWorld"
+
+    A working example:
+
+        >>> cf = ClassFile.create('HelloWorld')
+        >>> with cf.this.name as name:
+        ...    name.value = 'NotHelloWorld'
+        >>> print(cf.this.name.value)
+        "NotHelloWorld"
+    """
     def __init__(self, pool, index):
         self._pool = pool
         self._index = index
 
     @property
     def pool(self):
+        """
+        The constant pool this constant belongs to.
+        """
         return self._pool
 
     @property
     def index(self):
+        """
+        The index of this constant in the constant pool.
+        """
         return self._index
 
     def raw(self):
+        """
+        Returns the packed tuple form of this constant.
+        """
         raise NotImplementedError()
 
     def commit(self):
+        """
+        Commits any changes to this constant back to the constant pool.
+        """
         self.pool.raw_set(self.index, self.raw())
 
     def __enter__(self):
@@ -213,8 +246,8 @@ class ConstantPool(object):
         Iterates over the pool, yielding each matching ``Constant``. Calling
         without any arguments is equivelent to iterating over the pool.
 
-         * `type_` must be a subclass of ``Constant``.
-         * `f` must be callable which takes one value (the constant)
+        :param type_: Any subclass of :class:`Constant` or ``None``.
+        :param f: Any callable which takes one argument (the constant).
         """
         for constant in self:
             if type_ is not None and not isinstance(constant, type_):
@@ -236,8 +269,145 @@ class ConstantPool(object):
             return None
 
     def create_utf8(self, value):
+        """
+        Creates a new :class:`ConstantUTF8`, adding it to the pool and
+        returning it.
+
+        :param value: The value of the new UTF8 string.
+        """
         self.append((1, value))
-        return self.get(-1)
+        return self.get(self.raw_count - 1)
+
+    def create_integer(self, value):
+        """
+        Creates a new :class:`ConstantInteger`, adding it to the pool and
+        returning it.
+
+        :param value: The value of the new integer.
+        """
+        self.append((3, value))
+        return self.get(self.raw_count - 1)
+
+    def create_float(self, value):
+        """
+        Creates a new :class:`ConstantFloat`, adding it to the pool and
+        returning it.
+
+        :param value: The value of the new float.
+        """
+        self.append((4, value))
+        return self.get(self.raw_count - 1)
+
+    def create_long(self, value):
+        """
+        Creates a new :class:`ConstantLong`, adding it to the pool and
+        returning it.
+
+        :param value: The value of the new long.
+        """
+        self.append((5, value))
+        self.append(None)
+        return self.get(self.raw_count - 2)
+
+    def create_double(self, value):
+        """
+        Creates a new :class:`ConstantDouble`, adding it to the pool and
+        returning it.
+
+        :param value: The value of the new Double.
+        """
+        self.append((6, value))
+        self.append(None)
+        return self.get(self.raw_count - 2)
+
+    def create_class(self, name):
+        """
+        Creates a new :class:`ConstantClass`, adding it to the pool and
+        returning it.
+
+        :param name: The name of the new class.
+        """
+        self.append((
+            7,
+            self.create_utf8(name).index
+        ))
+        return self.get(self.raw_count - 1)
+
+    def create_string(self, value):
+        """
+        Creates a new :class:`ConstantString`, adding it to the pool and
+        returning it.
+
+        :param value: The value of the new string as a UTF8 string.
+        """
+        self.append((
+            8,
+            self.create_utf8(value).index
+        ))
+        return self.get(self.raw_count - 1)
+
+    def create_name_and_type(self, name, descriptor):
+        """
+        Creates a new :class:`ConstantNameAndType`, adding it to the pool and
+        returning it.
+
+        :param name: The name of the class.
+        :param descriptor: The descriptor for `name`.
+        """
+        self.append((
+            12,
+            self.create_class(name).index,
+            self.create_utf8(descriptor).index
+        ))
+        return self.get(self.raw_count - 1)
+
+    def create_field_ref(self, class_, field, descriptor):
+        """
+        Creates a new :class:`ConstantFieldRef`, adding it to the pool and
+        returning it.
+
+        :param class_: The name of the class to which `field` belongs.
+        :param field: The name of the field.
+        :param descriptor: The descriptor for `field`.
+        """
+        self.append((
+            9,
+            self.create_class(class_).index,
+            self.create_name_and_type(field, descriptor).index
+        ))
+        return self.get(self.raw_count - 1)
+
+    def create_method_ref(self, class_, method, descriptor):
+        """
+        Creates a new :class:`ConstantMethodRef`, adding it to the pool and
+        returning it.
+
+        :param class_: The name of the class to which `method` belongs.
+        :param method: The name of the method.
+        :param descriptor: The descriptor for `method`.
+        """
+        self.append((
+            10,
+            self.create_class(class_).index,
+            self.create_name_and_type(method, descriptor).index
+        ))
+        return self.get(self.raw_count)
+
+    def create_interface_method_ref(self, class_, if_method, descriptor):
+        """
+        Creates a new :class:`ConstantInterfaceMethodRef`, adding it to the
+        pool and returning it.
+
+        :param class_: The name of the class to which `if_method` belongs.
+        :param if_method: The name of the interface method.
+        :param descriptor: The descriptor for `if_method`.
+        """
+        self.append((
+            11,
+            self.create_class(class_).index,
+            self.create_name_and_type(if_method, descriptor).index
+        ))
+        return self.get(self.raw_count)
 
     # -------------
     # Properties
