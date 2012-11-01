@@ -40,7 +40,7 @@ class Field(object):
 
     @property
     def attributes(self):
-        return self._attribs
+        return self._attributes
 
     def _from_io(self, fio):
         self.access_flags.unpack(fio.read(2))

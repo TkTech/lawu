@@ -42,6 +42,10 @@ class Attribute(object):
         """
         return self.info
 
+    @classmethod
+    def create(cls, name):
+        raise NotImplementedError()
+
 
 class UnknownAttribute(Attribute):
     def unpack(self, info):
@@ -53,6 +57,12 @@ class UnknownAttribute(Attribute):
 
 
 class ConstantValueAttribute(Attribute):
+    @classmethod
+    def create(cls, cf, value):
+        c = cls(cf, cf.constants.create_utf8('ConstantValue').index)
+        c._constantvalue_index = value.index
+        return c
+
     def unpack(self, info):
         self._constantvalue_index = unpack_from('>H', info)[0]
 
@@ -123,6 +133,18 @@ class AttributeTable(object):
             ))
             fout.write(info)
 
+    def create(self, type_, *args, **kwargs):
+        """
+        Creates a new attribute of `type_`, appending it to the attribute
+        table and returning it.
+        """
+        attribute = type_.create(self._cf, *args, **kwargs)
+        self.append(attribute)
+        return attribute
+
     @property
     def count(self):
         return len(self._table)
+
+    def append(self, attribute):
+        self._table.append(attribute)
