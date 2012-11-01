@@ -12,27 +12,27 @@ class Attribute(object):
     @property
     def info(self):
         """
-        This `Attribute` packed into its on-disk representation.
+        This attribute packed into its on-disk representation.
         """
         raise NotImplementedError()
 
     @property
     def name(self):
         """
-        The :class:~jawa.cp.ConstantUtf8 with the name of this
+        The :class:`~jawa.constants.ConstantUtf8` with the name of this
         attribute.
         """
         return self._cf.constants[self._name_index]
 
     def unpack(self, info):
         """
-        Parses an instance of this `Attribute` from the blob `info`.
+        Parses an instance of this attribute from the blob `info`.
         """
         raise NotImplementedError()
 
     def pack(self):
         """
-        This `Attribute` packed into its on-disk representation.
+        This attribute packed into its on-disk representation.
         """
         return self.info
 

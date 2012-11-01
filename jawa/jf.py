@@ -1,6 +1,6 @@
 # -*- coding: utf8 -*-
 """
-The :mod:`core.jf` module provides tools for working with JVM ``.jar``
+The :mod:`jawa.jf` module provides tools for working with JVM ``.jar``
 archives, which are simply ZIP_ archives with some mandatory structure.
 
 .. note::
@@ -23,11 +23,11 @@ from jawa.cf import ClassFile
 class JarFile(EditableZipFile):
     """
     Implements Jawa_-specific extensions over
-    :class:`~jawa.utilities.ezip.EditableZipFile`.
+    :class:`~jawa.util.ezip.EditableZipFile`.
     """
     def all_classes(self):
         """
-        An iterator that yields a :class:`~jawa.core.cf.ClassFile` for each
+        An iterator that yields a :class:`~jawa.cf.ClassFile` for each
         path ending in ``.class`` in this JarFile.
         """
         # About 10ms faster for 1028 files than using self.regex()
@@ -39,4 +39,7 @@ class JarFile(EditableZipFile):
 
     @property
     def class_count(self):
+        """
+        The number of classes within this JarFile.
+        """
         return len(p for p in self.namelist if p.endswith('.class'))

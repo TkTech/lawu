@@ -4,7 +4,7 @@ from struct import pack, unpack
 from collections import namedtuple
 
 
-from jawa.cp import ConstantPool
+from jawa.constants import ConstantPool
 from jawa.fields import FieldTable
 from jawa.methods import MethodTable
 from jawa.attribute import AttributeTable
@@ -33,6 +33,10 @@ class ClassVersion(namedtuple('ClassVersion', ['major', 'minor'])):
 
     @property
     def human(self):
+        """
+        A human-readable string identifying this version, or ``None``
+        if it is unknown.
+        """
         return {
             0x33: 'J2SE_7',
             0x32: 'J2SE_6',
@@ -45,7 +49,23 @@ class ClassVersion(namedtuple('ClassVersion', ['major', 'minor'])):
 
 
 class ClassFile(object):
-    # The JVM .class magic number.
+    """
+    Implements the JVM ClassFile (files typically ending in ``.class``).
+
+    To open an existing ClassFile::
+
+        from jawa import ClassFile
+        with open('HelloWorld.class') as fin:
+            cf = ClassFile(fin)
+
+    To save a newly created or modified ClassFile::
+
+        with open('HelloWorld.class', 'wb') as fout:
+            cf.save(fout)
+
+    :param fio: any file-like object providing ``.read()``.
+    """
+    #: The JVM ClassFile magic number.
     MAGIC = 0xCAFEBABE
 
     def __init__(self, fio=None):
@@ -74,7 +94,7 @@ class ClassFile(object):
 
     def save(self, fout):
         """
-        Saves the `ClassFile` to the file-like object `fout`.
+        Saves the class to the file-like object `fout`.
         """
         write = fout.write
 
@@ -173,6 +193,17 @@ class ClassFile(object):
 
     @property
     def version(self):
+        """
+        The :class:`~jawa.cf.ClassVersion` for this class.
+
+        Example::
+
+            >>> cf.version = 51, 0
+            >>> print(cf.version)
+            ClassVersion(major=51, minor=0)
+            >>> print(cf.version.major)
+            51
+        """
         return self._version
 
     @version.setter
@@ -182,7 +213,7 @@ class ClassFile(object):
     @property
     def constants(self):
         """
-        The :class:~jawa.cp.ConstantPool for this `ClassFile`.
+        The :class:`~jawa.cp.ConstantPool` for this class.
         """
         return self._constants
 
@@ -192,24 +223,44 @@ class ClassFile(object):
 
     @property
     def this(self):
+        """
+        The :class:`~jawa.constants.ConstantClass` which represents this class.
+        """
         return self.constants.get(self._this)
 
     @property
     def super_(self):
+        """
+        The :class:`~jawa.constants.ConstantClass` which represents this
+        class's superclass.
+        """
         return self.constants.get(self._super)
 
     @property
     def interfaces(self):
+        """
+        A list of direct superinterfaces of this class as indexes into
+        the constant pool, in left-to-right order.
+        """
         return self._interfaces
 
     @property
     def fields(self):
+        """
+        The :class:`~jawa.fields.FieldTable` for this class.
+        """
         return self._fields
 
     @property
     def methods(self):
+        """
+        The :class:`~jawa.methods.MethodTable` for this class.
+        """
         return self._method
 
     @property
     def attributes(self):
+        """
+        The :class:`~jawa.attribute.AttributeTable` for this class.
+        """
         return self._attributes

@@ -5,12 +5,13 @@ A template for scripts that modify the Minecraft client.
 """
 if __name__ == '__main__':
     import sys
-    from jawa import JarFile, ConstantString
+    from jawa import JarFile
 
     with JarFile(sys.argv[1]) as jf:
         for path, cf in jf.all_classes():
 
             # Do you modifications here.
+            print cf.version
 
             with jf.open(path, 'w') as fout:
                 cf.save(fout)
