@@ -11,23 +11,6 @@ from jawa.attribute import AttributeTable
 from jawa.util.flags import Flags
 
 
-# The format and size-on-disk of each type of constant
-# in the constant pool.
-_constant_fmts = (
-    None, None, None,
-    ('>i', 4),
-    ('>f', 4),
-    ('>q', 8),
-    ('>d', 8),
-    ('>H', 2),
-    ('>H', 2),
-    ('>HH', 4),
-    ('>HH', 4),
-    ('>HH', 4),
-    ('>HH', 4)
-)
-
-
 class ClassVersion(namedtuple('ClassVersion', ['major', 'minor'])):
     __slots__ = ()
 
@@ -137,18 +120,7 @@ class ClassFile(object):
             self.constants.raw_count
         ))
 
-        for constant in self.constants:
-            raw = constant.raw()
-            tag = raw[0]
-            write(pack('>B', tag))
-
-            if tag == 1:
-                length = len(raw[1])
-                write(pack('>H', length))
-                write(raw[1])
-            else:
-                fmt, _ = _constant_fmts[tag]
-                write(pack(fmt, *raw[1:]))
+        self._constants._to_io(fout)
 
         write(self.access_flags.pack())
         write(pack('>HHH{0}H'.format(len(self._interfaces)),
@@ -170,37 +142,15 @@ class ClassFile(object):
         """
         Loads an existing JVM ClassFile from any file-like object.
         """
+        read = fio.read
+
         if unpack('>I', fio.read(4))[0] != ClassFile.MAGIC:
             raise ValueError('invalid magic number')
 
         # The version is swapped on disk to (minor, major), so swap it back.
         self.version = unpack('>HH', fio.read(4))[::-1]
 
-        # Reads in the ConstantPool (constant_pool in the JVM Spec)
-        constant_pool_count = unpack('>H', fio.read(2))[0]
-
-        # Pull this locally so CPython doesn't do a lookup each time.
-        pool = self._constants
-        read = fio.read
-
-        while constant_pool_count > 1:
-            constant_pool_count -= 1
-            # The 1-byte prefix identifies the type of constant.
-            tag = unpack('>B', read(1))[0]
-
-            if tag == 1:
-                # CONSTANT_Utf8_info, a length prefixed UTF-8-ish string.
-                length = unpack('>H', read(2))[0]
-                pool.append((tag, read(length)))
-            else:
-                # Every other constant type is trivial.
-                fmt, size = _constant_fmts[tag]
-                pool.append((tag,) + unpack(fmt, read(size)))
-                if tag in (5, 6):
-                    # LONG (5) and DOUBLE (6) count as two entries in the
-                    # pool.
-                    pool.append(None)
-                    constant_pool_count -= 1
+        self._constants._from_io(fio)
 
         # ClassFile access_flags, see section #4.1 of the JVM specs.
         self.access_flags.unpack(read(2))

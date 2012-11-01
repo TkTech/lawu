@@ -15,6 +15,8 @@ __all__ = (
     'ConstantNameAndType'
 )
 
+from struct import unpack, pack
+
 
 class Constant(object):
     """
@@ -37,12 +39,6 @@ class Constant(object):
         The index of this constant in the constant pool.
         """
         return self._index
-
-    def raw(self):
-        """
-        Returns the packed tuple form of this constant.
-        """
-        raise NotImplementedError()
 
 
 class ConstantNumber(Constant):
@@ -168,6 +164,23 @@ _constant_types = (
     ConstantMethodRef,
     ConstantInterfaceMethodRef,
     ConstantNameAndType
+)
+
+
+# The format and size-on-disk of each type of constant
+# in the constant pool.
+_constant_fmts = (
+    None, None, None,
+    ('>i', 4),
+    ('>f', 4),
+    ('>q', 8),
+    ('>d', 8),
+    ('>H', 2),
+    ('>H', 2),
+    ('>HH', 4),
+    ('>HH', 4),
+    ('>HH', 4),
+    ('>HH', 4)
 )
 
 
@@ -380,6 +393,48 @@ class ConstantPool(object):
             self.create_name_and_type(if_method, descriptor).index
         ))
         return self.get(self.raw_count)
+
+    def _from_io(self, fio):
+        # Reads in the ConstantPool (constant_pool in the JVM Spec)
+        constant_pool_count = unpack('>H', fio.read(2))[0]
+
+        # Pull this locally so CPython doesn't do a lookup each time.
+        read = fio.read
+
+        while constant_pool_count > 1:
+            constant_pool_count -= 1
+            # The 1-byte prefix identifies the type of constant.
+            tag = unpack('>B', read(1))[0]
+
+            if tag == 1:
+                # CONSTANT_Utf8_info, a length prefixed UTF-8-ish string.
+                length = unpack('>H', read(2))[0]
+                self.append((tag, read(length)))
+            else:
+                # Every other constant type is trivial.
+                fmt, size = _constant_fmts[tag]
+                self.append((tag,) + unpack(fmt, read(size)))
+                if tag in (5, 6):
+                    # LONG (5) and DOUBLE (6) count as two entries in the
+                    # pool.
+                    self.append(None)
+                    constant_pool_count -= 1
+
+    def _to_io(self, fout):
+        write = fout.write
+
+        for constant in self:
+            raw = constant.raw()
+            tag = raw[0]
+            write(pack('>B', tag))
+
+            if tag == 1:
+                length = len(raw[1])
+                write(pack('>H', length))
+                write(raw[1])
+            else:
+                fmt, _ = _constant_fmts[tag]
+                write(pack(fmt, *raw[1:]))
 
     # -------------
     # Properties
