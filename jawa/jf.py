@@ -9,21 +9,22 @@ archives, which are simply ZIP_ archives with some mandatory structure.
 
 .. _ZIP: http://en.wikipedia.org/wiki/Zip_(file_format)
 """
+__all__ = ('JarFile',)
+
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
+
 from jawa.util.ezip import EditableZipFile
-from jawa.core.cf import ClassFile
+from jawa.cf import ClassFile
 
 
 class JarFile(EditableZipFile):
     """
     Implements Jawa_-specific extensions over
-    :class:`~jawa.util.ezip.EditableZipFile`.
+    :class:`~jawa.utilities.ezip.EditableZipFile`.
     """
-    def open_class(self, path):
-        """
-        Return's a :class:`~jawa.core.cf.ClassFile` for the given `path`.
-        """
-        return ClassFile.from_str(self.read(path))
-
     def all_classes(self):
         """
         An iterator that yields a :class:`~jawa.core.cf.ClassFile` for each
@@ -31,4 +32,11 @@ class JarFile(EditableZipFile):
         """
         # About 10ms faster for 1028 files than using self.regex()
         for path in (p for p in self.namelist if p.endswith('.class')):
-            yield ClassFile.from_str(self.read(path))
+            yield path, ClassFile(StringIO(self.read(path)))
+
+    def open_class(self, path):
+        return ClassFile(StringIO(self.read(path)))
+
+    @property
+    def class_count(self):
+        return len(p for p in self.namelist if p.endswith('.class'))

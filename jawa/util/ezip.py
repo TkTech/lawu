@@ -1,3 +1,4 @@
+# -*- coding: utf8 -*-
 import re
 
 # czipfile offers a noticable improvement, especially when working with
@@ -7,22 +8,10 @@ try:
 except ImportError:
     from zipfile import ZipFile
 
-
-class ZipPathResult(unicode):
-    """
-    A very useful helper when iterating results from a
-    :py:class:`jawa.utils.ezip.EditableZipFile` that acts like a normal string,
-    but additionally provides a ``read()`` method.
-    """
-    def __new__(self, zip_, *args):
-        return unicode.__new__(self, *args)
-
-    def __init__(self, zip_, *args, **kwargs):
-        super(ZipPathResult, self).__init__(*args, **kwargs)
-        self.__zip_file = zip_
-
-    def read(self):
-        return self.__zip_file.read(self)
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
 
 
 class EditableZipFile(object):
@@ -87,6 +76,31 @@ class EditableZipFile(object):
         self._namelist.discard(path)
         self._cache.pop(path, None)
 
+    def open(self, path, mode='r'):
+        if mode == 'r':
+            return StringIO(self.read(path))
+        elif mode == 'w':
+            out = StringIO()
+
+            class ctx(object):
+                def __enter__(self_):
+                    return out
+
+                def __exit__(self_, *exc_info):
+                    self.write(path, out.getvalue())
+                    out.close()
+
+            return ctx()
+        else:
+            raise ValueError('expected r or w')
+
+        class ctx(object):
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *exc_info):
+                pass
+
     def __enter__(self):
         return self
 
@@ -103,6 +117,28 @@ class EditableZipFile(object):
         """
         for p in self._namelist:
             if re.match(regex, p):
-                yield ZipPathResult(self, p)
+                yield p
+
+    def directory_tree(self):
+        """
+        Returns a (potentially multilevel) dict representing the file
+        hierarchy.
+        """
+        root = {}
+
+        # Sort the paths by depth with the shortest occuring first.
+        paths = [p.split('/') for p in self.namelist]
+        paths.sort(key=lambda x: len(x))
+
+        for path in paths:
+            complete_path = '/'.join(path)
+
+            path_root = root
+            while len(path) > 1:
+                path_part = path.pop(0)
+                path_root = path_root.setdefault(path_part, {})
+            path_root[path[0]] = complete_path
+
+        return root
 
     close = __exit__

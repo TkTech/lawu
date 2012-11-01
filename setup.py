@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 setup(
     name="jawa",
     packages=find_packages(),
-    version="0.1.0",
-    description="Doing stuff with JVM classfiles.",
+    version="1.0",
+    description="Doing fun stuff with JVM ClassFiles.",
     author="Tyler Kennedy",
     author_email="tk@tkte.ch",
     url="http://github.com/TkTech/Jawa",
@@ -18,8 +18,5 @@ setup(
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Disassemblers"
-    ],
-    scripts=[
-        'scripts/jawa-shell'
     ]
 )

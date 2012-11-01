@@ -2,15 +2,7 @@
 """
 Methods for parsing standard JVM type descriptors for fields and methods.
 It does not depend on any other modules.
-
-.. note::
-    This module has not yet been optimized for performance and is not
-    in its final form.
 """
-
-
-class DescriptorError(Exception):
-    pass
 
 
 def method_descriptor(descriptor):
@@ -18,11 +10,7 @@ def method_descriptor(descriptor):
     Parses a Method descriptor as described in section 4.3.3 of the JVM
     specification. Returns the method argument types and return type.
     """
-    if not descriptor.startswith('('):
-        raise DescriptorError('missing opening bracket')
     end_para = descriptor.find(')')
-    if end_para == -1:
-        raise DescriptorError('missing closing bracket')
 
     method_args = parse_descriptor(descriptor[1:end_para])
     return_args = parse_descriptor(descriptor[end_para + 1:])
@@ -76,7 +64,7 @@ def parse_descriptor(descriptor):
             tokens.append((char, dimensions, _HUMAN_NAMES[char]))
             dimensions = 0
         elif state == 20 and char == ';':
-            tokens.append((''.join(token), dimensions, 'reference'))
+            tokens.append(('L', dimensions, ''.join(token)))
             dimensions = 0
             state = 10
             del token[:]
