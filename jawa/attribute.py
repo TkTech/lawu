@@ -109,6 +109,26 @@ class AttributeTable(object):
     def append(self, attribute):
         self._table.append(attribute)
 
+    def find(self, name=None, f=None):
+        for attribute in self._table:
+            if name is not None and not attribute.name.value == name:
+                continue
+
+            if f is not None and not f(attribute):
+                continue
+
+            yield attribute
+
+    def find_one(self, *args, **kwargs):
+        """
+        Same as ``find()`` but returns only the first result, or `None` if
+        nothing was found.
+        """
+        try:
+            return next(self.find(*args, **kwargs))
+        except StopIteration:
+            return None
+
 
 # Attributes can contain other attributes and AttributeTable's,
 # thus we have to do our import here.

@@ -14,7 +14,9 @@ JVMType = namedtuple('JVMType', [
 MethodDescriptor = namedtuple('MethodDescriptor', [
     'returns',
     'args',
-    'raw'
+    'returns_descriptor',
+    'args_descriptor',
+    'descriptor'
 ])
 
 
@@ -24,10 +26,14 @@ def method_descriptor(descriptor):
     specification.
     """
     end_para = descriptor.find(')')
+    returns = descriptor[end_para + 1:]
+    args = descriptor[1:end_para]
 
     return MethodDescriptor(
-        parse_descriptor(descriptor[end_para + 1:])[0],
-        parse_descriptor(descriptor[1:end_para]),
+        parse_descriptor(returns)[0],
+        parse_descriptor(args),
+        returns,
+        args,
         descriptor
     )
 

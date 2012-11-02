@@ -5,7 +5,9 @@ from struct import unpack, pack
 from itertools import repeat
 
 from jawa.util.flags import Flags
+from jawa.util.descriptor import method_descriptor
 from jawa.attribute import AttributeTable
+from jawa.attributes.code import CodeAttribute
 
 
 class Method(object):
@@ -45,6 +47,14 @@ class Method(object):
     def attributes(self):
         return self._attribs
 
+    @property
+    def returns(self):
+        return method_descriptor(self.descriptor.value).returns
+
+    @property
+    def args(self):
+        return method_descriptor(self.descriptor.value).args
+
     def _from_io(self, fio):
         self.access_flags.unpack(fio.read(2))
         self._name_index, self._descriptor_index = unpack('>HH', fio.read(4))
@@ -79,7 +89,7 @@ class MethodTable(object):
         """
         self._table = [fld for fld in self._table if fld is not method]
 
-    def create(self, name, descriptor):
+    def create(self, name, descriptor, code=None):
         """
         Creates a new method from `name` and `descriptor`.
         """
@@ -89,6 +99,7 @@ class MethodTable(object):
         method._name_index = name.index
         method._descriptor_index = descriptor.index
         method.access_flags.acc_public = True
+
         self.append(method)
         return method
 
@@ -107,6 +118,37 @@ class MethodTable(object):
         fout.write(pack('>H', self.count))
         for method in self._table:
             method._to_io(fout)
+
+    def find(self, name=None, args=None, returns=None, f=None):
+        for method in self._table:
+            if name is not None and method.name.value != name:
+                continue
+
+            descriptor = method.descriptor.value
+            end_para = descriptor.find(')')
+
+            args = descriptor[1:end_para]
+            if args is not None and args != args:
+                continue
+
+            returns = descriptor[end_para + 1:]
+            if returns is not None and returns != returns:
+                continue
+
+            if f is not None and not f(method):
+                continue
+
+            yield method
+
+    def find_one(self, *args, **kwargs):
+        """
+        Same as ``find()`` but returns only the first result, or `None` if
+        nothing was found.
+        """
+        try:
+            return next(self.find(*args, **kwargs))
+        except StopIteration:
+            return None
 
     @property
     def count(self):
