@@ -235,7 +235,7 @@ class ClassFile(object):
         """
         The :class:`~jawa.methods.MethodTable` for this class.
         """
-        return self._method
+        return self._methods
 
     @property
     def attributes(self):
