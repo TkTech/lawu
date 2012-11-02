@@ -2,11 +2,9 @@
 __all__ = (
     'AttributeTable',
     'Attribute',
-    'UnknownAttribute',
-    'ConstantValueAttribute',
-    'SourceFileAttribute'
+    'UnknownAttribute'
 )
-from struct import unpack_from, unpack, pack
+from struct import unpack, pack
 from itertools import repeat
 
 
@@ -56,44 +54,6 @@ class UnknownAttribute(Attribute):
         return self._info
 
 
-class ConstantValueAttribute(Attribute):
-    @classmethod
-    def create(cls, cf, value):
-        c = cls(cf, cf.constants.create_utf8('ConstantValue').index)
-        c._constantvalue_index = value.index
-        return c
-
-    def unpack(self, info):
-        self._constantvalue_index = unpack_from('>H', info)[0]
-
-    @property
-    def info(self):
-        return pack('>H', self._constantvalue_index)
-
-    @property
-    def constantvalue(self):
-        return self._cf.constants[self._constantvalue_index]
-
-
-class SourceFileAttribute(Attribute):
-    def unpack(self, info):
-        self._sourcefile_index = unpack_from('>H', info)[0]
-
-    @property
-    def info(self):
-        return pack('>H', self._sourcefile_index)
-
-    @property
-    def sourcefile(self):
-        return self._cf.constants[self._sourcefile_index]
-
-
-_default_parsers = {
-    'ConstantValue': ConstantValueAttribute,
-    'SourceFile': SourceFileAttribute
-}
-
-
 class AttributeTable(object):
     def __init__(self, cf):
         self._cf = cf
@@ -105,7 +65,7 @@ class AttributeTable(object):
         of type `name`, or :class:~jawa.attribute.UnknownAttribute if
         none is found.
         """
-        return _default_parsers.get(name, UnknownAttribute)
+        return default_parsers.get(name, UnknownAttribute)
 
     def _from_io(self, fio):
         """
@@ -148,3 +108,16 @@ class AttributeTable(object):
 
     def append(self, attribute):
         self._table.append(attribute)
+
+
+# Attributes can contain other attributes and AttributeTable's,
+# thus we have to do our import here.
+from jawa.attributes.code import CodeAttribute
+from jawa.attributes.source_file import SourceFileAttribute
+from jawa.attributes.constant_value import ConstantValueAttribute
+
+default_parsers = {
+    'Code': CodeAttribute,
+    'SourceFile': SourceFileAttribute,
+    'ConstantValue': ConstantValueAttribute
+}

@@ -5,7 +5,8 @@ from struct import unpack, pack
 from itertools import repeat
 
 from jawa.util.flags import Flags
-from jawa.attribute import AttributeTable, ConstantValueAttribute
+from jawa.attribute import AttributeTable
+from jawa.attributes.constant_value import ConstantValueAttribute
 
 
 class Field(object):
