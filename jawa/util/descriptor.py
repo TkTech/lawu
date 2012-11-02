@@ -1,27 +1,41 @@
 # -*- coding: utf8 -*-
 """
 Methods for parsing standard JVM type descriptors for fields and methods.
-It does not depend on any other modules.
 """
+from collections import namedtuple
+
+
+JVMType = namedtuple('JVMType', [
+    'type_',
+    'dimensions',
+    'name'
+])
+
+MethodDescriptor = namedtuple('MethodDescriptor', [
+    'returns',
+    'args',
+    'raw'
+])
 
 
 def method_descriptor(descriptor):
     """
     Parses a Method descriptor as described in section 4.3.3 of the JVM
-    specification. Returns the method argument types and return type.
+    specification.
     """
     end_para = descriptor.find(')')
 
-    method_args = parse_descriptor(descriptor[1:end_para])
-    return_args = parse_descriptor(descriptor[end_para + 1:])
-
-    return method_args, return_args[0]
+    return MethodDescriptor(
+        parse_descriptor(descriptor[end_para + 1:])[0],
+        parse_descriptor(descriptor[1:end_para]),
+        descriptor
+    )
 
 
 def field_descriptor(descriptor):
     """
     Parses a Field descriptor as described in section 4.3.2 of the JVM
-    specification. Returns the simple type of the field.
+    specification.
     """
     return parse_descriptor(descriptor)[0]
 
@@ -61,10 +75,10 @@ def parse_descriptor(descriptor):
         elif state == 10 and char == '[':
             dimensions += 1
         elif state == 10:
-            tokens.append((char, dimensions, _HUMAN_NAMES[char]))
+            tokens.append(JVMType(char, dimensions, _HUMAN_NAMES[char]))
             dimensions = 0
         elif state == 20 and char == ';':
-            tokens.append(('L', dimensions, ''.join(token)))
+            tokens.append(JVMType('L', dimensions, ''.join(token)))
             dimensions = 0
             state = 10
             del token[:]
