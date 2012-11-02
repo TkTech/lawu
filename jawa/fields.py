@@ -92,7 +92,7 @@ class FieldTable(object):
     def create_static(self, name, descriptor, value):
         """
         A shortcut for creating a static field with a ConstantValueAttribute
-        set to the :jawa:`~jawa.constants.Constant` `value`.
+        set to the :class:`~jawa.constants.Constant` `value`.
         """
         field = self.create(name, descriptor)
         field.attributes.create(ConstantValueAttribute, value)

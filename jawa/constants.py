@@ -5,6 +5,7 @@ __all__ = (
     'ConstantUTF8',
     'ConstantClass',
     'ConstantString',
+    'ConstantRef',
     'ConstantFieldRef',
     'ConstantMethodRef',
     'ConstantInterfaceMethodRef',
