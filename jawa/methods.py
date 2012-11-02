@@ -120,6 +120,25 @@ class MethodTable(object):
             method._to_io(fout)
 
     def find(self, name=None, args=None, returns=None, f=None):
+        """
+        Iterates over the methods table, yielding each matching method. Calling
+        without any arguments is equivelent to iterating over the table. For
+        example, to get all methods that take three integers and return void::
+
+            for method in cf.methods.find(args='III', returns='V'):
+                print(method.name.value)
+
+        Or to get all private methods::
+
+            is_private = lambda m: m.access_flags.acc_private
+            for method in cf.methods.find(f=is_private):
+                print method.name.value
+
+        :param name: The name of the method(s) to find.
+        :param args: The arguments descriptor (ex: ``III``)
+        :param returns: The returns descriptor (Ex: ``V``)
+        :param f: Any callable which takes one argument (the method).
+        """
         for method in self._table:
             if name is not None and method.name.value != name:
                 continue

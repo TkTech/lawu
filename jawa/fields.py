@@ -79,7 +79,10 @@ class FieldTable(object):
 
     def create(self, name, descriptor):
         """
-        Creates a new field from `name` and `descriptor`.
+        Creates a new field from `name` and `descriptor`. For example::
+
+            >>> field = cf.fields.create('BeerCount', 'I')
+
         """
         field = Field(self._cf)
         name = self._cf.constants.create_utf8(name)
@@ -92,8 +95,16 @@ class FieldTable(object):
 
     def create_static(self, name, descriptor, value):
         """
-        A shortcut for creating a static field with a ConstantValueAttribute
-        set to the :class:`~jawa.constants.Constant` `value`.
+        A shortcut for creating a static field with a
+        :class:`~jawa.attributes.constant_value.ConstantValueAttribute`
+        set to the :class:`~jawa.constants.Constant` `value`. For example,
+        to create a string with the classic "Hello World!"::
+
+            >>> field = cf.fields.create_static(
+            ...    'HelloWorld',
+            ...    'Ljava/lang/String;',
+            ...    cf.constants.create_string('Hello World!')
+            ... )
         """
         field = self.create(name, descriptor)
         field.attributes.create(ConstantValueAttribute, value)

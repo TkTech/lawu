@@ -6,7 +6,7 @@ from collections import namedtuple
 
 
 JVMType = namedtuple('JVMType', [
-    'type_',
+    'base_type',
     'dimensions',
     'name'
 ])
