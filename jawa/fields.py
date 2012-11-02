@@ -5,7 +5,7 @@ from struct import unpack, pack
 from itertools import repeat
 
 from jawa.util.flags import Flags
-from jawa.attribute import AttributeTable
+from jawa.attribute import AttributeTable, ConstantValueAttribute
 
 
 class Field(object):
@@ -87,6 +87,16 @@ class FieldTable(object):
         field._descriptor_index = descriptor.index
         field.access_flags.acc_public = True
         self.append(field)
+        return field
+
+    def create_static(self, name, descriptor, value):
+        """
+        A shortcut for creating a static field with a ConstantValueAttribute
+        set to the :jawa:`~jawa.constants.Constant` `value`.
+        """
+        field = self.create(name, descriptor)
+        field.attributes.create(ConstantValueAttribute, value)
+        field.access_flags.acc_static = True
         return field
 
     def __iter__(self):
