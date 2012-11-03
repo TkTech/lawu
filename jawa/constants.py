@@ -47,6 +47,9 @@ class ConstantNumber(Constant):
         super(ConstantNumber, self).__init__(pool, index)
         self.value = value
 
+    def __repr__(self):
+        return '{0}(value={0!r})'.format(self.__class__.__name__, self.value)
+
 
 class ConstantUTF8(Constant):
     TAG = 1
@@ -54,6 +57,9 @@ class ConstantUTF8(Constant):
     def __init__(self, pool, index, value):
         super(ConstantUTF8, self).__init__(pool, index)
         self.value = value
+
+    def __repr__(self):
+        return 'ConstantUTF8(value={0!r})'.format(self.value)
 
 
 class ConstantInteger(ConstantNumber):
@@ -83,6 +89,9 @@ class ConstantClass(Constant):
     def name(self):
         return self.pool.get(self._name_index)
 
+    def __repr__(self):
+        return 'ConstantClass(name={0!r})'.format(self.name)
+
 
 class ConstantString(Constant):
     TAG = 8
@@ -94,6 +103,9 @@ class ConstantString(Constant):
     @property
     def string(self):
         return self.pool.get(self._string_index)
+
+    def __repr__(self):
+        return 'ConstantString(string={0!r})'.format(self.string)
 
 
 class ConstantRef(Constant):
@@ -109,6 +121,10 @@ class ConstantRef(Constant):
     @property
     def name_and_type(self):
         return self.pool.get(self._name_and_type_index)
+
+    def __repr__(self):
+        return '{0}(class_={1!r}, name_and_type={2!r})'.format(
+            self.__class__.__name__, self.class_, self.name_and_type)
 
 
 class ConstantFieldRef(ConstantRef):
@@ -138,6 +154,10 @@ class ConstantNameAndType(Constant):
     @property
     def descriptor(self):
         return self.pool.get(self._descriptor_index)
+
+    def __repr__(self):
+        return 'ConstantNameAndType(name={0!r}, descriptor={1!r})'.format(
+            self.name, self.descriptor)
 
 
 _constant_types = (
