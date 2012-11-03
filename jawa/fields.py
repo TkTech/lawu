@@ -130,3 +130,35 @@ class FieldTable(object):
     @property
     def count(self):
         return len(self._table)
+
+    def find(self, name=None, type_=None, f=None):
+        """
+        Iterates over the fields table, yielding each matching method. Calling
+        without any arguments is equivelent to iterating over the table.
+
+        :param name: The name of the field(s) to find.
+        :param type_: The field descriptor (Ex: 'I')
+        :param f: Any callable which takes one argument (the field).
+        """
+        for field in self._table:
+            if name is not None and field.name.value != name:
+                continue
+
+            descriptor = field.descriptor.value
+            if type_ is not None and type_ != descriptor:
+                continue
+
+            if f is not None and not f(field):
+                continue
+
+            yield field
+
+    def find_one(self, *args, **kwargs):
+        """
+        Same as ``find()`` but returns only the first result, or `None` if
+        nothing was found.
+        """
+        try:
+            return next(self.find(*args, **kwargs))
+        except StopIteration:
+            return None

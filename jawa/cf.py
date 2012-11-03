@@ -67,7 +67,7 @@ class ClassFile(object):
 
     def __init__(self, fio=None):
         # Default to J2SE_7
-        self._version = ClassVersion(0x33, 0)
+        self._version = ClassVersion(0x32, 0)
         self._constants = ConstantPool()
         self._access_flags = Flags('>H', {
             'acc_public': 0x0001,

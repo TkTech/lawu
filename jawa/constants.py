@@ -321,7 +321,7 @@ class ConstantPool(object):
         """
         self.append((
             12,
-            self.create_class(name).index,
+            self.create_utf8(name).index,
             self.create_utf8(descriptor).index
         ))
         return self.get(self.raw_count - 1)
@@ -356,7 +356,7 @@ class ConstantPool(object):
             self.create_class(class_).index,
             self.create_name_and_type(method, descriptor).index
         ))
-        return self.get(self.raw_count)
+        return self.get(self.raw_count - 1)
 
     def create_interface_method_ref(self, class_, if_method, descriptor):
         """
@@ -372,7 +372,7 @@ class ConstantPool(object):
             self.create_class(class_).index,
             self.create_name_and_type(if_method, descriptor).index
         ))
-        return self.get(self.raw_count)
+        return self.get(self.raw_count - 1)
 
     def _from_io(self, fio):
         # Reads in the ConstantPool (constant_pool in the JVM Spec)

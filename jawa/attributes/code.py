@@ -5,7 +5,14 @@ from struct import unpack, pack
 from itertools import repeat
 from collections import namedtuple
 
+from jawa.constants import Constant
 from jawa.attribute import Attribute, AttributeTable
+from jawa.util.bytecode import (
+    read_instruction,
+    write_instruction,
+    mnemonic_to_opcode,
+    OperandTypes
+)
 
 try:
     from cStringIO import StringIO
@@ -20,11 +27,13 @@ CodeException = namedtuple('CodeException', [
 
 class CodeAttribute(Attribute):
     @classmethod
-    def create(cls, cf, code=None):
+    def create(cls, cf):
         c = cls(cf, cf.constants.create_utf8('Code').index)
         c._max_stack = 0
         c._max_locals = 0
         c._ex_table = []
+        c._attributes = AttributeTable(cf)
+        c._code = ''
         return c
 
     def unpack(self, info):
@@ -87,3 +96,45 @@ class CodeAttribute(Attribute):
     @property
     def attributes(self):
         return self._attributes
+
+    def assemble(self, code):
+        """
+        Assembles `code` using :meth:`~jawa.assemble.assemble`. Ex:
+
+        .. code-block:: python
+
+            method.code.assemble([
+                ('return',)
+            ])
+        """
+        fout = StringIO()
+        for instruction in code:
+            mnemonic, operands = instruction[0], list(instruction[1:])
+            opcode = mnemonic_to_opcode(mnemonic)
+            # Convert any `Constant` subclasses into their indexes.
+            for i, operand in enumerate(operands):
+                if isinstance(operand, Constant):
+                    operands[i] = operand.index
+            write_instruction(fout, fout.tell(), opcode, operands)
+
+        self._code = fout.getvalue()
+        fout.close()
+
+    def disassemble(self, convert=True):
+        """
+        An iterator that yields each instruction in this method.
+
+        :param convert: If ``True``, converts CONSTANT_INDEX operands into
+                        :class:`~jawa.constants.Constant` objects.
+        """
+        fio = StringIO(self._code)
+        while 1:
+            ins = read_instruction(fio, fio.tell())
+            if ins is None:
+                break
+
+            if convert:
+                for i, operand in enumerate(ins.operands):
+                    if operand.op_type == OperandTypes.CONSTANT_INDEX:
+                        ins.operands[i] = self._cf.constants[operand.value]
+            yield ins

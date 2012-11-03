@@ -45,7 +45,7 @@ class Method(object):
 
     @property
     def attributes(self):
-        return self._attribs
+        return self._attributes
 
     @property
     def returns(self):
@@ -54,6 +54,15 @@ class Method(object):
     @property
     def args(self):
         return method_descriptor(self.descriptor.value).args
+
+    @property
+    def code(self):
+        """
+        A shortcut for::
+
+            method.attributes.find_one(name='Code')
+        """
+        return self.attributes.find_one(name='Code')
 
     def _from_io(self, fio):
         self.access_flags.unpack(fio.read(2))
@@ -91,7 +100,8 @@ class MethodTable(object):
 
     def create(self, name, descriptor, code=None):
         """
-        Creates a new method from `name` and `descriptor`.
+        Creates a new method from `name` and `descriptor`. If `code` is not
+        ``None``, add a `Code` attribute to this method.
         """
         method = Method(self._cf)
         name = self._cf.constants.create_utf8(name)
@@ -99,6 +109,9 @@ class MethodTable(object):
         method._name_index = name.index
         method._descriptor_index = descriptor.index
         method.access_flags.acc_public = True
+
+        if code is not None:
+            method.attributes.create(CodeAttribute)
 
         self.append(method)
         return method

@@ -10,6 +10,9 @@ from jawa import JarFile
 if __name__ == '__main__':
     with JarFile(sys.argv[1]) as jf:
         for path, cf in jf.all_classes():
+            for method in cf.methods.find(f=lambda m: m.code):
+                for ins in method.code.disassemble():
+                    print ins
 
             # Do you modifications here.
 
