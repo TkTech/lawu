@@ -34,26 +34,27 @@ class OperandTypes(object):
 
 ubyte = struct.Struct('>B')
 ushort = struct.Struct('>H')
+byte = struct.Struct('>b')
 short = struct.Struct('>h')
 integer = struct.Struct('>i')
 
 opcode_table = {
-    0x32: ('aaload', None, (2, 1)),
-    0x53: ('aastore', None, (3, 0)),
-    0x01: ('aconst_null', None, (0, 1)),
-    0x19: ('aload', [(ubyte, 20)], (0, 1)),
-    0x2A: ('aload_0', None, (0, 1)),
-    0x2B: ('aload_1', None, (0, 1)),
-    0x2C: ('aload_2', None, (0, 1)),
-    0x2D: ('aload_3', None, (0, 1)),
-    0xBD: ('anewarray', [(ushort, 10)], (1, 1)),
-    0xB0: ('areturn', None, (1, 0)),
-    0xBE: ('arraylength', None, (1, 1)),
-    0x3A: ('astore', [(ubyte, 20)], (1, 0)),
-    0x4B: ('astore_0', None, (1, 0)),
-    0x4C: ('astore_1', None, (1, 0)),
-    0x4D: ('astore_2', None, (1, 0)),
-    0x4E: ('astore_3', None, (1, 0)),
+    0x32: ('aaload', None),
+    0x53: ('aastore', None),
+    0x01: ('aconst_null', None),
+    0x19: ('aload', [(ubyte, 20)]),
+    0x2A: ('aload_0', None),
+    0x2B: ('aload_1', None),
+    0x2C: ('aload_2', None),
+    0x2D: ('aload_3', None),
+    0xBD: ('anewarray', [(ushort, 10)]),
+    0xB0: ('areturn', None),
+    0xBE: ('arraylength', None),
+    0x3A: ('astore', [(ubyte, 20)]),
+    0x4B: ('astore_0', None),
+    0x4C: ('astore_1', None),
+    0x4D: ('astore_2', None),
+    0x4E: ('astore_3', None),
     0xBF: ('athrow', None),
     0x33: ('baload', None),
     0x54: ('bastore', None),
@@ -247,6 +248,13 @@ opcode_table = {
 # Creates a new dict with operand and mnemonic swapped for assembling.
 _opcode_by_opname = dict((o[0], (k,) + o[1:]) for k, o in opcode_table.items())
 
+# Opcodes that can be prefixed by the `wide` opcode.
+_wide = (
+    0x15, 0x17, 0x19, 0x16,
+    0x18, 0x36, 0x38, 0x3A,
+    0x37, 0x39, 0xA9, 0x84
+)
+
 
 def write_instruction(fout, start_pos, opcode, operands):
     """
@@ -260,9 +268,47 @@ def write_instruction(fout, start_pos, opcode, operands):
     fout.write(ubyte.pack(opcode))
     fmt_operands = opcode_table[opcode][1]
 
-    if fmt_operands:
+    if opcode in _wide:
+        # If this opcode can be prefixed by wide, we need to make sure its
+        # operand fits, and if not, extend it.
+        if operands[0] >= 256:
+            fout.write(ushort.pack(operands[0]))
+        else:
+            fout.write(ubyte.pack(operands[0]))
+
+        if opcode == 0x84:
+            # A special case for iinc which uses the second form of wide.
+            if operands[1] >= 256:
+                fout.write(short.pack(operands[1]))
+            else:
+                fout.write(byte.pack(operands[1]))
+    # A normal simple opcode with simple operands.
+    elif fmt_operands:
         for i, (fmt, _) in enumerate(fmt_operands):
             fout.write(fmt.pack(operands[i]))
+    # Special case for lookupswitch, which also has a unique.
+    elif opcode == 0xAB:
+        # assemble([
+        #     ('lookupswitch', {
+        #         2: -3,
+        #         4: 5
+        #     }, <default>)
+        # ])
+        padding = 4 - (start_pos + 1) % 4
+        padding = padding if padding != 4 else 0
+        fout.write(struct.pack('{0}x'.format(padding)))
+        fout.write(struct.pack('>ii',
+            operands[2],
+            len(operands[1])
+        ))
+        for key in sorted(operands[1].keys()):
+            fout.write(struct.pack('>ii',
+                key,
+                operands[1][key]
+            ))
+    # Special case for tableswitch.
+    elif opcode == 0xAA:
+        raise NotImplementedError()
 
 
 def read_instruction(fio, start_pos):
@@ -295,12 +341,14 @@ def read_instruction(fio, start_pos):
 
         # Default branch address and branch count.
         default, npairs = struct.unpack('>ii', fio.read(8))
-        final_operands.append(Operand(OperandTypes.BRANCH, default))
 
+        pairs = {}
         for _ in repeat(None, npairs):
             match, offset = struct.unpack('>ii', fio.read(8))
-            final_operands.append(Operand(OperandTypes.LITERAL, match))
-            final_operands.append(Operand(OperandTypes.BRANCH, offset))
+            pairs[match] = offset
+
+        final_operands.append(pairs)
+        final_operands.append(Operand(OperandTypes.BRANCH, default))
     # Special case for tableswitch
     elif op == 0xAA:
         # Get rid of the alignment padding.
