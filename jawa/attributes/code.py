@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-__all__ = ('CodeAttribute', 'CodeException')
+__all__ = ('CodeAttribute', 'CodeException', 'Label')
 
 from struct import unpack, pack
 from itertools import repeat
@@ -18,6 +18,16 @@ try:
     from cStringIO import StringIO
 except ImportError:
     from StringIO import StringIO
+
+
+class Label(object):
+    __slots__ = ('name')
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return 'Label({0!r})'.format(self.name)
 
 
 CodeException = namedtuple('CodeException', [
@@ -120,21 +130,38 @@ class CodeAttribute(Attribute):
         self._code = fout.getvalue()
         fout.close()
 
-    def disassemble(self, convert=True):
+    def disassemble(self, constants=True, labels=True):
         """
-        An iterator that yields each instruction in this method.
+        Disassembles this method, returning a list of instructions and a
+        label table.
 
-        :param convert: If ``True``, converts CONSTANT_INDEX operands into
-                        :class:`~jawa.constants.Constant` objects.
+        :param constants: If ``True``, converts ``CONSTANT_INDEX`` operands
+                          into :class:`~jawa.constants.Constant` objects.
+        :param labels: If ``True``, converts ``BRANCH`` operands
+                          into :class:`~Label` objects.
         """
         fio = StringIO(self._code)
-        while 1:
-            ins = read_instruction(fio, fio.tell())
-            if ins is None:
-                break
+        code = []
+        label_table = {}
 
-            if convert:
-                for i, operand in enumerate(ins.operands):
-                    if operand.op_type == OperandTypes.CONSTANT_INDEX:
-                        ins.operands[i] = self._cf.constants[operand.value]
-            yield ins
+        def convert(ins, operand):
+            if constants and operand.op_type == OperandTypes.CONSTANT_INDEX:
+                return self._cf.constants[operand.value]
+            elif labels and operand.op_type == OperandTypes.BRANCH:
+                jump_pc = ins.pos + operand.value
+                if jump_pc not in label_table:
+                    new_label = 'label_{0}'.format(len(label_table))
+                    label_table[jump_pc] = Label(new_label)
+                return label_table[jump_pc]
+            return operand
+
+        for ins in iter(lambda: read_instruction(fio, fio.tell()), None):
+            code.append(ins)
+            if not constants and not labels:
+                # We don't need to convert anything, so don't
+                # loop over all the operands.
+                continue
+
+            ins.operands[:] = [convert(ins, o) for o in ins.operands]
+
+        return code, label_table
