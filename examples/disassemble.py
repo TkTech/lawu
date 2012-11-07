@@ -4,7 +4,7 @@
 A simple example disassembler.
 """
 import sys
-from jawa import ClassFile, Label
+from jawa import ClassFile
 from jawa.util.bytecode import OperandTypes
 
 if __name__ == '__main__':
@@ -46,10 +46,7 @@ if __name__ == '__main__':
             ).strip())
 
             if method.code:
-                instructions, labels = method.code.disassemble(constants=False)
-                for ins in instructions:
-                    if ins.pos in labels:
-                        print('=> {0.name}:'.format(labels[ins.pos]))
+                for ins in method.code.disassemble():
 
                     line = [
                         '{ins.pos:04}',
@@ -58,12 +55,10 @@ if __name__ == '__main__':
                     ]
 
                     for operand in ins.operands:
-                        if isinstance(operand, Label):
-                            line.append('J[{0}]'.format(operand.name))
-                        elif operand.op_type == OperandTypes.CONSTANT_INDEX:
+                        if operand.op_type == OperandTypes.CONSTANT_INDEX:
                             line.append('C[{0}]'.format(operand.value))
                         elif operand.op_type == OperandTypes.BRANCH:
-                            line.append(operand)
+                            line.append('J[{0}]'.format(operand.value))
                         elif operand.op_type == OperandTypes.LITERAL:
                             line.append('#[{0}]'.format(operand.value))
                         elif operand.op_type == OperandTypes.LOCAL_INDEX:
