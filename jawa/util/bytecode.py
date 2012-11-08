@@ -15,12 +15,6 @@ import struct
 from itertools import repeat
 from collections import namedtuple
 
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
-
-
 Operand = namedtuple('Operand', ['op_type', 'value'])
 _Instruction = namedtuple('Instruction', [
     'mnemonic',
