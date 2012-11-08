@@ -74,7 +74,12 @@ class Instruction(_Instruction):
                 size += fmt.size
         elif self.opcode == 0xAB:
             # lookupswitch
-            raise NotImplementedError()
+            padding = 4 - (start_pos + 1) % 4
+            padding = padding if padding != 4 else 0
+            size += padding
+            # default & npairs
+            size += 8
+            size += len(self.operands[0]) * 8
         elif self.opcode == 0xAA:
             # tableswitch
             raise NotImplementedError()
@@ -368,17 +373,20 @@ def write_instruction(fout, start_pos, ins):
         padding = padding if padding != 4 else 0
         fout.write(struct.pack('{0}x'.format(padding)))
         fout.write(struct.pack('>ii',
-            operands[2].value,
-            len(operands[1])
+            operands[1].value,
+            len(operands[0])
         ))
-        for key in sorted(operands[1].keys()):
+        for key in sorted(operands[0].keys()):
             fout.write(struct.pack('>ii',
                 key,
-                operands[1][key]
+                operands[0][key].value
             ))
     # Special case for tableswitch.
     elif opcode == 0xAA:
         raise NotImplementedError()
+    else:
+        # opcode with no operands.
+        fout.write(ubyte.pack(opcode))
 
 
 def read_instruction(fio, start_pos):

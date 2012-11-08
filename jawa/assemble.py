@@ -43,7 +43,7 @@ def assemble(code):
                     operand.index
                 ))
             elif isinstance(operand, dict):
-                # lookupswitch's operand is a dict as
+                    # lookupswitch's operand is a dict as
                 # a special usability case.
                 final_operands.append(operand)
             elif isinstance(operand, Label):
@@ -69,7 +69,6 @@ def assemble(code):
     for ins in final:
         if isinstance(ins, Label):
             label_pcs[ins.name] = current_pc
-            print('Found label {0} at {1}'.format(ins.name, current_pc))
             continue
 
         # size_on_disk must know the current pc because of alignment on
@@ -79,17 +78,20 @@ def assemble(code):
     # The third pass, now that we know where each label is we can figure
     # out the offset for each jump.
     current_pc = 0
+    offset = lambda l: Operand(40, label_pcs[l.name] - current_pc)
+
     for ins in final:
         if isinstance(ins, Label):
             continue
 
         for i, operand in enumerate(ins.operands):
-            if not isinstance(operand, Label):
-                continue
-
-            label_pc = label_pcs[operand.name]
-            offset = label_pc - current_pc
-            ins.operands[i] = Operand(OperandTypes.BRANCH, offset)
+            if isinstance(operand, dict):
+                # lookupswitch is a special case
+                for k, v in operand.items():
+                    if isinstance(v, Label):
+                        operand[k] = offset(v)
+            elif isinstance(operand, Label):
+                ins.operands[i] = offset(operand)
 
         current_pc += ins.size_on_disk(current_pc)
 
