@@ -29,6 +29,13 @@ _Instruction = namedtuple('Instruction', [
     'pos'
 ])
 
+# Opcodes that can be prefixed by the `wide` opcode.
+_wide = (
+    0x15, 0x17, 0x19, 0x16,
+    0x18, 0x36, 0x38, 0x3A,
+    0x37, 0x39, 0xA9, 0x84
+)
+
 
 class Instruction(_Instruction):
     """
@@ -55,25 +62,55 @@ class Instruction(_Instruction):
             0
         )
 
-    @property
-    def fmt(self):
-        return opcode_table[self.opcode][1]
-
     def size_on_disk(self, start_pos=0):
         """
         Returns the size of this instruction and its operands when
         packed. `start_pos` is required for the `tableswitch` and
         `lookupswitch` instruction as the padding depends on alignment.
         """
-        size = 1
-        operands = self.fmt
-        if operands:
-            for fmt, _ in operands:
+        size, fmts = 1, definition_from_opcode(self.opcode)[1]
+        if self.wide:
+            size += 2
+            # Special case for iinc which has a 2nd extended operand.
+            if self.opcode == 0x84:
+                size += 2
+        elif fmts:
+            # A simple opcode with simple operands.
+            for fmt, _ in fmts:
                 size += fmt.size
+        elif self.opcode == 0xAB:
+            # lookupswitch
+            raise NotImplementedError()
+        elif self.opcode == 0xAA:
+            # tableswitch
+            raise NotImplementedError()
+
         return size
+
+    @property
+    def wide(self):
+        """
+        ``True`` if this instruction needs to be prefixed by the WIDE
+        opcode.
+        """
+        if self.opcode not in _wide:
+            return False
+
+        if self.operands[0].value >= 255:
+            return True
+
+        if self.opcode == 0x84:
+            if self.operands[1].value >= 255:
+                return True
+
+        return False
 
 
 class OperandTypes(object):
+    """
+    Constants used to determine the "type" of operand on an opcode,
+    such as a BRANCH [offset] or a LITERAL [value].
+    """
     LITERAL = 10
     LOCAL_INDEX = 20
     CONSTANT_INDEX = 30
@@ -87,6 +124,8 @@ byte = struct.Struct('>b')
 short = struct.Struct('>h')
 integer = struct.Struct('>i')
 
+#: An opcode to mnemonic & operand format mapping for every opcode
+#: supported by the JVM.
 opcode_table = {
     0x32: ('aaload', None),
     0x53: ('aastore', None),
@@ -297,13 +336,6 @@ opcode_table = {
 # Creates a new dict with operand and mnemonic swapped for assembling.
 _opcode_by_opname = dict((o[0], (k,) + o[1:]) for k, o in opcode_table.items())
 
-# Opcodes that can be prefixed by the `wide` opcode.
-_wide = (
-    0x15, 0x17, 0x19, 0x16,
-    0x18, 0x36, 0x38, 0x3A,
-    0x37, 0x39, 0xA9, 0x84
-)
-
 
 def write_instruction(fout, start_pos, ins):
     """
@@ -311,34 +343,27 @@ def write_instruction(fout, start_pos, ins):
 
     :param fout: Any file-like object providing ``write()``.
     :param start_pos: The current position in the stream.
-    :param ins:
+    :param ins: The `Instruction` to write.
     """
-    opcode = ins.opcode
-    operands = ins.operands
+    opcode, operands = ins.opcode, ins.operands
+    fmt_operands = definition_from_opcode(opcode)[1]
 
-    fout.write(ubyte.pack(opcode))
-    fmt_operands = ins.fmt
-
-    if opcode in _wide:
-        # If this opcode can be prefixed by wide, we need to make sure its
-        # operand fits, and if not, extend it.
-        if operands[0].value >= 256:
-            fout.write(ushort.pack(operands[0].value))
-        else:
-            fout.write(ubyte.pack(operands[0].value))
-
+    if ins.wide:
+        # The "WIDE" prefix
+        fout.write(ubyte.pack(0xC4))
+        # The real opcode.
+        fout.write(ubyte.pack(opcode))
+        fout.write(ushort.pack(operands[0].value))
         if opcode == 0x84:
-            # A special case for iinc which uses the second form of wide.
-            if operands[1].value >= 256:
-                fout.write(short.pack(operands[1].value))
-            else:
-                fout.write(byte.pack(operands[1].value))
+            fout.write(short.pack(operands[1].value))
     # A normal simple opcode with simple operands.
     elif fmt_operands:
+        fout.write(ubyte.pack(opcode))
         for i, (fmt, _) in enumerate(fmt_operands):
             fout.write(fmt.pack(operands[i].value))
     # Special case for lookupswitch, which also has a unique.
     elif opcode == 0xAB:
+        fout.write(ubyte.pack(opcode))
         # assemble([
         #     ('lookupswitch', {
         #         2: -3,
