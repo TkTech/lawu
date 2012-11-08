@@ -5,7 +5,7 @@ A simple example disassembler.
 """
 import sys
 from jawa import ClassFile
-from jawa.util.bytecode import OperandTypes
+from jawa.util.bytecode import OperandTypes, Instruction
 
 if __name__ == '__main__':
     with open(sys.argv[1]) as fin:
@@ -45,9 +45,9 @@ if __name__ == '__main__':
                 ', '.join(a.name + ('[]' * a.dimensions) for a in method.args)
             ).strip())
 
+            r = []
             if method.code:
                 for ins in method.code.disassemble():
-
                     line = [
                         '{ins.pos:04}',
                         '[0x{ins.opcode:02X}]',

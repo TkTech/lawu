@@ -6,7 +6,8 @@ __all__ = (
     'read_instruction',
     'write_instruction',
     'opcode_table',
-    'mnemonic_to_opcode'
+    'definition_from_mnemonic',
+    'definition_from_opcode'
 )
 
 import struct
@@ -14,14 +15,62 @@ import struct
 from itertools import repeat
 from collections import namedtuple
 
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
+
 
 Operand = namedtuple('Operand', ['op_type', 'value'])
-Instruction = namedtuple('Instruction', [
+_Instruction = namedtuple('Instruction', [
     'mnemonic',
     'opcode',
     'operands',
     'pos'
 ])
+
+
+class Instruction(_Instruction):
+    """
+    Represents a single JVM instruction, consisting
+    of an opcode and its potential operands.
+    """
+    __slots__ = ()
+
+    @classmethod
+    def from_mnemonic(cls, mnemonic, operands=None):
+        return cls(
+            mnemonic,
+            _opcode_by_opname[mnemonic][0],
+            operands or [],
+            0
+        )
+
+    @classmethod
+    def from_opcode(cls, opcode, operands=None):
+        return cls(
+            opcode_table[opcode][0],
+            opcode,
+            operands or [],
+            0
+        )
+
+    @property
+    def fmt(self):
+        return opcode_table[self.opcode][1]
+
+    def size_on_disk(self, start_pos=0):
+        """
+        Returns the size of this instruction and its operands when
+        packed. `start_pos` is required for the `tableswitch` and
+        `lookupswitch` instruction as the padding depends on alignment.
+        """
+        size = 1
+        operands = self.fmt
+        if operands:
+            for fmt, _ in operands:
+                size += fmt.size
+        return size
 
 
 class OperandTypes(object):
@@ -256,36 +305,38 @@ _wide = (
 )
 
 
-def write_instruction(fout, start_pos, opcode, operands):
+def write_instruction(fout, start_pos, ins):
     """
     Writes a single instruction of `opcode` with `operands` to `fout`.
 
     :param fout: Any file-like object providing ``write()``.
     :param start_pos: The current position in the stream.
-    :param opcode: The numeric opcode.
-    :param operands: Any iterable with the suitable operands for this opcode.
+    :param ins:
     """
+    opcode = ins.opcode
+    operands = ins.operands
+
     fout.write(ubyte.pack(opcode))
-    fmt_operands = opcode_table[opcode][1]
+    fmt_operands = ins.fmt
 
     if opcode in _wide:
         # If this opcode can be prefixed by wide, we need to make sure its
         # operand fits, and if not, extend it.
-        if operands[0] >= 256:
-            fout.write(ushort.pack(operands[0]))
+        if operands[0].value >= 256:
+            fout.write(ushort.pack(operands[0].value))
         else:
-            fout.write(ubyte.pack(operands[0]))
+            fout.write(ubyte.pack(operands[0].value))
 
         if opcode == 0x84:
             # A special case for iinc which uses the second form of wide.
-            if operands[1] >= 256:
-                fout.write(short.pack(operands[1]))
+            if operands[1].value >= 256:
+                fout.write(short.pack(operands[1].value))
             else:
-                fout.write(byte.pack(operands[1]))
+                fout.write(byte.pack(operands[1].value))
     # A normal simple opcode with simple operands.
     elif fmt_operands:
         for i, (fmt, _) in enumerate(fmt_operands):
-            fout.write(fmt.pack(operands[i]))
+            fout.write(fmt.pack(operands[i].value))
     # Special case for lookupswitch, which also has a unique.
     elif opcode == 0xAB:
         # assemble([
@@ -298,7 +349,7 @@ def write_instruction(fout, start_pos, opcode, operands):
         padding = padding if padding != 4 else 0
         fout.write(struct.pack('{0}x'.format(padding)))
         fout.write(struct.pack('>ii',
-            operands[2],
+            operands[2].value,
             len(operands[1])
         ))
         for key in sorted(operands[1].keys()):
@@ -382,10 +433,17 @@ def read_instruction(fio, start_pos):
     return Instruction(name, op, final_operands, start_pos)
 
 
-def mnemonic_to_opcode(mnemonic):
+def definition_from_mnemonic(mnemonic):
     """
-    Returns the opcode for `mnemonic`.
+    Returns the definition of an instruction by its mnemonic in the
+    form: ``(opcode, operand_fmt)``
+    """
+    return _opcode_by_opname[mnemonic]
 
-    :param mnemonic: The mnemonic to look up.
+
+def definition_from_opcode(opcode):
     """
-    return _opcode_by_opname[mnemonic.lower()][0]
+    Returns the definition of an instruction by its opcode in the
+    form: ``(mnemonic, operand_fmt)``
+    """
+    return opcode_table[opcode]

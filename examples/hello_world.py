@@ -4,6 +4,7 @@
 An example showing how to create a "Hello World" class from scratch.
 """
 from jawa import ClassFile
+from jawa.assemble import assemble
 
 if __name__ == '__main__':
     cf = ClassFile.create('HelloWorld')
@@ -12,7 +13,8 @@ if __name__ == '__main__':
     main.access_flags.acc_static = True
     main.code.max_locals = 1
     main.code.max_stack = 2
-    main.code.assemble([
+
+    main.code.assemble(assemble([
         ('getstatic', cf.constants.create_field_ref(
             'java/lang/System',
             'out',
@@ -25,7 +27,7 @@ if __name__ == '__main__':
             '(Ljava/lang/String;)V'
         )),
         ('return',)
-    ])
+    ]))
 
     with open('HelloWorld.class', 'wb') as fout:
         cf.save(fout)

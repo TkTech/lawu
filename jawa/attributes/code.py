@@ -9,8 +9,7 @@ from jawa.constants import Constant
 from jawa.attribute import Attribute, AttributeTable
 from jawa.util.bytecode import (
     read_instruction,
-    write_instruction,
-    mnemonic_to_opcode
+    write_instruction
 )
 
 try:
@@ -98,30 +97,18 @@ class CodeAttribute(Attribute):
 
     def assemble(self, code):
         """
-        Assembles `code` using :meth:`~jawa.assemble.assemble`. Ex:
-
-        .. code-block:: python
-
-            method.code.assemble([
-                ('return',)
-            ])
+        Assembles an iterable of :class:`~jawa.util.bytecode.Instruction`
+        objects into a methods code body.
         """
         fout = StringIO()
-        for instruction in code:
-            mnemonic, operands = instruction[0], list(instruction[1:])
-            opcode = mnemonic_to_opcode(mnemonic)
-            # Convert any `Constant` subclasses into their indexes.
-            for i, operand in enumerate(operands):
-                if isinstance(operand, Constant):
-                    operands[i] = operand.index
-            write_instruction(fout, fout.tell(), opcode, operands)
-
+        for ins in code:
+            write_instruction(fout, fout.tell(), ins)
         self._code = fout.getvalue()
         fout.close()
 
     def disassemble(self):
         """
-        Disassembles this mehtod.
+        Disassembles this method.
         """
         fio = StringIO(self._code)
 
