@@ -13,7 +13,7 @@ def assemble(code):
     """
     A convienience method for 'assembling' bytecode over the regular
     :meth:`~jawa.attributes.code.CodeAttribute.assemble()` method with
-    support labels and direct constants.
+    support for labels and direct constants.
     """
     final = []
 
