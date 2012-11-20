@@ -49,13 +49,15 @@ if __name__ == '__main__':
             if method.code:
                 for ins in method.code.disassemble():
                     line = [
-                        '{ins.pos:04}',
-                        '[0x{ins.opcode:02X}]',
-                        '{ins.mnemonic:>15} <-'
+                        '{ins.pos:04}'.format(ins=ins),
+                        '[0x{ins.opcode:02X}]'.format(ins=ins),
+                        '{ins.mnemonic:>15} <-'.format(ins=ins)
                     ]
 
                     for operand in ins.operands:
-                        if operand.op_type == OperandTypes.CONSTANT_INDEX:
+                        if isinstance(operand, dict):
+                            line.append('JT[{0!r}]'.format(operand))
+                        elif operand.op_type == OperandTypes.CONSTANT_INDEX:
                             line.append('C[{0}]'.format(operand.value))
                         elif operand.op_type == OperandTypes.BRANCH:
                             line.append('J[{0}]'.format(operand.value))
@@ -64,5 +66,5 @@ if __name__ == '__main__':
                         elif operand.op_type == OperandTypes.LOCAL_INDEX:
                             line.append('L[{0}]'.format(operand.value))
 
-                    print('  ' + ' '.join(line).format(ins=ins))
+                    print('  ' + ' '.join(line))
             print('}')

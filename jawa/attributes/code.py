@@ -114,3 +114,4 @@ class CodeAttribute(Attribute):
 
         for ins in iter(lambda: read_instruction(fio, fio.tell()), None):
             yield ins
+
