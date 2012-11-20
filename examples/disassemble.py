@@ -5,7 +5,7 @@ A simple example disassembler.
 """
 import sys
 from jawa import ClassFile
-from jawa.util.bytecode import OperandTypes, Instruction
+from jawa.util.bytecode import OperandTypes
 
 if __name__ == '__main__':
     with open(sys.argv[1]) as fin:
@@ -16,7 +16,7 @@ if __name__ == '__main__':
         print('; {0:->60}'.format(
             ' total: {0}'.format(cf.constants.count)
         ))
-        for constant in cf.constants.find():
+        for constant in cf.constants:
             print('; {0:04}: {1!r}'.format(constant.index, constant))
 
         # The fields table.
@@ -24,7 +24,7 @@ if __name__ == '__main__':
         print('; {0:->60}'.format(
             ' total: {0}'.format(cf.fields.count)
         ))
-        for field in cf.fields.find():
+        for field in cf.fields:
             print('; {0!r}'.format(field))
 
         # The methods table.
@@ -32,7 +32,7 @@ if __name__ == '__main__':
         print('; {0:->60}'.format(
             ' total: {0}'.format(cf.methods.count)
         ))
-        for method in cf.methods.find():
+        for method in cf.methods:
             # Find all enabled flags and print them out (such as acc_public
             # and acc_private)
             flags = method.access_flags.to_dict()
