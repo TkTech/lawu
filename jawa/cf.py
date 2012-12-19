@@ -207,6 +207,10 @@ class ClassFile(object):
         """
         return self.constants.get(self._this)
 
+    @this.setter
+    def this(self, value):
+        self._this = value.index
+
     @property
     def super_(self):
         """
@@ -214,6 +218,10 @@ class ClassFile(object):
         class's superclass.
         """
         return self.constants.get(self._super)
+
+    @super_.setter
+    def super_(self, value):
+        self._super = value.index
 
     @property
     def interfaces(self):
