@@ -3,3 +3,4 @@ __test__.jar
 test.py
 *.pyc
 docs/_build/
+.DS_Store
