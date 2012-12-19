@@ -44,6 +44,7 @@ clean:
 html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	touch $(BUILDDIR)/html/.nojekyll
+	echo "jawa.tkte.ch" > $(BUILDDIR)/html/CNAME
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
