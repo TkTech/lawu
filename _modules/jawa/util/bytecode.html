@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>jawa.util.bytecode &mdash; Jawa 0.1.2 documentation</title>
+    <title>jawa.util.bytecode &mdash; jawa  documentation</title>
     
     <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '0.1.2',
+        VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="Jawa 0.1.2 documentation" href="../../../index.html" />
+    <link rel="top" title="jawa  documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" /> 
   </head>
   <body>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">Jawa 0.1.2 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">jawa  documentation</a> &raquo;</li>
           <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -49,131 +49,58 @@
           <div class="body">
             
   <h1>Source code for jawa.util.bytecode</h1><div class="highlight"><pre>
-<span class="kn">from</span> <span class="nn">struct</span> <span class="kn">import</span> <span class="n">unpack</span><span class="p">,</span> <span class="n">calcsize</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">repeat</span>
+<span class="c"># -*- coding: utf8 -*-</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s">&#39;Instruction&#39;</span><span class="p">,</span>
+    <span class="s">&#39;Operand&#39;</span><span class="p">,</span>
+    <span class="s">&#39;OperandTypes&#39;</span><span class="p">,</span>
+    <span class="s">&#39;read_instruction&#39;</span>
+<span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">struct</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
 
 
-<div class="viewcode-block" id="BytecodeError"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.BytecodeError">[docs]</a><span class="k">class</span> <span class="nc">BytecodeError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="k">pass</span>
+<span class="n">Operand</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s">&#39;Operand&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;type_&#39;</span><span class="p">,</span> <span class="s">&#39;value&#39;</span><span class="p">])</span>
+<span class="n">_instruction</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s">&#39;Instruction&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;opcode&#39;</span><span class="p">,</span> <span class="s">&#39;operands&#39;</span><span class="p">,</span> <span class="s">&#39;pos&#39;</span><span class="p">])</span>
 
-</div>
-<div class="viewcode-block" id="Operand"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.Operand">[docs]</a><span class="k">class</span> <span class="nc">Operand</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="n">__slots__</span> <span class="o">=</span> <span class="p">()</span>
 
-</div>
-<div class="viewcode-block" id="PaddingOperand"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.PaddingOperand">[docs]</a><span class="k">class</span> <span class="nc">PaddingOperand</span><span class="p">(</span><span class="n">Operand</span><span class="p">):</span>
-    <span class="n">__slots__</span> <span class="o">=</span> <span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        <span class="k">pass</span>
-
-</div>
-<div class="viewcode-block" id="ConstantIndexOperand"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.ConstantIndexOperand">[docs]</a><span class="k">class</span> <span class="nc">ConstantIndexOperand</span><span class="p">(</span><span class="n">Operand</span><span class="p">):</span>
-    <span class="n">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;_index&#39;</span><span class="p">,</span> <span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">=</span> <span class="n">index</span>
-
+<div class="viewcode-block" id="Instruction"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.Instruction">[docs]</a><span class="k">class</span> <span class="nc">Instruction</span><span class="p">(</span><span class="n">_instruction</span><span class="p">):</span>
     <span class="nd">@property</span>
-<div class="viewcode-block" id="ConstantIndexOperand.index"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.ConstantIndexOperand.index">[docs]</a>    <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span>
-</div>
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s">&#39;&lt;ConstantIndexOperand(index=</span><span class="si">%r</span><span class="s">)&gt;&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span>
+<div class="viewcode-block" id="Instruction.mnemonic"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.Instruction.mnemonic">[docs]</a>    <span class="k">def</span> <span class="nf">mnemonic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the mnemonic for this opcode.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">_opcodes</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_opcode</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+</div></div>
+<div class="viewcode-block" id="OperandTypes"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.OperandTypes">[docs]</a><span class="k">class</span> <span class="nc">OperandTypes</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">LITERAL</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">LOCAL_INDEX</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="n">CONSTANT_INDEX</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">BRANCH</span> <span class="o">=</span> <span class="mi">40</span>
+    <span class="n">PADDING</span> <span class="o">=</span> <span class="mi">50</span>
 
 </div>
-<div class="viewcode-block" id="LocalIndexOperand"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.LocalIndexOperand">[docs]</a><span class="k">class</span> <span class="nc">LocalIndexOperand</span><span class="p">(</span><span class="n">Operand</span><span class="p">):</span>
-    <span class="n">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;_index&#39;</span><span class="p">)</span>
+<span class="n">ubyte</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s">&#39;&gt;B&#39;</span><span class="p">)</span>
+<span class="n">ushort</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">)</span>
+<span class="n">short</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s">&#39;&gt;h&#39;</span><span class="p">)</span>
+<span class="n">integer</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s">&#39;&gt;i&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">=</span> <span class="n">index</span>
-
-    <span class="nd">@property</span>
-<div class="viewcode-block" id="LocalIndexOperand.index"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.LocalIndexOperand.index">[docs]</a>    <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span>
-</div>
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s">&#39;&lt;LocalIndexOperand(index=</span><span class="si">%r</span><span class="s">)&gt;&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span>
-
-</div>
-<div class="viewcode-block" id="LiteralOperand"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.LiteralOperand">[docs]</a><span class="k">class</span> <span class="nc">LiteralOperand</span><span class="p">(</span><span class="n">Operand</span><span class="p">):</span>
-    <span class="n">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;_value&#39;</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="n">value</span>
-
-    <span class="nd">@property</span>
-<div class="viewcode-block" id="LiteralOperand.value"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.LiteralOperand.value">[docs]</a>    <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
-</div>
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s">&#39;&lt;LiteralOperand(value=</span><span class="si">%r</span><span class="s">)&gt;&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
-
-</div>
-<div class="viewcode-block" id="BranchOperand"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.BranchOperand">[docs]</a><span class="k">class</span> <span class="nc">BranchOperand</span><span class="p">(</span><span class="n">Operand</span><span class="p">):</span>
-    <span class="n">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;_offset&#39;</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_offset</span> <span class="o">=</span> <span class="n">offset</span>
-
-    <span class="nd">@property</span>
-<div class="viewcode-block" id="BranchOperand.offset"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.BranchOperand.offset">[docs]</a>    <span class="k">def</span> <span class="nf">offset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_offset</span>
-</div>
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s">&#39;&lt;BranchOperand(offset=</span><span class="si">%r</span><span class="s">)&gt;&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span>
-
-</div>
-<div class="viewcode-block" id="Opcode"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.Opcode">[docs]</a><span class="k">class</span> <span class="nc">Opcode</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="n">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;_op&#39;</span><span class="p">,</span> <span class="s">&#39;_operands&#39;</span><span class="p">,</span> <span class="s">&#39;_idx&#39;</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">operands</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_op</span> <span class="o">=</span> <span class="n">op</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_operands</span> <span class="o">=</span> <span class="n">operands</span> <span class="ow">or</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_idx</span> <span class="o">=</span> <span class="n">idx</span>
-
-    <span class="nd">@property</span>
-<div class="viewcode-block" id="Opcode.operands"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.Opcode.operands">[docs]</a>    <span class="k">def</span> <span class="nf">operands</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_operands</span>
-</div>
-    <span class="nd">@property</span>
-<div class="viewcode-block" id="Opcode.opcode"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.Opcode.opcode">[docs]</a>    <span class="k">def</span> <span class="nf">opcode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_op</span>
-</div>
-    <span class="nd">@property</span>
-<div class="viewcode-block" id="Opcode.name"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.Opcode.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">_opcodes</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_op</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-</div>
-    <span class="nd">@property</span>
-<div class="viewcode-block" id="Opcode.fmt"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.Opcode.fmt">[docs]</a>    <span class="k">def</span> <span class="nf">fmt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">_opcodes</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_op</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
-</div>
-    <span class="nd">@property</span>
-<div class="viewcode-block" id="Opcode.index"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.Opcode.index">[docs]</a>    <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_idx</span>
-</div>
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s">&#39;&lt;Opcode(opcode=</span><span class="si">%r</span><span class="s">, name=</span><span class="si">%r</span><span class="s">, operands=</span><span class="si">%r</span><span class="s">, idx=</span><span class="si">%r</span><span class="s">)&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">opcode</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">operands</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">index</span>
-        <span class="p">)</span>
-
-</div>
 <span class="n">_opcodes</span> <span class="o">=</span> <span class="p">{</span>
     <span class="mh">0x32</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;aaload&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
     <span class="mh">0x53</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;aastore&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
     <span class="mh">0x01</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;aconst_null&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
-    <span class="mh">0x19</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;aload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">LocalIndexOperand</span><span class="p">)],</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+    <span class="mh">0x19</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;aload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)],</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
     <span class="mh">0x2A</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;aload_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
     <span class="mh">0x2B</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;aload_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
     <span class="mh">0x2C</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;aload_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
     <span class="mh">0x2D</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;aload_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
-    <span class="mh">0xBD</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;anewarray&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">LiteralOperand</span><span class="p">)],</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+    <span class="mh">0xBD</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;anewarray&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">10</span><span class="p">)],</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
     <span class="mh">0xB0</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;areturn&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
     <span class="mh">0xBE</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;arraylength&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
-    <span class="mh">0x3A</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;astore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">LocalIndexOperand</span><span class="p">)],</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
+    <span class="mh">0x3A</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;astore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)],</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
     <span class="mh">0x4B</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;astore_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
     <span class="mh">0x4C</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;astore_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
     <span class="mh">0x4D</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;astore_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
@@ -181,10 +108,10 @@
     <span class="mh">0xBF</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;athrow&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x33</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;baload&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x54</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;bastore&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x10</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;bipush&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">LiteralOperand</span><span class="p">)]),</span>
+    <span class="mh">0x10</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;bipush&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]),</span>
     <span class="mh">0x34</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;caload&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x55</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;castore&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xC0</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;checkcast&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">ConstantIndexOperand</span><span class="p">)]),</span>
+    <span class="mh">0xC0</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;checkcast&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
     <span class="mh">0x90</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;d2f&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x8E</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;d2i&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x8F</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;d2l&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
@@ -196,7 +123,7 @@
     <span class="mh">0x0E</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dconst_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x0F</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dconst_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x6F</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ddiv&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x18</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">LocalIndexOperand</span><span class="p">)]),</span>
+    <span class="mh">0x18</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
     <span class="mh">0x26</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dload_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x27</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dload_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x28</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dload_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
@@ -205,7 +132,7 @@
     <span class="mh">0x77</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dneg&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x73</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;drem&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0xAF</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dreturn&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x39</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dstore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">LocalIndexOperand</span><span class="p">)]),</span>
+    <span class="mh">0x39</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dstore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
     <span class="mh">0x47</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dstore_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x48</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dstore_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x49</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dstore_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
@@ -229,7 +156,7 @@
     <span class="mh">0x0C</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fconst_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x0D</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fconst_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x6E</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fdiv&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x17</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">LocalIndexOperand</span><span class="p">)]),</span>
+    <span class="mh">0x17</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
     <span class="mh">0x22</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fload_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x23</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fload_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x24</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fload_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
@@ -238,16 +165,16 @@
     <span class="mh">0x76</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fneg&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x72</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;frem&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0xAE</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;freturn&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x38</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fstore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">LocalIndexOperand</span><span class="p">)]),</span>
+    <span class="mh">0x38</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fstore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
     <span class="mh">0x43</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fstore_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x44</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fstore_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x45</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fstore_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x46</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fstore_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x66</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fsub&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xB4</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;getfield&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">ConstantIndexOperand</span><span class="p">)]),</span>
-    <span class="mh">0xB2</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;getstatic&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">ConstantIndexOperand</span><span class="p">)]),</span>
-    <span class="mh">0xA7</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;goto&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;h&#39;</span><span class="p">,</span> <span class="n">BranchOperand</span><span class="p">)]),</span>
-    <span class="mh">0xC8</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;goto_w&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;i&#39;</span><span class="p">,</span> <span class="n">BranchOperand</span><span class="p">)]),</span>
+    <span class="mh">0xB4</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;getfield&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
+    <span class="mh">0xB2</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;getstatic&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
+    <span class="mh">0xA7</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;goto&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0xC8</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;goto_w&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">integer</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
     <span class="mh">0x91</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ib2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x92</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;i2c&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x87</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;i2d&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
@@ -266,45 +193,45 @@
     <span class="mh">0x07</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iconst_4&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x08</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iconst_5&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x6C</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;idiv&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xA5</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;if_acmpeq&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;h&#39;</span><span class="p">,</span> <span class="n">BranchOperand</span><span class="p">)]),</span>
-    <span class="mh">0xA6</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;if_acmpne&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;h&#39;</span><span class="p">,</span> <span class="n">BranchOperand</span><span class="p">)]),</span>
-    <span class="mh">0x9F</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;if_icmpeq&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;h&#39;</span><span class="p">,</span> <span class="n">BranchOperand</span><span class="p">)]),</span>
-    <span class="mh">0xA0</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;if_icmpne&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;h&#39;</span><span class="p">,</span> <span class="n">BranchOperand</span><span class="p">)]),</span>
-    <span class="mh">0xA1</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;if_icmplt&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;h&#39;</span><span class="p">,</span> <span class="n">BranchOperand</span><span class="p">)]),</span>
-    <span class="mh">0xA2</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;if_icmpge&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;h&#39;</span><span class="p">,</span> <span class="n">BranchOperand</span><span class="p">)]),</span>
-    <span class="mh">0xA3</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;if_icmpgt&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;h&#39;</span><span class="p">,</span> <span class="n">BranchOperand</span><span class="p">)]),</span>
-    <span class="mh">0xA4</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;if_icmple&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;h&#39;</span><span class="p">,</span> <span class="n">BranchOperand</span><span class="p">)]),</span>
-    <span class="mh">0x99</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ifeq&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;h&#39;</span><span class="p">,</span> <span class="n">BranchOperand</span><span class="p">)]),</span>
-    <span class="mh">0x9A</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ifne&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;h&#39;</span><span class="p">,</span> <span class="n">BranchOperand</span><span class="p">)]),</span>
-    <span class="mh">0x9B</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iflt&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;h&#39;</span><span class="p">,</span> <span class="n">BranchOperand</span><span class="p">)]),</span>
-    <span class="mh">0x9C</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ifge&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;h&#39;</span><span class="p">,</span> <span class="n">BranchOperand</span><span class="p">)]),</span>
-    <span class="mh">0x9D</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ifgt&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;h&#39;</span><span class="p">,</span> <span class="n">BranchOperand</span><span class="p">)]),</span>
-    <span class="mh">0x9E</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ifle&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;h&#39;</span><span class="p">,</span> <span class="n">BranchOperand</span><span class="p">)]),</span>
-    <span class="mh">0xC7</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ifnonnull&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;h&#39;</span><span class="p">,</span> <span class="n">BranchOperand</span><span class="p">)]),</span>
-    <span class="mh">0xC6</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ifnull&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;h&#39;</span><span class="p">,</span> <span class="n">BranchOperand</span><span class="p">)]),</span>
-    <span class="mh">0x84</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iinc&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">LocalIndexOperand</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">LiteralOperand</span><span class="p">)]),</span>
-    <span class="mh">0x15</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">LocalIndexOperand</span><span class="p">)]),</span>
+    <span class="mh">0xA5</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;if_acmpeq&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0xA6</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;if_acmpne&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0x9F</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;if_icmpeq&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0xA0</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;if_icmpne&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0xA1</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;if_icmplt&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0xA2</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;if_icmpge&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0xA3</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;if_icmpgt&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0xA4</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;if_icmple&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0x99</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ifeq&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0x9A</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ifne&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0x9B</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iflt&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0x9C</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ifge&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0x9D</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ifgt&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0x9E</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ifle&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0xC7</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ifnonnull&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0xC6</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ifnull&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0x84</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iinc&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="p">(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]),</span>
+    <span class="mh">0x15</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
     <span class="mh">0x1A</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iload_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x1B</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iload_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x1C</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iload_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x1D</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iload_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x68</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;imul&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x74</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ineg&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xC1</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;instanceof&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">ConstantIndexOperand</span><span class="p">)]),</span>
+    <span class="mh">0xC1</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;instanceof&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
     <span class="mh">0xB9</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;invokeinterface&#39;</span><span class="p">,</span> <span class="p">[</span>
-        <span class="p">(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">ConstantIndexOperand</span><span class="p">),</span>
-        <span class="p">(</span><span class="s">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">LiteralOperand</span><span class="p">),</span>
-        <span class="p">(</span><span class="s">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">PaddingOperand</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
     <span class="p">]),</span>
-    <span class="mh">0xB7</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;invokespecial&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">ConstantIndexOperand</span><span class="p">)]),</span>
-    <span class="mh">0xB8</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;invokestatic&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">ConstantIndexOperand</span><span class="p">)]),</span>
-    <span class="mh">0xB6</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;invokevirtual&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">ConstantIndexOperand</span><span class="p">)]),</span>
+    <span class="mh">0xB7</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;invokespecial&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
+    <span class="mh">0xB8</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;invokestatic&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
+    <span class="mh">0xB6</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;invokevirtual&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
     <span class="mh">0x80</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ior&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x70</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;irem&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0xAC</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ireturn&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x78</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ishl&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x7A</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ishr&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x36</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;istore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">LocalIndexOperand</span><span class="p">)]),</span>
+    <span class="mh">0x36</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;istore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
     <span class="mh">0x3B</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;istore_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x3C</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;istore_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x3D</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;istore_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
@@ -312,8 +239,8 @@
     <span class="mh">0x64</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;isub&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x7C</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iushr&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x82</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ixor&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xA8</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;jsr&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;h&#39;</span><span class="p">,</span> <span class="n">BranchOperand</span><span class="p">)]),</span>
-    <span class="mh">0xC9</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;jsr_w&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;i&#39;</span><span class="p">,</span> <span class="n">BranchOperand</span><span class="p">)]),</span>
+    <span class="mh">0xA8</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;jsr&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0xC9</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;jsr_w&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">integer</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
     <span class="mh">0x8A</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;l2d&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x89</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;l2f&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x88</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;l2i&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
@@ -324,11 +251,11 @@
     <span class="mh">0x94</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lcmp&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x09</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lconst_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x0A</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lconst_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x12</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ldc&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">ConstantIndexOperand</span><span class="p">)]),</span>
-    <span class="mh">0x13</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ldc_w&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">ConstantIndexOperand</span><span class="p">)]),</span>
-    <span class="mh">0x14</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ldc2_w&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">ConstantIndexOperand</span><span class="p">)]),</span>
+    <span class="mh">0x12</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ldc&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
+    <span class="mh">0x13</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ldc_w&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
+    <span class="mh">0x14</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ldc2_w&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
     <span class="mh">0x6D</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ldiv&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x16</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">LocalIndexOperand</span><span class="p">)]),</span>
+    <span class="mh">0x16</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
     <span class="mh">0x1E</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lload_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x1F</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lload_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x20</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lload_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
@@ -341,7 +268,7 @@
     <span class="mh">0xAD</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lreturn&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x79</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lshl&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x7B</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lshr&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x37</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lstore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">LocalIndexOperand</span><span class="p">)]),</span>
+    <span class="mh">0x37</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lstore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
     <span class="mh">0x3F</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lstore_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x40</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lstore_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x41</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lstore_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
@@ -352,21 +279,21 @@
     <span class="mh">0xC2</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;monitorenter&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0xC3</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;monitorexit&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0xC5</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;multianewarray&#39;</span><span class="p">,</span> <span class="p">[</span>
-        <span class="p">(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">ConstantIndexOperand</span><span class="p">),</span>
-        <span class="p">(</span><span class="s">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">LiteralOperand</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
     <span class="p">]),</span>
-    <span class="mh">0xBB</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;new&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">ConstantIndexOperand</span><span class="p">)]),</span>
-    <span class="mh">0xBC</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;newarray&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">LiteralOperand</span><span class="p">)]),</span>
+    <span class="mh">0xBB</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;new&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
+    <span class="mh">0xBC</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;newarray&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]),</span>
     <span class="mh">0x00</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;nop&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x57</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;pop&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x58</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;pop2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xB5</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;putfield&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">ConstantIndexOperand</span><span class="p">)]),</span>
-    <span class="mh">0xB3</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;putstatic&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">ConstantIndexOperand</span><span class="p">)]),</span>
-    <span class="mh">0xA9</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ret&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">LocalIndexOperand</span><span class="p">)]),</span>
+    <span class="mh">0xB5</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;putfield&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
+    <span class="mh">0xB3</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;putstatic&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
+    <span class="mh">0xA9</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ret&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
     <span class="mh">0xB1</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;return&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x35</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;saload&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0x56</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;sastore&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x11</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;sipush&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">LiteralOperand</span><span class="p">)]),</span>
+    <span class="mh">0x11</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;sipush&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]),</span>
     <span class="mh">0x5F</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;swap&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0xAA</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;tableswitch&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
     <span class="mh">0xC4</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;wide&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
@@ -375,90 +302,40 @@
     <span class="mh">0xFF</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;impdep2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
 <span class="p">}</span>
 
+<span class="c"># Creates a new dict with operand and mnemonic swapped for assembling.</span>
+<span class="n">_opcodes_by_opname</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">o</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="n">k</span><span class="p">,)</span> <span class="o">+</span> <span class="n">o</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">_opcodes</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
 
-<div class="viewcode-block" id="StreamDisassembler"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.StreamDisassembler">[docs]</a><span class="k">class</span> <span class="nc">StreamDisassembler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+<span class="k">def</span> <span class="nf">assemble_opcode</span><span class="p">(</span><span class="n">opcode</span><span class="p">,</span> <span class="n">operands</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Disassembles a stream of JVM instructions without caching or otherwise</span>
-<span class="sd">    doing anything with them. Once the stream has been consumed, it cannot</span>
-<span class="sd">    be re-iterated.</span>
+<span class="sd">    Assembles a single opcode and its operands.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">io</span>
+    <span class="n">opcode</span> <span class="o">=</span> <span class="n">opcode</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="StreamDisassembler.get_single"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.StreamDisassembler.get_single">[docs]</a>    <span class="k">def</span> <span class="nf">get_single</span><span class="p">(</span><span class="n">io</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Parses and returns a single opcode and its operands from the stream</span>
-<span class="sd">        `io`. `io` must support a blocking `read()` and `tell()`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">read</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read</span>
-        <span class="n">start_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span>
+    <span class="n">t_op</span><span class="p">,</span> <span class="n">t_operands</span> <span class="o">=</span> <span class="n">_opcodes_by_opname</span><span class="p">[</span><span class="n">opcode</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">[</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">ubyte</span><span class="p">,</span> <span class="n">t_op</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="n">t_operands</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">t_operand_fmt</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">t_operands</span><span class="p">):</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">t_operand_fmt</span><span class="p">,</span> <span class="n">operands</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
 
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">op</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">()</span>
+    <span class="k">return</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">op</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_opcodes</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">BytecodeError</span><span class="p">(</span><span class="s">&#39;0x</span><span class="si">%X</span><span class="s"> is not a recognized opcode.&#39;</span> <span class="o">%</span> <span class="n">op</span><span class="p">)</span>
 
-        <span class="n">name</span><span class="p">,</span> <span class="n">operands</span> <span class="o">=</span> <span class="n">_opcodes</span><span class="p">[</span><span class="n">op</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span>
-        <span class="n">f_operands</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="n">operands</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">struct_fmt</span><span class="p">,</span> <span class="n">operand_type</span> <span class="ow">in</span> <span class="n">operands</span><span class="p">:</span>
-                <span class="n">f_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">operand_type</span><span class="p">(</span>
-                    <span class="n">unpack</span><span class="p">(</span><span class="n">struct_fmt</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="n">calcsize</span><span class="p">(</span><span class="n">struct_fmt</span><span class="p">))</span>
-                <span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
-        <span class="c"># Special case the Lookupswitch instruction.</span>
-        <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="mh">0xAB</span><span class="p">:</span>
-            <span class="n">padding</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">-</span> <span class="p">(</span><span class="n">start_pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span>
-            <span class="k">if</span> <span class="n">padding</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
-                <span class="n">read</span><span class="p">(</span><span class="n">padding</span><span class="p">)</span>
-            <span class="n">default</span><span class="p">,</span> <span class="n">npairs</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&#39;&gt;ii&#39;</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
-            <span class="n">f_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BranchOperand</span><span class="p">(</span><span class="n">default</span><span class="p">))</span>
-            <span class="c"># TODO: Unroll.</span>
-            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">repeat</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">npairs</span><span class="p">):</span>
-                <span class="n">match</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&#39;&gt;ii&#39;</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
-                <span class="n">f_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">LiteralOperand</span><span class="p">(</span><span class="n">match</span><span class="p">))</span>
-                <span class="n">f_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BranchOperand</span><span class="p">(</span><span class="n">offset</span><span class="p">))</span>
-        <span class="c"># Special case for the Tableswitch instruction.</span>
-        <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="mh">0xAA</span><span class="p">:</span>
-            <span class="n">padding</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">-</span> <span class="p">(</span><span class="n">start_pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span>
-            <span class="k">if</span> <span class="n">padding</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
-                <span class="n">read</span><span class="p">(</span><span class="n">padding</span><span class="p">)</span>
-            <span class="n">default</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&#39;&gt;iii&#39;</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="mi">12</span><span class="p">))</span>
-            <span class="n">count</span> <span class="o">=</span> <span class="n">high</span> <span class="o">-</span> <span class="n">low</span> <span class="o">+</span> <span class="mi">1</span>
-            <span class="n">f_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BranchOperand</span><span class="p">(</span><span class="n">default</span><span class="p">))</span>
-            <span class="n">f_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">LiteralOperand</span><span class="p">(</span><span class="n">low</span><span class="p">))</span>
-            <span class="n">f_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">LiteralOperand</span><span class="p">(</span><span class="n">high</span><span class="p">))</span>
-            <span class="c"># TODO: Unroll.</span>
-            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">repeat</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">count</span><span class="p">):</span>
-                <span class="n">f_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BranchOperand</span><span class="p">(</span>
-                    <span class="n">unpack</span><span class="p">(</span><span class="s">&#39;&gt;i&#39;</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="p">))</span>
-        <span class="c"># Special case for the wide prefix.</span>
-        <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="mh">0xC4</span><span class="p">:</span>
-            <span class="n">real_opcode</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-            <span class="n">name</span><span class="p">,</span> <span class="n">operands</span> <span class="o">=</span> <span class="n">_opcodes</span><span class="p">[</span><span class="n">real_opcode</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span>
-            <span class="n">f_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">LocalIndexOperand</span><span class="p">(</span>
-                <span class="n">unpack</span><span class="p">(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="p">))</span>
-            <span class="k">if</span> <span class="n">real_opcode</span> <span class="o">==</span> <span class="mh">0x84</span><span class="p">:</span>
-                <span class="n">f_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">LiteralOperand</span><span class="p">(</span>
-                    <span class="n">unpack</span><span class="p">(</span><span class="s">&#39;&gt;h&#39;</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="p">))</span>
-        <span class="k">return</span> <span class="n">Opcode</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">f_operands</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="n">start_pos</span><span class="p">)</span>
-</div>
-    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Iterates and yields each instruction in the stream until no more</span>
-<span class="sd">        can be read.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="k">yield</span> <span class="n">StreamDisassembler</span><span class="o">.</span><span class="n">get_single</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">StopIteration</span><span class="p">()</span></div>
+<div class="viewcode-block" id="read_instruction"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.read_instruction">[docs]</a><span class="k">def</span> <span class="nf">read_instruction</span><span class="p">(</span><span class="n">fio</span><span class="p">,</span> <span class="n">start_pos</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">op</span> <span class="o">=</span> <span class="n">ubyte</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">except</span> <span class="n">struct</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="n">name</span><span class="p">,</span> <span class="n">operands</span> <span class="o">=</span> <span class="n">_opcodes</span><span class="p">[</span><span class="n">op</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="n">final_operands</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">operands</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">type_</span> <span class="ow">in</span> <span class="n">operands</span><span class="p">:</span>
+            <span class="n">final_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">Operand</span><span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fmt</span><span class="o">.</span><span class="n">size</span><span class="p">))[</span><span class="mi">0</span><span class="p">]))</span>
+
+    <span class="k">return</span> <span class="n">Instruction</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">final_operands</span><span class="p">,</span> <span class="n">start_pos</span><span class="p">)</span></div>
 </pre></div>
 
           </div>
@@ -492,28 +369,13 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">Jawa 0.1.2 documentation</a> &raquo;</li>
+        <li><a href="../../../index.html">jawa  documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
-
     <div class="footer">
-        &copy; Copyright 2012, Tyler Kennedy.
+        &copy; Copyright 2012, Author.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-11145163-14']);
-  _gaq.push(['_setDomainName', 'tkte.ch']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-
   </body>
 </html>

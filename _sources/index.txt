@@ -22,17 +22,9 @@ Jawa API
 .. toctree::
    :maxdepth: 4
 
-   jawa.core
-   jawa.core.attribs
+   jawa
+   jawa.attributes
    jawa.util
-
-Examples
---------
-
-.. toctree::
-   :maxdepth: 4
-
-   examples/jar
 
 
 Indices and tables
@@ -41,4 +33,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

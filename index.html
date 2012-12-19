@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Jawa - JVM ClassFile Library &mdash; Jawa 0.1.2 documentation</title>
+    <title>Jawa - JVM ClassFile Library &mdash; jawa  documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.1.2',
+        VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,8 +25,8 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Jawa 0.1.2 documentation" href="#" />
-    <link rel="next" title="core Package" href="jawa.core.html" /> 
+    <link rel="top" title="jawa  documentation" href="#" />
+    <link rel="next" title="jawa Package" href="jawa.html" /> 
   </head>
   <body>
     <div class="related">
@@ -39,9 +39,9 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="jawa.core.html" title="core Package"
+          <a href="jawa.html" title="jawa Package"
              accesskey="N">next</a> |</li>
-        <li><a href="#">Jawa 0.1.2 documentation</a> &raquo;</li> 
+        <li><a href="#">jawa  documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -56,7 +56,7 @@
 class files.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">This documentation is up to date as of August 08, 2012.</p>
+<p class="last">This documentation is up to date as of November 02, 2012.</p>
 </div>
 <div class="section" id="getting-jawa">
 <h2>Getting Jawa<a class="headerlink" href="#getting-jawa" title="Permalink to this headline">¶</a></h2>
@@ -69,42 +69,27 @@ changes are rare and installation from Github is very easy. To install:</p>
 <h2>Jawa API<a class="headerlink" href="#jawa-api" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="jawa.core.html">core Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="jawa.core.html#module-jawa.core.jf"><tt class="docutils literal"><span class="pre">core.jf</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jawa.core.html#module-jawa.core.cf"><tt class="docutils literal"><span class="pre">core.cf</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jawa.core.html#module-jawa.core.context"><tt class="docutils literal"><span class="pre">core.context</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jawa.core.html#module-jawa.core.attributes"><tt class="docutils literal"><span class="pre">core.attributes</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jawa.core.html#module-jawa.core.constants"><tt class="docutils literal"><span class="pre">core.constants</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jawa.core.html#module-jawa.core.fields"><tt class="docutils literal"><span class="pre">core.fields</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jawa.core.html#module-jawa.core.methods"><tt class="docutils literal"><span class="pre">core.methods</span></tt> Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jawa.html">jawa Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="jawa.html#module-jawa.attribute"><tt class="docutils literal"><span class="pre">attribute</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jawa.html#module-jawa.cf"><tt class="docutils literal"><span class="pre">cf</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jawa.html#module-jawa.constants"><tt class="docutils literal"><span class="pre">constants</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jawa.html#module-jawa.fields"><tt class="docutils literal"><span class="pre">fields</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jawa.html#module-jawa.jf"><tt class="docutils literal"><span class="pre">jf</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jawa.html#module-jawa.methods"><tt class="docutils literal"><span class="pre">methods</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jawa.html#module-jawa.assemble"><tt class="docutils literal"><span class="pre">assemble</span></tt> Module</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="jawa.core.attribs.html">core.attribs Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="jawa.core.attribs.html#module-jawa.core.attribs.attribute"><tt class="docutils literal"><span class="pre">core.attribs.attribute</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jawa.core.attribs.html#module-jawa.core.attribs.code"><tt class="docutils literal"><span class="pre">core.attribs.code</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jawa.core.attribs.html#module-jawa.core.attribs.sourcefile"><tt class="docutils literal"><span class="pre">core.attribs.sourcefile</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jawa.core.attribs.html#module-jawa.core.attribs.unknown"><tt class="docutils literal"><span class="pre">core.attribs.unknown</span></tt> Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jawa.attributes.html">attributes Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="jawa.attributes.html#module-jawa.attributes.code"><tt class="docutils literal"><span class="pre">code</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jawa.attributes.html#module-jawa.attributes.constant_value"><tt class="docutils literal"><span class="pre">constant_value</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jawa.attributes.html#module-jawa.attributes.source_file"><tt class="docutils literal"><span class="pre">source_file</span></tt> Module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="jawa.util.html">util Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="jawa.util.html#module-jawa.util.bytecode"><tt class="docutils literal"><span class="pre">util.bytecode</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jawa.util.html#module-jawa.util.descriptor"><tt class="docutils literal"><span class="pre">util.descriptor</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jawa.util.html#module-jawa.util.ezip"><tt class="docutils literal"><span class="pre">util.ezip</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jawa.util.html#module-jawa.util.keywords"><tt class="docutils literal"><span class="pre">util.keywords</span></tt> Module</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-<div class="section" id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="examples/jar.html">Working With Jar Files</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples/jar.html#basic-reading">Basic Reading</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/jar.html#basic-writing">Basic Writing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/jar.html#reading-classes">Reading Classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/jar.html#saving">Saving</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jawa.util.html#module-jawa.util.bytecode"><tt class="docutils literal"><span class="pre">bytecode</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jawa.util.html#module-jawa.util.descriptor"><tt class="docutils literal"><span class="pre">descriptor</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jawa.util.html#module-jawa.util.ezip"><tt class="docutils literal"><span class="pre">ezip</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jawa.util.html#module-jawa.util.flags"><tt class="docutils literal"><span class="pre">flags</span></tt> Module</a></li>
 </ul>
 </li>
 </ul>
@@ -133,17 +118,14 @@ changes are rare and installation from Github is very easy. To install:</p>
 <li><a class="reference internal" href="#jawa-api">Jawa API</a><ul>
 </ul>
 </li>
-<li><a class="reference internal" href="#examples">Examples</a><ul>
-</ul>
-</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 
   <h4>Next topic</h4>
-  <p class="topless"><a href="jawa.core.html"
-                        title="next chapter">core Package</a></p>
+  <p class="topless"><a href="jawa.html"
+                        title="next chapter">jawa Package</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/index.txt"
@@ -176,29 +158,14 @@ changes are rare and installation from Github is very easy. To install:</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="jawa.core.html" title="core Package"
+          <a href="jawa.html" title="jawa Package"
              >next</a> |</li>
-        <li><a href="#">Jawa 0.1.2 documentation</a> &raquo;</li> 
+        <li><a href="#">jawa  documentation</a> &raquo;</li> 
       </ul>
     </div>
-
     <div class="footer">
-        &copy; Copyright 2012, Tyler Kennedy.
+        &copy; Copyright 2012, Author.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-11145163-14']);
-  _gaq.push(['_setDomainName', 'tkte.ch']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-
   </body>
 </html>

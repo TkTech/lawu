@@ -1,34 +1,35 @@
 util Package
 ============
 
-:mod:`util.bytecode` Module
----------------------------
+:mod:`bytecode` Module
+----------------------
 
 .. automodule:: jawa.util.bytecode
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`util.descriptor` Module
------------------------------
+:mod:`descriptor` Module
+------------------------
 
 .. automodule:: jawa.util.descriptor
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`util.ezip` Module
------------------------
+:mod:`ezip` Module
+------------------
 
 .. automodule:: jawa.util.ezip
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`util.keywords` Module
----------------------------
+:mod:`flags` Module
+-------------------
 
-.. automodule:: jawa.util.keywords
+.. automodule:: jawa.util.flags
     :members:
     :undoc-members:
     :show-inheritance:
+
