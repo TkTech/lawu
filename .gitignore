@@ -4,3 +4,4 @@ test.py
 *.pyc
 docs/_build/
 .DS_Store
+*.un~
