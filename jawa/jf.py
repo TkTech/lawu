@@ -49,6 +49,7 @@ class JarFile(EditableZipFile):
     @property
     def class_count(self):
         """
-        The number of classes within this JarFile.
+        The number of classes within this JarFile (any file ending in .class
+        is considered to be a ClassFile).
         """
-        return len(p for p in self.namelist if p.endswith('.class'))
+        return sum(1 for p in self.namelist if p.endswith('.class'))
