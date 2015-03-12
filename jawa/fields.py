@@ -43,6 +43,14 @@ class Field(object):
     def attributes(self):
         return self._attributes
 
+    @property
+    def value(self):
+        """
+        A shortcut for the field's ConstantValue attribute, should one exist.
+        """
+        constant_value = self.attributes.find_one(name='ConstantValue')
+        return constant_value
+
     def _from_io(self, fio):
         self.access_flags.unpack(fio.read(2))
         self._name_index, self._descriptor_index = unpack('>HH', fio.read(4))
@@ -50,10 +58,7 @@ class Field(object):
 
     def _to_io(self, fout):
         fout.write(self.access_flags.pack())
-        fout.write(pack('>HH',
-            self._name_index,
-            self._descriptor_index
-        ))
+        fout.write(pack('>HH', self._name_index, self._descriptor_index))
         self._attributes._to_io(fout)
 
 
@@ -81,6 +86,8 @@ class FieldTable(object):
         """
         Creates a new field from `name` and `descriptor`. For example::
 
+            >>> from jawa import ClassFile
+            >>> cf = ClassFile.create('BeerCounter')
             >>> field = cf.fields.create('BeerCount', 'I')
 
         """
@@ -100,6 +107,8 @@ class FieldTable(object):
         set to the :class:`~jawa.constants.Constant` `value`. For example,
         to create a string with the classic "Hello World!"::
 
+            >>> from jawa import ClassFile
+            >>> cf = ClassFile.create('BeerCounter')
             >>> field = cf.fields.create_static(
             ...    'HelloWorld',
             ...    'Ljava/lang/String;',
