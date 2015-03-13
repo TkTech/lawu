@@ -16,6 +16,15 @@ changes are rare and installation from Github is very easy. To install::
 
     pip install git+https://github.com/TkTech/Jawa.git
 
+Basic Examples
+--------------
+
+.. toctree::
+    :maxdepth: 2
+    :glob:
+
+    examples/*
+
 Jawa Core API
 -------------
 
