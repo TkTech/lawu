@@ -1,60 +1,58 @@
-.. include:: links.rst
-
-jawa Package
+jawa package
 ============
 
-:mod:`attribute` Module
------------------------
-
-.. automodule:: jawa.attribute
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`cf` Module
-----------------
-
-.. automodule:: jawa.cf
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`constants` Module
------------------------
-
-.. automodule:: jawa.constants
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`fields` Module
---------------------
-
-.. automodule:: jawa.fields
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`jf` Module
-----------------
+jawa.jf module
+--------------
 
 .. automodule:: jawa.jf
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`methods` Module
----------------------
+jawa.cf module
+--------------
 
-.. automodule:: jawa.methods
+.. automodule:: jawa.cf
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`assemble` Module
-----------------------
+jawa.assemble module
+--------------------
 
 .. automodule:: jawa.assemble
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+jawa.attribute module
+---------------------
+
+.. automodule:: jawa.attribute
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+jawa.constants module
+---------------------
+
+.. automodule:: jawa.constants
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+jawa.fields module
+------------------
+
+.. automodule:: jawa.fields
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+jawa.methods module
+-------------------
+
+.. automodule:: jawa.methods
     :members:
     :undoc-members:
     :show-inheritance:

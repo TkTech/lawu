@@ -16,20 +16,12 @@ changes are rare and installation from Github is very easy. To install::
 
     pip install git+https://github.com/TkTech/Jawa.git
 
-Jawa API
---------
+Jawa Core API
+-------------
 
 .. toctree::
-   :maxdepth: 4
+    :maxdepth: 2
 
-   jawa
-   jawa.attributes
-   jawa.util
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+    jawa
+    jawa.attributes
+    jawa.util
