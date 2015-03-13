@@ -1,4 +1,8 @@
 # -*- coding: utf8 -*-
+"""
+The :mod:`jawa.cf` module provides tools for working with JVM ``.class``
+ClassFiles.
+"""
 __all__ = ('ClassFile', 'ClassVersion')
 from struct import pack, unpack
 from collections import namedtuple
