@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -10,7 +8,7 @@
     
     <title>jawa.constants &mdash; jawa  documentation</title>
     
-    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -26,10 +24,14 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="jawa  documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -38,15 +40,15 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">jawa  documentation</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">jawa  documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for jawa.constants</h1><div class="highlight"><pre>
 <span class="c"># -*- coding: utf8 -*-</span>
@@ -56,9 +58,9 @@
     <span class="s">&#39;ConstantUTF8&#39;</span><span class="p">,</span>
     <span class="s">&#39;ConstantClass&#39;</span><span class="p">,</span>
     <span class="s">&#39;ConstantString&#39;</span><span class="p">,</span>
+    <span class="s">&#39;ConstantRef&#39;</span><span class="p">,</span>
     <span class="s">&#39;ConstantFieldRef&#39;</span><span class="p">,</span>
     <span class="s">&#39;ConstantMethodRef&#39;</span><span class="p">,</span>
-    <span class="s">&#39;ConstantFieldRef&#39;</span><span class="p">,</span>
     <span class="s">&#39;ConstantInterfaceMethodRef&#39;</span><span class="p">,</span>
     <span class="s">&#39;ConstantInteger&#39;</span><span class="p">,</span>
     <span class="s">&#39;ConstantFloat&#39;</span><span class="p">,</span>
@@ -67,31 +69,30 @@
     <span class="s">&#39;ConstantNameAndType&#39;</span>
 <span class="p">)</span>
 
+<span class="kn">from</span> <span class="nn">struct</span> <span class="kn">import</span> <span class="n">unpack</span><span class="p">,</span> <span class="n">pack</span>
+
 
 <div class="viewcode-block" id="Constant"><a class="viewcode-back" href="../../jawa.html#jawa.constants.Constant">[docs]</a><span class="k">class</span> <span class="nc">Constant</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The base class for all ``Constant*`` types.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_pool</span> <span class="o">=</span> <span class="n">pool</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">=</span> <span class="n">index</span>
 
     <span class="nd">@property</span>
-<div class="viewcode-block" id="Constant.pool"><a class="viewcode-back" href="../../jawa.html#jawa.constants.Constant.pool">[docs]</a>    <span class="k">def</span> <span class="nf">pool</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">pool</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The constant pool this constant belongs to.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pool</span>
-</div>
-    <span class="nd">@property</span>
-<div class="viewcode-block" id="Constant.index"><a class="viewcode-back" href="../../jawa.html#jawa.constants.Constant.index">[docs]</a>    <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span>
-</div>
-<div class="viewcode-block" id="Constant.raw"><a class="viewcode-back" href="../../jawa.html#jawa.constants.Constant.raw">[docs]</a>    <span class="k">def</span> <span class="nf">raw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
-</div>
-<div class="viewcode-block" id="Constant.commit"><a class="viewcode-back" href="../../jawa.html#jawa.constants.Constant.commit">[docs]</a>    <span class="k">def</span> <span class="nf">commit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">raw_set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw</span><span class="p">())</span>
-</div>
-    <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">exc_info</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The index of this constant in the constant pool.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span>
 
 </div>
 <span class="k">class</span> <span class="nc">ConstantNumber</span><span class="p">(</span><span class="n">Constant</span><span class="p">):</span>
@@ -99,62 +100,67 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">ConstantNumber</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
 
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;{0}(value={0!r})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
 
 <div class="viewcode-block" id="ConstantUTF8"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantUTF8">[docs]</a><span class="k">class</span> <span class="nc">ConstantUTF8</span><span class="p">(</span><span class="n">Constant</span><span class="p">):</span>
+    <span class="n">TAG</span> <span class="o">=</span> <span class="mi">1</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ConstantUTF8</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
 
-<div class="viewcode-block" id="ConstantUTF8.raw"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantUTF8.raw">[docs]</a>    <span class="k">def</span> <span class="nf">raw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;ConstantUTF8(value={0!r})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
 
-</div></div>
+</div>
 <div class="viewcode-block" id="ConstantInteger"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantInteger">[docs]</a><span class="k">class</span> <span class="nc">ConstantInteger</span><span class="p">(</span><span class="n">ConstantNumber</span><span class="p">):</span>
-<div class="viewcode-block" id="ConstantInteger.raw"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantInteger.raw">[docs]</a>    <span class="k">def</span> <span class="nf">raw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+    <span class="n">TAG</span> <span class="o">=</span> <span class="mi">3</span>
 
-</div></div>
+</div>
 <div class="viewcode-block" id="ConstantFloat"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantFloat">[docs]</a><span class="k">class</span> <span class="nc">ConstantFloat</span><span class="p">(</span><span class="n">ConstantNumber</span><span class="p">):</span>
-<div class="viewcode-block" id="ConstantFloat.raw"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantFloat.raw">[docs]</a>    <span class="k">def</span> <span class="nf">raw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+    <span class="n">TAG</span> <span class="o">=</span> <span class="mi">4</span>
 
-</div></div>
+</div>
 <div class="viewcode-block" id="ConstantLong"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantLong">[docs]</a><span class="k">class</span> <span class="nc">ConstantLong</span><span class="p">(</span><span class="n">ConstantNumber</span><span class="p">):</span>
-<div class="viewcode-block" id="ConstantLong.raw"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantLong.raw">[docs]</a>    <span class="k">def</span> <span class="nf">raw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+    <span class="n">TAG</span> <span class="o">=</span> <span class="mi">5</span>
 
-</div></div>
+</div>
 <div class="viewcode-block" id="ConstantDouble"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantDouble">[docs]</a><span class="k">class</span> <span class="nc">ConstantDouble</span><span class="p">(</span><span class="n">ConstantNumber</span><span class="p">):</span>
-<div class="viewcode-block" id="ConstantDouble.raw"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantDouble.raw">[docs]</a>    <span class="k">def</span> <span class="nf">raw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+    <span class="n">TAG</span> <span class="o">=</span> <span class="mi">6</span>
 
-</div></div>
+</div>
 <div class="viewcode-block" id="ConstantClass"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantClass">[docs]</a><span class="k">class</span> <span class="nc">ConstantClass</span><span class="p">(</span><span class="n">Constant</span><span class="p">):</span>
+    <span class="n">TAG</span> <span class="o">=</span> <span class="mi">7</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">name_index</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ConstantClass</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_name_index</span> <span class="o">=</span> <span class="n">name_index</span>
 
     <span class="nd">@property</span>
-<div class="viewcode-block" id="ConstantClass.name"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantClass.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name_index</span><span class="p">)</span>
-</div>
-<div class="viewcode-block" id="ConstantClass.raw"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantClass.raw">[docs]</a>    <span class="k">def</span> <span class="nf">raw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name_index</span><span class="p">)</span>
 
-</div></div>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;ConstantClass(name={0!r})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+</div>
 <div class="viewcode-block" id="ConstantString"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantString">[docs]</a><span class="k">class</span> <span class="nc">ConstantString</span><span class="p">(</span><span class="n">Constant</span><span class="p">):</span>
+    <span class="n">TAG</span> <span class="o">=</span> <span class="mi">8</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">string_index</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ConstantString</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_string_index</span> <span class="o">=</span> <span class="n">string_index</span>
 
     <span class="nd">@property</span>
-<div class="viewcode-block" id="ConstantString.string"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantString.string">[docs]</a>    <span class="k">def</span> <span class="nf">string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_string_index</span><span class="p">)</span>
-</div>
-<div class="viewcode-block" id="ConstantString.raw"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantString.raw">[docs]</a>    <span class="k">def</span> <span class="nf">raw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_string_index</span><span class="p">)</span>
 
-</div></div>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;ConstantString(string={0!r})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">string</span><span class="p">)</span>
+
+</div>
 <div class="viewcode-block" id="ConstantRef"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantRef">[docs]</a><span class="k">class</span> <span class="nc">ConstantRef</span><span class="p">(</span><span class="n">Constant</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">class_index</span><span class="p">,</span> <span class="n">name_and_type_index</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ConstantRef</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
@@ -162,47 +168,51 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_name_and_type_index</span> <span class="o">=</span> <span class="n">name_and_type_index</span>
 
     <span class="nd">@property</span>
-<div class="viewcode-block" id="ConstantRef.class_"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantRef.class_">[docs]</a>    <span class="k">def</span> <span class="nf">class_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">class_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_class_index</span><span class="p">)</span>
-</div>
+
     <span class="nd">@property</span>
-<div class="viewcode-block" id="ConstantRef.name_and_type"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantRef.name_and_type">[docs]</a>    <span class="k">def</span> <span class="nf">name_and_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">name_and_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name_and_type_index</span><span class="p">)</span>
 
-</div></div>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;{0}(class_={1!r}, name_and_type={2!r})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_and_type</span><span class="p">)</span>
+
+</div>
 <div class="viewcode-block" id="ConstantFieldRef"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantFieldRef">[docs]</a><span class="k">class</span> <span class="nc">ConstantFieldRef</span><span class="p">(</span><span class="n">ConstantRef</span><span class="p">):</span>
-<div class="viewcode-block" id="ConstantFieldRef.raw"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantFieldRef.raw">[docs]</a>    <span class="k">def</span> <span class="nf">raw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_class_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name_and_type_index</span><span class="p">)</span>
+    <span class="n">TAG</span> <span class="o">=</span> <span class="mi">9</span>
 
-</div></div>
+</div>
 <div class="viewcode-block" id="ConstantMethodRef"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantMethodRef">[docs]</a><span class="k">class</span> <span class="nc">ConstantMethodRef</span><span class="p">(</span><span class="n">ConstantRef</span><span class="p">):</span>
-<div class="viewcode-block" id="ConstantMethodRef.raw"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantMethodRef.raw">[docs]</a>    <span class="k">def</span> <span class="nf">raw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_class_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name_and_type_index</span><span class="p">)</span>
+    <span class="n">TAG</span> <span class="o">=</span> <span class="mi">10</span>
 
-</div></div>
+</div>
 <div class="viewcode-block" id="ConstantInterfaceMethodRef"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantInterfaceMethodRef">[docs]</a><span class="k">class</span> <span class="nc">ConstantInterfaceMethodRef</span><span class="p">(</span><span class="n">ConstantRef</span><span class="p">):</span>
-<div class="viewcode-block" id="ConstantInterfaceMethodRef.raw"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantInterfaceMethodRef.raw">[docs]</a>    <span class="k">def</span> <span class="nf">raw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_class_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name_and_type_index</span><span class="p">)</span>
+    <span class="n">TAG</span> <span class="o">=</span> <span class="mi">11</span>
 
-</div></div>
+</div>
 <div class="viewcode-block" id="ConstantNameAndType"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantNameAndType">[docs]</a><span class="k">class</span> <span class="nc">ConstantNameAndType</span><span class="p">(</span><span class="n">Constant</span><span class="p">):</span>
+    <span class="n">TAG</span> <span class="o">=</span> <span class="mi">12</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">name_index</span><span class="p">,</span> <span class="n">descriptor_index</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ConstantNameAndType</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_name_index</span> <span class="o">=</span> <span class="n">name_index</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_descriptor_index</span> <span class="o">=</span> <span class="n">descriptor_index</span>
 
     <span class="nd">@property</span>
-<div class="viewcode-block" id="ConstantNameAndType.name"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantNameAndType.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name_index</span><span class="p">)</span>
-</div>
-    <span class="nd">@property</span>
-<div class="viewcode-block" id="ConstantNameAndType.descriptor"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantNameAndType.descriptor">[docs]</a>    <span class="k">def</span> <span class="nf">descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_descriptor_index</span><span class="p">)</span>
-</div>
-<div class="viewcode-block" id="ConstantNameAndType.raw"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantNameAndType.raw">[docs]</a>    <span class="k">def</span> <span class="nf">raw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_descriptor_index</span><span class="p">)</span>
 
-</div></div>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_descriptor_index</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;ConstantNameAndType(name={0!r}, descriptor={1!r})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">descriptor</span><span class="p">)</span>
+
+</div>
 <span class="n">_constant_types</span> <span class="o">=</span> <span class="p">(</span>
     <span class="bp">None</span><span class="p">,</span>
     <span class="n">ConstantUTF8</span><span class="p">,</span>
@@ -220,6 +230,23 @@
 <span class="p">)</span>
 
 
+<span class="c"># The format and size-on-disk of each type of constant</span>
+<span class="c"># in the constant pool.</span>
+<span class="n">_constant_fmts</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="p">(</span><span class="s">&#39;&gt;i&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">&#39;&gt;f&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">&#39;&gt;q&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">&#39;&gt;d&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">&#39;&gt;HH&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">&#39;&gt;HH&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">&#39;&gt;HH&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">&#39;&gt;HH&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="p">)</span>
+
+
 <div class="viewcode-block" id="ConstantPool"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantPool">[docs]</a><span class="k">class</span> <span class="nc">ConstantPool</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_pool</span> <span class="o">=</span> <span class="p">[</span><span class="bp">None</span><span class="p">]</span>
@@ -229,13 +256,6 @@
 <span class="sd">        Appends a new constant to the end of the pool.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_pool</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">constant</span><span class="p">)</span>
-</div>
-<div class="viewcode-block" id="ConstantPool.raw"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantPool.raw">[docs]</a>    <span class="k">def</span> <span class="nf">raw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the &quot;raw&quot; constant for `index`. Typically only useful for</span>
-<span class="sd">        calculating size-on-disk and for saving.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pool</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
 </div>
     <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">constant</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pool</span><span class="p">):</span>
@@ -248,24 +268,24 @@
 <span class="sd">        does not exist.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">constant</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pool</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">_constant_types</span><span class="p">[</span><span class="n">constant</span><span class="p">[</span><span class="mi">0</span><span class="p">]](</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="o">*</span><span class="n">constant</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">constant</span><span class="p">,</span> <span class="n">Constant</span><span class="p">):</span>
+            <span class="n">constant</span> <span class="o">=</span> <span class="n">_constant_types</span><span class="p">[</span><span class="n">constant</span><span class="p">[</span><span class="mi">0</span><span class="p">]](</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="o">*</span><span class="n">constant</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pool</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">constant</span>
+        <span class="k">return</span> <span class="n">constant</span>
 </div>
     <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ConstantPool.raw_set"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantPool.raw_set">[docs]</a>    <span class="k">def</span> <span class="nf">raw_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Overwrites the &#39;raw&#39; constant at `idx` with `value`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_pool</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-</div>
+
 <div class="viewcode-block" id="ConstantPool.find"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantPool.find">[docs]</a>    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Iterates over the pool, yielding each matching ``Constant``. Calling</span>
 <span class="sd">        without any arguments is equivelent to iterating over the pool.</span>
 
-<span class="sd">         * `type_` must be a subclass of ``Constant``.</span>
-<span class="sd">         * `f` must be callable which takes one value (the constant)</span>
+<span class="sd">        :param type_: Any subclass of :class:`Constant` or ``None``.</span>
+<span class="sd">        :param f: Any callable which takes one argument (the constant).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">constant</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">type_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">constant</span><span class="p">,</span> <span class="n">type_</span><span class="p">):</span>
@@ -287,15 +307,233 @@
             <span class="k">return</span> <span class="bp">None</span>
 </div>
 <div class="viewcode-block" id="ConstantPool.create_utf8"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantPool.create_utf8">[docs]</a>    <span class="k">def</span> <span class="nf">create_utf8</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a new :class:`ConstantUTF8`, adding it to the pool and</span>
+<span class="sd">        returning it.</span>
+
+<span class="sd">        :param value: The value of the new UTF8 string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ConstantPool.create_integer"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantPool.create_integer">[docs]</a>    <span class="k">def</span> <span class="nf">create_integer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a new :class:`ConstantInteger`, adding it to the pool and</span>
+<span class="sd">        returning it.</span>
+
+<span class="sd">        :param value: The value of the new integer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ConstantPool.create_float"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantPool.create_float">[docs]</a>    <span class="k">def</span> <span class="nf">create_float</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a new :class:`ConstantFloat`, adding it to the pool and</span>
+<span class="sd">        returning it.</span>
+
+<span class="sd">        :param value: The value of the new float.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ConstantPool.create_long"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantPool.create_long">[docs]</a>    <span class="k">def</span> <span class="nf">create_long</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a new :class:`ConstantLong`, adding it to the pool and</span>
+<span class="sd">        returning it.</span>
+
+<span class="sd">        :param value: The value of the new long.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_count</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ConstantPool.create_double"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantPool.create_double">[docs]</a>    <span class="k">def</span> <span class="nf">create_double</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a new :class:`ConstantDouble`, adding it to the pool and</span>
+<span class="sd">        returning it.</span>
+
+<span class="sd">        :param value: The value of the new Double.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">6</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_count</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ConstantPool.create_class"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantPool.create_class">[docs]</a>    <span class="k">def</span> <span class="nf">create_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a new :class:`ConstantClass`, adding it to the pool and</span>
+<span class="sd">        returning it.</span>
+
+<span class="sd">        :param name: The name of the new class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">((</span>
+            <span class="mi">7</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_utf8</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">index</span>
+        <span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ConstantPool.create_string"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantPool.create_string">[docs]</a>    <span class="k">def</span> <span class="nf">create_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a new :class:`ConstantString`, adding it to the pool and</span>
+<span class="sd">        returning it.</span>
+
+<span class="sd">        :param value: The value of the new string as a UTF8 string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">((</span>
+            <span class="mi">8</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_utf8</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">index</span>
+        <span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ConstantPool.create_name_and_type"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantPool.create_name_and_type">[docs]</a>    <span class="k">def</span> <span class="nf">create_name_and_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a new :class:`ConstantNameAndType`, adding it to the pool and</span>
+<span class="sd">        returning it.</span>
+
+<span class="sd">        :param name: The name of the class.</span>
+<span class="sd">        :param descriptor: The descriptor for `name`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">((</span>
+            <span class="mi">12</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_utf8</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_utf8</span><span class="p">(</span><span class="n">descriptor</span><span class="p">)</span><span class="o">.</span><span class="n">index</span>
+        <span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ConstantPool.create_field_ref"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantPool.create_field_ref">[docs]</a>    <span class="k">def</span> <span class="nf">create_field_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a new :class:`ConstantFieldRef`, adding it to the pool and</span>
+<span class="sd">        returning it.</span>
+
+<span class="sd">        :param class_: The name of the class to which `field` belongs.</span>
+<span class="sd">        :param field: The name of the field.</span>
+<span class="sd">        :param descriptor: The descriptor for `field`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">((</span>
+            <span class="mi">9</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_class</span><span class="p">(</span><span class="n">class_</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_name_and_type</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">)</span><span class="o">.</span><span class="n">index</span>
+        <span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ConstantPool.create_method_ref"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantPool.create_method_ref">[docs]</a>    <span class="k">def</span> <span class="nf">create_method_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a new :class:`ConstantMethodRef`, adding it to the pool and</span>
+<span class="sd">        returning it.</span>
+
+<span class="sd">        :param class_: The name of the class to which `method` belongs.</span>
+<span class="sd">        :param method: The name of the method.</span>
+<span class="sd">        :param descriptor: The descriptor for `method`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">((</span>
+            <span class="mi">10</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_class</span><span class="p">(</span><span class="n">class_</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_name_and_type</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">)</span><span class="o">.</span><span class="n">index</span>
+        <span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ConstantPool.create_interface_method_ref"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantPool.create_interface_method_ref">[docs]</a>    <span class="k">def</span> <span class="nf">create_interface_method_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_</span><span class="p">,</span> <span class="n">if_method</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a new :class:`ConstantInterfaceMethodRef`, adding it to the</span>
+<span class="sd">        pool and returning it.</span>
+
+<span class="sd">        :param class_: The name of the class to which `if_method` belongs.</span>
+<span class="sd">        :param if_method: The name of the interface method.</span>
+<span class="sd">        :param descriptor: The descriptor for `if_method`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">((</span>
+            <span class="mi">11</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_class</span><span class="p">(</span><span class="n">class_</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_name_and_type</span><span class="p">(</span><span class="n">if_method</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">)</span><span class="o">.</span><span class="n">index</span>
+        <span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">_from_io</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fio</span><span class="p">):</span>
+        <span class="c"># Reads in the ConstantPool (constant_pool in the JVM Spec)</span>
+        <span class="n">constant_pool_count</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c"># Pull this locally so CPython doesn&#39;t do a lookup each time.</span>
+        <span class="n">read</span> <span class="o">=</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span>
+
+        <span class="k">while</span> <span class="n">constant_pool_count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">constant_pool_count</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="c"># The 1-byte prefix identifies the type of constant.</span>
+            <span class="n">tag</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c"># CONSTANT_Utf8_info, a length prefixed UTF-8-ish string.</span>
+                <span class="n">length</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">tag</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="n">length</span><span class="p">)))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c"># Every other constant type is trivial.</span>
+                <span class="n">fmt</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">_constant_fmts</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">tag</span><span class="p">,)</span> <span class="o">+</span> <span class="n">unpack</span><span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="n">size</span><span class="p">)))</span>
+                <span class="k">if</span> <span class="n">tag</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
+                    <span class="c"># LONG (5) and DOUBLE (6) count as two entries in the</span>
+                    <span class="c"># pool.</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
+                    <span class="n">constant_pool_count</span> <span class="o">-=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">_to_io</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fout</span><span class="p">):</span>
+        <span class="n">write</span> <span class="o">=</span> <span class="n">fout</span><span class="o">.</span><span class="n">write</span>
+        <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_count</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">constant</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">constant</span><span class="p">,</span> <span class="n">ConstantUTF8</span><span class="p">):</span>
+                <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">constant</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;BH&#39;</span><span class="p">,</span>
+                    <span class="n">constant</span><span class="o">.</span><span class="n">TAG</span><span class="p">,</span>
+                    <span class="n">length</span>
+                <span class="p">))</span>
+                <span class="n">write</span><span class="p">(</span><span class="n">constant</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">constant</span><span class="p">,</span> <span class="n">ConstantInteger</span><span class="p">):</span>
+                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;Bi&#39;</span><span class="p">,</span>
+                    <span class="n">constant</span><span class="o">.</span><span class="n">TAG</span><span class="p">,</span>
+                    <span class="n">constant</span><span class="o">.</span><span class="n">value</span>
+                <span class="p">))</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">constant</span><span class="p">,</span> <span class="n">ConstantFloat</span><span class="p">):</span>
+                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;Bf&#39;</span><span class="p">,</span>
+                    <span class="n">constant</span><span class="o">.</span><span class="n">TAG</span><span class="p">,</span>
+                    <span class="n">constant</span><span class="o">.</span><span class="n">value</span>
+                <span class="p">))</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">constant</span><span class="p">,</span> <span class="n">ConstantLong</span><span class="p">):</span>
+                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;Bq&#39;</span><span class="p">,</span>
+                    <span class="n">constant</span><span class="o">.</span><span class="n">TAG</span><span class="p">,</span>
+                    <span class="n">constant</span><span class="o">.</span><span class="n">value</span>
+                <span class="p">))</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">constant</span><span class="p">,</span> <span class="n">ConstantDouble</span><span class="p">):</span>
+                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;Bd&#39;</span><span class="p">,</span>
+                    <span class="n">constant</span><span class="o">.</span><span class="n">TAG</span><span class="p">,</span>
+                    <span class="n">constant</span><span class="o">.</span><span class="n">value</span>
+                <span class="p">))</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">constant</span><span class="p">,</span> <span class="n">ConstantClass</span><span class="p">):</span>
+                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;BH&#39;</span><span class="p">,</span>
+                    <span class="n">constant</span><span class="o">.</span><span class="n">TAG</span><span class="p">,</span>
+                    <span class="n">constant</span><span class="o">.</span><span class="n">_name_index</span>
+                <span class="p">))</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">constant</span><span class="p">,</span> <span class="n">ConstantString</span><span class="p">):</span>
+                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;BH&#39;</span><span class="p">,</span>
+                    <span class="n">constant</span><span class="o">.</span><span class="n">TAG</span><span class="p">,</span>
+                    <span class="n">constant</span><span class="o">.</span><span class="n">_string_index</span>
+                <span class="p">))</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">constant</span><span class="p">,</span> <span class="n">ConstantRef</span><span class="p">):</span>
+                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;BHH&#39;</span><span class="p">,</span>
+                    <span class="n">constant</span><span class="o">.</span><span class="n">TAG</span><span class="p">,</span>
+                    <span class="n">constant</span><span class="o">.</span><span class="n">_class_index</span><span class="p">,</span>
+                    <span class="n">constant</span><span class="o">.</span><span class="n">_name_and_type_index</span>
+                <span class="p">))</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">constant</span><span class="p">,</span> <span class="n">ConstantNameAndType</span><span class="p">):</span>
+                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;BHH&#39;</span><span class="p">,</span>
+                    <span class="n">constant</span><span class="o">.</span><span class="n">TAG</span><span class="p">,</span>
+                    <span class="n">constant</span><span class="o">.</span><span class="n">_name_index</span><span class="p">,</span>
+                    <span class="n">constant</span><span class="o">.</span><span class="n">_descriptor_index</span>
+                <span class="p">))</span>
 
     <span class="c"># -------------</span>
     <span class="c"># Properties</span>
     <span class="c"># -------------</span>
-</div>
+
     <span class="nd">@property</span>
-<div class="viewcode-block" id="ConstantPool.count"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantPool.count">[docs]</a>    <span class="k">def</span> <span class="nf">count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The number of `Constants` in the `ConstantPool`, excluding padding.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -304,21 +542,21 @@
             <span class="k">if</span> <span class="n">constant</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">count</span>
-</div>
+
     <span class="nd">@property</span>
-<div class="viewcode-block" id="ConstantPool.raw_count"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantPool.raw_count">[docs]</a>    <span class="k">def</span> <span class="nf">raw_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">raw_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The number of `Constants` in the `ConstantPool`, including padding.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pool</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pool</span><span class="p">)</span></div>
 </pre></div>
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none">
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
@@ -335,22 +573,17 @@
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li><a href="../../index.html">jawa  documentation</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li> 
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2012, Author.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      &copy;2012, Author.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.2</a>
+      
     </div>
+
+    
+
+    
   </body>
 </html>

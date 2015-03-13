@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -10,7 +8,7 @@
     
     <title>jawa.assemble &mdash; jawa  documentation</title>
     
-    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -26,10 +24,14 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="jawa  documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -38,40 +40,123 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">jawa  documentation</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">jawa  documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for jawa.assemble</h1><div class="highlight"><pre>
 <span class="c"># -*- coding: utf8 -*-</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;Label&#39;</span><span class="p">,</span> <span class="s">&#39;assemble&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+
+<span class="kn">from</span> <span class="nn">jawa.constants</span> <span class="kn">import</span> <span class="n">Constant</span>
+<span class="kn">from</span> <span class="nn">jawa.util.bytecode</span> <span class="kn">import</span> <span class="o">*</span>
 
 
-<div class="viewcode-block" id="assemble"><a class="viewcode-back" href="../../jawa.html#jawa.assemble.assemble">[docs]</a><span class="k">def</span> <span class="nf">assemble</span><span class="p">(</span><span class="n">cf</span><span class="p">,</span> <span class="n">code</span><span class="p">):</span>
+<span class="n">Label</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s">&#39;Label&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">])</span>
+
+
+<div class="viewcode-block" id="assemble"><a class="viewcode-back" href="../../jawa.html#jawa.assemble.assemble">[docs]</a><span class="k">def</span> <span class="nf">assemble</span><span class="p">(</span><span class="n">code</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Assembles `code` (which is a list of opcodes and operands) to JVM</span>
-<span class="sd">    bytecode. Ex::</span>
+<span class="sd">    A convienience method for &#39;assembling&#39; bytecode over the regular</span>
+<span class="sd">    :meth:`~jawa.attributes.code.CodeAttribute.assemble()` method with</span>
+<span class="sd">    support for labels and direct constants.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">final</span> <span class="o">=</span> <span class="p">[]</span>
 
-<span class="sd">        assemble(cf, [</span>
-<span class="sd">            (&#39;returns&#39;,)</span>
-<span class="sd">        ])</span>
+    <span class="c"># We need to make three passes, because we cannot know the offset for</span>
+    <span class="c"># jump labels until after we&#39;ve figured out the PC for each instructions,</span>
+    <span class="c"># which is complicated by the variable-width instructions set and</span>
+    <span class="c"># alignment padding.</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">code</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">Label</span><span class="p">):</span>
+            <span class="n">final</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="k">continue</span>
 
-<span class="sd">    If an operand is a subclass of :class:`~jawa.constants.Constant`, its</span>
-<span class="sd">    index is automatically used.</span>
-<span class="sd">    &quot;&quot;&quot;</span></div>
+        <span class="n">mnemonic</span><span class="p">,</span> <span class="n">operands</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">operand_fmts</span> <span class="o">=</span> <span class="n">definition_from_mnemonic</span><span class="p">(</span><span class="n">mnemonic</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c"># We need to coerce each opcodes operands into their</span>
+        <span class="c"># final `Operand` form.</span>
+        <span class="n">final_operands</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">operand</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">operands</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="n">Operand</span><span class="p">):</span>
+                <span class="c"># Already in Operand form.</span>
+                <span class="n">final_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">operand</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="n">Constant</span><span class="p">):</span>
+                <span class="c"># Convert constants into CONSTANT_INDEX&#39;es</span>
+                <span class="n">final_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Operand</span><span class="p">(</span>
+                    <span class="n">OperandTypes</span><span class="o">.</span><span class="n">CONSTANT_INDEX</span><span class="p">,</span>
+                    <span class="n">operand</span><span class="o">.</span><span class="n">index</span>
+                <span class="p">))</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="c"># lookupswitch&#39;s operand is a dict as</span>
+                <span class="c"># a special usability case.</span>
+                <span class="n">final_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">operand</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="n">Label</span><span class="p">):</span>
+                <span class="n">final_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">operand</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c"># For anything else, lookup that opcode&#39;s operand</span>
+                <span class="c"># type from its definition.</span>
+                <span class="n">final_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Operand</span><span class="p">(</span>
+                    <span class="n">operand_fmts</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+                    <span class="n">operand</span>
+                <span class="p">))</span>
+
+        <span class="c"># Build the final, immutable `Instruction`.</span>
+        <span class="n">final</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Instruction</span><span class="o">.</span><span class="n">from_mnemonic</span><span class="p">(</span>
+            <span class="n">mnemonic</span><span class="p">,</span>
+            <span class="n">operands</span><span class="o">=</span><span class="n">final_operands</span>
+        <span class="p">))</span>
+
+    <span class="n">label_pcs</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c"># The second pass, find the absolute PC for each label.</span>
+    <span class="n">current_pc</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">ins</span> <span class="ow">in</span> <span class="n">final</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ins</span><span class="p">,</span> <span class="n">Label</span><span class="p">):</span>
+            <span class="n">label_pcs</span><span class="p">[</span><span class="n">ins</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">current_pc</span>
+            <span class="k">continue</span>
+
+        <span class="c"># size_on_disk must know the current pc because of alignment on</span>
+        <span class="c"># tableswitch and lookupswitch.</span>
+        <span class="n">current_pc</span> <span class="o">+=</span> <span class="n">ins</span><span class="o">.</span><span class="n">size_on_disk</span><span class="p">(</span><span class="n">current_pc</span><span class="p">)</span>
+
+    <span class="c"># The third pass, now that we know where each label is we can figure</span>
+    <span class="c"># out the offset for each jump.</span>
+    <span class="n">current_pc</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="n">Operand</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="n">label_pcs</span><span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">-</span> <span class="n">current_pc</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ins</span> <span class="ow">in</span> <span class="n">final</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ins</span><span class="p">,</span> <span class="n">Label</span><span class="p">):</span>
+            <span class="k">continue</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">operand</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ins</span><span class="o">.</span><span class="n">operands</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="c"># lookupswitch is a special case</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">operand</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Label</span><span class="p">):</span>
+                        <span class="n">operand</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">offset</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="n">Label</span><span class="p">):</span>
+                <span class="n">ins</span><span class="o">.</span><span class="n">operands</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">offset</span><span class="p">(</span><span class="n">operand</span><span class="p">)</span>
+
+        <span class="n">current_pc</span> <span class="o">+=</span> <span class="n">ins</span><span class="o">.</span><span class="n">size_on_disk</span><span class="p">(</span><span class="n">current_pc</span><span class="p">)</span>
+
+        <span class="k">yield</span> <span class="n">ins</span></div>
 </pre></div>
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none">
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
@@ -88,22 +173,17 @@
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li><a href="../../index.html">jawa  documentation</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li> 
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2012, Author.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      &copy;2012, Author.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.2</a>
+      
     </div>
+
+    
+
+    
   </body>
 </html>

@@ -1,27 +1,26 @@
-attributes Package
-==================
+jawa.attributes package
+=======================
 
-:mod:`code` Module
--------------------
+jawa.attributes.code module
+---------------------------
 
 .. automodule:: jawa.attributes.code
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`constant_value` Module
-----------------------------
+jawa.attributes.constant_value module
+-------------------------------------
 
 .. automodule:: jawa.attributes.constant_value
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`source_file` Module
--------------------------
+jawa.attributes.source_file module
+----------------------------------
 
 .. automodule:: jawa.attributes.source_file
     :members:
     :undoc-members:
     :show-inheritance:
-
