@@ -19,10 +19,14 @@ setup(
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Disassemblers"
     ],
+    tests_require=[
+        'pytest'
+    ],
     extras_require={
         'dev': [
             'pytest',
-            'pytest-cov'
+            'pytest-cov',
+            'sphinx'
         ]
     }
 )
