@@ -22,7 +22,7 @@ from jawa.cf import ClassFile
 
 class JarFile(EditableZipFile):
     """
-    Implements Jawa_-specific extensions over
+    Implements Jawa-specific extensions over
     :class:`~jawa.util.ezip.EditableZipFile`.
     """
     def all_classes(self):
