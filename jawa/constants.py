@@ -16,6 +16,13 @@ __all__ = (
     'ConstantNameAndType'
 )
 
+try:
+	unicode
+	basestring
+except NameError:
+	unicode = str  # compatibility for Python 3
+	basestring = str  # compatibility for Python 3
+
 from struct import unpack, pack
 
 
@@ -56,7 +63,9 @@ class ConstantUTF8(Constant):
 
     def __init__(self, pool, index, value):
         super(ConstantUTF8, self).__init__(pool, index)
-        self.value = value.decode('utf-8')
+        if not isinstance(value, unicode):
+            value = value.decode('utf-8')
+        self.value = value
 
     def __repr__(self):
         return 'ConstantUTF8(value={0!r})'.format(self.value)
@@ -409,7 +418,7 @@ class ConstantPool(object):
             if tag == 1:
                 # CONSTANT_Utf8_info, a length prefixed UTF-8-ish string.
                 length = unpack('>H', read(2))[0]
-                self.append((tag, read(length)))
+                self.append((tag, read(length).decode('utf-8')))
             else:
                 # Every other constant type is trivial.
                 fmt, size = _constant_fmts[tag]
