@@ -56,7 +56,7 @@ class ConstantUTF8(Constant):
 
     def __init__(self, pool, index, value):
         super(ConstantUTF8, self).__init__(pool, index)
-        self.value = value
+        self.value = value.decode('utf-8')
 
     def __repr__(self):
         return 'ConstantUTF8(value={0!r})'.format(self.value)
