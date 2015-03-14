@@ -64,7 +64,10 @@ class ConstantUTF8(Constant):
     def __init__(self, pool, index, value):
         super(ConstantUTF8, self).__init__(pool, index)
         if not isinstance(value, unicode):
-            value = value.decode('utf-8')
+            try:
+                value = value.decode('utf-8')
+            except UnicodeDecodeError:
+                pass
         self.value = value
 
     def __repr__(self):
@@ -418,7 +421,12 @@ class ConstantPool(object):
             if tag == 1:
                 # CONSTANT_Utf8_info, a length prefixed UTF-8-ish string.
                 length = unpack('>H', read(2))[0]
-                self.append((tag, read(length).decode('utf-8')))
+                value = read(length)
+                try:
+                    value = value.decode('utf-8')
+                except UnicodeDecodeError:
+                    pass
+                self.append((tag, value))
             else:
                 # Every other constant type is trivial.
                 fmt, size = _constant_fmts[tag]
