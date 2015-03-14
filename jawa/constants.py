@@ -431,7 +431,7 @@ class ConstantPool(object):
                     constant.TAG,
                     length
                 ))
-                write(constant.value)
+                write(constant.value.encode('utf-8'))
             elif isinstance(constant, ConstantInteger):
                 write(pack('>Bi',
                     constant.TAG,
