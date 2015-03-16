@@ -32,3 +32,11 @@ jawa.util.flags module
     :members:
     :undoc-members:
     :show-inheritance:
+
+jawa.util.utf module
+----------------------
+
+.. automodule:: jawa.util.utf
+    :members:
+    :undoc-members:
+    :show-inheritance:
