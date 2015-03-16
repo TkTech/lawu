@@ -11,7 +11,7 @@ when parsing and writing JVM ClassFiles or object serialization archives.
 
 def decode_modified_utf8(s):
     """
-    Parses a bytestring containing modified UTF-8 as defined in section
+    Decodes a bytestring containing modified UTF-8 as defined in section
     4.4.7 of the JVM specification.
 
     :param s: bytestring to be converted.
@@ -36,7 +36,7 @@ def decode_modified_utf8(s):
             ix += 2
             x = ((x & 0xF) << 12) + ((y & 0x3F) << 6) + (z & 0x3F)
         elif x == 0xED:
-            v, w, x, y, z = s[ix:ix+5]
+            v, w, x, y, z = s[ix:ix+6]
             ix += 5
             x = 0x10000 + (
                 ((v & 0x0F) << 16)
@@ -47,3 +47,18 @@ def decode_modified_utf8(s):
 
         final_string += unichr(x)
     return final_string
+
+
+def encode_modified_utf8(u):
+    """
+    Encodes a unicode string as modified UTF-8 as defined in section 4.4.7
+    of the JVM specification.
+
+    .. note::
+
+        Stub!
+
+    :param u: unicode to be converted.
+    :returns: A decoded bytestring.
+    """
+    return u.decode('utf-8')
