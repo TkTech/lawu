@@ -54,11 +54,27 @@ def encode_modified_utf8(u):
     Encodes a unicode string as modified UTF-8 as defined in section 4.4.7
     of the JVM specification.
 
-    .. note::
-
-        Stub!
-
     :param u: unicode to be converted.
     :returns: A decoded bytestring.
     """
-    return u.decode('utf-8')
+    # Trying to encode a non-unicode string will result in some serious
+    # abnormalities.
+    assert(isinstance(u, unicode))
+    final_string = bytearray()
+
+    for c in [ord(char) for char in u]:
+        if c < 0x7F:
+            final_string.append(c)
+        elif c == 0x00 or (c > 0x80 and c < 0x7FF):
+            final_string.extend(
+                (0xC0 | (0x1F & (c >> 6))),
+                (0x80 | (0x3F & c))
+            )
+        elif c > 0x800 and c < 0xFFFF:
+            final_string.extend(
+                (0xE0 | (0x0F & (c >> 12))),
+                (0x80 | (0x3F & (c >> 6))),
+                (0x80 | (0x3F & c))
+            )
+
+    return str(final_string)
