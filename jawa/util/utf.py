@@ -1,3 +1,14 @@
+"""
+Utility methods for handling oddities in character encoding encountered
+when parsing and writing JVM ClassFiles or object serialization archives.
+
+.. note::
+
+    http://bugs.python.org/issue2857 was an attempt in 2008 to get support
+    for MUTF-8/CESU-8 into the python core.
+"""
+
+
 def decode_modified_utf8(s):
     """
     Parses a bytestring containing modified UTF-8 as defined in section
