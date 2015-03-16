@@ -15,7 +15,11 @@ from jawa.util.bytecode import (
 try:
     from cStringIO import StringIO
 except ImportError:
-    from StringIO import StringIO
+    try:
+        from StringIO import StringIO
+    except ImportError:
+        from io import BytesIO
+        StringIO = BytesIO
 
 
 CodeException = namedtuple('CodeException', [
@@ -114,4 +118,3 @@ class CodeAttribute(Attribute):
 
         for ins in iter(lambda: read_instruction(fio, fio.tell()), None):
             yield ins
-
