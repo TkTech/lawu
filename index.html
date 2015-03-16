@@ -58,7 +58,7 @@
 class files.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">This documentation is up to date as of March 13, 2015.</p>
+<p class="last">This documentation is up to date as of March 16, 2015.</p>
 </div>
 <div class="section" id="getting-jawa">
 <h2>Getting Jawa<a class="headerlink" href="#getting-jawa" title="Permalink to this headline">¶</a></h2>
@@ -67,6 +67,30 @@ changes are rare and installation from Github is very easy. To install:</p>
 <div class="highlight-python"><div class="highlight"><pre>pip install git+https://github.com/TkTech/Jawa.git
 </pre></div>
 </div>
+</div>
+<div class="section" id="why-jawa">
+<h2>Why Jawa?<a class="headerlink" href="#why-jawa" title="Permalink to this headline">¶</a></h2>
+<p>First, some background. Jawa is the successor project to &#8220;Solum&#8221;, a library
+written during the early days of Minecraft to facilitate automated contextual
+disassembly of the Minecraft JARs with each release. This tool was able to
+extract new block types, new network packets (and their structure) and other
+similar interesting tidbits automatically any time a new release was made. This
+drastically simplified our efforts to reverse engineer and document Minecraft
+and its protocol (an effort which continues <a class="reference external" href="http://wiki.vg">to this day</a>).</p>
+<p>This means that Jawa is intended to be used very differently from most projects
+similar to it. Instead of trying to produce a human-readable disassembly or
+nearly-compilable Java, it&#8217;s intended for people that want to dive into or
+automate work on JVM bytecode. For example, Jawa has been used for:</p>
+<ul class="simple">
+<li>The automatic verification of community-uploaded plugins</li>
+<li>Analysis and analytics of public Android APKs (thousands at a time)</li>
+</ul>
+<p>Fast forward a few years. There are new toys on the block like <a class="reference external" href="https://github.com/Storyyeller/Krakatau">Krakatau</a>
+which came out a few years after Solum. Krakatau is great disasembler &amp;
+decompiler, but it&#8217;s API was not designed for humans and is not considered
+&#8220;Pythonic&#8221;. It does not follow PEP8, it is sparesly commented and poorly
+documented. This makes it very hard to work with when all you want to do is
+open up a Python shell and dive into a ClassFile.</p>
 </div>
 <div class="section" id="basic-examples">
 <h2>Basic Examples<a class="headerlink" href="#basic-examples" title="Permalink to this headline">¶</a></h2>
@@ -118,6 +142,7 @@ changes are rare and installation from Github is very easy. To install:</p>
   <ul>
 <li><a class="reference internal" href="#">Jawa - JVM ClassFile Library</a><ul>
 <li><a class="reference internal" href="#getting-jawa">Getting Jawa</a></li>
+<li><a class="reference internal" href="#why-jawa">Why Jawa?</a></li>
 <li><a class="reference internal" href="#basic-examples">Basic Examples</a></li>
 <li><a class="reference internal" href="#jawa-core-api">Jawa Core API</a></li>
 </ul>
