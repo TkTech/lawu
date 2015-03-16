@@ -18,6 +18,8 @@ __all__ = (
 
 from struct import unpack, pack
 
+from jawa.util.utf import decode_modified_utf8
+
 
 class Constant(object):
     """
@@ -409,7 +411,7 @@ class ConstantPool(object):
             if tag == 1:
                 # CONSTANT_Utf8_info, a length prefixed UTF-8-ish string.
                 length = unpack('>H', read(2))[0]
-                self.append((tag, read(length)))
+                self.append((tag, decode_modified_utf8(read(length))))
             else:
                 # Every other constant type is trivial.
                 fmt, size = _constant_fmts[tag]
@@ -427,57 +429,62 @@ class ConstantPool(object):
         for constant in self:
             if isinstance(constant, ConstantUTF8):
                 length = len(constant.value)
-                write(pack('>BH',
+                write(pack(
+                    '>BH',
                     constant.TAG,
                     length
                 ))
                 write(constant.value)
             elif isinstance(constant, ConstantInteger):
-                write(pack('>Bi',
+                write(pack(
+                    '>Bi',
                     constant.TAG,
                     constant.value
                 ))
             elif isinstance(constant, ConstantFloat):
-                write(pack('>Bf',
+                write(pack(
+                    '>Bf',
                     constant.TAG,
                     constant.value
                 ))
             elif isinstance(constant, ConstantLong):
-                write(pack('>Bq',
+                write(pack(
+                    '>Bq',
                     constant.TAG,
                     constant.value
                 ))
             elif isinstance(constant, ConstantDouble):
-                write(pack('>Bd',
+                write(pack(
+                    '>Bd',
                     constant.TAG,
                     constant.value
                 ))
             elif isinstance(constant, ConstantClass):
-                write(pack('>BH',
+                write(pack(
+                    '>BH',
                     constant.TAG,
                     constant._name_index
                 ))
             elif isinstance(constant, ConstantString):
-                write(pack('>BH',
+                write(pack(
+                    '>BH',
                     constant.TAG,
                     constant._string_index
                 ))
             elif isinstance(constant, ConstantRef):
-                write(pack('>BHH',
+                write(pack(
+                    '>BHH',
                     constant.TAG,
                     constant._class_index,
                     constant._name_and_type_index
                 ))
             elif isinstance(constant, ConstantNameAndType):
-                write(pack('>BHH',
+                write(pack(
+                    '>BHH',
                     constant.TAG,
                     constant._name_index,
                     constant._descriptor_index
                 ))
-
-    # -------------
-    # Properties
-    # -------------
 
     @property
     def count(self):
