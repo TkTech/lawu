@@ -42,6 +42,10 @@ decompiler, but it's API was not designed for humans and is not considered
 documented. This makes it very hard to work with when all you want to do is
 open up a Python shell and dive into a ClassFile.
 
+Unlike most projects of its kind (like `Krakatau`_) Jawa is also very
+permissively licenced under the MIT licence. You're free to use it in any
+type of project should it be commercial, closed source or open source.
+
 
 Basic Examples
 --------------
