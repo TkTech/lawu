@@ -18,7 +18,7 @@ __all__ = (
 
 from struct import unpack, pack
 
-from jawa.util.utf import decode_modified_utf8
+from jawa.util.utf import decode_modified_utf8, encode_modified_utf8
 
 
 class Constant(object):
@@ -262,7 +262,7 @@ class ConstantPool(object):
 
         :param value: The value of the new UTF8 string.
         """
-        self.append((1, value))
+        self.append((1, unicode(value)))
         return self.get(self.raw_count - 1)
 
     def create_integer(self, value):
@@ -428,13 +428,14 @@ class ConstantPool(object):
 
         for constant in self:
             if isinstance(constant, ConstantUTF8):
-                length = len(constant.value)
+                encoded_value = encode_modified_utf8(constant.value)
+                length = len(encoded_value)
                 write(pack(
                     '>BH',
                     constant.TAG,
                     length
                 ))
-                write(constant.value)
+                write(encoded_value)
             elif isinstance(constant, ConstantInteger):
                 write(pack(
                     '>Bi',
