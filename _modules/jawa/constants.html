@@ -71,6 +71,8 @@
 
 <span class="kn">from</span> <span class="nn">struct</span> <span class="kn">import</span> <span class="n">unpack</span><span class="p">,</span> <span class="n">pack</span>
 
+<span class="kn">from</span> <span class="nn">jawa.util.utf</span> <span class="kn">import</span> <span class="n">decode_modified_utf8</span><span class="p">,</span> <span class="n">encode_modified_utf8</span>
+
 
 <div class="viewcode-block" id="Constant"><a class="viewcode-back" href="../../jawa.html#jawa.constants.Constant">[docs]</a><span class="k">class</span> <span class="nc">Constant</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -313,7 +315,7 @@
 
 <span class="sd">        :param value: The value of the new UTF8 string.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">(</span><span class="n">value</span><span class="p">)))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="ConstantPool.create_integer"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantPool.create_integer">[docs]</a>    <span class="k">def</span> <span class="nf">create_integer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
@@ -462,7 +464,7 @@
             <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="c"># CONSTANT_Utf8_info, a length prefixed UTF-8-ish string.</span>
                 <span class="n">length</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">tag</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="n">length</span><span class="p">)))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">tag</span><span class="p">,</span> <span class="n">decode_modified_utf8</span><span class="p">(</span><span class="n">read</span><span class="p">(</span><span class="n">length</span><span class="p">))))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c"># Every other constant type is trivial.</span>
                 <span class="n">fmt</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">_constant_fmts</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span>
@@ -479,58 +481,64 @@
 
         <span class="k">for</span> <span class="n">constant</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">constant</span><span class="p">,</span> <span class="n">ConstantUTF8</span><span class="p">):</span>
-                <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">constant</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;BH&#39;</span><span class="p">,</span>
+                <span class="n">encoded_value</span> <span class="o">=</span> <span class="n">encode_modified_utf8</span><span class="p">(</span><span class="n">constant</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">encoded_value</span><span class="p">)</span>
+                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span>
+                    <span class="s">&#39;&gt;BH&#39;</span><span class="p">,</span>
                     <span class="n">constant</span><span class="o">.</span><span class="n">TAG</span><span class="p">,</span>
                     <span class="n">length</span>
                 <span class="p">))</span>
-                <span class="n">write</span><span class="p">(</span><span class="n">constant</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                <span class="n">write</span><span class="p">(</span><span class="n">encoded_value</span><span class="p">)</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">constant</span><span class="p">,</span> <span class="n">ConstantInteger</span><span class="p">):</span>
-                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;Bi&#39;</span><span class="p">,</span>
+                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span>
+                    <span class="s">&#39;&gt;Bi&#39;</span><span class="p">,</span>
                     <span class="n">constant</span><span class="o">.</span><span class="n">TAG</span><span class="p">,</span>
                     <span class="n">constant</span><span class="o">.</span><span class="n">value</span>
                 <span class="p">))</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">constant</span><span class="p">,</span> <span class="n">ConstantFloat</span><span class="p">):</span>
-                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;Bf&#39;</span><span class="p">,</span>
+                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span>
+                    <span class="s">&#39;&gt;Bf&#39;</span><span class="p">,</span>
                     <span class="n">constant</span><span class="o">.</span><span class="n">TAG</span><span class="p">,</span>
                     <span class="n">constant</span><span class="o">.</span><span class="n">value</span>
                 <span class="p">))</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">constant</span><span class="p">,</span> <span class="n">ConstantLong</span><span class="p">):</span>
-                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;Bq&#39;</span><span class="p">,</span>
+                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span>
+                    <span class="s">&#39;&gt;Bq&#39;</span><span class="p">,</span>
                     <span class="n">constant</span><span class="o">.</span><span class="n">TAG</span><span class="p">,</span>
                     <span class="n">constant</span><span class="o">.</span><span class="n">value</span>
                 <span class="p">))</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">constant</span><span class="p">,</span> <span class="n">ConstantDouble</span><span class="p">):</span>
-                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;Bd&#39;</span><span class="p">,</span>
+                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span>
+                    <span class="s">&#39;&gt;Bd&#39;</span><span class="p">,</span>
                     <span class="n">constant</span><span class="o">.</span><span class="n">TAG</span><span class="p">,</span>
                     <span class="n">constant</span><span class="o">.</span><span class="n">value</span>
                 <span class="p">))</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">constant</span><span class="p">,</span> <span class="n">ConstantClass</span><span class="p">):</span>
-                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;BH&#39;</span><span class="p">,</span>
+                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span>
+                    <span class="s">&#39;&gt;BH&#39;</span><span class="p">,</span>
                     <span class="n">constant</span><span class="o">.</span><span class="n">TAG</span><span class="p">,</span>
                     <span class="n">constant</span><span class="o">.</span><span class="n">_name_index</span>
                 <span class="p">))</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">constant</span><span class="p">,</span> <span class="n">ConstantString</span><span class="p">):</span>
-                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;BH&#39;</span><span class="p">,</span>
+                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span>
+                    <span class="s">&#39;&gt;BH&#39;</span><span class="p">,</span>
                     <span class="n">constant</span><span class="o">.</span><span class="n">TAG</span><span class="p">,</span>
                     <span class="n">constant</span><span class="o">.</span><span class="n">_string_index</span>
                 <span class="p">))</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">constant</span><span class="p">,</span> <span class="n">ConstantRef</span><span class="p">):</span>
-                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;BHH&#39;</span><span class="p">,</span>
+                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span>
+                    <span class="s">&#39;&gt;BHH&#39;</span><span class="p">,</span>
                     <span class="n">constant</span><span class="o">.</span><span class="n">TAG</span><span class="p">,</span>
                     <span class="n">constant</span><span class="o">.</span><span class="n">_class_index</span><span class="p">,</span>
                     <span class="n">constant</span><span class="o">.</span><span class="n">_name_and_type_index</span>
                 <span class="p">))</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">constant</span><span class="p">,</span> <span class="n">ConstantNameAndType</span><span class="p">):</span>
-                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;BHH&#39;</span><span class="p">,</span>
+                <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span>
+                    <span class="s">&#39;&gt;BHH&#39;</span><span class="p">,</span>
                     <span class="n">constant</span><span class="o">.</span><span class="n">TAG</span><span class="p">,</span>
                     <span class="n">constant</span><span class="o">.</span><span class="n">_name_index</span><span class="p">,</span>
                     <span class="n">constant</span><span class="o">.</span><span class="n">_descriptor_index</span>
                 <span class="p">))</span>
-
-    <span class="c"># -------------</span>
-    <span class="c"># Properties</span>
-    <span class="c"># -------------</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
