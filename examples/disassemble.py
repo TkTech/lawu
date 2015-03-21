@@ -8,7 +8,7 @@ from jawa import ClassFile
 from jawa.util.bytecode import OperandTypes
 
 if __name__ == '__main__':
-    with open(sys.argv[1]) as fin:
+    with open(sys.argv[1], 'rb') as fin:
         cf = ClassFile(fin)
 
         # The constant pool.

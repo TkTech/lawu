@@ -8,6 +8,12 @@ when parsing and writing JVM ClassFiles or object serialization archives.
     for MUTF-8/CESU-8 into the python core.
 """
 
+try:
+    unicode
+    unichr
+except NameError:
+    unicode = str
+    unichr = chr
 
 def decode_modified_utf8(s):
     """
@@ -77,4 +83,4 @@ def encode_modified_utf8(u):
                 (0x80 | (0x3F & c))
             )
 
-    return str(final_string)
+    return final_string
