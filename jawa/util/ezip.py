@@ -11,7 +11,10 @@ except ImportError:
 try:
     from cStringIO import StringIO
 except ImportError:
-    from StringIO import StringIO
+    try:
+        from StringIO import StringIO
+    except ImportError:
+        from io import BytesIO as StringIO
 
 
 class EditableZipFile(object):

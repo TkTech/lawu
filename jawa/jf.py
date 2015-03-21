@@ -14,7 +14,11 @@ __all__ = ('JarFile',)
 try:
     from cStringIO import StringIO
 except ImportError:
-    from StringIO import StringIO
+    try:
+        from StringIO import StringIO
+    except ImportError:
+        from io import BytesIO as StringIO
+
 
 from jawa.util.ezip import EditableZipFile
 from jawa.cf import ClassFile
