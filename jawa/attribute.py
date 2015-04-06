@@ -87,7 +87,8 @@ class AttributeTable(object):
         fout.write(pack('>H', self.count))
         for attribute in self._table:
             info = attribute.info
-            fout.write(pack('>HI',
+            fout.write(pack(
+                '>HI',
                 attribute.name.index,
                 len(info)
             ))
@@ -132,6 +133,7 @@ class AttributeTable(object):
 
 # Attributes can contain other attributes and AttributeTable's,
 # thus we have to do our import here.
+# pylint: disable=cyclic-import
 from jawa.attributes.code import CodeAttribute
 from jawa.attributes.source_file import SourceFileAttribute
 from jawa.attributes.constant_value import ConstantValueAttribute
