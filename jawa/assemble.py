@@ -3,7 +3,12 @@ __all__ = ('Label', 'assemble')
 from collections import namedtuple
 
 from jawa.constants import Constant
-from jawa.util.bytecode import *
+from jawa.util.bytecode import (
+    Operand,
+    OperandTypes,
+    Instruction,
+    definition_from_mnemonic
+)
 
 
 Label = namedtuple('Label', ['name'])
