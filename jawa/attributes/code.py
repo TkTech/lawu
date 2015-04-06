@@ -5,7 +5,6 @@ from struct import unpack, pack
 from itertools import repeat
 from collections import namedtuple
 
-from jawa.constants import Constant
 from jawa.attribute import Attribute, AttributeTable
 from jawa.util.bytecode import (
     read_instruction,
@@ -53,15 +52,14 @@ class CodeAttribute(Attribute):
     @property
     def info(self):
         fout = StringIO()
-        fout.write(pack('>HHI',
+        fout.write(pack(
+            '>HHI',
             self._max_stack,
             self._max_locals,
             len(self._code)
         ))
         fout.write(self._code)
-        fout.write(pack('>H',
-            len(self._ex_table)
-        ))
+        fout.write(pack('>H', len(self._ex_table)))
         for exception in self._ex_table:
             fout.write(pack('>HHHH', *exception))
         self._attributes._to_io(fout)
@@ -114,4 +112,3 @@ class CodeAttribute(Attribute):
 
         for ins in iter(lambda: read_instruction(fio, fio.tell()), None):
             yield ins
-
