@@ -1,5 +1,7 @@
 # Jawa
 
+[![Code Health](https://landscape.io/github/TkTech/Jawa/master/landscape.svg?style=flat)](https://landscape.io/github/TkTech/Jawa/master)
+
 Jawa is a pure-python Java disassembler and assembler currently under
 development. Expect it to be buggy/broken at times.
 
