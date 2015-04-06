@@ -128,7 +128,7 @@ class EditableZipFile(object):
 
         # Sort the paths by depth with the shortest occuring first.
         paths = [p.split('/') for p in self.namelist]
-        paths.sort(key=lambda x: len(x))
+        paths.sort(key=len)
 
         for path in paths:
             complete_path = '/'.join(path)
