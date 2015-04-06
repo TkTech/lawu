@@ -39,10 +39,10 @@ def decode_modified_utf8(s):
             v, w, x, y, z = s[ix:ix+6]
             ix += 5
             x = 0x10000 + (
-                ((v & 0x0F) << 16)
-                + ((w & 0x3F) << 10)
-                + ((y & 0x0F) << 6)
-                + (z & 0x3F)
+                ((v & 0x0F) << 16) +
+                ((w & 0x3F) << 10) +
+                ((y & 0x0F) << 6) +
+                (z & 0x3F)
             )
 
         final_string += unichr(x)
