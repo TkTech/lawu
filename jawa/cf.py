@@ -117,7 +117,8 @@ class ClassFile(object):
         """
         write = fout.write
 
-        write(pack('>IHH',
+        write(pack(
+            '>IHH',
             ClassFile.MAGIC,
             self.version.minor,
             self.version.major
@@ -126,7 +127,8 @@ class ClassFile(object):
         self._constants._to_io(fout)
 
         write(self.access_flags.pack())
-        write(pack('>HHH{0}H'.format(len(self._interfaces)),
+        write(pack(
+            '>HHH{0}H'.format(len(self._interfaces)),
             self._this,
             self._super,
             len(self._interfaces),
@@ -181,6 +183,7 @@ class ClassFile(object):
 
         Example::
 
+            >>> cf = ClassFile.create('HelloWorld')
             >>> cf.version = 51, 0
             >>> print(cf.version)
             ClassVersion(major=51, minor=0)
