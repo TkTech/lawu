@@ -36,9 +36,9 @@ automate work on JVM bytecode. For example, Jawa has been used for:
 - Analysis and analytics of public Android APKs (thousands at a time)
 
 Fast forward a few years. There are new toys on the block like `Krakatau`_
-which came out a few years after Solum. Krakatau is great disasembler &
-decompiler, but it's API was not designed for humans and is not considered
-"Pythonic". It does not follow PEP8, it is sparesly commented and poorly
+which came out a few years after Solum. Krakatau is a great disasembler &
+decompiler, but its API was not designed for humans and is not considered
+"Pythonic". It does not follow PEP8, it is sparsely commented and poorly
 documented. This makes it very hard to work with when all you want to do is
 open up a Python shell and dive into a ClassFile.
 
