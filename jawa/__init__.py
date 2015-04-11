@@ -1,5 +1,4 @@
 # -*- coding: utf8 -*-
-from jawa.jf import *
 from jawa.cf import *
 from jawa.fields import *
 from jawa.methods import *
