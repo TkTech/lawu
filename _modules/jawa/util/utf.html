@@ -27,23 +27,10 @@
     <link rel="up" title="Module code" href="../../index.html" />
    
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">jawa  documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
-      </ul>
-    </div>  
+  <body role="document">  
 
     <div class="document">
       <div class="documentwrapper">
@@ -51,7 +38,7 @@
           <div class="body" role="main">
             
   <h1>Source code for jawa.util.utf</h1><div class="highlight"><pre>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Utility methods for handling oddities in character encoding encountered</span>
 <span class="sd">when parsing and writing JVM ClassFiles or object serialization archives.</span>
 
@@ -78,7 +65,7 @@
         <span class="n">ix</span> <span class="o">+=</span> <span class="mi">1</span>
 
         <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="c"># Just an ASCII character, nothing else to do.</span>
+            <span class="c1"># Just an ASCII character, nothing else to do.</span>
             <span class="k">pass</span>
         <span class="k">elif</span> <span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
             <span class="n">y</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">ix</span><span class="p">]</span>
@@ -92,16 +79,16 @@
             <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">ix</span><span class="p">:</span><span class="n">ix</span><span class="o">+</span><span class="mi">6</span><span class="p">]</span>
             <span class="n">ix</span> <span class="o">+=</span> <span class="mi">5</span>
             <span class="n">x</span> <span class="o">=</span> <span class="mh">0x10000</span> <span class="o">+</span> <span class="p">(</span>
-                <span class="p">((</span><span class="n">v</span> <span class="o">&amp;</span> <span class="mh">0x0F</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span>
-                <span class="o">+</span> <span class="p">((</span><span class="n">w</span> <span class="o">&amp;</span> <span class="mh">0x3F</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">10</span><span class="p">)</span>
-                <span class="o">+</span> <span class="p">((</span><span class="n">y</span> <span class="o">&amp;</span> <span class="mh">0x0F</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">)</span>
-                <span class="o">+</span> <span class="p">(</span><span class="n">z</span> <span class="o">&amp;</span> <span class="mh">0x3F</span><span class="p">)</span>
+                <span class="p">((</span><span class="n">v</span> <span class="o">&amp;</span> <span class="mh">0x0F</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">+</span>
+                <span class="p">((</span><span class="n">w</span> <span class="o">&amp;</span> <span class="mh">0x3F</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">10</span><span class="p">)</span> <span class="o">+</span>
+                <span class="p">((</span><span class="n">y</span> <span class="o">&amp;</span> <span class="mh">0x0F</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">+</span>
+                <span class="p">(</span><span class="n">z</span> <span class="o">&amp;</span> <span class="mh">0x3F</span><span class="p">)</span>
             <span class="p">)</span>
 
         <span class="n">final_string</span> <span class="o">+=</span> <span class="nb">unichr</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">final_string</span>
+    <span class="k">return</span> <span class="n">final_string</span></div>
 
-</div>
+
 <div class="viewcode-block" id="encode_modified_utf8"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.utf.encode_modified_utf8">[docs]</a><span class="k">def</span> <span class="nf">encode_modified_utf8</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Encodes a unicode string as modified UTF-8 as defined in section 4.4.7</span>
@@ -110,8 +97,8 @@
 <span class="sd">    :param u: unicode to be converted.</span>
 <span class="sd">    :returns: A decoded bytestring.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c"># Trying to encode a non-unicode string will result in some serious</span>
-    <span class="c"># abnormalities.</span>
+    <span class="c1"># Trying to encode a non-unicode string will result in some serious</span>
+    <span class="c1"># abnormalities.</span>
     <span class="k">assert</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">))</span>
     <span class="n">final_string</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">()</span>
 
@@ -137,7 +124,15 @@
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
@@ -159,8 +154,8 @@
       &copy;2012, Author.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
     </div>
 

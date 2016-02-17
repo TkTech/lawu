@@ -27,25 +27,10 @@
     <link rel="next" title="Generating Classes From Scratch - Hello World!" href="examples/hello_world.html" />
    
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="examples/hello_world.html" title="Generating Classes From Scratch - Hello World!"
-             accesskey="N">next</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">jawa  documentation</a> &raquo;</li> 
-      </ul>
-    </div>  
+  <body role="document">  
 
     <div class="document">
       <div class="documentwrapper">
@@ -58,13 +43,13 @@
 class files.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">This documentation is up to date as of March 16, 2015.</p>
+<p class="last">This documentation is up to date as of February 17, 2016.</p>
 </div>
 <div class="section" id="getting-jawa">
 <h2>Getting Jawa<a class="headerlink" href="#getting-jawa" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference external" href="http://github.com/TkTech/Jawa">Jawa</a> is not yet available on PyPi as it is still being developed. That said, breaking
 changes are rare and installation from Github is very easy. To install:</p>
-<div class="highlight-python"><div class="highlight"><pre>pip install git+https://github.com/TkTech/Jawa.git
+<div class="highlight-python"><div class="highlight"><pre><span></span>pip install git+https://github.com/TkTech/Jawa.git
 </pre></div>
 </div>
 </div>
@@ -86,9 +71,9 @@ automate work on JVM bytecode. For example, Jawa has been used for:</p>
 <li>Analysis and analytics of public Android APKs (thousands at a time)</li>
 </ul>
 <p>Fast forward a few years. There are new toys on the block like <a class="reference external" href="https://github.com/Storyyeller/Krakatau">Krakatau</a>
-which came out a few years after Solum. Krakatau is great disasembler &amp;
-decompiler, but it&#8217;s API was not designed for humans and is not considered
-&#8220;Pythonic&#8221;. It does not follow PEP8, it is sparesly commented and poorly
+which came out a few years after Solum. Krakatau is a great disasembler &amp;
+decompiler, but its API was not designed for humans and is not considered
+&#8220;Pythonic&#8221;. It does not follow PEP8, it is sparsely commented and poorly
 documented. This makes it very hard to work with when all you want to do is
 open up a Python shell and dive into a ClassFile.</p>
 <p>Unlike most projects of its kind (like <a class="reference external" href="https://github.com/Storyyeller/Krakatau">Krakatau</a>) Jawa is also very
@@ -108,7 +93,6 @@ type of project should it be commercial, closed source or open source.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="jawa.html">jawa package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="jawa.html#module-jawa.jf">jawa.jf module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jawa.html#module-jawa.cf">jawa.cf module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jawa.html#module-jawa.assemble">jawa.assemble module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jawa.html#module-jawa.attribute">jawa.attribute module</a></li>
@@ -126,7 +110,6 @@ type of project should it be commercial, closed source or open source.</p>
 <li class="toctree-l1"><a class="reference internal" href="jawa.util.html">jawa.util package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="jawa.util.html#module-jawa.util.bytecode">jawa.util.bytecode module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jawa.util.html#module-jawa.util.descriptor">jawa.util.descriptor module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jawa.util.html#module-jawa.util.ezip">jawa.util.ezip module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jawa.util.html#module-jawa.util.flags">jawa.util.flags module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jawa.util.html#module-jawa.util.utf">jawa.util.utf module</a></li>
 </ul>
@@ -152,10 +135,14 @@ type of project should it be commercial, closed source or open source.</p>
 </ul>
 </li>
 </ul>
-
-  <h4>Next topic</h4>
-  <p class="topless"><a href="examples/hello_world.html"
-                        title="next chapter">Generating Classes From Scratch - Hello World!</a></p>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="examples/hello_world.html" title="next chapter">Generating Classes From Scratch - Hello World!</a></li>
+  </ul></li>
+</ul>
+</div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -184,12 +171,12 @@ type of project should it be commercial, closed source or open source.</p>
       &copy;2012, Author.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
       <a href="_sources/index.txt"
-          rel="nofollow">Page source</a></li>
+          rel="nofollow">Page source</a>
     </div>
 
     

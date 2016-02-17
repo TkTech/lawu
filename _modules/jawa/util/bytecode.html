@@ -27,23 +27,10 @@
     <link rel="up" title="Module code" href="../../index.html" />
    
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">jawa  documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
-      </ul>
-    </div>  
+  <body role="document">  
 
     <div class="document">
       <div class="documentwrapper">
@@ -51,16 +38,16 @@
           <div class="body" role="main">
             
   <h1>Source code for jawa.util.bytecode</h1><div class="highlight"><pre>
-<span class="c"># -*- coding: utf8 -*-</span>
+<span></span><span class="c1"># -*- coding: utf8 -*-</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s">&#39;Instruction&#39;</span><span class="p">,</span>
-    <span class="s">&#39;Operand&#39;</span><span class="p">,</span>
-    <span class="s">&#39;OperandTypes&#39;</span><span class="p">,</span>
-    <span class="s">&#39;read_instruction&#39;</span><span class="p">,</span>
-    <span class="s">&#39;write_instruction&#39;</span><span class="p">,</span>
-    <span class="s">&#39;opcode_table&#39;</span><span class="p">,</span>
-    <span class="s">&#39;definition_from_mnemonic&#39;</span><span class="p">,</span>
-    <span class="s">&#39;definition_from_opcode&#39;</span>
+    <span class="s1">&#39;Instruction&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Operand&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;OperandTypes&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;read_instruction&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;write_instruction&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;opcode_table&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;definition_from_mnemonic&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;definition_from_opcode&#39;</span>
 <span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">struct</span>
@@ -68,15 +55,15 @@
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">repeat</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
 
-<span class="n">Operand</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s">&#39;Operand&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;op_type&#39;</span><span class="p">,</span> <span class="s">&#39;value&#39;</span><span class="p">])</span>
-<span class="n">_Instruction</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s">&#39;Instruction&#39;</span><span class="p">,</span> <span class="p">[</span>
-    <span class="s">&#39;mnemonic&#39;</span><span class="p">,</span>
-    <span class="s">&#39;opcode&#39;</span><span class="p">,</span>
-    <span class="s">&#39;operands&#39;</span><span class="p">,</span>
-    <span class="s">&#39;pos&#39;</span>
+<span class="n">Operand</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;Operand&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;op_type&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">])</span>
+<span class="n">_Instruction</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;Instruction&#39;</span><span class="p">,</span> <span class="p">[</span>
+    <span class="s1">&#39;mnemonic&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;opcode&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;operands&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;pos&#39;</span>
 <span class="p">])</span>
 
-<span class="c"># Opcodes that can be prefixed by the `wide` opcode.</span>
+<span class="c1"># Opcodes that can be prefixed by the `wide` opcode.</span>
 <span class="n">_wide</span> <span class="o">=</span> <span class="p">(</span>
     <span class="mh">0x15</span><span class="p">,</span> <span class="mh">0x17</span><span class="p">,</span> <span class="mh">0x19</span><span class="p">,</span> <span class="mh">0x16</span><span class="p">,</span>
     <span class="mh">0x18</span><span class="p">,</span> <span class="mh">0x36</span><span class="p">,</span> <span class="mh">0x38</span><span class="p">,</span> <span class="mh">0x3A</span><span class="p">,</span>
@@ -98,8 +85,8 @@
             <span class="n">_opcode_by_opname</span><span class="p">[</span><span class="n">mnemonic</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
             <span class="n">operands</span> <span class="ow">or</span> <span class="p">[],</span>
             <span class="mi">0</span>
-        <span class="p">)</span>
-</div>
+        <span class="p">)</span></div>
+
     <span class="nd">@classmethod</span>
 <div class="viewcode-block" id="Instruction.from_opcode"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.Instruction.from_opcode">[docs]</a>    <span class="k">def</span> <span class="nf">from_opcode</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">opcode</span><span class="p">,</span> <span class="n">operands</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">cls</span><span class="p">(</span>
@@ -107,8 +94,8 @@
             <span class="n">opcode</span><span class="p">,</span>
             <span class="n">operands</span> <span class="ow">or</span> <span class="p">[],</span>
             <span class="mi">0</span>
-        <span class="p">)</span>
-</div>
+        <span class="p">)</span></div>
+
 <div class="viewcode-block" id="Instruction.size_on_disk"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.Instruction.size_on_disk">[docs]</a>    <span class="k">def</span> <span class="nf">size_on_disk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_pos</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the size of this instruction and its operands when</span>
@@ -118,27 +105,27 @@
         <span class="n">size</span><span class="p">,</span> <span class="n">fmts</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">definition_from_opcode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opcode</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">wide</span><span class="p">:</span>
             <span class="n">size</span> <span class="o">+=</span> <span class="mi">2</span>
-            <span class="c"># Special case for iinc which has a 2nd extended operand.</span>
+            <span class="c1"># Special case for iinc which has a 2nd extended operand.</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">opcode</span> <span class="o">==</span> <span class="mh">0x84</span><span class="p">:</span>
                 <span class="n">size</span> <span class="o">+=</span> <span class="mi">2</span>
         <span class="k">elif</span> <span class="n">fmts</span><span class="p">:</span>
-            <span class="c"># A simple opcode with simple operands.</span>
+            <span class="c1"># A simple opcode with simple operands.</span>
             <span class="k">for</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">fmts</span><span class="p">:</span>
                 <span class="n">size</span> <span class="o">+=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">size</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">opcode</span> <span class="o">==</span> <span class="mh">0xAB</span><span class="p">:</span>
-            <span class="c"># lookupswitch</span>
+            <span class="c1"># lookupswitch</span>
             <span class="n">padding</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">-</span> <span class="p">(</span><span class="n">start_pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span>
             <span class="n">padding</span> <span class="o">=</span> <span class="n">padding</span> <span class="k">if</span> <span class="n">padding</span> <span class="o">!=</span> <span class="mi">4</span> <span class="k">else</span> <span class="mi">0</span>
             <span class="n">size</span> <span class="o">+=</span> <span class="n">padding</span>
-            <span class="c"># default &amp; npairs</span>
+            <span class="c1"># default &amp; npairs</span>
             <span class="n">size</span> <span class="o">+=</span> <span class="mi">8</span>
             <span class="n">size</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">operands</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="mi">8</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">opcode</span> <span class="o">==</span> <span class="mh">0xAA</span><span class="p">:</span>
-            <span class="c"># tableswitch</span>
+            <span class="c1"># tableswitch</span>
             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
-        <span class="k">return</span> <span class="n">size</span>
-</div>
+        <span class="k">return</span> <span class="n">size</span></div>
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">wide</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -155,9 +142,9 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">operands</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;=</span> <span class="mi">255</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">True</span>
 
-        <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="bp">False</span></div>
 
-</div>
+
 <div class="viewcode-block" id="OperandTypes"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.OperandTypes">[docs]</a><span class="k">class</span> <span class="nc">OperandTypes</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants used to determine the &quot;type&quot; of operand on an opcode,</span>
@@ -167,225 +154,225 @@
     <span class="n">LOCAL_INDEX</span> <span class="o">=</span> <span class="mi">20</span>
     <span class="n">CONSTANT_INDEX</span> <span class="o">=</span> <span class="mi">30</span>
     <span class="n">BRANCH</span> <span class="o">=</span> <span class="mi">40</span>
-    <span class="n">PADDING</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">PADDING</span> <span class="o">=</span> <span class="mi">50</span></div>
 
-</div>
-<span class="n">ubyte</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s">&#39;&gt;B&#39;</span><span class="p">)</span>
-<span class="n">ushort</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s">&#39;&gt;H&#39;</span><span class="p">)</span>
-<span class="n">byte</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s">&#39;&gt;b&#39;</span><span class="p">)</span>
-<span class="n">short</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s">&#39;&gt;h&#39;</span><span class="p">)</span>
-<span class="n">integer</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s">&#39;&gt;i&#39;</span><span class="p">)</span>
 
-<span class="c">#: An opcode to mnemonic &amp; operand format mapping for every opcode</span>
-<span class="c">#: supported by the JVM.</span>
+<span class="n">ubyte</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s1">&#39;&gt;B&#39;</span><span class="p">)</span>
+<span class="n">ushort</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">)</span>
+<span class="n">byte</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s1">&#39;&gt;b&#39;</span><span class="p">)</span>
+<span class="n">short</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s1">&#39;&gt;h&#39;</span><span class="p">)</span>
+<span class="n">integer</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s1">&#39;&gt;i&#39;</span><span class="p">)</span>
+
+<span class="c1">#: An opcode to mnemonic &amp; operand format mapping for every opcode</span>
+<span class="c1">#: supported by the JVM.</span>
 <span class="n">opcode_table</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="mh">0x32</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;aaload&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x53</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;aastore&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x01</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;aconst_null&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x19</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;aload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
-    <span class="mh">0x2A</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;aload_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x2B</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;aload_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x2C</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;aload_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x2D</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;aload_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xBD</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;anewarray&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]),</span>
-    <span class="mh">0xB0</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;areturn&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xBE</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;arraylength&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x3A</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;astore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
-    <span class="mh">0x4B</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;astore_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x4C</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;astore_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x4D</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;astore_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x4E</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;astore_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xBF</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;athrow&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x33</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;baload&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x54</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;bastore&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x10</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;bipush&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]),</span>
-    <span class="mh">0x34</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;caload&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x55</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;castore&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xC0</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;checkcast&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0x90</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;d2f&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x8E</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;d2i&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x8F</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;d2l&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x63</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dadd&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x31</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;daload&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x52</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dastore&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x98</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dcmpg&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x97</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dcmpl&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x0E</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dconst_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x0F</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dconst_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x6F</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ddiv&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x18</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
-    <span class="mh">0x26</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dload_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x27</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dload_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x28</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dload_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x29</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dload_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x6B</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dmul&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x77</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dneg&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x73</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;drem&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xAF</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dreturn&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x39</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dstore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
-    <span class="mh">0x47</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dstore_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x48</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dstore_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x49</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dstore_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x4a</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dstore_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x67</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dsub&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x59</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dup&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x5A</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dup_x1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x5B</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dup_x2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x5C</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dup2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x5D</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dup2_x1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x5E</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;dup2_x2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x8D</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;f2d&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x8B</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;f2i&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x8C</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;f2l&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x62</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fadd&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x30</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;faload&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x51</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fastore&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x96</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fcmpg&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x95</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fcmpl&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x0B</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fconst_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x0C</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fconst_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x0D</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fconst_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x6E</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fdiv&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x17</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
-    <span class="mh">0x22</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fload_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x23</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fload_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x24</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fload_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x25</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fload_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x6A</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fmul&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x76</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fneg&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x72</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;frem&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xAE</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;freturn&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x38</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fstore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
-    <span class="mh">0x43</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fstore_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x44</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fstore_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x45</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fstore_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x46</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fstore_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x66</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;fsub&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xB4</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;getfield&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0xB2</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;getstatic&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0xA7</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;goto&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0xC8</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;goto_w&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">integer</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0x91</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ib2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x92</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;i2c&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x87</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;i2d&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x86</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;i2f&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x85</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;i2l&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x93</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;i2s&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x60</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iadd&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x2E</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iaload&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x7E</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iand&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x4F</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iastore&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x02</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iconst_m1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x03</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iconst_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x04</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iconst_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x05</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iconst_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x06</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iconst_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x07</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iconst_4&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x08</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iconst_5&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x6C</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;idiv&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xA5</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;if_acmpeq&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0xA6</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;if_acmpne&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0x9F</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;if_icmpeq&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0xA0</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;if_icmpne&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0xA1</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;if_icmplt&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0xA2</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;if_icmpge&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0xA3</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;if_icmpgt&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0xA4</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;if_icmple&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0x99</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ifeq&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0x9A</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ifne&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0x9B</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iflt&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0x9C</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ifge&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0x9D</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ifgt&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0x9E</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ifle&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0xC7</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ifnonnull&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0xC6</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ifnull&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0x84</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iinc&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="p">(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]),</span>
-    <span class="mh">0x15</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
-    <span class="mh">0x1A</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iload_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x1B</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iload_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x1C</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iload_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x1D</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iload_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x68</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;imul&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x74</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ineg&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xC1</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;instanceof&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0xB9</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;invokeinterface&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="p">(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">50</span><span class="p">)]),</span>
-    <span class="mh">0xB7</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;invokespecial&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0xB8</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;invokestatic&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0xB6</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;invokevirtual&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0x80</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ior&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x70</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;irem&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xAC</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ireturn&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x78</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ishl&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x7A</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ishr&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x36</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;istore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
-    <span class="mh">0x3B</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;istore_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x3C</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;istore_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x3D</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;istore_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x3E</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;istore_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x64</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;isub&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x7C</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;iushr&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x82</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ixor&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xA8</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;jsr&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0xC9</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;jsr_w&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">integer</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0x8A</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;l2d&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x89</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;l2f&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x88</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;l2i&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x61</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ladd&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x2F</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;laload&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x7F</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;land&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x50</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lastore&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x94</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lcmp&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x09</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lconst_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x0A</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lconst_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x12</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ldc&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0x13</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ldc_w&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0x14</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ldc2_w&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0x6D</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ldiv&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x16</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
-    <span class="mh">0x1E</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lload_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x1F</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lload_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x20</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lload_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x21</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lload_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x69</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lmul&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x75</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lneg&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xAB</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lookupswitch&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x81</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lor&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x71</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lrem&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xAD</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lreturn&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x79</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lshl&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x7B</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lshr&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x37</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lstore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
-    <span class="mh">0x3F</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lstore_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x40</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lstore_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x41</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lstore_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x42</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lstore_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x65</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lsub&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x7D</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lushr&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x83</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lxor&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xC2</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;monitorenter&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xC3</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;monitorexit&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xC5</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;multianewarray&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="p">(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]),</span>
-    <span class="mh">0xBB</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;new&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0xBC</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;newarray&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]),</span>
-    <span class="mh">0x00</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;nop&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x57</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;pop&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x58</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;pop2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xB5</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;putfield&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0xB3</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;putstatic&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0xA9</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;ret&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
-    <span class="mh">0xB1</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;return&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x35</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;saload&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x56</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;sastore&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0x11</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;sipush&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]),</span>
-    <span class="mh">0x5F</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;swap&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xAA</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;tableswitch&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xC4</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;wide&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xCA</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;breakpoint&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xFE</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;impdep1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-    <span class="mh">0xFF</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;impdep2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="mh">0x32</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;aaload&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x53</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;aastore&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x01</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;aconst_null&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x19</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;aload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
+    <span class="mh">0x2A</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;aload_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x2B</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;aload_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x2C</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;aload_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x2D</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;aload_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0xBD</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;anewarray&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]),</span>
+    <span class="mh">0xB0</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;areturn&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0xBE</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;arraylength&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x3A</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;astore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
+    <span class="mh">0x4B</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;astore_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x4C</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;astore_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x4D</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;astore_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x4E</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;astore_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0xBF</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;athrow&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x33</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;baload&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x54</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;bastore&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x10</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;bipush&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]),</span>
+    <span class="mh">0x34</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;caload&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x55</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;castore&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0xC0</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;checkcast&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
+    <span class="mh">0x90</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;d2f&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x8E</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;d2i&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x8F</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;d2l&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x63</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dadd&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x31</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;daload&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x52</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dastore&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x98</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dcmpg&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x97</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dcmpl&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x0E</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dconst_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x0F</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dconst_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x6F</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ddiv&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x18</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
+    <span class="mh">0x26</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dload_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x27</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dload_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x28</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dload_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x29</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dload_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x6B</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dmul&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x77</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dneg&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x73</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;drem&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0xAF</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dreturn&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x39</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dstore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
+    <span class="mh">0x47</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dstore_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x48</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dstore_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x49</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dstore_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x4a</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dstore_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x67</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dsub&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x59</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dup&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x5A</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dup_x1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x5B</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dup_x2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x5C</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dup2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x5D</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dup2_x1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x5E</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dup2_x2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x8D</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;f2d&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x8B</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;f2i&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x8C</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;f2l&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x62</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fadd&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x30</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;faload&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x51</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fastore&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x96</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fcmpg&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x95</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fcmpl&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x0B</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fconst_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x0C</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fconst_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x0D</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fconst_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x6E</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fdiv&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x17</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
+    <span class="mh">0x22</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fload_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x23</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fload_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x24</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fload_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x25</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fload_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x6A</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fmul&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x76</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fneg&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x72</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;frem&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0xAE</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;freturn&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x38</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fstore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
+    <span class="mh">0x43</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fstore_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x44</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fstore_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x45</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fstore_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x46</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fstore_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x66</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fsub&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0xB4</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;getfield&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
+    <span class="mh">0xB2</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;getstatic&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
+    <span class="mh">0xA7</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;goto&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0xC8</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;goto_w&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">integer</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0x91</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ib2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x92</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;i2c&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x87</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;i2d&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x86</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;i2f&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x85</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;i2l&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x93</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;i2s&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x60</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iadd&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x2E</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iaload&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x7E</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iand&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x4F</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iastore&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x02</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iconst_m1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x03</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iconst_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x04</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iconst_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x05</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iconst_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x06</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iconst_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x07</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iconst_4&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x08</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iconst_5&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x6C</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;idiv&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0xA5</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;if_acmpeq&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0xA6</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;if_acmpne&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0x9F</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;if_icmpeq&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0xA0</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;if_icmpne&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0xA1</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;if_icmplt&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0xA2</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;if_icmpge&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0xA3</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;if_icmpgt&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0xA4</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;if_icmple&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0x99</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ifeq&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0x9A</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ifne&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0x9B</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iflt&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0x9C</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ifge&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0x9D</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ifgt&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0x9E</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ifle&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0xC7</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ifnonnull&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0xC6</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ifnull&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0x84</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iinc&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="p">(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]),</span>
+    <span class="mh">0x15</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
+    <span class="mh">0x1A</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iload_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x1B</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iload_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x1C</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iload_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x1D</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iload_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x68</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;imul&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x74</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ineg&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0xC1</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;instanceof&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
+    <span class="mh">0xB9</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;invokeinterface&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="p">(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">50</span><span class="p">)]),</span>
+    <span class="mh">0xB7</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;invokespecial&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
+    <span class="mh">0xB8</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;invokestatic&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
+    <span class="mh">0xB6</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;invokevirtual&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
+    <span class="mh">0x80</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ior&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x70</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;irem&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0xAC</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ireturn&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x78</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ishl&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x7A</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ishr&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x36</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;istore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
+    <span class="mh">0x3B</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;istore_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x3C</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;istore_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x3D</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;istore_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x3E</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;istore_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x64</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;isub&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x7C</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iushr&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x82</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ixor&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0xA8</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;jsr&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0xC9</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;jsr_w&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">integer</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
+    <span class="mh">0x8A</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;l2d&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x89</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;l2f&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x88</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;l2i&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x61</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ladd&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x2F</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;laload&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x7F</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;land&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x50</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lastore&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x94</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lcmp&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x09</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lconst_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x0A</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lconst_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x12</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ldc&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
+    <span class="mh">0x13</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ldc_w&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
+    <span class="mh">0x14</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ldc2_w&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
+    <span class="mh">0x6D</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ldiv&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x16</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
+    <span class="mh">0x1E</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lload_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x1F</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lload_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x20</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lload_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x21</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lload_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x69</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lmul&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x75</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lneg&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0xAB</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lookupswitch&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x81</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lor&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x71</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lrem&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0xAD</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lreturn&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x79</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lshl&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x7B</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lshr&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x37</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lstore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
+    <span class="mh">0x3F</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lstore_0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x40</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lstore_1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x41</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lstore_2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x42</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lstore_3&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x65</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lsub&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x7D</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lushr&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x83</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lxor&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0xC2</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;monitorenter&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0xC3</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;monitorexit&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0xC5</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;multianewarray&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="p">(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]),</span>
+    <span class="mh">0xBB</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;new&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
+    <span class="mh">0xBC</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;newarray&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]),</span>
+    <span class="mh">0x00</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;nop&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x57</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;pop&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x58</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;pop2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0xB5</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;putfield&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
+    <span class="mh">0xB3</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;putstatic&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
+    <span class="mh">0xA9</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ret&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
+    <span class="mh">0xB1</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;return&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x35</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;saload&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x56</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;sastore&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0x11</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;sipush&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]),</span>
+    <span class="mh">0x5F</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;swap&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0xAA</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;tableswitch&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0xC4</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;wide&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0xCA</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;breakpoint&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0xFE</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;impdep1&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+    <span class="mh">0xFF</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;impdep2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="c"># Creates a new dict with operand and mnemonic swapped for assembling.</span>
+<span class="c1"># Creates a new dict with operand and mnemonic swapped for assembling.</span>
 <span class="n">_opcode_by_opname</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">o</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="n">k</span><span class="p">,)</span> <span class="o">+</span> <span class="n">o</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">opcode_table</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
 
 
@@ -401,47 +388,47 @@
     <span class="n">fmt_operands</span> <span class="o">=</span> <span class="n">definition_from_opcode</span><span class="p">(</span><span class="n">opcode</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">ins</span><span class="o">.</span><span class="n">wide</span><span class="p">:</span>
-        <span class="c"># The &quot;WIDE&quot; prefix</span>
+        <span class="c1"># The &quot;WIDE&quot; prefix</span>
         <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ubyte</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="mh">0xC4</span><span class="p">))</span>
-        <span class="c"># The real opcode.</span>
+        <span class="c1"># The real opcode.</span>
         <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ubyte</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">opcode</span><span class="p">))</span>
         <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ushort</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">operands</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">opcode</span> <span class="o">==</span> <span class="mh">0x84</span><span class="p">:</span>
             <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">short</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">operands</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
-    <span class="c"># A normal simple opcode with simple operands.</span>
+    <span class="c1"># A normal simple opcode with simple operands.</span>
     <span class="k">elif</span> <span class="n">fmt_operands</span><span class="p">:</span>
         <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ubyte</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">opcode</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fmt_operands</span><span class="p">):</span>
             <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fmt</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">operands</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
-    <span class="c"># Special case for lookupswitch, which also has a unique.</span>
+    <span class="c1"># Special case for lookupswitch, which also has a unique.</span>
     <span class="k">elif</span> <span class="n">opcode</span> <span class="o">==</span> <span class="mh">0xAB</span><span class="p">:</span>
         <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ubyte</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">opcode</span><span class="p">))</span>
-        <span class="c"># assemble([</span>
-        <span class="c">#     (&#39;lookupswitch&#39;, {</span>
-        <span class="c">#         2: -3,</span>
-        <span class="c">#         4: 5</span>
-        <span class="c">#     }, &lt;default&gt;)</span>
-        <span class="c"># ])</span>
+        <span class="c1"># assemble([</span>
+        <span class="c1">#     (&#39;lookupswitch&#39;, {</span>
+        <span class="c1">#         2: -3,</span>
+        <span class="c1">#         4: 5</span>
+        <span class="c1">#     }, &lt;default&gt;)</span>
+        <span class="c1"># ])</span>
         <span class="n">padding</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">-</span> <span class="p">(</span><span class="n">start_pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span>
         <span class="n">padding</span> <span class="o">=</span> <span class="n">padding</span> <span class="k">if</span> <span class="n">padding</span> <span class="o">!=</span> <span class="mi">4</span> <span class="k">else</span> <span class="mi">0</span>
-        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;{0}x&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">padding</span><span class="p">)))</span>
-        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;ii&#39;</span><span class="p">,</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;{0}x&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">padding</span><span class="p">)))</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;ii&#39;</span><span class="p">,</span>
             <span class="n">operands</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
             <span class="nb">len</span><span class="p">(</span><span class="n">operands</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="p">))</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">operands</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;&gt;ii&#39;</span><span class="p">,</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;ii&#39;</span><span class="p">,</span>
                 <span class="n">key</span><span class="p">,</span>
                 <span class="n">operands</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
             <span class="p">))</span>
-    <span class="c"># Special case for tableswitch.</span>
+    <span class="c1"># Special case for tableswitch.</span>
     <span class="k">elif</span> <span class="n">opcode</span> <span class="o">==</span> <span class="mh">0xAA</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="c"># opcode with no operands.</span>
-        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ubyte</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">opcode</span><span class="p">))</span>
+        <span class="c1"># opcode with no operands.</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ubyte</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">opcode</span><span class="p">))</span></div>
 
-</div>
+
 <div class="viewcode-block" id="read_instruction"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.read_instruction">[docs]</a><span class="k">def</span> <span class="nf">read_instruction</span><span class="p">(</span><span class="n">fio</span><span class="p">,</span> <span class="n">start_pos</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reads a single instruction from `fio` and returns it, or ``None`` if</span>
@@ -458,44 +445,44 @@
     <span class="n">name</span><span class="p">,</span> <span class="n">operands</span> <span class="o">=</span> <span class="n">opcode_table</span><span class="p">[</span><span class="n">op</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span>
 
     <span class="n">final_operands</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="c"># Most opcodes have simple operands.</span>
+    <span class="c1"># Most opcodes have simple operands.</span>
     <span class="k">if</span> <span class="n">operands</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">type_</span> <span class="ow">in</span> <span class="n">operands</span><span class="p">:</span>
             <span class="n">final_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">Operand</span><span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fmt</span><span class="o">.</span><span class="n">size</span><span class="p">))[</span><span class="mi">0</span><span class="p">]))</span>
-    <span class="c"># Special case for lookupswitch.</span>
+    <span class="c1"># Special case for lookupswitch.</span>
     <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="mh">0xAB</span><span class="p">:</span>
-        <span class="c"># Get rid of the alignment padding.</span>
+        <span class="c1"># Get rid of the alignment padding.</span>
         <span class="n">padding</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">-</span> <span class="p">(</span><span class="n">start_pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span>
         <span class="n">padding</span> <span class="o">=</span> <span class="n">padding</span> <span class="k">if</span> <span class="n">padding</span> <span class="o">!=</span> <span class="mi">4</span> <span class="k">else</span> <span class="mi">0</span>
         <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">padding</span><span class="p">)</span>
 
-        <span class="c"># Default branch address and branch count.</span>
-        <span class="n">default</span><span class="p">,</span> <span class="n">npairs</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s">&#39;&gt;ii&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+        <span class="c1"># Default branch address and branch count.</span>
+        <span class="n">default</span><span class="p">,</span> <span class="n">npairs</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;ii&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
 
         <span class="n">pairs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">repeat</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">npairs</span><span class="p">):</span>
-            <span class="n">match</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s">&#39;&gt;ii&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+            <span class="n">match</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;ii&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
             <span class="n">pairs</span><span class="p">[</span><span class="n">match</span><span class="p">]</span> <span class="o">=</span> <span class="n">offset</span>
 
         <span class="n">final_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pairs</span><span class="p">)</span>
         <span class="n">final_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Operand</span><span class="p">(</span><span class="n">OperandTypes</span><span class="o">.</span><span class="n">BRANCH</span><span class="p">,</span> <span class="n">default</span><span class="p">))</span>
-    <span class="c"># Special case for tableswitch</span>
+    <span class="c1"># Special case for tableswitch</span>
     <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="mh">0xAA</span><span class="p">:</span>
-        <span class="c"># Get rid of the alignment padding.</span>
+        <span class="c1"># Get rid of the alignment padding.</span>
         <span class="n">padding</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">-</span> <span class="p">(</span><span class="n">start_pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span>
         <span class="n">padding</span> <span class="o">=</span> <span class="n">padding</span> <span class="k">if</span> <span class="n">padding</span> <span class="o">!=</span> <span class="mi">4</span> <span class="k">else</span> <span class="mi">0</span>
         <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">padding</span><span class="p">)</span>
 
-        <span class="n">default</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s">&#39;&gt;iii&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">12</span><span class="p">))</span>
+        <span class="n">default</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;iii&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">12</span><span class="p">))</span>
         <span class="n">final_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Operand</span><span class="p">(</span><span class="n">OperandTypes</span><span class="o">.</span><span class="n">BRANCH</span><span class="p">,</span> <span class="n">default</span><span class="p">))</span>
         <span class="n">final_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Operand</span><span class="p">(</span><span class="n">OperandTypes</span><span class="o">.</span><span class="n">LITERAL</span><span class="p">,</span> <span class="n">low</span><span class="p">))</span>
         <span class="n">final_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Operand</span><span class="p">(</span><span class="n">OperandTypes</span><span class="o">.</span><span class="n">LITERAL</span><span class="p">,</span> <span class="n">high</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">repeat</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">high</span> <span class="o">-</span> <span class="n">low</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="n">offset</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s">&#39;&gt;i&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;i&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">final_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Operand</span><span class="p">(</span><span class="n">OperandTypes</span><span class="o">.</span><span class="n">BRANCH</span><span class="p">,</span> <span class="n">offset</span><span class="p">))</span>
-    <span class="c"># Special case for the wide prefix</span>
+    <span class="c1"># Special case for the wide prefix</span>
     <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="mh">0xC4</span><span class="p">:</span>
         <span class="n">real_op</span> <span class="o">=</span> <span class="n">ubyte</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">name</span><span class="p">,</span> <span class="n">operands</span> <span class="o">=</span> <span class="n">opcode_table</span><span class="p">[</span><span class="n">real_op</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span>
@@ -503,24 +490,24 @@
             <span class="n">OperandTypes</span><span class="o">.</span><span class="n">LOCAL_INDEX</span><span class="p">,</span>
             <span class="n">ushort</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
         <span class="p">))</span>
-        <span class="c"># Further special case for iinc.</span>
+        <span class="c1"># Further special case for iinc.</span>
         <span class="k">if</span> <span class="n">real_op</span> <span class="o">==</span> <span class="mh">0x84</span><span class="p">:</span>
             <span class="n">final_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Operand</span><span class="p">(</span>
                 <span class="n">OperandTypes</span><span class="o">.</span><span class="n">LITERAL</span><span class="p">,</span>
                 <span class="n">short</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
             <span class="p">))</span>
 
-    <span class="k">return</span> <span class="n">Instruction</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">final_operands</span><span class="p">,</span> <span class="n">start_pos</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Instruction</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">final_operands</span><span class="p">,</span> <span class="n">start_pos</span><span class="p">)</span></div>
 
-</div>
+
 <div class="viewcode-block" id="definition_from_mnemonic"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.definition_from_mnemonic">[docs]</a><span class="k">def</span> <span class="nf">definition_from_mnemonic</span><span class="p">(</span><span class="n">mnemonic</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the definition of an instruction by its mnemonic in the</span>
 <span class="sd">    form: ``(opcode, operand_fmt)``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_opcode_by_opname</span><span class="p">[</span><span class="n">mnemonic</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">_opcode_by_opname</span><span class="p">[</span><span class="n">mnemonic</span><span class="p">]</span></div>
 
-</div>
+
 <div class="viewcode-block" id="definition_from_opcode"><a class="viewcode-back" href="../../../jawa.util.html#jawa.util.bytecode.definition_from_opcode">[docs]</a><span class="k">def</span> <span class="nf">definition_from_opcode</span><span class="p">(</span><span class="n">opcode</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the definition of an instruction by its opcode in the</span>
@@ -533,7 +520,15 @@
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
@@ -555,8 +550,8 @@
       &copy;2012, Author.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
     </div>
 

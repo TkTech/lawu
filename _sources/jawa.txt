@@ -1,14 +1,6 @@
 jawa package
 ============
 
-jawa.jf module
---------------
-
-.. automodule:: jawa.jf
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 jawa.cf module
 --------------
 

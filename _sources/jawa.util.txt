@@ -17,13 +17,6 @@ jawa.util.descriptor module
     :undoc-members:
     :show-inheritance:
 
-jawa.util.ezip module
----------------------
-
-.. automodule:: jawa.util.ezip
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 jawa.util.flags module
 ----------------------
