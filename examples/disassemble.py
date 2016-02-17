@@ -14,7 +14,7 @@ if __name__ == '__main__':
         # The constant pool.
         print('; {0:->60}'.format(' constant pool'))
         print('; {0:->60}'.format(
-            ' total: {0}'.format(cf.constants.count)
+            ' total: {0}'.format(len(cf.constants))
         ))
         for constant in cf.constants:
             print('; {0:04}: {1!r}'.format(constant.index, constant))
@@ -22,7 +22,7 @@ if __name__ == '__main__':
         # The fields table.
         print('; {0:->60}'.format(' fields'))
         print('; {0:->60}'.format(
-            ' total: {0}'.format(cf.fields.count)
+            ' total: {0}'.format(len(cf.fields))
         ))
         for field in cf.fields:
             print('; {0!r}'.format(field))
@@ -30,7 +30,7 @@ if __name__ == '__main__':
         # The methods table.
         print('; {0:->60}'.format(' methods'))
         print('; {0:->60}'.format(
-            ' total: {0}'.format(cf.methods.count)
+            ' total: {0}'.format(len(cf.methods))
         ))
         for method in cf.methods:
             # Find all enabled flags and print them out (such as acc_public

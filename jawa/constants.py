@@ -487,8 +487,7 @@ class ConstantPool(object):
                     constant._descriptor_index
                 ))
 
-    @property
-    def count(self):
+    def __len__(self):
         """
         The number of `Constants` in the `ConstantPool`, excluding padding.
         """

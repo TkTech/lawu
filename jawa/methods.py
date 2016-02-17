@@ -71,7 +71,8 @@ class Method(object):
 
     def _to_io(self, fout):
         fout.write(self.access_flags.pack())
-        fout.write(pack('>HH',
+        fout.write(pack(
+            '>HH',
             self._name_index,
             self._descriptor_index
         ))
@@ -128,7 +129,7 @@ class MethodTable(object):
             self.append(method)
 
     def _to_io(self, fout):
-        fout.write(pack('>H', self.count))
+        fout.write(pack('>H', len(self)))
         for method in self._table:
             method._to_io(fout)
 
@@ -182,6 +183,5 @@ class MethodTable(object):
         except StopIteration:
             return None
 
-    @property
-    def count(self):
+    def __len__(self):
         return len(self._table)

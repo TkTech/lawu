@@ -84,7 +84,7 @@ class AttributeTable(object):
             self._table.append(attribute)
 
     def _to_io(self, fout):
-        fout.write(pack('>H', self.count))
+        fout.write(pack('>H', len(self)))
         for attribute in self._table:
             info = attribute.info
             fout.write(pack(
@@ -103,8 +103,7 @@ class AttributeTable(object):
         self.append(attribute)
         return attribute
 
-    @property
-    def count(self):
+    def __len__(self):
         return len(self._table)
 
     def append(self, attribute):

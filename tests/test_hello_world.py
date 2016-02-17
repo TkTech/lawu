@@ -29,10 +29,10 @@ def test_hello_world():
     with open(sample_path, 'rb') as fin:
         cf = ClassFile(fin)
 
-        assert cf.constants.count == 21
-        assert cf.attributes.count == 0
-        assert cf.fields.count == 0
-        assert cf.methods.count == 1
+        assert len(cf.constants) == 21
+        assert len(cf.attributes) == 0
+        assert len(cf.fields) == 0
+        assert len(cf.methods) == 1
 
         main_method = cf.methods.find_one(name='main')
         assert main_method is not None

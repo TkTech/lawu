@@ -132,12 +132,11 @@ class FieldTable(object):
             self.append(field)
 
     def _to_io(self, fout):
-        fout.write(pack('>H', self.count))
+        fout.write(pack('>H', len(self)))
         for field in self._table:
             field._to_io(fout)
 
-    @property
-    def count(self):
+    def __len__(self):
         return len(self._table)
 
     def find(self, name=None, type_=None, f=None):
