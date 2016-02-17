@@ -26,7 +26,8 @@ setup(
         'dev': [
             'pytest',
             'pytest-cov',
-            'sphinx'
+            'sphinx',
+            'ghp-import'
         ]
     }
 )
