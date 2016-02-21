@@ -160,12 +160,12 @@ class MethodTable(object):
             descriptor = method.descriptor.value
             end_para = descriptor.find(')')
 
-            args = descriptor[1:end_para]
-            if args is not None and args != args:
+            m_args = descriptor[1:end_para]
+            if args is not None and args != m_args:
                 continue
 
-            returns = descriptor[end_para + 1:]
-            if returns is not None and returns != returns:
+            m_returns = descriptor[end_para + 1:]
+            if returns is not None and returns != m_returns:
                 continue
 
             if f is not None and not f(method):
