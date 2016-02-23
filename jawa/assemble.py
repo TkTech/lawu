@@ -1,5 +1,4 @@
 # -*- coding: utf8 -*-
-__all__ = ('Label', 'assemble')
 from collections import namedtuple
 
 from jawa.constants import Constant
@@ -16,9 +15,24 @@ Label = namedtuple('Label', ['name'])
 
 def assemble(code):
     """
-    A convienience method for 'assembling' bytecode over the regular
-    :meth:`~jawa.attributes.code.CodeAttribute.assemble()` method with
-    support for labels and direct constants.
+    Assemble the given iterable of mnemonics, operands, and lables.
+
+    A convienience over constructing individual Instruction and Operand
+    objects, the output of this function can be directly piped to
+    :class:`~jawa.attributes.code.CodeAttribute.assemble()` to produce
+    executable bytecode.
+
+    As a simple example, lets produce an infinite loop:
+
+        >>> from jawa.assemble import assemble, Label
+        >>> print(list(assemble((
+        ...     Label('start'),
+        ...     ('goto', Label('start'))
+        ... ))))
+        [Instruction(mnemonic='goto', opcode=167, operands=[
+            Operand(op_type=40, value=0)], pos=0)]
+
+    For a more complex example, see examples/hello_world.py.
     """
     final = []
 
