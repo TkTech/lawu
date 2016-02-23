@@ -1,5 +1,5 @@
-jawa.attributes package
-=======================
+Implemented Attributes
+======================
 
 jawa.attributes.code module
 ---------------------------

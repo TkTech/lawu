@@ -1,5 +1,5 @@
-jawa.util package
-=================
+Utility APIs
+============
 
 jawa.util.bytecode module
 -------------------------

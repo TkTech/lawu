@@ -1,5 +1,5 @@
-jawa package
-============
+Core APIs
+=========
 
 jawa.cf module
 --------------
