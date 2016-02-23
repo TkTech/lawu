@@ -23,6 +23,44 @@ CodeException = namedtuple('CodeException', [
 
 
 class CodeAttribute(Attribute):
+    """
+    A `CodeAttribute` contains the executable bytecode of a single method.
+
+    As a quick example, lets make a "HelloWorld" class with a single method
+    that simply returns when it's called:
+
+    .. code-block:: python
+
+        from jawa import ClassFile
+        from jawa.util.bytecode import Instruction
+
+        cf = ClassFile.create('HelloWorld')
+
+        main = cf.methods.create(
+            # The name of the method
+            'main',
+            # The signature of the method
+            '([Ljava/lang/String;)V',
+            # Tell Jawa to automatically create an empty CodeAttribute for
+            # us to use.
+            code=True
+        )
+        main.code.max_locals = 1
+        main.access_flags.acc_static = True
+        main.code.assemble([
+            Instruction.from_mnemonic('return')
+        ])
+
+        # Save it to disk so we can run it with the JVM.
+        with open('HelloWorld.class', 'wb') as fout:
+            cf.save(fout)
+
+    .. note::
+
+        Not all :class:`~jawa.methods.Method` objects will have an associated
+        `CodeAttribute` - methods that are flagged as `acc_native` or
+        `acc_abstract` will never have one.
+    """
     def __init__(self, table, name_index=None):
         super(CodeAttribute, self).__init__(
             table,
@@ -37,6 +75,16 @@ class CodeAttribute(Attribute):
         self._code = ''
 
     def unpack(self, info):
+        """
+        Read the CodeAttribute from the byte string `info`.
+
+        .. note::
+
+            Advanced usage only. You will typically never need to call this
+            method as it will be called for you when loading a ClassFile.
+
+        :param info: A byte string containing an unparsed CodeAttribute.
+        """
         fio = StringIO(info)
         self._max_stack, self._max_locals, c_len = unpack('>HHI', fio.read(8))
         self._code = fio.read(c_len)
@@ -54,6 +102,9 @@ class CodeAttribute(Attribute):
 
     @property
     def info(self):
+        """
+        The `CodeAttribute` in packed byte string form.
+        """
         fout = StringIO()
         fout.write(pack(
             '>HHI',
@@ -70,6 +121,7 @@ class CodeAttribute(Attribute):
 
     @property
     def max_stack(self):
+        """The maximum size of the stack."""
         return self._max_stack
 
     @max_stack.setter
@@ -78,6 +130,7 @@ class CodeAttribute(Attribute):
 
     @property
     def max_locals(self):
+        """The maximum number of locals."""
         return self._max_locals
 
     @max_locals.setter
@@ -94,12 +147,16 @@ class CodeAttribute(Attribute):
 
     @property
     def attributes(self):
+        """
+        An :class:`~jawa.attribute.AttributeTable` containing all of the
+        attributes associated with this `CodeAttribute`.
+        """
         return self._attributes
 
     def assemble(self, code):
         """
         Assembles an iterable of :class:`~jawa.util.bytecode.Instruction`
-        objects into a methods code body.
+        objects into a method's code body.
         """
         fout = StringIO()
         for ins in code:
@@ -109,7 +166,8 @@ class CodeAttribute(Attribute):
 
     def disassemble(self):
         """
-        Disassembles this method.
+        Disassembles this method, yielding an iterable of
+        :class:`~jawa.util.bytecode.Instruction` objects.
         """
         fio = StringIO(self._code)
 
