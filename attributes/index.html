@@ -135,23 +135,65 @@
             
   <div class="section" id="implemented-attributes">
 <h1>Implemented Attributes<a class="headerlink" href="#implemented-attributes" title="Permalink to this headline">¶</a></h1>
+<p>Standard attributes are defined in <a class="reference external" href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7">Section 4.7 - Attributes</a>. In addition to
+these attributes, various compilers, debuggers, obfuscators, and other tools
+may insert additional unknown attributes into a <a class="reference internal" href="../jawa.html#jawa.cf.ClassFile" title="jawa.cf.ClassFile"><code class="xref py py-class docutils literal"><span class="pre">ClassFile</span></code></a>.</p>
+<p>Not all standard attributes are currently implemented. When an unknown
+attribute is encountered, an <a class="reference internal" href="../jawa.html#jawa.attribute.UnknownAttribute" title="jawa.attribute.UnknownAttribute"><code class="xref py py-class docutils literal"><span class="pre">UnknownAttribute</span></code></a> object
+is created instead.</p>
 <div class="section" id="module-jawa.attributes.code">
 <span id="jawa-attributes-code-module"></span><h2>jawa.attributes.code module<a class="headerlink" href="#module-jawa.attributes.code" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="jawa.attributes.code.CodeAttribute">
 <em class="property">class </em><code class="descclassname">jawa.attributes.code.</code><code class="descname">CodeAttribute</code><span class="sig-paren">(</span><em>table</em>, <em>name_index=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/attributes/code.html#CodeAttribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attributes.code.CodeAttribute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../jawa.html#jawa.attribute.Attribute" title="jawa.attribute.Attribute"><code class="xref py py-class docutils literal"><span class="pre">jawa.attribute.Attribute</span></code></a></p>
+<p>A <cite>CodeAttribute</cite> contains the executable bytecode of a single method.</p>
+<p>As a quick example, lets make a &#8220;HelloWorld&#8221; class with a single method
+that simply returns when it&#8217;s called:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">jawa</span> <span class="kn">import</span> <span class="n">ClassFile</span>
+<span class="kn">from</span> <span class="nn">jawa.util.bytecode</span> <span class="kn">import</span> <span class="n">Instruction</span>
+
+<span class="n">cf</span> <span class="o">=</span> <span class="n">ClassFile</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;HelloWorld&#39;</span><span class="p">)</span>
+
+<span class="n">main</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="c1"># The name of the method</span>
+    <span class="s1">&#39;main&#39;</span><span class="p">,</span>
+    <span class="c1"># The signature of the method</span>
+    <span class="s1">&#39;([Ljava/lang/String;)V&#39;</span><span class="p">,</span>
+    <span class="c1"># Tell Jawa to automatically create an empty CodeAttribute for</span>
+    <span class="c1"># us to use.</span>
+    <span class="n">code</span><span class="o">=</span><span class="bp">True</span>
+<span class="p">)</span>
+<span class="n">main</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">max_locals</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">main</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">acc_static</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="n">main</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">assemble</span><span class="p">([</span>
+    <span class="n">Instruction</span><span class="o">.</span><span class="n">from_mnemonic</span><span class="p">(</span><span class="s1">&#39;return&#39;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="c1"># Save it to disk so we can run it with the JVM.</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;HelloWorld.class&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+    <span class="n">cf</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Not all <a class="reference internal" href="../jawa.html#jawa.methods.Method" title="jawa.methods.Method"><code class="xref py py-class docutils literal"><span class="pre">Method</span></code></a> objects will have an associated
+<cite>CodeAttribute</cite> - methods that are flagged as <cite>acc_native</cite> or
+<cite>acc_abstract</cite> will never have one.</p>
+</div>
 <dl class="method">
 <dt id="jawa.attributes.code.CodeAttribute.assemble">
 <code class="descname">assemble</code><span class="sig-paren">(</span><em>code</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/attributes/code.html#CodeAttribute.assemble"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attributes.code.CodeAttribute.assemble" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assembles an iterable of <a class="reference internal" href="../util/index.html#jawa.util.bytecode.Instruction" title="jawa.util.bytecode.Instruction"><code class="xref py py-class docutils literal"><span class="pre">Instruction</span></code></a>
-objects into a methods code body.</p>
+objects into a method&#8217;s code body.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="jawa.attributes.code.CodeAttribute.attributes">
 <code class="descname">attributes</code><a class="headerlink" href="#jawa.attributes.code.CodeAttribute.attributes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>An <a class="reference internal" href="../jawa.html#jawa.attribute.AttributeTable" title="jawa.attribute.AttributeTable"><code class="xref py py-class docutils literal"><span class="pre">AttributeTable</span></code></a> containing all of the
+attributes associated with this <cite>CodeAttribute</cite>.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="jawa.attributes.code.CodeAttribute.code">
@@ -161,7 +203,8 @@ objects into a methods code body.</p>
 <dl class="method">
 <dt id="jawa.attributes.code.CodeAttribute.disassemble">
 <code class="descname">disassemble</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/attributes/code.html#CodeAttribute.disassemble"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attributes.code.CodeAttribute.disassemble" title="Permalink to this definition">¶</a></dt>
-<dd><p>Disassembles this method.</p>
+<dd><p>Disassembles this method, yielding an iterable of
+<a class="reference internal" href="../util/index.html#jawa.util.bytecode.Instruction" title="jawa.util.bytecode.Instruction"><code class="xref py py-class docutils literal"><span class="pre">Instruction</span></code></a> objects.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -172,22 +215,39 @@ objects into a methods code body.</p>
 <dl class="attribute">
 <dt id="jawa.attributes.code.CodeAttribute.info">
 <code class="descname">info</code><a class="headerlink" href="#jawa.attributes.code.CodeAttribute.info" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The <cite>CodeAttribute</cite> in packed byte string form.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="jawa.attributes.code.CodeAttribute.max_locals">
 <code class="descname">max_locals</code><a class="headerlink" href="#jawa.attributes.code.CodeAttribute.max_locals" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The maximum number of locals.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="jawa.attributes.code.CodeAttribute.max_stack">
 <code class="descname">max_stack</code><a class="headerlink" href="#jawa.attributes.code.CodeAttribute.max_stack" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The maximum size of the stack.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="jawa.attributes.code.CodeAttribute.unpack">
 <code class="descname">unpack</code><span class="sig-paren">(</span><em>info</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/attributes/code.html#CodeAttribute.unpack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attributes.code.CodeAttribute.unpack" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Read the CodeAttribute from the byte string <cite>info</cite>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Advanced usage only. You will typically never need to call this
+method as it will be called for you when loading a ClassFile.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>info</strong> &#8211; A byte string containing an unparsed CodeAttribute.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 

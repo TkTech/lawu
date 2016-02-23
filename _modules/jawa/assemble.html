@@ -129,7 +129,6 @@
             
   <h1>Source code for jawa.assemble</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf8 -*-</span>
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Label&#39;</span><span class="p">,</span> <span class="s1">&#39;assemble&#39;</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
 
 <span class="kn">from</span> <span class="nn">jawa.constants</span> <span class="kn">import</span> <span class="n">Constant</span>
@@ -146,9 +145,24 @@
 
 <div class="viewcode-block" id="assemble"><a class="viewcode-back" href="../../jawa.html#jawa.assemble.assemble">[docs]</a><span class="k">def</span> <span class="nf">assemble</span><span class="p">(</span><span class="n">code</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A convienience method for &#39;assembling&#39; bytecode over the regular</span>
-<span class="sd">    :meth:`~jawa.attributes.code.CodeAttribute.assemble()` method with</span>
-<span class="sd">    support for labels and direct constants.</span>
+<span class="sd">    Assemble the given iterable of mnemonics, operands, and lables.</span>
+
+<span class="sd">    A convienience over constructing individual Instruction and Operand</span>
+<span class="sd">    objects, the output of this function can be directly piped to</span>
+<span class="sd">    :class:`~jawa.attributes.code.CodeAttribute.assemble()` to produce</span>
+<span class="sd">    executable bytecode.</span>
+
+<span class="sd">    As a simple example, lets produce an infinite loop:</span>
+
+<span class="sd">        &gt;&gt;&gt; from jawa.assemble import assemble, Label</span>
+<span class="sd">        &gt;&gt;&gt; print(list(assemble((</span>
+<span class="sd">        ...     Label(&#39;start&#39;),</span>
+<span class="sd">        ...     (&#39;goto&#39;, Label(&#39;start&#39;))</span>
+<span class="sd">        ... ))))</span>
+<span class="sd">        [Instruction(mnemonic=&#39;goto&#39;, opcode=167, operands=[</span>
+<span class="sd">            Operand(op_type=40, value=0)], pos=0)]</span>
+
+<span class="sd">    For a more complex example, see examples/hello_world.py.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">final</span> <span class="o">=</span> <span class="p">[]</span>
 

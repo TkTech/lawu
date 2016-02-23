@@ -153,6 +153,44 @@
 
 
 <div class="viewcode-block" id="CodeAttribute"><a class="viewcode-back" href="../../../attributes/index.html#jawa.attributes.code.CodeAttribute">[docs]</a><span class="k">class</span> <span class="nc">CodeAttribute</span><span class="p">(</span><span class="n">Attribute</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A `CodeAttribute` contains the executable bytecode of a single method.</span>
+
+<span class="sd">    As a quick example, lets make a &quot;HelloWorld&quot; class with a single method</span>
+<span class="sd">    that simply returns when it&#39;s called:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        from jawa import ClassFile</span>
+<span class="sd">        from jawa.util.bytecode import Instruction</span>
+
+<span class="sd">        cf = ClassFile.create(&#39;HelloWorld&#39;)</span>
+
+<span class="sd">        main = cf.methods.create(</span>
+<span class="sd">            # The name of the method</span>
+<span class="sd">            &#39;main&#39;,</span>
+<span class="sd">            # The signature of the method</span>
+<span class="sd">            &#39;([Ljava/lang/String;)V&#39;,</span>
+<span class="sd">            # Tell Jawa to automatically create an empty CodeAttribute for</span>
+<span class="sd">            # us to use.</span>
+<span class="sd">            code=True</span>
+<span class="sd">        )</span>
+<span class="sd">        main.code.max_locals = 1</span>
+<span class="sd">        main.access_flags.acc_static = True</span>
+<span class="sd">        main.code.assemble([</span>
+<span class="sd">            Instruction.from_mnemonic(&#39;return&#39;)</span>
+<span class="sd">        ])</span>
+
+<span class="sd">        # Save it to disk so we can run it with the JVM.</span>
+<span class="sd">        with open(&#39;HelloWorld.class&#39;, &#39;wb&#39;) as fout:</span>
+<span class="sd">            cf.save(fout)</span>
+
+<span class="sd">    .. note::</span>
+
+<span class="sd">        Not all :class:`~jawa.methods.Method` objects will have an associated</span>
+<span class="sd">        `CodeAttribute` - methods that are flagged as `acc_native` or</span>
+<span class="sd">        `acc_abstract` will never have one.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">name_index</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">CodeAttribute</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
             <span class="n">table</span><span class="p">,</span>
@@ -167,6 +205,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_code</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
 <div class="viewcode-block" id="CodeAttribute.unpack"><a class="viewcode-back" href="../../../attributes/index.html#jawa.attributes.code.CodeAttribute.unpack">[docs]</a>    <span class="k">def</span> <span class="nf">unpack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read the CodeAttribute from the byte string `info`.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            Advanced usage only. You will typically never need to call this</span>
+<span class="sd">            method as it will be called for you when loading a ClassFile.</span>
+
+<span class="sd">        :param info: A byte string containing an unparsed CodeAttribute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">fio</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_max_stack</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_locals</span><span class="p">,</span> <span class="n">c_len</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;HHI&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_code</span> <span class="o">=</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">c_len</span><span class="p">)</span>
@@ -184,6 +232,9 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The `CodeAttribute` in packed byte string form.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">fout</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
         <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span>
             <span class="s1">&#39;&gt;HHI&#39;</span><span class="p">,</span>
@@ -200,6 +251,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">max_stack</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The maximum size of the stack.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_stack</span>
 
     <span class="nd">@max_stack.setter</span>
@@ -208,6 +260,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">max_locals</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The maximum number of locals.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_locals</span>
 
     <span class="nd">@max_locals.setter</span>
@@ -224,12 +277,16 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        An :class:`~jawa.attribute.AttributeTable` containing all of the</span>
+<span class="sd">        attributes associated with this `CodeAttribute`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span>
 
 <div class="viewcode-block" id="CodeAttribute.assemble"><a class="viewcode-back" href="../../../attributes/index.html#jawa.attributes.code.CodeAttribute.assemble">[docs]</a>    <span class="k">def</span> <span class="nf">assemble</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Assembles an iterable of :class:`~jawa.util.bytecode.Instruction`</span>
-<span class="sd">        objects into a methods code body.</span>
+<span class="sd">        objects into a method&#39;s code body.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">fout</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">ins</span> <span class="ow">in</span> <span class="n">code</span><span class="p">:</span>
@@ -239,7 +296,8 @@
 
 <div class="viewcode-block" id="CodeAttribute.disassemble"><a class="viewcode-back" href="../../../attributes/index.html#jawa.attributes.code.CodeAttribute.disassemble">[docs]</a>    <span class="k">def</span> <span class="nf">disassemble</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Disassembles this method.</span>
+<span class="sd">        Disassembles this method, yielding an iterable of</span>
+<span class="sd">        :class:`~jawa.util.bytecode.Instruction` objects.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">fio</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_code</span><span class="p">)</span>
 

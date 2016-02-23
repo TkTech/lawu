@@ -307,9 +307,22 @@ class&#8217;s superclass.</p>
 <dl class="function">
 <dt id="jawa.assemble.assemble">
 <code class="descclassname">jawa.assemble.</code><code class="descname">assemble</code><span class="sig-paren">(</span><em>code</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/assemble.html#assemble"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.assemble.assemble" title="Permalink to this definition">¶</a></dt>
-<dd><p>A convienience method for &#8216;assembling&#8217; bytecode over the regular
-<a class="reference internal" href="attributes/index.html#jawa.attributes.code.CodeAttribute.assemble" title="jawa.attributes.code.CodeAttribute.assemble"><code class="xref py py-meth docutils literal"><span class="pre">assemble()</span></code></a> method with
-support for labels and direct constants.</p>
+<dd><p>Assemble the given iterable of mnemonics, operands, and lables.</p>
+<p>A convienience over constructing individual Instruction and Operand
+objects, the output of this function can be directly piped to
+<a class="reference internal" href="attributes/index.html#jawa.attributes.code.CodeAttribute.assemble" title="jawa.attributes.code.CodeAttribute.assemble"><code class="xref py py-class docutils literal"><span class="pre">assemble()</span></code></a> to produce
+executable bytecode.</p>
+<p>As a simple example, lets produce an infinite loop:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">jawa.assemble</span> <span class="kn">import</span> <span class="n">assemble</span><span class="p">,</span> <span class="n">Label</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">assemble</span><span class="p">((</span>
+<span class="gp">... </span>    <span class="n">Label</span><span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="s1">&#39;goto&#39;</span><span class="p">,</span> <span class="n">Label</span><span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">))</span>
+<span class="gp">... </span><span class="p">))))</span>
+<span class="go">[Instruction(mnemonic=&#39;goto&#39;, opcode=167, operands=[</span>
+<span class="go">    Operand(op_type=40, value=0)], pos=0)]</span>
+</pre></div>
+</div>
+<p>For a more complex example, see examples/hello_world.py.</p>
 </dd></dl>
 
 </div>
