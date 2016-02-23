@@ -139,8 +139,9 @@
 
 
 <div class="viewcode-block" id="Attribute"><a class="viewcode-back" href="../../jawa.html#jawa.attribute.Attribute">[docs]</a><span class="k">class</span> <span class="nc">Attribute</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cf</span><span class="p">,</span> <span class="n">name_index</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span> <span class="o">=</span> <span class="n">cf</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">name_index</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_table</span> <span class="o">=</span> <span class="n">table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">cf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_name_index</span> <span class="o">=</span> <span class="n">name_index</span>
 
     <span class="nd">@property</span>
@@ -158,6 +159,20 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_name_index</span><span class="p">]</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The AttributeTable that owns this attribute, if any.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">cf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The ClassFile that owns this attribute, if any.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span>
+
 <div class="viewcode-block" id="Attribute.unpack"><a class="viewcode-back" href="../../jawa.html#jawa.attribute.Attribute.unpack">[docs]</a>    <span class="k">def</span> <span class="nf">unpack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parses an instance of this attribute from the blob `info`.</span>
@@ -168,11 +183,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This attribute packed into its on-disk representation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span></div>
-
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="Attribute.create"><a class="viewcode-back" href="../../jawa.html#jawa.attribute.Attribute.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span></div></div>
 
 
 <div class="viewcode-block" id="UnknownAttribute"><a class="viewcode-back" href="../../jawa.html#jawa.attribute.UnknownAttribute">[docs]</a><span class="k">class</span> <span class="nc">UnknownAttribute</span><span class="p">(</span><span class="n">Attribute</span><span class="p">):</span>
@@ -185,9 +196,10 @@
 
 
 <div class="viewcode-block" id="AttributeTable"><a class="viewcode-back" href="../../jawa.html#jawa.attribute.AttributeTable">[docs]</a><span class="k">class</span> <span class="nc">AttributeTable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cf</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cf</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span> <span class="o">=</span> <span class="n">cf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_table</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
 
     <span class="k">def</span> <span class="nf">_get_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -208,7 +220,7 @@
             <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="n">name_index</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
 
             <span class="n">type_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_type</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-            <span class="n">attribute</span> <span class="o">=</span> <span class="n">type_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="p">,</span> <span class="n">name_index</span><span class="p">)</span>
+            <span class="n">attribute</span> <span class="o">=</span> <span class="n">type_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name_index</span><span class="o">=</span><span class="n">name_index</span><span class="p">)</span>
 
             <span class="n">attribute</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">length</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attribute</span><span class="p">)</span>
@@ -229,7 +241,7 @@
 <span class="sd">        Creates a new attribute of `type_`, appending it to the attribute</span>
 <span class="sd">        table and returning it.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">attribute</span> <span class="o">=</span> <span class="n">type_</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">attribute</span> <span class="o">=</span> <span class="n">type_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attribute</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">attribute</span></div>
 
@@ -257,7 +269,25 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
         <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">None</span></div></div>
+            <span class="k">return</span> <span class="bp">None</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">cf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The ClassFile that owns this Attribute, if any.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">parent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The parent attribute, if any.</span>
+
+<span class="sd">        If this AttributeTable belongs to another Attribute, this will</span>
+<span class="sd">        reference that attribute. For example, when parsing a StackMapTable</span>
+<span class="sd">        attribute, this would point to the owning Code attribute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span></div>
 
 
 <span class="c1"># Attributes can contain other attributes and AttributeTable&#39;s,</span>

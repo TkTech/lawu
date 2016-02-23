@@ -316,12 +316,18 @@ support for labels and direct constants.</p>
 <span id="jawa-attribute-module"></span><h2>jawa.attribute module<a class="headerlink" href="#module-jawa.attribute" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="jawa.attribute.AttributeTable">
-<em class="property">class </em><code class="descclassname">jawa.attribute.</code><code class="descname">AttributeTable</code><span class="sig-paren">(</span><em>cf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/attribute.html#AttributeTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attribute.AttributeTable" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">jawa.attribute.</code><code class="descname">AttributeTable</code><span class="sig-paren">(</span><em>cf</em>, <em>parent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/attribute.html#AttributeTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attribute.AttributeTable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <dl class="method">
 <dt id="jawa.attribute.AttributeTable.append">
 <code class="descname">append</code><span class="sig-paren">(</span><em>attribute</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/attribute.html#AttributeTable.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attribute.AttributeTable.append" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.attribute.AttributeTable.cf">
+<code class="descname">cf</code><a class="headerlink" href="#jawa.attribute.AttributeTable.cf" title="Permalink to this definition">¶</a></dt>
+<dd><p>The ClassFile that owns this Attribute, if any.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="jawa.attribute.AttributeTable.create">
@@ -342,16 +348,26 @@ table and returning it.</p>
 nothing was found.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="jawa.attribute.AttributeTable.parent">
+<code class="descname">parent</code><a class="headerlink" href="#jawa.attribute.AttributeTable.parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>The parent attribute, if any.</p>
+<p>If this AttributeTable belongs to another Attribute, this will
+reference that attribute. For example, when parsing a StackMapTable
+attribute, this would point to the owning Code attribute.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="jawa.attribute.Attribute">
-<em class="property">class </em><code class="descclassname">jawa.attribute.</code><code class="descname">Attribute</code><span class="sig-paren">(</span><em>cf</em>, <em>name_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/attribute.html#Attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attribute.Attribute" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">jawa.attribute.</code><code class="descname">Attribute</code><span class="sig-paren">(</span><em>table</em>, <em>name_index=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/attribute.html#Attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attribute.Attribute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<dl class="classmethod">
-<dt id="jawa.attribute.Attribute.create">
-<em class="property">classmethod </em><code class="descname">create</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/attribute.html#Attribute.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attribute.Attribute.create" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="attribute">
+<dt id="jawa.attribute.Attribute.cf">
+<code class="descname">cf</code><a class="headerlink" href="#jawa.attribute.Attribute.cf" title="Permalink to this definition">¶</a></dt>
+<dd><p>The ClassFile that owns this attribute, if any.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="jawa.attribute.Attribute.info">
@@ -372,6 +388,12 @@ attribute.</p>
 <dd><p>This attribute packed into its on-disk representation.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="jawa.attribute.Attribute.table">
+<code class="descname">table</code><a class="headerlink" href="#jawa.attribute.Attribute.table" title="Permalink to this definition">¶</a></dt>
+<dd><p>The AttributeTable that owns this attribute, if any.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="jawa.attribute.Attribute.unpack">
 <code class="descname">unpack</code><span class="sig-paren">(</span><em>info</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/attribute.html#Attribute.unpack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attribute.Attribute.unpack" title="Permalink to this definition">¶</a></dt>
@@ -382,7 +404,7 @@ attribute.</p>
 
 <dl class="class">
 <dt id="jawa.attribute.UnknownAttribute">
-<em class="property">class </em><code class="descclassname">jawa.attribute.</code><code class="descname">UnknownAttribute</code><span class="sig-paren">(</span><em>cf</em>, <em>name_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/attribute.html#UnknownAttribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attribute.UnknownAttribute" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">jawa.attribute.</code><code class="descname">UnknownAttribute</code><span class="sig-paren">(</span><em>table</em>, <em>name_index=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/attribute.html#UnknownAttribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attribute.UnknownAttribute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#jawa.attribute.Attribute" title="jawa.attribute.Attribute"><code class="xref py py-class docutils literal"><span class="pre">jawa.attribute.Attribute</span></code></a></p>
 <dl class="attribute">
 <dt id="jawa.attribute.UnknownAttribute.info">

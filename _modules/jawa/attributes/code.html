@@ -153,15 +153,18 @@
 
 
 <div class="viewcode-block" id="CodeAttribute"><a class="viewcode-back" href="../../../attributes/index.html#jawa.attributes.code.CodeAttribute">[docs]</a><span class="k">class</span> <span class="nc">CodeAttribute</span><span class="p">(</span><span class="n">Attribute</span><span class="p">):</span>
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="CodeAttribute.create"><a class="viewcode-back" href="../../../attributes/index.html#jawa.attributes.code.CodeAttribute.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">cf</span><span class="p">):</span>
-        <span class="n">c</span> <span class="o">=</span> <span class="n">cls</span><span class="p">(</span><span class="n">cf</span><span class="p">,</span> <span class="n">cf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">create_utf8</span><span class="p">(</span><span class="s1">&#39;Code&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-        <span class="n">c</span><span class="o">.</span><span class="n">_max_stack</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">c</span><span class="o">.</span><span class="n">_max_locals</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">c</span><span class="o">.</span><span class="n">_ex_table</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">c</span><span class="o">.</span><span class="n">_attributes</span> <span class="o">=</span> <span class="n">AttributeTable</span><span class="p">(</span><span class="n">cf</span><span class="p">)</span>
-        <span class="n">c</span><span class="o">.</span><span class="n">_code</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-        <span class="k">return</span> <span class="n">c</span></div>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">name_index</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CodeAttribute</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
+            <span class="n">table</span><span class="p">,</span>
+            <span class="n">name_index</span> <span class="ow">or</span> <span class="n">table</span><span class="o">.</span><span class="n">cf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">create_utf8</span><span class="p">(</span>
+                <span class="s1">&#39;Code&#39;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">index</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_stack</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_locals</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ex_table</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span> <span class="o">=</span> <span class="n">AttributeTable</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">cf</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_code</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
 <div class="viewcode-block" id="CodeAttribute.unpack"><a class="viewcode-back" href="../../../attributes/index.html#jawa.attributes.code.CodeAttribute.unpack">[docs]</a>    <span class="k">def</span> <span class="nf">unpack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
         <span class="n">fio</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
@@ -175,7 +178,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_ex_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">CodeException</span><span class="p">(</span>
                 <span class="o">*</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;HHHH&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
             <span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span> <span class="o">=</span> <span class="n">AttributeTable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span> <span class="o">=</span> <span class="n">AttributeTable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span><span class="o">.</span><span class="n">_from_io</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span>
         <span class="n">fio</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
