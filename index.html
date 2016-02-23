@@ -1,41 +1,131 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Jawa - JVM ClassFile Library &mdash; jawa  documentation</title>
-    
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="jawa  documentation" href="#" />
-    <link rel="next" title="Generating Classes From Scratch - Hello World!" href="examples/hello_world.html" />
-   
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Jawa - JVM ClassFile Library &mdash; jawa  documentation</title>
+  
 
-  </head>
-  <body role="document">  
+  
+  
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="jawa  documentation" href="#"/>
+        <link rel="next" title="Examples" href="examples/index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="#" class="icon icon-home"> jawa
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="jawa.html">Core APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attributes/index.html">Implemented Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="util/index.html">Utility APIs</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="#">jawa</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="#">Docs</a> &raquo;</li>
+      
+    <li>Jawa - JVM ClassFile Library</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/index.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="jawa-jvm-classfile-library">
 <h1>Jawa - JVM ClassFile Library<a class="headerlink" href="#jawa-jvm-classfile-library" title="Permalink to this headline">¶</a></h1>
@@ -43,7 +133,7 @@
 class files.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">This documentation is up to date as of February 17, 2016.</p>
+<p class="last">This documentation is up to date as of February 23, 2016.</p>
 </div>
 <div class="section" id="getting-jawa">
 <h2>Getting Jawa<a class="headerlink" href="#getting-jawa" title="Permalink to this headline">¶</a></h2>
@@ -55,27 +145,16 @@ changes are rare and installation from Github is very easy. To install:</p>
 </div>
 <div class="section" id="why-jawa">
 <h2>Why Jawa?<a class="headerlink" href="#why-jawa" title="Permalink to this headline">¶</a></h2>
-<p>First, some background. Jawa is the successor project to &#8220;Solum&#8221;, a library
-written during the early days of Minecraft to facilitate automated contextual
-disassembly of the Minecraft JARs with each release. This tool was able to
-extract new block types, new network packets (and their structure) and other
-similar interesting tidbits automatically any time a new release was made. This
-drastically simplified our efforts to reverse engineer and document Minecraft
-and its protocol (an effort which continues <a class="reference external" href="http://wiki.vg">to this day</a>).</p>
-<p>This means that Jawa is intended to be used very differently from most projects
-similar to it. Instead of trying to produce a human-readable disassembly or
-nearly-compilable Java, it&#8217;s intended for people that want to dive into or
-automate work on JVM bytecode. For example, Jawa has been used for:</p>
+<p>Jawa is intended to be used very differently from most projects similar to it.
+Instead of trying to produce a human-readable disassembly or nearly-compilable
+Java, it&#8217;s intended for people that want to dive into or automate work on JVM
+bytecode. For example, Jawa has been used for:</p>
 <ul class="simple">
 <li>The automatic verification of community-uploaded plugins</li>
 <li>Analysis and analytics of public Android APKs (thousands at a time)</li>
+<li>Automatic extraction of &#8220;private&#8221; API keys embedded in Android APKs.</li>
+<li>Automated reverse engineering of the Minecraft server and client.</li>
 </ul>
-<p>Fast forward a few years. There are new toys on the block like <a class="reference external" href="https://github.com/Storyyeller/Krakatau">Krakatau</a>
-which came out a few years after Solum. Krakatau is a great disasembler &amp;
-decompiler, but its API was not designed for humans and is not considered
-&#8220;Pythonic&#8221;. It does not follow PEP8, it is sparsely commented and poorly
-documented. This makes it very hard to work with when all you want to do is
-open up a Python shell and dive into a ClassFile.</p>
 <p>Unlike most projects of its kind (like <a class="reference external" href="https://github.com/Storyyeller/Krakatau">Krakatau</a>) Jawa is also very
 permissively licenced under the MIT licence. You&#8217;re free to use it in any
 type of project should it be commercial, closed source or open source.</p>
@@ -84,15 +163,18 @@ type of project should it be commercial, closed source or open source.</p>
 <h2>Basic Examples<a class="headerlink" href="#basic-examples" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="examples/hello_world.html">Generating Classes From Scratch - Hello World!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/hello_world.html">Generating Classes From Scratch - Hello World!</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
-<div class="section" id="jawa-core-api">
-<h2>Jawa Core API<a class="headerlink" href="#jawa-core-api" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="jawa-api">
+<h2>Jawa API<a class="headerlink" href="#jawa-api" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="jawa.html">jawa package</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="jawa.html">Core APIs</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="jawa.html#module-jawa.cf">jawa.cf module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jawa.html#module-jawa.assemble">jawa.assemble module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jawa.html#module-jawa.attribute">jawa.attribute module</a></li>
@@ -101,86 +183,91 @@ type of project should it be commercial, closed source or open source.</p>
 <li class="toctree-l2"><a class="reference internal" href="jawa.html#module-jawa.methods">jawa.methods module</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="jawa.attributes.html">jawa.attributes package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="jawa.attributes.html#module-jawa.attributes.code">jawa.attributes.code module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jawa.attributes.html#module-jawa.attributes.constant_value">jawa.attributes.constant_value module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jawa.attributes.html#module-jawa.attributes.source_file">jawa.attributes.source_file module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attributes/index.html">Implemented Attributes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="attributes/index.html#module-jawa.attributes.code">jawa.attributes.code module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="attributes/index.html#module-jawa.attributes.constant_value">jawa.attributes.constant_value module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="attributes/index.html#module-jawa.attributes.source_file">jawa.attributes.source_file module</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="jawa.util.html">jawa.util package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="jawa.util.html#module-jawa.util.bytecode">jawa.util.bytecode module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jawa.util.html#module-jawa.util.descriptor">jawa.util.descriptor module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jawa.util.html#module-jawa.util.flags">jawa.util.flags module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jawa.util.html#module-jawa.util.utf">jawa.util.utf module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="util/index.html">Utility APIs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="util/index.html#module-jawa.util.bytecode">jawa.util.bytecode module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="util/index.html#module-jawa.util.descriptor">jawa.util.descriptor module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="util/index.html#module-jawa.util.flags">jawa.util.flags module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="util/index.html#module-jawa.util.utf">jawa.util.utf module</a></li>
 </ul>
 </li>
 </ul>
 </div>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span>Index</span></a></li>
+</ul>
 </div>
 </div>
 
 
+           </div>
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="#">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Jawa - JVM ClassFile Library</a><ul>
-<li><a class="reference internal" href="#getting-jawa">Getting Jawa</a></li>
-<li><a class="reference internal" href="#why-jawa">Why Jawa?</a></li>
-<li><a class="reference internal" href="#basic-examples">Basic Examples</a></li>
-<li><a class="reference internal" href="#jawa-core-api">Jawa Core API</a></li>
-</ul>
-</li>
-</ul>
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="#">Documentation overview</a><ul>
-      <li>Next: <a href="examples/hello_world.html" title="next chapter">Generating Classes From Scratch - Hello World!</a></li>
-  </ul></li>
-</ul>
-</div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/index.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="examples/index.html" class="btn btn-neutral float-right" title="Examples" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2012, Author.
+
     </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2012, Author.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
-      
-      |
-      <a href="_sources/index.txt"
-          rel="nofollow">Page source</a>
-    </div>
 
-    
+    </section>
 
-    
-  </body>
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>
