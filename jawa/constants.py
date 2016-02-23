@@ -396,7 +396,18 @@ class ConstantPool(object):
         ))
         return self.get(self.raw_count - 1)
 
-    def _from_io(self, fio):
+    def unpack(self, fio):
+        """
+        Read the ConstantPool from the file-like object `fio`.
+
+
+        .. note::
+
+            Advanced usage only. You will typically never need to call this
+            method as it will be called for you when loading a ClassFile.
+
+        :param fio: Any file-like object providing `read()`
+        """
         # Reads in the ConstantPool (constant_pool in the JVM Spec)
         constant_pool_count = unpack('>H', fio.read(2))[0]
 
@@ -422,7 +433,17 @@ class ConstantPool(object):
                     self.append(None)
                     constant_pool_count -= 1
 
-    def _to_io(self, fout):
+    def pack(self, fout):
+        """
+        Write the ConstantPool to the file-like object `fout`.
+
+        .. note::
+
+            Advanced usage only. You will typically never need to call this
+            method as it will be calle=d for you when saving a ClassFile.
+
+        :param fout: Any file-like object providing `write()`
+        """
         write = fout.write
         write(pack('>H', self.raw_count))
 

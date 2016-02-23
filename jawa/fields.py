@@ -51,15 +51,37 @@ class Field(object):
         constant_value = self.attributes.find_one(name='ConstantValue')
         return constant_value
 
-    def _from_io(self, fio):
+    def unpack(self, fio):
+        """
+        Read the Field from the file-like object `fio`.
+
+
+        .. note::
+
+            Advanced usage only. You will typically never need to call this
+            method as it will be called for you when loading a ClassFile.
+
+        :param fio: Any file-like object providing `read()`
+        """
         self.access_flags.unpack(fio.read(2))
         self._name_index, self._descriptor_index = unpack('>HH', fio.read(4))
         self._attributes._from_io(fio)
 
-    def _to_io(self, fout):
+    def pack(self, fout):
+        """
+        Write the Field to the file-like object `fout`.
+
+
+        .. note::
+
+            Advanced usage only. You will typically never need to call this
+            method as it will be calle=d for you when saving a ClassFile.
+
+        :param fout: Any file-like object providing `write()`
+        """
         fout.write(self.access_flags.pack())
         fout.write(pack('>HH', self._name_index, self._descriptor_index))
-        self._attributes._to_io(fout)
+        self._attributes.pack(fout)
 
 
 class FieldTable(object):
@@ -124,17 +146,39 @@ class FieldTable(object):
         for field in self._table:
             yield field
 
-    def _from_io(self, fio):
+    def unpack(self, fio):
+        """
+        Read the FieldTable from the file-like object `fio`.
+
+
+        .. note::
+
+            Advanced usage only. You will typically never need to call this
+            method as it will be called for you when loading a ClassFile.
+
+        :param fio: Any file-like object providing `read()`
+        """
         field_count = unpack('>H', fio.read(2))[0]
         for _ in repeat(None, field_count):
             field = Field(self._cf)
-            field._from_io(fio)
+            field.unpack(fio)
             self.append(field)
 
-    def _to_io(self, fout):
+    def pack(self, fout):
+        """
+        Write the FieldTable to the file-like object `fout`.
+
+
+        .. note::
+
+            Advanced usage only. You will typically never need to call this
+            method as it will be calle=d for you when saving a ClassFile.
+
+        :param fout: Any file-like object providing `write()`
+        """
         fout.write(pack('>H', len(self)))
         for field in self._table:
-            field._to_io(fout)
+            field.pack(fout)
 
     def __len__(self):
         return len(self._table)

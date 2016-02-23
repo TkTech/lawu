@@ -49,7 +49,7 @@ class CodeAttribute(Attribute):
                 *unpack('>HHHH', fio.read(8))
             ))
         self._attributes = AttributeTable(self._cf, parent=self)
-        self._attributes._from_io(fio)
+        self._attributes.unpack(fio)
         fio.close()
 
     @property
@@ -65,7 +65,7 @@ class CodeAttribute(Attribute):
         fout.write(pack('>H', len(self._ex_table)))
         for exception in self._ex_table:
             fout.write(pack('>HHHH', *exception))
-        self._attributes._to_io(fout)
+        self._attributes.pack(fout)
         return fout.getvalue()
 
     @property

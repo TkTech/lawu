@@ -64,19 +64,39 @@ class Method(object):
         """
         return self.attributes.find_one(name='Code')
 
-    def _from_io(self, fio):
+    def unpack(self, fio):
+        """
+        Read the Method from the file-like object `fio`.
+
+        .. note::
+
+            Advanced usage only. You will typically never need to call this
+            method as it will be called for you when loading a ClassFile.
+
+        :param fio: Any file-like object providing `read()`
+        """
         self.access_flags.unpack(fio.read(2))
         self._name_index, self._descriptor_index = unpack('>HH', fio.read(4))
-        self._attributes._from_io(fio)
+        self._attributes.unpack(fio)
 
-    def _to_io(self, fout):
+    def pack(self, fout):
+        """
+        Write the Method to the file-like object `fout`.
+
+        .. note::
+
+            Advanced usage only. You will typically never need to call this
+            method as it will be calle=d for you when saving a ClassFile.
+
+        :param fout: Any file-like object providing `write()`
+        """
         fout.write(self.access_flags.pack())
         fout.write(pack(
             '>HH',
             self._name_index,
             self._descriptor_index
         ))
-        self._attributes._to_io(fout)
+        self._attributes.pack(fout)
 
 
 class MethodTable(object):
@@ -121,17 +141,37 @@ class MethodTable(object):
         for method in self._table:
             yield method
 
-    def _from_io(self, fio):
+    def unpack(self, fio):
+        """
+        Read the MethodTable from the file-like object `fio`.
+
+        .. note::
+
+            Advanced usage only. You will typically never need to call this
+            method as it will be called for you when loading a ClassFile.
+
+        :param fio: Any file-like object providing `read()`
+        """
         method_count = unpack('>H', fio.read(2))[0]
         for _ in repeat(None, method_count):
             method = Method(self._cf)
-            method._from_io(fio)
+            method.unpack(fio)
             self.append(method)
 
-    def _to_io(self, fout):
+    def pack(self, fout):
+        """
+        Write the MethodTable to the file-like object `fout`.
+
+        .. note::
+
+            Advanced usage only. You will typically never need to call this
+            method as it will be calle=d for you when saving a ClassFile.
+
+        :param fout: Any file-like object providing `write()`
+        """
         fout.write(pack('>H', len(self)))
         for method in self._table:
-            method._to_io(fout)
+            method.pack(fout)
 
     def find(self, name=None, args=None, returns=None, f=None):
         """

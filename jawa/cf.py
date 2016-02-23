@@ -1,9 +1,10 @@
 # -*- coding: utf8 -*-
 """
+ClassFile support.
+
 The :mod:`jawa.cf` module provides tools for working with JVM ``.class``
 ClassFiles.
 """
-__all__ = ('ClassFile', 'ClassVersion')
 from struct import pack, unpack
 from collections import namedtuple
 
@@ -16,13 +17,17 @@ from jawa.util.flags import Flags
 
 
 class ClassVersion(namedtuple('ClassVersion', ['major', 'minor'])):
+    """
+    ClassFile file format version.
+    """
     __slots__ = ()
 
     @property
     def human(self):
         """
-        A human-readable string identifying this version, or ``None``
-        if it is unknown.
+        A human-readable string identifying this version.
+
+        If the version is unknown, `None` is returned instead.
         """
         return {
             0x33: 'J2SE_7',
@@ -66,6 +71,7 @@ class ClassFile(object):
 
     :param fio: any file-like object providing ``.read()``.
     """
+
     #: The JVM ClassFile magic number.
     MAGIC = 0xCAFEBABE
 
@@ -96,8 +102,7 @@ class ClassFile(object):
     @classmethod
     def create(cls, this, super_='java/lang/Object'):
         """
-        A utility method which sets up reasonable defaults for a new public
-        class.
+        A utility which sets up reasonable defaults for a new public class.
 
         :param this: The name of this class.
         :param super_: The name of this class's superclass.
@@ -106,8 +111,8 @@ class ClassFile(object):
         cf.access_flags.acc_public = True
         cf.access_flags.acc_super = True
 
-        cf._this = cf.constants.create_class(this).index
-        cf._super = cf.constants.create_class(super_).index
+        cf.this = cf.constants.create_class(this)
+        cf.super_ = cf.constants.create_class(super_)
 
         return cf
 
@@ -124,7 +129,7 @@ class ClassFile(object):
             self.version.major
         ))
 
-        self._constants._to_io(fout)
+        self._constants.pack(fout)
 
         write(self.access_flags.pack())
         write(pack(
@@ -135,13 +140,9 @@ class ClassFile(object):
             *self._interfaces
         ))
 
-        self._fields._to_io(fout)
-        self._methods._to_io(fout)
-        self._attributes._to_io(fout)
-
-    # ------------
-    # Internal
-    # ------------
+        self._fields.pack(fout)
+        self._methods.pack(fout)
+        self._attributes.pack(fout)
 
     def _from_io(self, fio):
         """
@@ -155,7 +156,7 @@ class ClassFile(object):
         # The version is swapped on disk to (minor, major), so swap it back.
         self.version = unpack('>HH', fio.read(4))[::-1]
 
-        self._constants._from_io(fio)
+        self._constants.unpack(fio)
 
         # ClassFile access_flags, see section #4.1 of the JVM specs.
         self.access_flags.unpack(read(2))
@@ -168,13 +169,9 @@ class ClassFile(object):
             read(2 * interfaces_count)
         )
 
-        self._fields._from_io(fio)
-        self._methods._from_io(fio)
-        self._attributes._from_io(fio)
-
-    # -------------
-    # Properties
-    # -------------
+        self._fields.unpack(fio)
+        self._methods.unpack(fio)
+        self._attributes.unpack(fio)
 
     @property
     def version(self):

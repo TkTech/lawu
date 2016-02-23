@@ -79,10 +79,16 @@ class AttributeTable(object):
         """
         return default_parsers.get(name, UnknownAttribute)
 
-    def _from_io(self, fio):
+    def unpack(self, fio):
         """
-        Loads an existing `AttributeTable` from the file-like object
-        `fio`.
+        Read the ConstantPool from the file-like object `fio`.
+
+        .. note::
+
+            Advanced usage only. You will typically never need to call this
+            method as it will be called for you when loading a ClassFile.
+
+        :param fio: Any file-like object providing `read()`
         """
         count = unpack('>H', fio.read(2))[0]
         for _ in repeat(None, count):
@@ -95,7 +101,17 @@ class AttributeTable(object):
             attribute.unpack(fio.read(length))
             self._table.append(attribute)
 
-    def _to_io(self, fout):
+    def pack(self, fout):
+        """
+        Write the AttributeTable to the file-like object `fout`.
+
+        .. note::
+
+            Advanced usage only. You will typically never need to call this
+            method as it will be calle=d for you when saving a ClassFile.
+
+        :param fout: Any file-like object providing `write()`
+        """
         fout.write(pack('>H', len(self)))
         for attribute in self._table:
             info = attribute.info
