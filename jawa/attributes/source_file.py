@@ -4,14 +4,14 @@ from jawa.attribute import Attribute
 
 
 class SourceFileAttribute(Attribute):
-    def __init__(self, table, sourcefile_index=None, name_index=None):
+    def __init__(self, table, sourcefile=None, name_index=None):
         super(SourceFileAttribute, self).__init__(
             table,
             name_index or table.cf.constants.create_utf8(
                 'SourceFile'
             ).index
         )
-        self._sourcefile_index = sourcefile_index
+        self._sourcefile_index = sourcefile.index if sourcefile else None
 
     def unpack(self, info):
         self._sourcefile_index = unpack_from('>H', info)[0]
