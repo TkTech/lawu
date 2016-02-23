@@ -209,10 +209,16 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">default_parsers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">UnknownAttribute</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_from_io</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fio</span><span class="p">):</span>
+<div class="viewcode-block" id="AttributeTable.unpack"><a class="viewcode-back" href="../../jawa.html#jawa.attribute.AttributeTable.unpack">[docs]</a>    <span class="k">def</span> <span class="nf">unpack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fio</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Loads an existing `AttributeTable` from the file-like object</span>
-<span class="sd">        `fio`.</span>
+<span class="sd">        Read the ConstantPool from the file-like object `fio`.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            Advanced usage only. You will typically never need to call this</span>
+<span class="sd">            method as it will be called for you when loading a ClassFile.</span>
+
+<span class="sd">        :param fio: Any file-like object providing `read()`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">count</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">repeat</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">count</span><span class="p">):</span>
@@ -223,9 +229,19 @@
             <span class="n">attribute</span> <span class="o">=</span> <span class="n">type_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name_index</span><span class="o">=</span><span class="n">name_index</span><span class="p">)</span>
 
             <span class="n">attribute</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">length</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attribute</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attribute</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_to_io</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fout</span><span class="p">):</span>
+<div class="viewcode-block" id="AttributeTable.pack"><a class="viewcode-back" href="../../jawa.html#jawa.attribute.AttributeTable.pack">[docs]</a>    <span class="k">def</span> <span class="nf">pack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fout</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write the AttributeTable to the file-like object `fout`.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            Advanced usage only. You will typically never need to call this</span>
+<span class="sd">            method as it will be calle=d for you when saving a ClassFile.</span>
+
+<span class="sd">        :param fout: Any file-like object providing `write()`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
         <span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table</span><span class="p">:</span>
             <span class="n">info</span> <span class="o">=</span> <span class="n">attribute</span><span class="o">.</span><span class="n">info</span>
@@ -234,7 +250,7 @@
                 <span class="n">attribute</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
                 <span class="nb">len</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
             <span class="p">))</span>
-            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">info</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AttributeTable.create"><a class="viewcode-back" href="../../jawa.html#jawa.attribute.AttributeTable.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

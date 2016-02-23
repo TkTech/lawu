@@ -526,7 +526,17 @@
         <span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_from_io</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fio</span><span class="p">):</span>
+<div class="viewcode-block" id="ConstantPool.unpack"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantPool.unpack">[docs]</a>    <span class="k">def</span> <span class="nf">unpack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fio</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read the ConstantPool from the file-like object `fio`.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            Advanced usage only. You will typically never need to call this</span>
+<span class="sd">            method as it will be called for you when loading a ClassFile.</span>
+
+<span class="sd">        :param fio: Any file-like object providing `read()`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Reads in the ConstantPool (constant_pool in the JVM Spec)</span>
         <span class="n">constant_pool_count</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -550,9 +560,19 @@
                     <span class="c1"># LONG (5) and DOUBLE (6) count as two entries in the</span>
                     <span class="c1"># pool.</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
-                    <span class="n">constant_pool_count</span> <span class="o">-=</span> <span class="mi">1</span>
+                    <span class="n">constant_pool_count</span> <span class="o">-=</span> <span class="mi">1</span></div>
 
-    <span class="k">def</span> <span class="nf">_to_io</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fout</span><span class="p">):</span>
+<div class="viewcode-block" id="ConstantPool.pack"><a class="viewcode-back" href="../../jawa.html#jawa.constants.ConstantPool.pack">[docs]</a>    <span class="k">def</span> <span class="nf">pack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fout</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write the ConstantPool to the file-like object `fout`.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            Advanced usage only. You will typically never need to call this</span>
+<span class="sd">            method as it will be calle=d for you when saving a ClassFile.</span>
+
+<span class="sd">        :param fout: Any file-like object providing `write()`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">write</span> <span class="o">=</span> <span class="n">fout</span><span class="o">.</span><span class="n">write</span>
         <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_count</span><span class="p">))</span>
 
@@ -615,7 +635,7 @@
                     <span class="n">constant</span><span class="o">.</span><span class="n">TAG</span><span class="p">,</span>
                     <span class="n">constant</span><span class="o">.</span><span class="n">_name_index</span><span class="p">,</span>
                     <span class="n">constant</span><span class="o">.</span><span class="n">_descriptor_index</span>
-                <span class="p">))</span>
+                <span class="p">))</span></div>
 
     <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

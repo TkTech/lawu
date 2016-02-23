@@ -179,7 +179,7 @@
                 <span class="o">*</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;HHHH&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
             <span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span> <span class="o">=</span> <span class="n">AttributeTable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span><span class="o">.</span><span class="n">_from_io</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span>
         <span class="n">fio</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
     <span class="nd">@property</span>
@@ -195,7 +195,7 @@
         <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ex_table</span><span class="p">)))</span>
         <span class="k">for</span> <span class="n">exception</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ex_table</span><span class="p">:</span>
             <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;HHHH&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">exception</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span><span class="o">.</span><span class="n">_to_io</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">fout</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
 
     <span class="nd">@property</span>

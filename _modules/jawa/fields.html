@@ -181,15 +181,35 @@
         <span class="n">constant_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">find_one</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ConstantValue&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">constant_value</span>
 
-    <span class="k">def</span> <span class="nf">_from_io</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fio</span><span class="p">):</span>
+<div class="viewcode-block" id="Field.unpack"><a class="viewcode-back" href="../../jawa.html#jawa.fields.Field.unpack">[docs]</a>    <span class="k">def</span> <span class="nf">unpack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fio</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read the Field from the file-like object `fio`.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            Advanced usage only. You will typically never need to call this</span>
+<span class="sd">            method as it will be called for you when loading a ClassFile.</span>
+
+<span class="sd">        :param fio: Any file-like object providing `read()`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_name_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_descriptor_index</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;HH&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span><span class="o">.</span><span class="n">_from_io</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_to_io</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fout</span><span class="p">):</span>
+<div class="viewcode-block" id="Field.pack"><a class="viewcode-back" href="../../jawa.html#jawa.fields.Field.pack">[docs]</a>    <span class="k">def</span> <span class="nf">pack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fout</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write the Field to the file-like object `fout`.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            Advanced usage only. You will typically never need to call this</span>
+<span class="sd">            method as it will be calle=d for you when saving a ClassFile.</span>
+
+<span class="sd">        :param fout: Any file-like object providing `write()`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">pack</span><span class="p">())</span>
         <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;HH&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_descriptor_index</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span><span class="o">.</span><span class="n">_to_io</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="FieldTable"><a class="viewcode-back" href="../../jawa.html#jawa.fields.FieldTable">[docs]</a><span class="k">class</span> <span class="nc">FieldTable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -254,17 +274,37 @@
         <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">field</span>
 
-    <span class="k">def</span> <span class="nf">_from_io</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fio</span><span class="p">):</span>
+<div class="viewcode-block" id="FieldTable.unpack"><a class="viewcode-back" href="../../jawa.html#jawa.fields.FieldTable.unpack">[docs]</a>    <span class="k">def</span> <span class="nf">unpack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fio</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read the FieldTable from the file-like object `fio`.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            Advanced usage only. You will typically never need to call this</span>
+<span class="sd">            method as it will be called for you when loading a ClassFile.</span>
+
+<span class="sd">        :param fio: Any file-like object providing `read()`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">field_count</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">repeat</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">field_count</span><span class="p">):</span>
             <span class="n">field</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="p">)</span>
-            <span class="n">field</span><span class="o">.</span><span class="n">_from_io</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+            <span class="n">field</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_to_io</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fout</span><span class="p">):</span>
+<div class="viewcode-block" id="FieldTable.pack"><a class="viewcode-back" href="../../jawa.html#jawa.fields.FieldTable.pack">[docs]</a>    <span class="k">def</span> <span class="nf">pack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fout</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write the FieldTable to the file-like object `fout`.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            Advanced usage only. You will typically never need to call this</span>
+<span class="sd">            method as it will be calle=d for you when saving a ClassFile.</span>
+
+<span class="sd">        :param fout: Any file-like object providing `write()`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
         <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table</span><span class="p">:</span>
-            <span class="n">field</span><span class="o">.</span><span class="n">_to_io</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span>
+            <span class="n">field</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_table</span><span class="p">)</span>

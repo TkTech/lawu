@@ -130,10 +130,11 @@
   <h1>Source code for jawa.cf</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf8 -*-</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">ClassFile support.</span>
+
 <span class="sd">The :mod:`jawa.cf` module provides tools for working with JVM ``.class``</span>
 <span class="sd">ClassFiles.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;ClassFile&#39;</span><span class="p">,</span> <span class="s1">&#39;ClassVersion&#39;</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">struct</span> <span class="kn">import</span> <span class="n">pack</span><span class="p">,</span> <span class="n">unpack</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
 
@@ -146,13 +147,16 @@
 
 
 <div class="viewcode-block" id="ClassVersion"><a class="viewcode-back" href="../../jawa.html#jawa.cf.ClassVersion">[docs]</a><span class="k">class</span> <span class="nc">ClassVersion</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;ClassVersion&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="s1">&#39;minor&#39;</span><span class="p">])):</span>
+    <span class="sd">&quot;&quot;&quot;ClassFile file format version.&quot;&quot;&quot;</span>
+
     <span class="n">__slots__</span> <span class="o">=</span> <span class="p">()</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">human</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A human-readable string identifying this version, or ``None``</span>
-<span class="sd">        if it is unknown.</span>
+<span class="sd">        A human-readable string identifying this version.</span>
+
+<span class="sd">        If the version is unknown, `None` is returned instead.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="mh">0x33</span><span class="p">:</span> <span class="s1">&#39;J2SE_7&#39;</span><span class="p">,</span>
@@ -196,6 +200,7 @@
 
 <span class="sd">    :param fio: any file-like object providing ``.read()``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="c1">#: The JVM ClassFile magic number.</span>
     <span class="n">MAGIC</span> <span class="o">=</span> <span class="mh">0xCAFEBABE</span>
 
@@ -226,8 +231,7 @@
     <span class="nd">@classmethod</span>
 <div class="viewcode-block" id="ClassFile.create"><a class="viewcode-back" href="../../jawa.html#jawa.cf.ClassFile.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">this</span><span class="p">,</span> <span class="n">super_</span><span class="o">=</span><span class="s1">&#39;java/lang/Object&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A utility method which sets up reasonable defaults for a new public</span>
-<span class="sd">        class.</span>
+<span class="sd">        A utility which sets up reasonable defaults for a new public class.</span>
 
 <span class="sd">        :param this: The name of this class.</span>
 <span class="sd">        :param super_: The name of this class&#39;s superclass.</span>
@@ -236,8 +240,8 @@
         <span class="n">cf</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">acc_public</span> <span class="o">=</span> <span class="bp">True</span>
         <span class="n">cf</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">acc_super</span> <span class="o">=</span> <span class="bp">True</span>
 
-        <span class="n">cf</span><span class="o">.</span><span class="n">_this</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">create_class</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="o">.</span><span class="n">index</span>
-        <span class="n">cf</span><span class="o">.</span><span class="n">_super</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">create_class</span><span class="p">(</span><span class="n">super_</span><span class="p">)</span><span class="o">.</span><span class="n">index</span>
+        <span class="n">cf</span><span class="o">.</span><span class="n">this</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">create_class</span><span class="p">(</span><span class="n">this</span><span class="p">)</span>
+        <span class="n">cf</span><span class="o">.</span><span class="n">super_</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">create_class</span><span class="p">(</span><span class="n">super_</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">cf</span></div>
 
@@ -254,7 +258,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="o">.</span><span class="n">major</span>
         <span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_constants</span><span class="o">.</span><span class="n">_to_io</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_constants</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span>
 
         <span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">pack</span><span class="p">())</span>
         <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span>
@@ -265,13 +269,9 @@
             <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_interfaces</span>
         <span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span><span class="o">.</span><span class="n">_to_io</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_methods</span><span class="o">.</span><span class="n">_to_io</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span><span class="o">.</span><span class="n">_to_io</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span></div>
-
-    <span class="c1"># ------------</span>
-    <span class="c1"># Internal</span>
-    <span class="c1"># ------------</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_methods</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_from_io</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fio</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -285,7 +285,7 @@
         <span class="c1"># The version is swapped on disk to (minor, major), so swap it back.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;HH&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_constants</span><span class="o">.</span><span class="n">_from_io</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_constants</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span>
 
         <span class="c1"># ClassFile access_flags, see section #4.1 of the JVM specs.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
@@ -298,13 +298,9 @@
             <span class="n">read</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">interfaces_count</span><span class="p">)</span>
         <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span><span class="o">.</span><span class="n">_from_io</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_methods</span><span class="o">.</span><span class="n">_from_io</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span><span class="o">.</span><span class="n">_from_io</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span>
-
-    <span class="c1"># -------------</span>
-    <span class="c1"># Properties</span>
-    <span class="c1"># -------------</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_methods</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
