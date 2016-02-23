@@ -3,6 +3,3 @@ max-line-length: 80
 
 ignore-paths:
     - docs/conf.py
-
-pep8:
-    full: true
