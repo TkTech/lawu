@@ -17,9 +17,8 @@ from jawa.util.flags import Flags
 
 
 class ClassVersion(namedtuple('ClassVersion', ['major', 'minor'])):
-    """
-    ClassFile file format version.
-    """
+    """ClassFile file format version."""
+
     __slots__ = ()
 
     @property

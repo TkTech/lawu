@@ -400,7 +400,6 @@ class ConstantPool(object):
         """
         Read the ConstantPool from the file-like object `fio`.
 
-
         .. note::
 
             Advanced usage only. You will typically never need to call this

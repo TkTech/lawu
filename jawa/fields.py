@@ -55,7 +55,6 @@ class Field(object):
         """
         Read the Field from the file-like object `fio`.
 
-
         .. note::
 
             Advanced usage only. You will typically never need to call this
@@ -65,12 +64,11 @@ class Field(object):
         """
         self.access_flags.unpack(fio.read(2))
         self._name_index, self._descriptor_index = unpack('>HH', fio.read(4))
-        self._attributes._from_io(fio)
+        self._attributes.unpack(fio)
 
     def pack(self, fout):
         """
         Write the Field to the file-like object `fout`.
-
 
         .. note::
 
@@ -150,7 +148,6 @@ class FieldTable(object):
         """
         Read the FieldTable from the file-like object `fio`.
 
-
         .. note::
 
             Advanced usage only. You will typically never need to call this
@@ -167,7 +164,6 @@ class FieldTable(object):
     def pack(self, fout):
         """
         Write the FieldTable to the file-like object `fout`.
-
 
         .. note::
 
