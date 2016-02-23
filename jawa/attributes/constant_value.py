@@ -4,11 +4,14 @@ from jawa.attribute import Attribute
 
 
 class ConstantValueAttribute(Attribute):
-    @classmethod
-    def create(cls, cf, value):
-        c = cls(cf, cf.constants.create_utf8('ConstantValue').index)
-        c._constantvalue_index = value.index
-        return c
+    def __init__(self, table, value=None, name_index=None):
+        super(ConstantValueAttribute, self).__init__(
+            table,
+            name_index or table.cf.constants.create_utf8(
+                'ConstantValue'
+            ).index
+        )
+        self._constantvalue_index = value.index if value else None
 
     def unpack(self, info):
         self._constantvalue_index = unpack_from('>H', info)[0]

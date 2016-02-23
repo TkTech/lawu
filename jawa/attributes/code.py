@@ -23,15 +23,18 @@ CodeException = namedtuple('CodeException', [
 
 
 class CodeAttribute(Attribute):
-    @classmethod
-    def create(cls, cf):
-        c = cls(cf, cf.constants.create_utf8('Code').index)
-        c._max_stack = 0
-        c._max_locals = 0
-        c._ex_table = []
-        c._attributes = AttributeTable(cf)
-        c._code = ''
-        return c
+    def __init__(self, table, name_index=None):
+        super(CodeAttribute, self).__init__(
+            table,
+            name_index or table.cf.constants.create_utf8(
+                'Code'
+            ).index
+        )
+        self._max_stack = 0
+        self._max_locals = 0
+        self._ex_table = []
+        self._attributes = AttributeTable(table.cf, parent=self)
+        self._code = ''
 
     def unpack(self, info):
         fio = StringIO(info)
@@ -45,7 +48,7 @@ class CodeAttribute(Attribute):
             self._ex_table.append(CodeException(
                 *unpack('>HHHH', fio.read(8))
             ))
-        self._attributes = AttributeTable(self._cf)
+        self._attributes = AttributeTable(self._cf, parent=self)
         self._attributes._from_io(fio)
         fio.close()
 

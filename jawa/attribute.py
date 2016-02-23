@@ -9,8 +9,9 @@ from itertools import repeat
 
 
 class Attribute(object):
-    def __init__(self, cf, name_index):
-        self._cf = cf
+    def __init__(self, table, name_index=None):
+        self._table = table
+        self._cf = table.cf
         self._name_index = name_index
 
     @property
@@ -28,6 +29,20 @@ class Attribute(object):
         """
         return self._cf.constants[self._name_index]
 
+    @property
+    def table(self):
+        """
+        The AttributeTable that owns this attribute, if any.
+        """
+        return self._table
+
+    @property
+    def cf(self):
+        """
+        The ClassFile that owns this attribute, if any.
+        """
+        return self._cf
+
     def unpack(self, info):
         """
         Parses an instance of this attribute from the blob `info`.
@@ -40,10 +55,6 @@ class Attribute(object):
         """
         return self.info
 
-    @classmethod
-    def create(cls, name):
-        raise NotImplementedError()
-
 
 class UnknownAttribute(Attribute):
     def unpack(self, info):
@@ -55,9 +66,10 @@ class UnknownAttribute(Attribute):
 
 
 class AttributeTable(object):
-    def __init__(self, cf):
+    def __init__(self, cf, parent=None):
         self._cf = cf
         self._table = []
+        self._parent = parent
 
     def _get_type(self, name):
         """
@@ -78,7 +90,7 @@ class AttributeTable(object):
             name = self._cf.constants[name_index].value
 
             type_ = self._get_type(name)
-            attribute = type_(self._cf, name_index)
+            attribute = type_(self, name_index=name_index)
 
             attribute.unpack(fio.read(length))
             self._table.append(attribute)
@@ -99,7 +111,7 @@ class AttributeTable(object):
         Creates a new attribute of `type_`, appending it to the attribute
         table and returning it.
         """
-        attribute = type_.create(self._cf, *args, **kwargs)
+        attribute = type_(self, *args, **kwargs)
         self.append(attribute)
         return attribute
 
@@ -128,6 +140,24 @@ class AttributeTable(object):
             return next(self.find(*args, **kwargs))
         except StopIteration:
             return None
+
+    @property
+    def cf(self):
+        """
+        The ClassFile that owns this Attribute, if any.
+        """
+        return self._cf
+
+    @property
+    def parent(self):
+        """
+        The parent attribute, if any.
+
+        If this AttributeTable belongs to another Attribute, this will
+        reference that attribute. For example, when parsing a StackMapTable
+        attribute, this would point to the owning Code attribute.
+        """
+        return self._parent
 
 
 # Attributes can contain other attributes and AttributeTable's,
