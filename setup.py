@@ -27,6 +27,7 @@ setup(
             'pytest',
             'pytest-cov',
             'sphinx',
+            'sphinxcontrib-googleanalytics',
             'ghp-import'
         ]
     }
