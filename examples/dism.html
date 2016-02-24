@@ -5,7 +5,18 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-11145163-14']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Disassembly - A Simple javap Clone &mdash; jawa  documentation</title>
@@ -30,7 +41,10 @@
   
 
   
-    <link rel="top" title="jawa  documentation" href="../index.html"/> 
+    <link rel="top" title="jawa  documentation" href="../index.html"/>
+        <link rel="up" title="Examples" href="index.html"/>
+        <link rel="next" title="Core APIs" href="../jawa.html"/>
+        <link rel="prev" title="Generating Classes From Scratch - Hello World!" href="hello_world.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -75,8 +89,12 @@
           
             
             
-                <ul>
-<li class="toctree-l1"><a class="reference internal" href="index.html">Examples</a></li>
+                <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="hello_world.html">Generating Classes From Scratch - Hello World!</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Disassembly - A Simple javap Clone</a></li>
+</ul>
+</li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../jawa.html">Core APIs</a></li>
@@ -111,6 +129,8 @@
 <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">Examples</a> &raquo;</li>
       
     <li>Disassembly - A Simple javap Clone</li>
       <li class="wy-breadcrumbs-aside">
@@ -208,6 +228,15 @@ the Oracle JDK. We can make a simple clone very easily using Jawa:</p>
            </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../jawa.html" class="btn btn-neutral float-right" title="Core APIs" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="hello_world.html" class="btn btn-neutral" title="Generating Classes From Scratch - Hello World!" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
