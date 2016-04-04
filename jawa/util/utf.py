@@ -44,7 +44,9 @@ def decode_modified_utf8(s):
                 ((y & 0x0F) << 6) +
                 (z & 0x3F)
             )
-
+        elif x == 0xC0 and s[ix] == 0x80:
+            ix += 1
+            x = 0
         final_string += unichr(x)
     return final_string
 
@@ -63,18 +65,18 @@ def encode_modified_utf8(u):
     final_string = bytearray()
 
     for c in [ord(char) for char in u]:
-        if c < 0x7F:
-            final_string.append(c)
-        elif c == 0x00 or (c > 0x80 and c < 0x7FF):
-            final_string.extend(
+        if c == 0x00 or (c > 0x80 and c < 0x7FF):
+            final_string.extend([
                 (0xC0 | (0x1F & (c >> 6))),
-                (0x80 | (0x3F & c))
+                (0x80 | (0x3F & c))]
             )
+        elif c < 0x7F:
+            final_string.append(c)
         elif c > 0x800 and c < 0xFFFF:
-            final_string.extend(
+            final_string.extend([
                 (0xE0 | (0x0F & (c >> 12))),
                 (0x80 | (0x3F & (c >> 6))),
-                (0x80 | (0x3F & c))
+                (0x80 | (0x3F & c))]
             )
 
-    return str(final_string)
+    return final_string
