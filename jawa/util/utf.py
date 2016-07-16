@@ -65,7 +65,7 @@ def encode_modified_utf8(u):
     final_string = bytearray()
 
     for c in [ord(char) for char in u]:
-        if c == 0x00 or (c > 0x80 and c < 0x7FF):
+        if c == 0x00 or (0x80 < c < 0x7FF):
             final_string.extend([
                 (0xC0 | (0x1F & (c >> 6))),
                 (0x80 | (0x3F & c))]
