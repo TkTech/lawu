@@ -140,19 +140,19 @@
             
   <h1>Source code for jawa.attributes.constant_value</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf8 -*-</span>
-<span class="kn">from</span> <span class="nn">struct</span> <span class="kn">import</span> <span class="n">unpack_from</span><span class="p">,</span> <span class="n">pack</span>
-<span class="kn">from</span> <span class="nn">jawa.attribute</span> <span class="kn">import</span> <span class="n">Attribute</span>
+<span class="kn">from</span> <span class="nn">struct</span> <span class="k">import</span> <span class="n">unpack_from</span><span class="p">,</span> <span class="n">pack</span>
+<span class="kn">from</span> <span class="nn">jawa.attribute</span> <span class="k">import</span> <span class="n">Attribute</span>
 
 
 <div class="viewcode-block" id="ConstantValueAttribute"><a class="viewcode-back" href="../../../attributes/index.html#jawa.attributes.constant_value.ConstantValueAttribute">[docs]</a><span class="k">class</span> <span class="nc">ConstantValueAttribute</span><span class="p">(</span><span class="n">Attribute</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">name_index</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name_index</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ConstantValueAttribute</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
             <span class="n">table</span><span class="p">,</span>
             <span class="n">name_index</span> <span class="ow">or</span> <span class="n">table</span><span class="o">.</span><span class="n">cf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">create_utf8</span><span class="p">(</span>
                 <span class="s1">&#39;ConstantValue&#39;</span>
             <span class="p">)</span><span class="o">.</span><span class="n">index</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_constantvalue_index</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">index</span> <span class="k">if</span> <span class="n">value</span> <span class="k">else</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_constantvalue_index</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">index</span> <span class="k">if</span> <span class="n">value</span> <span class="k">else</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="ConstantValueAttribute.unpack"><a class="viewcode-back" href="../../../attributes/index.html#jawa.attributes.constant_value.ConstantValueAttribute.unpack">[docs]</a>    <span class="k">def</span> <span class="nf">unpack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_constantvalue_index</span> <span class="o">=</span> <span class="n">unpack_from</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">info</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>

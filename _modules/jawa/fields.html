@@ -142,12 +142,12 @@
 <span></span><span class="c1"># -*- coding: utf8 -*-</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;FieldTable&#39;</span><span class="p">,</span> <span class="s1">&#39;Field&#39;</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">struct</span> <span class="kn">import</span> <span class="n">unpack</span><span class="p">,</span> <span class="n">pack</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">repeat</span>
+<span class="kn">from</span> <span class="nn">struct</span> <span class="k">import</span> <span class="n">unpack</span><span class="p">,</span> <span class="n">pack</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">repeat</span>
 
-<span class="kn">from</span> <span class="nn">jawa.util.flags</span> <span class="kn">import</span> <span class="n">Flags</span>
-<span class="kn">from</span> <span class="nn">jawa.attribute</span> <span class="kn">import</span> <span class="n">AttributeTable</span>
-<span class="kn">from</span> <span class="nn">jawa.attributes.constant_value</span> <span class="kn">import</span> <span class="n">ConstantValueAttribute</span>
+<span class="kn">from</span> <span class="nn">jawa.util.flags</span> <span class="k">import</span> <span class="n">Flags</span>
+<span class="kn">from</span> <span class="nn">jawa.attribute</span> <span class="k">import</span> <span class="n">AttributeTable</span>
+<span class="kn">from</span> <span class="nn">jawa.attributes.constant_value</span> <span class="k">import</span> <span class="n">ConstantValueAttribute</span>
 
 
 <div class="viewcode-block" id="Field"><a class="viewcode-back" href="../../jawa.html#jawa.fields.Field">[docs]</a><span class="k">class</span> <span class="nc">Field</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -257,7 +257,7 @@
         <span class="n">descriptor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">create_utf8</span><span class="p">(</span><span class="n">descriptor</span><span class="p">)</span>
         <span class="n">field</span><span class="o">.</span><span class="n">_name_index</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">index</span>
         <span class="n">field</span><span class="o">.</span><span class="n">_descriptor_index</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">index</span>
-        <span class="n">field</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">acc_public</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">acc_public</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">field</span></div>
 
@@ -278,7 +278,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">)</span>
         <span class="n">field</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">ConstantValueAttribute</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        <span class="n">field</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">acc_static</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">acc_static</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="n">field</span></div>
 
     <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -297,7 +297,7 @@
 <span class="sd">        :param fio: Any file-like object providing `read()`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">field_count</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">repeat</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">field_count</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">repeat</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">field_count</span><span class="p">):</span>
             <span class="n">field</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="p">)</span>
             <span class="n">field</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="p">)</span></div>
@@ -320,7 +320,7 @@
     <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_table</span><span class="p">)</span>
 
-<div class="viewcode-block" id="FieldTable.find"><a class="viewcode-back" href="../../jawa.html#jawa.fields.FieldTable.find">[docs]</a>    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">type_</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="FieldTable.find"><a class="viewcode-back" href="../../jawa.html#jawa.fields.FieldTable.find">[docs]</a>    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">type_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Iterates over the fields table, yielding each matching method. Calling</span>
 <span class="sd">        without any arguments is equivelent to iterating over the table.</span>
@@ -330,14 +330,14 @@
 <span class="sd">        :param f: Any callable which takes one argument (the field).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">value</span> <span class="o">!=</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">value</span> <span class="o">!=</span> <span class="n">name</span><span class="p">:</span>
                 <span class="k">continue</span>
 
             <span class="n">descriptor</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">value</span>
-            <span class="k">if</span> <span class="n">type_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">type_</span> <span class="o">!=</span> <span class="n">descriptor</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">type_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">type_</span> <span class="o">!=</span> <span class="n">descriptor</span><span class="p">:</span>
                 <span class="k">continue</span>
 
-            <span class="k">if</span> <span class="n">f</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">f</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">f</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">f</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
                 <span class="k">continue</span>
 
             <span class="k">yield</span> <span class="n">field</span></div>
@@ -350,7 +350,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
         <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">None</span></div></div>
+            <span class="k">return</span> <span class="kc">None</span></div></div>
 </pre></div>
 
            </div>

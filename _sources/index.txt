@@ -11,8 +11,11 @@ class files.
 Getting Jawa
 ------------
 
-Jawa_ is not yet available on PyPi as it is still being developed. That said, breaking
-changes are rare and installation from Github is very easy. To install::
+Jawa_ is now available on pypi. You can install the latest release with:
+
+    pip install jawa
+
+Alternatively, you can install the latest work directly from github:
 
     pip install git+https://github.com/TkTech/Jawa.git
 

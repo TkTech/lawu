@@ -146,15 +146,15 @@
 <span class="sd">The :mod:`jawa.cf` module provides tools for working with JVM ``.class``</span>
 <span class="sd">ClassFiles.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">struct</span> <span class="kn">import</span> <span class="n">pack</span><span class="p">,</span> <span class="n">unpack</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">from</span> <span class="nn">struct</span> <span class="k">import</span> <span class="n">pack</span><span class="p">,</span> <span class="n">unpack</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
 
 
-<span class="kn">from</span> <span class="nn">jawa.constants</span> <span class="kn">import</span> <span class="n">ConstantPool</span>
-<span class="kn">from</span> <span class="nn">jawa.fields</span> <span class="kn">import</span> <span class="n">FieldTable</span>
-<span class="kn">from</span> <span class="nn">jawa.methods</span> <span class="kn">import</span> <span class="n">MethodTable</span>
-<span class="kn">from</span> <span class="nn">jawa.attribute</span> <span class="kn">import</span> <span class="n">AttributeTable</span>
-<span class="kn">from</span> <span class="nn">jawa.util.flags</span> <span class="kn">import</span> <span class="n">Flags</span>
+<span class="kn">from</span> <span class="nn">jawa.constants</span> <span class="k">import</span> <span class="n">ConstantPool</span>
+<span class="kn">from</span> <span class="nn">jawa.fields</span> <span class="k">import</span> <span class="n">FieldTable</span>
+<span class="kn">from</span> <span class="nn">jawa.methods</span> <span class="k">import</span> <span class="n">MethodTable</span>
+<span class="kn">from</span> <span class="nn">jawa.attribute</span> <span class="k">import</span> <span class="n">AttributeTable</span>
+<span class="kn">from</span> <span class="nn">jawa.util.flags</span> <span class="k">import</span> <span class="n">Flags</span>
 
 
 <div class="viewcode-block" id="ClassVersion"><a class="viewcode-back" href="../../jawa.html#jawa.cf.ClassVersion">[docs]</a><span class="k">class</span> <span class="nc">ClassVersion</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;ClassVersion&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="s1">&#39;minor&#39;</span><span class="p">])):</span>
@@ -177,7 +177,7 @@
             <span class="mh">0x2F</span><span class="p">:</span> <span class="s1">&#39;JDK1_3&#39;</span><span class="p">,</span>
             <span class="mh">0x2E</span><span class="p">:</span> <span class="s1">&#39;JDK1_2&#39;</span><span class="p">,</span>
             <span class="mh">0x2D</span><span class="p">:</span> <span class="s1">&#39;JDK1_1&#39;</span><span class="p">,</span>
-        <span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">major</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span></div>
+        <span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">major</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ClassFile"><a class="viewcode-back" href="../../jawa.html#jawa.cf.ClassFile">[docs]</a><span class="k">class</span> <span class="nc">ClassFile</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -215,7 +215,7 @@
     <span class="c1">#: The JVM ClassFile magic number.</span>
     <span class="n">MAGIC</span> <span class="o">=</span> <span class="mh">0xCAFEBABE</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fio</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fio</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># Default to J2SE_7</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">=</span> <span class="n">ClassVersion</span><span class="p">(</span><span class="mh">0x32</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_constants</span> <span class="o">=</span> <span class="n">ConstantPool</span><span class="p">()</span>
@@ -248,8 +248,8 @@
 <span class="sd">        :param super_: The name of this class&#39;s superclass.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">cf</span> <span class="o">=</span> <span class="n">ClassFile</span><span class="p">()</span>
-        <span class="n">cf</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">acc_public</span> <span class="o">=</span> <span class="bp">True</span>
-        <span class="n">cf</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">acc_super</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">cf</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">acc_public</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">cf</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">acc_super</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="n">cf</span><span class="o">.</span><span class="n">this</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">create_class</span><span class="p">(</span><span class="n">this</span><span class="p">)</span>
         <span class="n">cf</span><span class="o">.</span><span class="n">super_</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">create_class</span><span class="p">(</span><span class="n">super_</span><span class="p">)</span>
@@ -273,7 +273,7 @@
 
         <span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">pack</span><span class="p">())</span>
         <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span>
-            <span class="s1">&#39;&gt;HHH{0}H&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_interfaces</span><span class="p">)),</span>
+            <span class="s1">&#39;&gt;HHH</span><span class="si">{0}</span><span class="s1">H&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_interfaces</span><span class="p">)),</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_this</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_super</span><span class="p">,</span>
             <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_interfaces</span><span class="p">),</span>
@@ -305,7 +305,7 @@
         <span class="c1"># Interfaces are a simple list of CONSTANT_Class indexes.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_this</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_super</span><span class="p">,</span> <span class="n">interfaces_count</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;HHH&#39;</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_interfaces</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span>
-            <span class="s1">&#39;&gt;{0}H&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">interfaces_count</span><span class="p">),</span>
+            <span class="s1">&#39;&gt;</span><span class="si">{0}</span><span class="s1">H&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">interfaces_count</span><span class="p">),</span>
             <span class="n">read</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">interfaces_count</span><span class="p">)</span>
         <span class="p">)</span>
 
@@ -329,7 +329,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_version</span>
 
-    <span class="nd">@version.setter</span>
+    <span class="nd">@version</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">major</span><span class="p">,</span> <span class="n">minor</span><span class="p">)):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">=</span> <span class="n">ClassVersion</span><span class="p">(</span><span class="n">major</span><span class="p">,</span> <span class="n">minor</span><span class="p">)</span>
 
@@ -351,7 +351,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_this</span><span class="p">)</span>
 
-    <span class="nd">@this.setter</span>
+    <span class="nd">@this</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">this</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_this</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">index</span>
 
@@ -363,7 +363,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_super</span><span class="p">)</span>
 
-    <span class="nd">@super_.setter</span>
+    <span class="nd">@super_</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">super_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_super</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">index</span>
 

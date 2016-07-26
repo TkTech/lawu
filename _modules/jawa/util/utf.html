@@ -159,7 +159,7 @@
 <span class="sd">    :returns: A unicode representation of the original string.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">s</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-    <span class="n">final_string</span> <span class="o">=</span> <span class="nb">unicode</span><span class="p">()</span>
+    <span class="n">final_string</span> <span class="o">=</span> <span class="n">unicode</span><span class="p">()</span>
     <span class="n">ix</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">while</span> <span class="n">ix</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">ix</span><span class="p">]</span>
@@ -185,8 +185,10 @@
                 <span class="p">((</span><span class="n">y</span> <span class="o">&amp;</span> <span class="mh">0x0F</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">+</span>
                 <span class="p">(</span><span class="n">z</span> <span class="o">&amp;</span> <span class="mh">0x3F</span><span class="p">)</span>
             <span class="p">)</span>
-
-        <span class="n">final_string</span> <span class="o">+=</span> <span class="nb">unichr</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">x</span> <span class="o">==</span> <span class="mh">0xC0</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">ix</span><span class="p">]</span> <span class="o">==</span> <span class="mh">0x80</span><span class="p">:</span>
+            <span class="n">ix</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">final_string</span> <span class="o">+=</span> <span class="n">unichr</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">final_string</span></div>
 
 
@@ -200,25 +202,25 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Trying to encode a non-unicode string will result in some serious</span>
     <span class="c1"># abnormalities.</span>
-    <span class="k">assert</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">))</span>
+    <span class="k">assert</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">unicode</span><span class="p">))</span>
     <span class="n">final_string</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">()</span>
 
     <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">ord</span><span class="p">(</span><span class="n">char</span><span class="p">)</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">u</span><span class="p">]:</span>
-        <span class="k">if</span> <span class="n">c</span> <span class="o">&lt;</span> <span class="mh">0x7F</span><span class="p">:</span>
-            <span class="n">final_string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">c</span> <span class="o">==</span> <span class="mh">0x00</span> <span class="ow">or</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="mh">0x80</span> <span class="ow">and</span> <span class="n">c</span> <span class="o">&lt;</span> <span class="mh">0x7FF</span><span class="p">):</span>
-            <span class="n">final_string</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+        <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="mh">0x00</span> <span class="ow">or</span> <span class="p">(</span><span class="mh">0x80</span> <span class="o">&lt;</span> <span class="n">c</span> <span class="o">&lt;</span> <span class="mh">0x7FF</span><span class="p">):</span>
+            <span class="n">final_string</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
                 <span class="p">(</span><span class="mh">0xC0</span> <span class="o">|</span> <span class="p">(</span><span class="mh">0x1F</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">))),</span>
-                <span class="p">(</span><span class="mh">0x80</span> <span class="o">|</span> <span class="p">(</span><span class="mh">0x3F</span> <span class="o">&amp;</span> <span class="n">c</span><span class="p">))</span>
+                <span class="p">(</span><span class="mh">0x80</span> <span class="o">|</span> <span class="p">(</span><span class="mh">0x3F</span> <span class="o">&amp;</span> <span class="n">c</span><span class="p">))]</span>
             <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">c</span> <span class="o">&lt;</span> <span class="mh">0x7F</span><span class="p">:</span>
+            <span class="n">final_string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">c</span> <span class="o">&gt;</span> <span class="mh">0x800</span> <span class="ow">and</span> <span class="n">c</span> <span class="o">&lt;</span> <span class="mh">0xFFFF</span><span class="p">:</span>
-            <span class="n">final_string</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+            <span class="n">final_string</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
                 <span class="p">(</span><span class="mh">0xE0</span> <span class="o">|</span> <span class="p">(</span><span class="mh">0x0F</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;&gt;</span> <span class="mi">12</span><span class="p">))),</span>
                 <span class="p">(</span><span class="mh">0x80</span> <span class="o">|</span> <span class="p">(</span><span class="mh">0x3F</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">))),</span>
-                <span class="p">(</span><span class="mh">0x80</span> <span class="o">|</span> <span class="p">(</span><span class="mh">0x3F</span> <span class="o">&amp;</span> <span class="n">c</span><span class="p">))</span>
+                <span class="p">(</span><span class="mh">0x80</span> <span class="o">|</span> <span class="p">(</span><span class="mh">0x3F</span> <span class="o">&amp;</span> <span class="n">c</span><span class="p">))]</span>
             <span class="p">)</span>
 
-    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">final_string</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">final_string</span></div>
 </pre></div>
 
            </div>

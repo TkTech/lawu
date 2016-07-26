@@ -142,20 +142,20 @@
 <span></span><span class="c1"># -*- coding: utf8 -*-</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;CodeAttribute&#39;</span><span class="p">,</span> <span class="s1">&#39;CodeException&#39;</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">struct</span> <span class="kn">import</span> <span class="n">unpack</span><span class="p">,</span> <span class="n">pack</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">repeat</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">from</span> <span class="nn">struct</span> <span class="k">import</span> <span class="n">unpack</span><span class="p">,</span> <span class="n">pack</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">repeat</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
 
-<span class="kn">from</span> <span class="nn">jawa.attribute</span> <span class="kn">import</span> <span class="n">Attribute</span><span class="p">,</span> <span class="n">AttributeTable</span>
-<span class="kn">from</span> <span class="nn">jawa.util.bytecode</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">jawa.attribute</span> <span class="k">import</span> <span class="n">Attribute</span><span class="p">,</span> <span class="n">AttributeTable</span>
+<span class="kn">from</span> <span class="nn">jawa.util.bytecode</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">read_instruction</span><span class="p">,</span>
     <span class="n">write_instruction</span>
 <span class="p">)</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">cStringIO</span> <span class="kn">import</span> <span class="n">StringIO</span>
+    <span class="kn">from</span> <span class="nn">cStringIO</span> <span class="k">import</span> <span class="n">StringIO</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">StringIO</span> <span class="kn">import</span> <span class="n">StringIO</span>
+    <span class="kn">from</span> <span class="nn">StringIO</span> <span class="k">import</span> <span class="n">StringIO</span>
 
 
 <span class="n">CodeException</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;CodeException&#39;</span><span class="p">,</span> <span class="p">[</span>
@@ -202,7 +202,7 @@
 <span class="sd">        `CodeAttribute` - methods that are flagged as `acc_native` or</span>
 <span class="sd">        `acc_abstract` will never have one.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">name_index</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">name_index</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">CodeAttribute</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
             <span class="n">table</span><span class="p">,</span>
             <span class="n">name_index</span> <span class="ow">or</span> <span class="n">table</span><span class="o">.</span><span class="n">cf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">create_utf8</span><span class="p">(</span>
@@ -233,7 +233,7 @@
         <span class="c1"># The exception table</span>
         <span class="n">ex_table_len</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ex_table</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">repeat</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">ex_table_len</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">repeat</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">ex_table_len</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ex_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">CodeException</span><span class="p">(</span>
                 <span class="o">*</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;HHHH&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
             <span class="p">))</span>
@@ -265,7 +265,7 @@
         <span class="sd">&quot;&quot;&quot;The maximum size of the stack.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_stack</span>
 
-    <span class="nd">@max_stack.setter</span>
+    <span class="nd">@max_stack</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">max_stack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_max_stack</span> <span class="o">=</span> <span class="n">value</span>
 
@@ -274,7 +274,7 @@
         <span class="sd">&quot;&quot;&quot;The maximum number of locals.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_locals</span>
 
-    <span class="nd">@max_locals.setter</span>
+    <span class="nd">@max_locals</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">max_locals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_max_locals</span> <span class="o">=</span> <span class="n">value</span>
 
@@ -312,7 +312,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">fio</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_code</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">ins</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">read_instruction</span><span class="p">(</span><span class="n">fio</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">tell</span><span class="p">()),</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">ins</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">read_instruction</span><span class="p">(</span><span class="n">fio</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">tell</span><span class="p">()),</span> <span class="kc">None</span><span class="p">):</span>
             <span class="k">yield</span> <span class="n">ins</span></div></div>
 </pre></div>
 

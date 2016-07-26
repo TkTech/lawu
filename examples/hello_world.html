@@ -91,7 +91,7 @@
             
                 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="">Generating Classes From Scratch - Hello World!</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Generating Classes From Scratch - Hello World!</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dism.html">Disassembly - A Simple javap Clone</a></li>
 </ul>
 </li>
@@ -122,7 +122,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -157,19 +157,19 @@ generate a ClassFile equivelent to this Java:</p>
 <span class="o">}</span>
 </pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: utf8 -*-</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">An example showing how to create a &quot;Hello World&quot; class from scratch.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">jawa</span> <span class="kn">import</span> <span class="n">ClassFile</span>
-<span class="kn">from</span> <span class="nn">jawa.assemble</span> <span class="kn">import</span> <span class="n">assemble</span>
+<span class="kn">from</span> <span class="nn">jawa</span> <span class="k">import</span> <span class="n">ClassFile</span>
+<span class="kn">from</span> <span class="nn">jawa.assemble</span> <span class="k">import</span> <span class="n">assemble</span>
 
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">cf</span> <span class="o">=</span> <span class="n">ClassFile</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;HelloWorld&#39;</span><span class="p">)</span>
 
-    <span class="n">main</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;main&#39;</span><span class="p">,</span> <span class="s1">&#39;([Ljava/lang/String;)V&#39;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">main</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">acc_static</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">main</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;main&#39;</span><span class="p">,</span> <span class="s1">&#39;([Ljava/lang/String;)V&#39;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">main</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">acc_static</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">main</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">max_locals</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">main</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">max_stack</span> <span class="o">=</span> <span class="mi">2</span>
 
