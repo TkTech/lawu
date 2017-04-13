@@ -595,6 +595,7 @@ class ConstantPool(object):
                                 constant._bootstrap_method_attr_index,
                                 constant._name_and_type_index
                             ))
+
     def __len__(self):
         """
         The number of `Constants` in the `ConstantPool`, excluding padding.
