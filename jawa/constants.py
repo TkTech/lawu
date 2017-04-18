@@ -576,25 +576,25 @@ class ConstantPool(object):
                     constant._descriptor_index
                 ))
             elif isinstance(constant, ConstantMethodHandle):
-                            write(pack(
-                                '>BBH',
-                                constant.TAG,
-                                constant._reference_kind,
-                                constant._reference_index
-                            ))
+                write(pack(
+                    '>BBH',
+                    constant.TAG,
+                    constant._reference_kind,
+                    constant._reference_index
+                ))
             elif isinstance(constant, ConstantMethodType):
-                            write(pack(
-                                '>BH',
-                                constant.TAG,
-                                constant._descriptor_index
-                            ))
+                write(pack(
+                    '>BH',
+                    constant.TAG,
+                    constant._descriptor_index
+                ))
             elif isinstance(constant, ConstantInvokeDynamic):
-                            write(pack(
-                                '>BHH',
-                                constant.TAG,
-                                constant._bootstrap_method_attr_index,
-                                constant._name_and_type_index
-                            ))
+                write(pack(
+                    '>BHH',
+                    constant.TAG,
+                    constant._bootstrap_method_attr_index,
+                    constant._name_and_type_index
+                ))
 
     def __len__(self):
         """
