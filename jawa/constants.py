@@ -13,7 +13,10 @@ __all__ = (
     'ConstantFloat',
     'ConstantLong',
     'ConstantDouble',
-    'ConstantNameAndType'
+    'ConstantNameAndType',
+    'ConstantMethodHandle',
+    'ConstantMethodType',
+    'ConstantInvokeDynamic',
 )
 
 from struct import unpack, pack
@@ -161,6 +164,60 @@ class ConstantNameAndType(Constant):
         return 'ConstantNameAndType(name={0!r}, descriptor={1!r})'.format(
             self.name, self.descriptor)
 
+class ConstantMethodHandle(Constant):
+    TAG = 15
+
+    def __init__(self, pool, index, reference_kind, reference_index):
+        super(ConstantMethodHandle, self).__init__(pool, index)
+        self._reference_kind = reference_kind
+        self._reference_index = reference_index
+
+    @property
+    def kind(self):
+        return self.pool.get(self._reference_kind)
+
+    @property
+    def reference(self):
+        return self.pool.get(self._reference_index)
+
+    def __repr__(self):
+        return 'ConstantMethodHandle(kind={0!r}, index={1!r})'.format(
+            self.kind, self.reference)
+
+class ConstantMethodType(Constant):
+    TAG = 16
+
+    def __init__(self, pool, index, descriptor_index):
+        super(ConstantMethodType, self).__init__(pool, index)
+        self._descriptor_index = descriptor_index
+
+    @property
+    def descriptor(self):
+        return self.pool.get(self._descriptor_index)
+
+    def __repr__(self):
+        return 'ConstantMethodType(descriptor={0!r})'.format(
+            self.descriptor)
+
+class ConstantInvokeDynamic(Constant):
+    TAG = 18
+
+    def __init__(self, pool, index, bootstrap_method_attr_index, name_and_type_index):
+        super(ConstantInvokeDynamic, self).__init__(pool, index)
+        self._bootstrap_method_attr_index = bootstrap_method_attr_index
+        self._name_and_type_index = name_and_type_index
+
+    @property
+    def methodAttr(self):
+        return self.pool.get(self._bootstrap_method_attr_index)
+
+    @property
+    def nameAndType(self):
+        return self.pool.get(self._name_and_type_index)
+
+    def __repr__(self):
+        return 'ConstantInvokeDynamic(methodAttr={0!r}, nameAndType={1!r})'.format(
+            self.methodAttr, self.nameAndType)
 
 _constant_types = (
     None,
@@ -175,7 +232,13 @@ _constant_types = (
     ConstantFieldRef,
     ConstantMethodRef,
     ConstantInterfaceMethodRef,
-    ConstantNameAndType
+    ConstantNameAndType,
+    None,
+    None,
+    ConstantMethodHandle,
+    ConstantMethodType,
+    None,
+    ConstantInvokeDynamic
 )
 
 
@@ -192,6 +255,12 @@ _constant_fmts = (
     ('>HH', 4),
     ('>HH', 4),
     ('>HH', 4),
+    ('>HH', 4),
+    None,
+    None,
+    ('>BH', 3),
+    ('>H', 2),
+    None,
     ('>HH', 4)
 )
 
@@ -505,6 +574,26 @@ class ConstantPool(object):
                     constant.TAG,
                     constant._name_index,
                     constant._descriptor_index
+                ))
+            elif isinstance(constant, ConstantMethodHandle):
+                write(pack(
+                    '>BBH',
+                    constant.TAG,
+                    constant._reference_kind,
+                    constant._reference_index
+                ))
+            elif isinstance(constant, ConstantMethodType):
+                write(pack(
+                    '>BH',
+                    constant.TAG,
+                    constant._descriptor_index
+                ))
+            elif isinstance(constant, ConstantInvokeDynamic):
+                write(pack(
+                    '>BHH',
+                    constant.TAG,
+                    constant._bootstrap_method_attr_index,
+                    constant._name_and_type_index
                 ))
 
     def __len__(self):
