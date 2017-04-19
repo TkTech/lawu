@@ -46,7 +46,7 @@ class ClassFile(object):
     To open an existing ClassFile::
 
         from jawa import ClassFile
-        with open('HelloWorld.class') as fin:
+        with open('HelloWorld.class', 'rb') as fin:
             cf = ClassFile(fin)
 
     To save a newly created or modified ClassFile::
