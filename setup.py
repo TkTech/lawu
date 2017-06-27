@@ -20,7 +20,8 @@ setup(
         "Topic :: Software Development :: Disassemblers"
     ],
     tests_require=[
-        'pytest'
+        'pytest',
+        'pytest-cov'
     ],
     extras_require={
         'dev': [

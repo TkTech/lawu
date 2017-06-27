@@ -29,9 +29,11 @@ def test_encode_utf8_1():
     """
     Tests encoding of some special cases:
         1 - byte 00 must be encoded as 'c080'
-        2 - supplementary characters (represented by the two surrogate code units of their UTF-16 representation):
-        each surrogate must be encoded by three bytes. This means supplementary characters are represented by six bytes
-        then U+10400 (represented as \uD801\uDC00) will be encoded as 'eda081edb080'
+        2 - supplementary characters (represented by the two surrogate code
+        units of their UTF-16 representation): each surrogate must be encoded
+        by three bytes. This means supplementary characters are represented by
+        six bytes then U+10400 (represented as \uD801\uDC00) will be encoded as
+        'eda081edb080'
     """
     # string containing byte 00
     str1 = u'1\x002'
