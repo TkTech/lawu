@@ -18,8 +18,8 @@ def decode_modified_utf8(s):
     :returns: A unicode representation of the original string.
     """
     s = bytearray(s)
-    buffer = []
-    buffer_append = buffer.append
+    buff = []
+    buffer_append = buff.append
     ix = 0
     while ix < len(s):
         x = s[ix]
@@ -49,7 +49,7 @@ def decode_modified_utf8(s):
             ix += 1
             x = 0
         buffer_append(x)
-    return u''.join(map(unichr, buffer))
+    return u''.join(map(unichr, buff))
 
 
 def encode_modified_utf8(u):
