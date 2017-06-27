@@ -1,0 +1,7 @@
+test:
+    override:
+        - py.test tests
+
+dependencies:
+    pre:
+       -  pip install pytest pytest-cov
