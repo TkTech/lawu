@@ -232,7 +232,8 @@ class ClassFile(object):
         A list of direct superinterfaces of this class as indexes into
         the constant pool, in left-to-right order.
         """
-        return self._interfaces
+        for interface_index in self._interfaces:
+            yield self._constants[interface_index]
 
     @property
     def fields(self):
