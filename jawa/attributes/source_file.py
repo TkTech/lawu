@@ -4,6 +4,9 @@ from jawa.attribute import Attribute
 
 
 class SourceFileAttribute(Attribute):
+    ADDED_IN = '1.0.2'
+    MINIMUM_CLASS_VERSION = (45, 3)
+
     def __init__(self, table, sourcefile=None, name_index=None):
         super(SourceFileAttribute, self).__init__(
             table,

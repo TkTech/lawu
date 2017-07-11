@@ -1,6 +1,4 @@
 # -*- coding: utf8 -*-
-__all__ = ('CodeAttribute', 'CodeException')
-
 from struct import unpack, pack
 from itertools import repeat
 from collections import namedtuple
@@ -61,6 +59,9 @@ class CodeAttribute(Attribute):
         `CodeAttribute` - methods that are flagged as `acc_native` or
         `acc_abstract` will never have one.
     """
+    ADDED_IN = '1.0.2'
+    MINIMUM_CLASS_VERSION = (45, 3)
+
     def __init__(self, table, name_index=None):
         super(CodeAttribute, self).__init__(
             table,
