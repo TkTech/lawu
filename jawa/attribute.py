@@ -1,9 +1,4 @@
 # -*- coding: utf8 -*-
-__all__ = (
-    'AttributeTable',
-    'Attribute',
-    'UnknownAttribute'
-)
 from struct import unpack, pack
 from itertools import repeat
 
@@ -108,7 +103,7 @@ class AttributeTable(object):
         .. note::
 
             Advanced usage only. You will typically never need to call this
-            method as it will be calle=d for you when saving a ClassFile.
+            method as it will be called for you when saving a ClassFile.
 
         :param fout: Any file-like object providing `write()`
         """
