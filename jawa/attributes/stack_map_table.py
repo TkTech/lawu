@@ -5,6 +5,11 @@ from struct import unpack_from
 from jawa.attribute import Attribute
 from jawa.util.verifier import VerificationTypes
 
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
+
 # These types are followed by an additional u2.
 TYPES_WITH_EXTRA = (
     VerificationTypes.ITEM_Object,
@@ -59,10 +64,15 @@ class StackMapTableAttribute(Attribute):
     def unpack(self, info):
         # Described in "4.7.4. The StackMapTable Attribute"
         length = unpack_from('>H', info)[0]
+        if not length:
+            return
+
+        fio = StringIO(info)
+        fio.seek(2)
 
         previous_frame = None
         for i in xrange(length):
-            frame_type = unpack_from('>B', info)[0]
+            frame_type = unpack_from('B', fio.read(1))[0]
             frame = StackMapFrame(frame_type)
             if frame_type < 64:
                 # 0 to 63 are SAME_FRAME
@@ -84,9 +94,10 @@ class StackMapTableAttribute(Attribute):
                     frame.frame_offset = previous_frame.frame_offset + \
                             frame_type - 63
                     frame.frame_locals = previous_frame.frame_locals
-                    frame.frame_stack = list(
-                        self._unpack_verification_type_info(info, 1)
-                    )
+
+                frame.frame_stack = list(
+                    self._unpack_verification_type_info(fio, 1)
+                )
 
                 self.frames.append(frame)
                 previous_frame = frame
@@ -97,7 +108,7 @@ class StackMapTableAttribute(Attribute):
                 raise NotImplementedError()
 
             # All other types have an additional offset
-            frame_offset = unpack_from('>H', info)[0]
+            frame_offset = unpack_from('>H', fio.read(2))[0]
 
             if frame_type == 247:
                 # SAME_LOCALS_1_STACK_ITEM_EXTENDED
@@ -108,7 +119,10 @@ class StackMapTableAttribute(Attribute):
                             frame_offset + 1
                     frame.frame_locals = previous_frame.frame_locals
                     frame.frame_stack = list(
-                        self._unpack_verification_type_info(info, 1)
+                        self._unpack_verification_type_info(
+                            fio,
+                            1
+                        )
                     )
             elif frame_type < 251:
                 # CHOP
@@ -135,12 +149,13 @@ class StackMapTableAttribute(Attribute):
                 else:
                     frame.frame_offset = previous_frame.frame_ffset + \
                             frame_offset + 1
-                    frame.frame_locals = list(
-                        self._unpack_verification_type_info(
-                            info,
-                            frame_type - 251
-                        )
+
+                frame.frame_locals = previous_frame.frame_locals + list(
+                    self._unpack_verification_type_info(
+                        fio,
+                        frame_type - 251
                     )
+                )
             elif frame_type == 255:
                 # FULL_FRAME
                 if i == 0:
@@ -150,26 +165,27 @@ class StackMapTableAttribute(Attribute):
                             frame_offset + 1
 
                 frame.frame_locals = list(self._unpack_verification_type_info(
-                    info,
-                    unpack_from('>H', info)[0]
+                    fio,
+                    unpack_from('>H', fio.read(2))[0]
                 ))
                 frame.frame_stack = list(self._unpack_verification_type_info(
-                    info,
-                    unpack_from('>H', info)[0]
+                    fio,
+                    unpack_from('>H', fio.read(2))[0]
                 ))
 
             self.frames.append(frame)
             previous_frame = frame
 
     @staticmethod
-    def _unpack_verification_type_info(info, count):
+    def _unpack_verification_type_info(fio, count):
         # Unpacks the verification_type_info structure, used for both locals
         # and the stack.
         for _ in repeat(None, count):
-            tag = unpack_from('>B', info)[0]
+            tag = unpack_from('B', fio.read(1))[0]
             if tag in TYPES_WITH_EXTRA:
-                yield (tag, unpack_from('>H', info)[0])
-            yield (tag,)
+                yield (tag, unpack_from('>H', fio.read(2))[0])
+            else:
+                yield (tag,)
 
     @property
     def info(self):
