@@ -1,14 +1,8 @@
 # -*- coding: utf-8 -*-
 from itertools import repeat
-from struct import unpack_from
 
 from jawa.attribute import Attribute
 from jawa.util.verifier import VerificationTypes
-
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
 
 # These types are followed by an additional u2.
 TYPES_WITH_EXTRA = (
@@ -63,16 +57,10 @@ class StackMapTableAttribute(Attribute):
 
     def unpack(self, info):
         # Described in "4.7.4. The StackMapTable Attribute"
-        length = unpack_from('>H', info)[0]
-        if not length:
-            return
-
-        fio = StringIO(info)
-        fio.seek(2)
-
+        length = info.u2()
         previous_frame = None
         for i in xrange(length):
-            frame_type = unpack_from('B', fio.read(1))[0]
+            frame_type = info.u1()
             frame = StackMapFrame(frame_type)
             if frame_type < 64:
                 # 0 to 63 are SAME_FRAME
@@ -96,7 +84,7 @@ class StackMapTableAttribute(Attribute):
                     frame.frame_locals = previous_frame.frame_locals
 
                 frame.frame_stack = list(
-                    self._unpack_verification_type_info(fio, 1)
+                    self._unpack_verification_type_info(info, 1)
                 )
 
                 self.frames.append(frame)
@@ -108,7 +96,7 @@ class StackMapTableAttribute(Attribute):
                 raise NotImplementedError()
 
             # All other types have an additional offset
-            frame_offset = unpack_from('>H', fio.read(2))[0]
+            frame_offset = info.u2()
 
             if frame_type == 247:
                 # SAME_LOCALS_1_STACK_ITEM_EXTENDED
@@ -120,7 +108,7 @@ class StackMapTableAttribute(Attribute):
                     frame.frame_locals = previous_frame.frame_locals
                     frame.frame_stack = list(
                         self._unpack_verification_type_info(
-                            fio,
+                            info,
                             1
                         )
                     )
@@ -152,7 +140,7 @@ class StackMapTableAttribute(Attribute):
 
                 frame.frame_locals = previous_frame.frame_locals + list(
                     self._unpack_verification_type_info(
-                        fio,
+                        info,
                         frame_type - 251
                     )
                 )
@@ -165,25 +153,25 @@ class StackMapTableAttribute(Attribute):
                             frame_offset + 1
 
                 frame.frame_locals = list(self._unpack_verification_type_info(
-                    fio,
-                    unpack_from('>H', fio.read(2))[0]
+                    info,
+                    info.u2()
                 ))
                 frame.frame_stack = list(self._unpack_verification_type_info(
-                    fio,
-                    unpack_from('>H', fio.read(2))[0]
+                    info,
+                    info.u2()
                 ))
 
             self.frames.append(frame)
             previous_frame = frame
 
     @staticmethod
-    def _unpack_verification_type_info(fio, count):
+    def _unpack_verification_type_info(info, count):
         # Unpacks the verification_type_info structure, used for both locals
         # and the stack.
         for _ in repeat(None, count):
-            tag = unpack_from('B', fio.read(1))[0]
+            tag = info.u1()
             if tag in TYPES_WITH_EXTRA:
-                yield (tag, unpack_from('>H', fio.read(2))[0])
+                yield (tag, info.u2())
             else:
                 yield (tag,)
 

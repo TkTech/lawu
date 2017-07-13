@@ -1,6 +1,7 @@
 # -*- coding: utf8 -*-
 from struct import unpack, pack
 from itertools import repeat
+from jawa.util.stream import BufferStreamReader
 
 
 class Attribute(object):
@@ -92,8 +93,12 @@ class AttributeTable(object):
 
             type_ = self._get_type(name)
             attribute = type_(self, name_index=name_index)
+            attribute_info = fio.read(length)
 
-            attribute.unpack(fio.read(length))
+            if isinstance(attribute, UnknownAttribute):
+                attribute.unpack(attribute_info)
+            else:
+                attribute.unpack(BufferStreamReader(attribute_info))
             self._table.append(attribute)
 
     def pack(self, fout):
@@ -178,10 +183,12 @@ from jawa.attributes.code import CodeAttribute
 from jawa.attributes.source_file import SourceFileAttribute
 from jawa.attributes.constant_value import ConstantValueAttribute
 from jawa.attributes.stack_map_table import StackMapTableAttribute
+from jawa.attributes.exceptions import ExceptionsAttribute
 
 default_parsers = {
     'Code': CodeAttribute,
     'SourceFile': SourceFileAttribute,
     'ConstantValue': ConstantValueAttribute,
-    'StackMapTable': StackMapTableAttribute
+    'StackMapTable': StackMapTableAttribute,
+    'Exceptions': ExceptionsAttribute
 }

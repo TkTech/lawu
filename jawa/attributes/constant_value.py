@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-from struct import unpack_from, pack
+from struct import pack
 from jawa.attribute import Attribute
 
 
@@ -17,7 +17,7 @@ class ConstantValueAttribute(Attribute):
         self._constantvalue_index = value.index if value else None
 
     def unpack(self, info):
-        self._constantvalue_index = unpack_from('>H', info)[0]
+        self._constantvalue_index = info.u2()
 
     @property
     def info(self):

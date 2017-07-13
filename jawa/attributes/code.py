@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-from struct import unpack, pack
+from struct import pack
 from itertools import repeat
 from collections import namedtuple
 
@@ -13,7 +13,6 @@ try:
     from cStringIO import StringIO
 except ImportError:
     from StringIO import StringIO
-
 
 CodeException = namedtuple('CodeException', [
     'start_pc', 'end_pc', 'handler_pc', 'catch_type'
@@ -86,20 +85,18 @@ class CodeAttribute(Attribute):
 
         :param info: A byte string containing an unparsed CodeAttribute.
         """
-        fio = StringIO(info)
-        self._max_stack, self._max_locals, c_len = unpack('>HHI', fio.read(8))
-        self._code = fio.read(c_len)
+        self._max_stack, self._max_locals, c_len = info.unpack('>HHI')
+        self._code = info.read(c_len)
 
         # The exception table
-        ex_table_len = unpack('>H', fio.read(2))[0]
+        ex_table_len = info.u2()
         self._ex_table = []
         for _ in repeat(None, ex_table_len):
             self._ex_table.append(CodeException(
-                *unpack('>HHHH', fio.read(8))
+                *info.unpack('>HHHH')
             ))
         self._attributes = AttributeTable(self._cf, parent=self)
-        self._attributes.unpack(fio)
-        fio.close()
+        self._attributes.unpack(info)
 
     @property
     def info(self):
