@@ -185,6 +185,7 @@ from jawa.attributes.constant_value import ConstantValueAttribute
 from jawa.attributes.stack_map_table import StackMapTableAttribute
 from jawa.attributes.exceptions import ExceptionsAttribute
 from jawa.attributes.line_number_table import LineNumberTableAttribute
+from jawa.attributes.deprecated import DeprecatedAttribute
 
 default_parsers = {
     'Code': CodeAttribute,
@@ -192,5 +193,6 @@ default_parsers = {
     'ConstantValue': ConstantValueAttribute,
     'StackMapTable': StackMapTableAttribute,
     'Exceptions': ExceptionsAttribute,
-    'LineNumberTable': LineNumberTableAttribute
+    'LineNumberTable': LineNumberTableAttribute,
+    'Deprecated': DeprecatedAttribute
 }
