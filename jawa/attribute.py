@@ -186,6 +186,7 @@ from jawa.attributes.stack_map_table import StackMapTableAttribute
 from jawa.attributes.exceptions import ExceptionsAttribute
 from jawa.attributes.line_number_table import LineNumberTableAttribute
 from jawa.attributes.deprecated import DeprecatedAttribute
+from jawa.attributes.local_variable import LocalVariableTableAttribute
 
 default_parsers = {
     'Code': CodeAttribute,
@@ -194,5 +195,6 @@ default_parsers = {
     'StackMapTable': StackMapTableAttribute,
     'Exceptions': ExceptionsAttribute,
     'LineNumberTable': LineNumberTableAttribute,
-    'Deprecated': DeprecatedAttribute
+    'Deprecated': DeprecatedAttribute,
+    'LocalVariableTable': LocalVariableTableAttribute
 }
