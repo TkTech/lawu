@@ -1,24 +1,4 @@
 # -*- coding: utf8 -*-
-__all__ = (
-    'ConstantPool',
-    'Constant',
-    'ConstantUTF8',
-    'ConstantClass',
-    'ConstantString',
-    'ConstantRef',
-    'ConstantFieldRef',
-    'ConstantMethodRef',
-    'ConstantInterfaceMethodRef',
-    'ConstantInteger',
-    'ConstantFloat',
-    'ConstantLong',
-    'ConstantDouble',
-    'ConstantNameAndType',
-    'ConstantMethodHandle',
-    'ConstantMethodType',
-    'ConstantInvokeDynamic',
-)
-
 from struct import unpack, pack
 
 from jawa.util.utf import decode_modified_utf8, encode_modified_utf8
@@ -164,6 +144,7 @@ class ConstantNameAndType(Constant):
         return 'ConstantNameAndType(name={0!r}, descriptor={1!r})'.format(
             self.name, self.descriptor)
 
+
 class ConstantMethodHandle(Constant):
     TAG = 15
 
@@ -184,6 +165,7 @@ class ConstantMethodHandle(Constant):
         return 'ConstantMethodHandle(kind={0!r}, index={1!r})'.format(
             self.kind, self.reference)
 
+
 class ConstantMethodType(Constant):
     TAG = 16
 
@@ -199,10 +181,12 @@ class ConstantMethodType(Constant):
         return 'ConstantMethodType(descriptor={0!r})'.format(
             self.descriptor)
 
+
 class ConstantInvokeDynamic(Constant):
     TAG = 18
 
-    def __init__(self, pool, index, bootstrap_method_attr_index, name_and_type_index):
+    def __init__(self, pool, index, bootstrap_method_attr_index,
+                 name_and_type_index):
         super(ConstantInvokeDynamic, self).__init__(pool, index)
         self._bootstrap_method_attr_index = bootstrap_method_attr_index
         self._name_and_type_index = name_and_type_index
@@ -216,8 +200,10 @@ class ConstantInvokeDynamic(Constant):
         return self.pool.get(self._name_and_type_index)
 
     def __repr__(self):
-        return 'ConstantInvokeDynamic(methodAttr={0!r}, nameAndType={1!r})'.format(
-            self.methodAttr, self.nameAndType)
+        return (
+            'ConstantInvokeDynamic(methodAttr={0!r}, '
+            'nameAndType={1!r})'
+        ).format(self.methodAttr, self.nameAndType)
 
 _constant_types = (
     None,
