@@ -58,7 +58,8 @@ class StackMapTableAttribute(Attribute):
     def unpack(self, info):
         # Described in "4.7.4. The StackMapTable Attribute"
         length = info.u2()
-        previous_frame = None
+        # Start with a null-state FULL_FRAME.
+        previous_frame = StackMapFrame(255)
         for i in xrange(length):
             frame_type = info.u1()
             frame = StackMapFrame(frame_type)
