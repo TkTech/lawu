@@ -119,9 +119,9 @@ class StackMapTableAttribute(Attribute):
                 else:
                     frame.frame_offset = previous_frame.frame_offset + \
                             frame_offset + 1
-                frame.frame_locals = previous_frame.frame_locals[
-                    0:251 - frame_type
-                ]
+                    frame.frame_locals = previous_frame.frame_locals[
+                        0:251 - frame_type
+                    ]
             elif frame_type == 251:
                 # SAME_FRAME_EXTENDED
                 if i == 0:
@@ -135,7 +135,7 @@ class StackMapTableAttribute(Attribute):
                 if i == 0:
                     frame.frame_offset = frame_offset
                 else:
-                    frame.frame_offset = previous_frame.frame_ffset + \
+                    frame.frame_offset = previous_frame.frame_offset + \
                             frame_offset + 1
 
                 frame.frame_locals = previous_frame.frame_locals + list(
