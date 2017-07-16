@@ -184,11 +184,13 @@ from jawa.attributes.source_file import SourceFileAttribute
 from jawa.attributes.constant_value import ConstantValueAttribute
 from jawa.attributes.stack_map_table import StackMapTableAttribute
 from jawa.attributes.exceptions import ExceptionsAttribute
+from jawa.attributes.line_number_table import LineNumberTableAttribute
 
 default_parsers = {
     'Code': CodeAttribute,
     'SourceFile': SourceFileAttribute,
     'ConstantValue': ConstantValueAttribute,
     'StackMapTable': StackMapTableAttribute,
-    'Exceptions': ExceptionsAttribute
+    'Exceptions': ExceptionsAttribute,
+    'LineNumberTable': LineNumberTableAttribute
 }
