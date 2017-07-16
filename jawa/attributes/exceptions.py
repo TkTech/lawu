@@ -30,3 +30,6 @@ class ExceptionsAttribute(Attribute):
             len(self.exceptions),
             *self.exceptions
         )
+
+    def __repr__(self):
+        return '<ExceptionsAttribute({0!r})>'.format(self.exceptions)
