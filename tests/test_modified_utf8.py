@@ -4,7 +4,7 @@ import os
 
 import binascii
 
-from jawa import ClassFile
+from jawa.cf import ClassFile
 from jawa.util.utf import encode_modified_utf8, decode_modified_utf8
 
 

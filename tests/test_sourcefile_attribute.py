@@ -7,7 +7,7 @@ try:
 except ImportError:
     from StringIO import StringIO
 
-from jawa import ClassFile
+from jawa.cf import ClassFile
 from jawa.attributes.source_file import SourceFileAttribute
 
 

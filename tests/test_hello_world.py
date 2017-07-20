@@ -4,7 +4,7 @@ import os
 
 import pytest
 
-from jawa import ClassFile
+from jawa.cf import ClassFile
 from jawa.util.bytecode import Instruction, Operand
 
 

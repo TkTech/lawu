@@ -3,7 +3,7 @@ import os.path
 
 import pytest
 
-from jawa import ClassFile
+from jawa.cf import ClassFile
 
 
 @pytest.fixture
