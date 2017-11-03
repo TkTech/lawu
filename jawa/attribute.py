@@ -1,6 +1,10 @@
 # -*- coding: utf8 -*-
+import inspect
+import pkgutil
+import importlib
 from struct import unpack, pack
 from itertools import repeat
+
 from jawa.util.stream import BufferStreamReader
 
 
@@ -73,7 +77,7 @@ class AttributeTable(object):
         of type `name`, or :class:~jawa.attribute.UnknownAttribute if
         none is found.
         """
-        return default_parsers.get(name, UnknownAttribute)
+        return get_attribute_classes().get(name, UnknownAttribute)
 
     def unpack(self, fio):
         """
@@ -176,25 +180,30 @@ class AttributeTable(object):
         return self._parent
 
 
-# Attributes can contain other attributes and AttributeTable's,
-# thus we have to do our import here.
-# pylint: disable=cyclic-import
-from jawa.attributes.code import CodeAttribute
-from jawa.attributes.source_file import SourceFileAttribute
-from jawa.attributes.constant_value import ConstantValueAttribute
-from jawa.attributes.stack_map_table import StackMapTableAttribute
-from jawa.attributes.exceptions import ExceptionsAttribute
-from jawa.attributes.line_number_table import LineNumberTableAttribute
-from jawa.attributes.deprecated import DeprecatedAttribute
-from jawa.attributes.local_variable import LocalVariableTableAttribute
+def get_attribute_classes():
+    """
+    Lookup all builtin Attribute subclasses, load them, and return a dict
+    of attribute name to class.
 
-default_parsers = {
-    'Code': CodeAttribute,
-    'SourceFile': SourceFileAttribute,
-    'ConstantValue': ConstantValueAttribute,
-    'StackMapTable': StackMapTableAttribute,
-    'Exceptions': ExceptionsAttribute,
-    'LineNumberTable': LineNumberTableAttribute,
-    'Deprecated': DeprecatedAttribute,
-    'LocalVariableTable': LocalVariableTableAttribute
-}
+    :rtype: dict
+    """
+    attribute_children = pkgutil.iter_modules(
+        importlib.import_module('jawa.attributes').__path__,
+        prefix='jawa.attributes.'
+    )
+
+    result = {}
+    for _, name, _ in attribute_children:
+        classes = inspect.getmembers(
+            importlib.import_module(name),
+            lambda c: (
+                inspect.isclass(c) and issubclass(c, Attribute) and
+                c is not Attribute
+            )
+        )
+
+        for class_name, class_ in classes:
+            attribute_name = getattr(class_, 'ATTRIBUTE_NAME', class_name[:-9])
+            result[attribute_name] = class_
+
+    return result

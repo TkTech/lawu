@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from jawa.attribute import default_parsers
+from jawa.attribute import get_attribute_classes
 
 
 def test_mandatory_attributes():
-    for parser_class in default_parsers.values():
+    for parser_class in get_attribute_classes().values():
         assert hasattr(parser_class, 'ADDED_IN'), (
             'Attribute parser missing mandatory ADDED_IN property'
         )
