@@ -19,18 +19,24 @@ setup(
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Disassemblers"
     ],
+    install_requires=[
+        'click>=5.0',
+        'six'
+    ],
     tests_require=[
-        'pytest',
-        'pytest-cov'
+        'pytest>=2.10',
     ],
     extras_require={
         'dev': [
             'pytest',
-            'pytest-cov',
             'sphinx',
             'sphinxcontrib-googleanalytics',
             'sphinx_rtd_theme',
             'ghp-import'
         ]
-    }
+    },
+    entry_points='''
+    [console_scripts]
+    jawa=jawa.cli:cli
+    '''
 )
