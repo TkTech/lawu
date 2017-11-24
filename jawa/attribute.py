@@ -177,9 +177,11 @@ class AttributeTable(object):
 from jawa.attributes.code import CodeAttribute
 from jawa.attributes.source_file import SourceFileAttribute
 from jawa.attributes.constant_value import ConstantValueAttribute
+from jawa.attributes.signature import SignatureAttribute
 
 default_parsers = {
     'Code': CodeAttribute,
     'SourceFile': SourceFileAttribute,
-    'ConstantValue': ConstantValueAttribute
+    'ConstantValue': ConstantValueAttribute,
+    'Signature': SignatureAttribute
 }
