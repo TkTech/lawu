@@ -5,6 +5,7 @@ import click
 
 from jawa.cf import ClassVersion
 from jawa.attribute import get_attribute_classes
+from jawa.util import bytecode
 
 
 @click.group()
@@ -29,4 +30,56 @@ def attributes():
                     fg='yellow'
                 )
             )
+        )
+
+
+@cli.command()
+@click.argument('mnemonic')
+def ins(mnemonic):
+    """Lookup instruction information.
+
+    Lookup an instruction by its mnemonic.
+    """
+    operand_types = {
+        10: u'Literal',
+        20: u'Local Index',
+        30: u'Constant Index',
+        40: u'Branch',
+        50: u'Padding'
+    }
+
+    operand_sizes = {
+        bytecode.ubyte: u'ubyte',
+        bytecode.ushort: u'ushort',
+        bytecode.byte: u'byte',
+        bytecode.short: u'short',
+        bytecode.integer: u'integer'
+    }
+
+    try:
+        op, fmt = bytecode.definition_from_mnemonic(mnemonic)
+    except KeyError:
+        click.secho(u'No definition found.', fg='red')
+        return
+
+    click.echo(u'{mnemonic} (0x{op})'.format(
+        mnemonic=click.style(mnemonic, fg='green', underline=True),
+        op=click.style(format(op, u'02x'), fg='green')
+    ))
+
+    if op in bytecode.can_be_wide:
+        click.echo(u'This instruction can be prefixed by the WIDE opcode.')
+
+    if fmt:
+        click.secho(u'Operand Format:', fg='yellow')
+        for operand_fmt, operand_type in fmt:
+            click.echo(u'- {ty} as a {fmt}'.format(
+                ty=click.style(operand_types[operand_type], fg='yellow'),
+                fmt=click.style(operand_sizes[operand_fmt], fg='yellow')
+            ))
+    elif op in (0xAB, 0xAA, 0xC4):
+        # lookup[table|switch] and WIDE.
+        click.secho(u'\nOperand Format:', fg='yellow')
+        click.echo(
+            u'This is a special-case opcode with variable operand parsing.'
         )

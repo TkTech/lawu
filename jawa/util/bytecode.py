@@ -1,15 +1,4 @@
 # -*- coding: utf8 -*-
-__all__ = (
-    'Instruction',
-    'Operand',
-    'OperandTypes',
-    'read_instruction',
-    'write_instruction',
-    'opcode_table',
-    'definition_from_mnemonic',
-    'definition_from_opcode'
-)
-
 import struct
 
 from itertools import repeat
@@ -24,7 +13,7 @@ _Instruction = namedtuple('Instruction', [
 ])
 
 # Opcodes that can be prefixed by the `wide` opcode.
-_wide = (
+can_be_wide = (
     0x15, 0x17, 0x19, 0x16,
     0x18, 0x36, 0x38, 0x3A,
     0x37, 0x39, 0xA9, 0x84
@@ -92,7 +81,7 @@ class Instruction(_Instruction):
         ``True`` if this instruction needs to be prefixed by the WIDE
         opcode.
         """
-        if self.opcode not in _wide:
+        if self.opcode not in can_be_wide:
             return False
 
         if self.operands[0].value >= 255:
@@ -355,13 +344,13 @@ def write_instruction(fout, start_pos, ins):
         fout.write(ushort.pack(operands[0].value))
         if opcode == 0x84:
             fout.write(short.pack(operands[1].value))
-    # A normal simple opcode with simple operands.
     elif fmt_operands:
+        # A normal simple opcode with simple operands.
         fout.write(ubyte.pack(opcode))
         for i, (fmt, _) in enumerate(fmt_operands):
             fout.write(fmt.pack(operands[i].value))
-    # Special case for lookupswitch, which also has a unique.
     elif opcode == 0xAB:
+        # Special case for lookupswitch.
         fout.write(ubyte.pack(opcode))
         # assemble([
         #     ('lookupswitch', {
@@ -372,17 +361,11 @@ def write_instruction(fout, start_pos, ins):
         padding = 4 - (start_pos + 1) % 4
         padding = padding if padding != 4 else 0
         fout.write(struct.pack('{0}x'.format(padding)))
-        fout.write(struct.pack('>ii',
-            operands[1].value,
-            len(operands[0])
-        ))
+        fout.write(struct.pack('>ii', operands[1].value, len(operands[0])))
         for key in sorted(operands[0].keys()):
-            fout.write(struct.pack('>ii',
-                key,
-                operands[0][key].value
-            ))
-    # Special case for tableswitch.
+            fout.write(struct.pack('>ii', key, operands[0][key].value))
     elif opcode == 0xAA:
+        # Special case for tableswitch.
         raise NotImplementedError()
     else:
         # opcode with no operands.
