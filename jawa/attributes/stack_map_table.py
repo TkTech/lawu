@@ -106,13 +106,13 @@ class StackMapTableAttribute(Attribute):
                 else:
                     frame.frame_offset = previous_frame.frame_offset + \
                             frame_offset + 1
-                    frame.frame_locals = previous_frame.frame_locals
-                    frame.frame_stack = list(
-                        self._unpack_verification_type_info(
-                            info,
-                            1
-                        )
+                frame.frame_locals = previous_frame.frame_locals
+                frame.frame_stack = list(
+                    self._unpack_verification_type_info(
+                        info,
+                        1
                     )
+                )
             elif frame_type < 251:
                 # CHOP
                 if i == 0:
