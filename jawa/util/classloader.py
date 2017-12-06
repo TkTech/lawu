@@ -86,6 +86,7 @@ class ClassLoader(object):
         :param path: Fully-qualified path to a ClassFile or an asset file.
         :type path: unicode
         """
+        # Try both with-and-without the class suffix.
         try:
             full_path = self.path_map[path]
         except KeyError as original_e:
@@ -96,6 +97,8 @@ class ClassLoader(object):
             else:
                 path = path + '.class'
 
+        # Try to refresh the class from the cache, loading it from disk
+        # if not found.
         try:
             r = self.class_cache.pop(path)
         except KeyError:
@@ -107,9 +110,11 @@ class ClassLoader(object):
                 with open(full_path, 'rb') as fio:
                     r = ClassFile(fio)
 
+        # Even if it was found re-set the key to update the OrderedDict
+        # ordering.
         self.class_cache[path] = r
 
-        # If the cache is enabled removed every item over N started from
+        # If the cache is enabled remove every item over N started from
         # the least-used.
         if self.max_cache > 0:
             to_pop = max(len(self.class_cache) - self.max_cache, 0)
