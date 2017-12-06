@@ -37,7 +37,7 @@ class ClassLoader(object):
         self.follow_symlinks = follow_symlinks
         self.maximum_depth = maximum_depth
 
-    def add_path(self, path):
+    def add_path(self, *paths):
         """Add a new path to the class loader.
 
         If the given `path` is a directory, it is traversed up to the maximum
@@ -47,27 +47,28 @@ class ClassLoader(object):
         If the given `path` is a .jar or .zip file it will be opened and the
         file index added to the class loader lookup table.
 
-        :param path: A path to either a ZIP/JAR or a directory to be added
-                     to the classpath.
-        :type path: unicode
+        :param paths: Any number of paths to either a ZIP/JAR or a directory to
+                      be added to the classpath.
+        :type paths: unicode
         """
-        # We're adding an archive to the classpath so we want to open it,
-        # get the index, and unpack it into our path map.
-        if path.lower().endswith(('.zip', '.jar')):
-            with ZipFile(path, 'r') as zf:
-                self.path_map.update(izip(zf.namelist(), repeat(path)))
-                return
-        elif os.path.isdir(path):
-            walker = _walk(
-                path,
-                follow_links=self.follow_symlinks,
-                maximum_depth=self.maximum_depth
-            )
-            for root, dirs, files in walker:
-                for file_ in files:
-                    path_full = os.path.join(root, file_)
-                    path_suffix = os.path.relpath(path_full, path)
-                    self.path_map[path_suffix] = path_full
+        for path in paths:
+            # We're adding an archive to the classpath so we want to open it,
+            # get the index, and unpack it into our path map.
+            if path.lower().endswith(('.zip', '.jar')):
+                with ZipFile(path, 'r') as zf:
+                    self.path_map.update(izip(zf.namelist(), repeat(path)))
+                    return
+            elif os.path.isdir(path):
+                walker = _walk(
+                    path,
+                    follow_links=self.follow_symlinks,
+                    maximum_depth=self.maximum_depth
+                )
+                for root, dirs, files in walker:
+                    for file_ in files:
+                        path_full = os.path.join(root, file_)
+                        path_suffix = os.path.relpath(path_full, path)
+                        self.path_map[path_suffix] = path_full
 
     def load(self, path):
         """Load the class at `path` or return an asset path.
@@ -88,6 +89,8 @@ class ClassLoader(object):
                 full_path = self.path_map[path + '.class']
             except KeyError:
                 raise original_e
+            else:
+                path = path + '.class'
 
         if full_path.endswith(('.zip', '.jar')):
             with ZipFile(full_path, 'r') as zf:
