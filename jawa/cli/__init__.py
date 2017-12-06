@@ -3,9 +3,9 @@
 import six
 import click
 
-from jawa.cf import ClassVersion
+from jawa.cf import ClassVersion, ClassFile
 from jawa.attribute import get_attribute_classes
-from jawa.util import bytecode
+from jawa.util import bytecode, shell, classloader
 
 
 @click.group()
@@ -83,3 +83,22 @@ def ins(mnemonic):
         click.echo(
             u'This is a special-case opcode with variable operand parsing.'
         )
+
+
+@cli.command(name='shell')
+@click.option('--class-path', '-cp', multiple=True)
+def shell_command(class_path):
+    """Drop into a debugging shell.
+
+    Once the shell is loaded you can use `load(<class name>)` to load
+    any class on the set classpath.
+    """
+    loader = classloader.ClassLoader()
+
+    for path in class_path:
+        loader.add_path(path)
+
+    shell.start_shell(local_ns={
+        'ClassFile': ClassFile,
+        'load': loader.load
+    })
