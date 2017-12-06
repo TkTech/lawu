@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 import os
 import os.path
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
 from itertools import izip, repeat
 from zipfile import ZipFile
 from collections import OrderedDict
@@ -112,8 +116,14 @@ class ClassLoader(object):
                 with open(full_path, 'rb') as fio:
                     r = ClassFile(fio)
             else:
-                with full_path.open(path) as fio:
+                # It's 2x as fast to read the entire file at once using
+                # read and wrapping it in a StringIO then it is to just
+                # ZipFile.open() it...
+                try:
+                    fio = StringIO(full_path.read(path))
                     r = ClassFile(fio)
+                finally:
+                    fio.close()
 
         # Even if it was found re-set the key to update the OrderedDict
         # ordering.

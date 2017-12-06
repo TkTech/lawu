@@ -475,8 +475,15 @@ class ConstantPool(object):
 
             if tag == 1:
                 # CONSTANT_Utf8_info, a length prefixed UTF-8-ish string.
-                length = unpack('>H', read(2))[0]
-                self.append((tag, decode_modified_utf8(read(length))))
+                # Only attempt to properly decode the MUTF8 if it fails
+                # regular UTF8 decoding, which overs huge time savings over
+                # large JARs.
+                utf8_str = read(unpack('>H', read(2))[0])
+                try:
+                    utf8_str = utf8_str.decode('utf8')
+                except UnicodeDecodeError:
+                    utf8_str = decode_modified_utf8(utf8_str)
+                self.append((tag, utf8_str))
             else:
                 # Every other constant type is trivial.
                 fmt, size = _constant_fmts[tag]
