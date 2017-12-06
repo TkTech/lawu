@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from struct import pack
 
-from jawa.attribute import Attribute
+from jawa.attribute import Attribute, lazy_attribute_property
 
 
 class ExceptionsAttribute(Attribute):
@@ -15,11 +15,16 @@ class ExceptionsAttribute(Attribute):
                 'Exceptions'
             ).index
         )
-        self.exceptions = []
+        self._exceptions = []
 
     def unpack(self, info):
         length = info.u2()
-        self.exceptions = list(info.unpack('>{0}H'.format(length)))
+        self._exceptions = list(info.unpack('>{0}H'.format(length)))
+
+    @property
+    @lazy_attribute_property
+    def exceptions(self):
+        return self._exceptions
 
     @property
     def info(self):

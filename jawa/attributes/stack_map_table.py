@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from itertools import repeat
 
-from jawa.attribute import Attribute
+from jawa.attribute import Attribute, lazy_attribute_property
 from jawa.util.verifier import VerificationTypes
 
 # These types are followed by an additional u2.
@@ -53,7 +53,7 @@ class StackMapTableAttribute(Attribute):
                 'StackMapTable'
             ).index
         )
-        self.frames = []
+        self._frames = []
 
     def unpack(self, info):
         # Described in "4.7.4. The StackMapTable Attribute"
@@ -72,7 +72,7 @@ class StackMapTableAttribute(Attribute):
                             frame_type + 1
                     frame.frame_locals = previous_frame.frame_locals
 
-                self.frames.append(frame)
+                self._frames.append(frame)
                 previous_frame = frame
                 continue
             elif frame_type < 128:
@@ -88,7 +88,7 @@ class StackMapTableAttribute(Attribute):
                     self._unpack_verification_type_info(info, 1)
                 )
 
-                self.frames.append(frame)
+                self._frames.append(frame)
                 previous_frame = frame
                 continue
             elif frame_type < 247:
@@ -162,7 +162,7 @@ class StackMapTableAttribute(Attribute):
                     info.u2()
                 ))
 
-            self.frames.append(frame)
+            self._frames.append(frame)
             previous_frame = frame
 
     @staticmethod
@@ -175,6 +175,11 @@ class StackMapTableAttribute(Attribute):
                 yield (tag, info.u2())
             else:
                 yield (tag,)
+
+    @property
+    @lazy_attribute_property
+    def frames(self):
+        return self._frames
 
     @property
     def info(self):

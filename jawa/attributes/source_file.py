@@ -1,6 +1,6 @@
 # -*- coding: utf8 -*-
 from struct import pack
-from jawa.attribute import Attribute
+from jawa.attribute import Attribute, lazy_attribute_property
 
 
 class SourceFileAttribute(Attribute):
@@ -24,5 +24,6 @@ class SourceFileAttribute(Attribute):
         return pack('>H', self._sourcefile_index)
 
     @property
+    @lazy_attribute_property
     def sourcefile(self):
         return self._cf.constants[self._sourcefile_index]

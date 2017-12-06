@@ -4,8 +4,21 @@ import pkgutil
 import importlib
 from struct import unpack, pack
 from itertools import repeat
+from functools import wraps
+
 
 from jawa.util.stream import BufferStreamReader
+
+
+def lazy_attribute_property(f):
+    @wraps(f)
+    def _f(self, *args, **kwargs):
+        if not hasattr(self, '_lazy_loaded'):
+            self.unpack(BufferStreamReader(self._original_info))
+            self._lazy_loaded = True
+
+        return f(self, *args, **kwargs)
+    return _f
 
 
 class Attribute(object):
@@ -13,6 +26,7 @@ class Attribute(object):
         self._table = table
         self._cf = table.cf
         self._name_index = name_index
+        self._original_info = None
 
     @property
     def info(self):
@@ -96,13 +110,10 @@ class AttributeTable(object):
             name = self._cf.constants[name_index].value
 
             type_ = self._get_type(name)
-            attribute = type_(self, name_index=name_index)
-            attribute_info = fio.read(length)
 
-            if isinstance(attribute, UnknownAttribute):
-                attribute.unpack(attribute_info)
-            else:
-                attribute.unpack(BufferStreamReader(attribute_info))
+            attribute = type_(self, name_index=name_index)
+            attribute._original_info = fio.read(length)
+
             self._table.append(attribute)
 
     def pack(self, fout):
