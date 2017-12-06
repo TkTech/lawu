@@ -244,6 +244,7 @@ opcode_table = {
     0x68: ('imul', None),
     0x74: ('ineg', None),
     0xC1: ('instanceof', [(ushort, 30)]),
+    0xBA: ('invokedynamic', [(ushort, 30), (ubyte, 50), (ubyte, 50)]),
     0xB9: ('invokeinterface', [(ushort, 30), (ubyte, 10), (ubyte, 50)]),
     0xB7: ('invokespecial', [(ushort, 30)]),
     0xB8: ('invokestatic', [(ushort, 30)]),
