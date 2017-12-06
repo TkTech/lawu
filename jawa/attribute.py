@@ -77,7 +77,7 @@ class AttributeTable(object):
         of type `name`, or :class:~jawa.attribute.UnknownAttribute if
         none is found.
         """
-        return get_attribute_classes().get(name, UnknownAttribute)
+        return ATTRIBUTE_CLASSES.get(name, UnknownAttribute)
 
     def unpack(self, fio):
         """
@@ -207,3 +207,6 @@ def get_attribute_classes():
             result[attribute_name] = class_
 
     return result
+
+
+ATTRIBUTE_CLASSES = get_attribute_classes()
