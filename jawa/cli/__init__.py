@@ -98,5 +98,6 @@ def shell_command(class_path):
 
     shell.start_shell(local_ns={
         'ClassFile': ClassFile,
-        'load': loader.load
+        'load': loader.load,
+        'loader': loader
     })

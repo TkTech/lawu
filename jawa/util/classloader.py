@@ -3,11 +3,13 @@ import os
 import os.path
 from itertools import izip, repeat
 from zipfile import ZipFile
+from collections import OrderedDict
 
 from jawa.cf import ClassFile
 
 
 def _walk(path, follow_links=False, maximum_depth=None):
+    """A modified os.walk with support for maximum traversal depth."""
     root_level = path.rstrip(os.path.sep).count(os.path.sep)
     for root, dirs, files in os.walk(path, followlinks=follow_links):
         yield root, dirs, files
@@ -31,11 +33,16 @@ class ClassLoader(object):
                           filesystem directories. If set to `None` no limit
                           will be enforced. [default: 20]
     :type maximum_depth: Long or None.
+    :param max_cache: The maximum number of ClassFile's to store in the cache.
+                      If set to 0, no classes with be cached. [default: 50]
+    :type max_cache: Long
     """
-    def __init__(self, follow_symlinks=False, maximum_depth=20):
+    def __init__(self, follow_symlinks=False, maximum_depth=20, max_cache=50):
         self.path_map = {}
         self.follow_symlinks = follow_symlinks
         self.maximum_depth = maximum_depth
+        self.class_cache = OrderedDict()
+        self.max_cache = max_cache
 
     def add_path(self, *paths):
         """Add a new path to the class loader.
@@ -76,9 +83,6 @@ class ClassLoader(object):
         If `path` points to a valid fully-qualified class it will be loaded
         and returned.
 
-        if `path` points to a a non-class file, the path will be returned
-        instead (useful for loading assets).
-
         :param path: Fully-qualified path to a ClassFile or an asset file.
         :type path: unicode
         """
@@ -92,12 +96,29 @@ class ClassLoader(object):
             else:
                 path = path + '.class'
 
-        if full_path.endswith(('.zip', '.jar')):
-            with ZipFile(full_path, 'r') as zf:
-                with zf.open(path) as fio:
-                    return ClassFile(fio)
-        elif full_path.endswith('.class'):
-            with open(full_path, 'rb') as fio:
-                return ClassFile(fio)
-        else:
-            return full_path
+        try:
+            r = self.class_cache.pop(path)
+        except KeyError:
+            if full_path.endswith(('.zip', '.jar')):
+                with ZipFile(full_path, 'r') as zf:
+                    with zf.open(path) as fio:
+                        r = ClassFile(fio)
+            else:
+                with open(full_path, 'rb') as fio:
+                    r = ClassFile(fio)
+
+        self.class_cache[path] = r
+
+        # If the cache is enabled removed every item over N started from
+        # the least-used.
+        if self.max_cache > 0:
+            to_pop = max(len(self.class_cache) - self.max_cache, 0)
+            for _ in repeat(None, to_pop):
+                self.class_cache.popitem(last=False)
+
+        return r
+
+    def clear(self):
+        """Erase all stored paths and all cached classes."""
+        self.path_map.clear()
+        self.class_cache.clear()
