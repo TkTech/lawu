@@ -38,11 +38,18 @@ class ClassLoader(object):
     :type max_cache: Long
     """
     def __init__(self, follow_symlinks=False, maximum_depth=20, max_cache=50):
+        #: A mapping of all known classes to their source location.
         self.path_map = {}
+        #: Should symlinks be followed when traversing directories?
         self.follow_symlinks = follow_symlinks
+        #: The maximum number of directories to traverse.
         self.maximum_depth = maximum_depth
-        self.class_cache = OrderedDict()
+
+        #: The maximum number of entries that may live in the class cache
+        #: at any one time. Setting this to 0 will cause the cache to become
+        #: infinite.
         self.max_cache = max_cache
+        self.class_cache = OrderedDict()
 
     def add_path(self, *paths):
         """Add a new path to the class loader.
@@ -62,9 +69,8 @@ class ClassLoader(object):
             # We're adding an archive to the classpath so we want to open it,
             # get the index, and unpack it into our path map.
             if path.lower().endswith(('.zip', '.jar')):
-                with ZipFile(path, 'r') as zf:
-                    self.path_map.update(izip(zf.namelist(), repeat(path)))
-                    return
+                zf = ZipFile(path, 'r')
+                self.path_map.update(izip(zf.namelist(), repeat(zf)))
             elif os.path.isdir(path):
                 walker = _walk(
                     path,
@@ -102,12 +108,11 @@ class ClassLoader(object):
         try:
             r = self.class_cache.pop(path)
         except KeyError:
-            if full_path.endswith(('.zip', '.jar')):
-                with ZipFile(full_path, 'r') as zf:
-                    with zf.open(path) as fio:
-                        r = ClassFile(fio)
-            else:
+            if isinstance(full_path, basestring):
                 with open(full_path, 'rb') as fio:
+                    r = ClassFile(fio)
+            else:
+                with full_path.open(path) as fio:
                     r = ClassFile(fio)
 
         # Even if it was found re-set the key to update the OrderedDict
