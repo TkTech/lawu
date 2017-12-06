@@ -34,7 +34,7 @@ class ClassLoader(object):
                           will be enforced. [default: 20]
     :type maximum_depth: Long or None.
     :param max_cache: The maximum number of ClassFile's to store in the cache.
-                      If set to 0, no classes with be cached. [default: 50]
+                      If set to 0, the cache will be unlimited. [default: 50]
     :type max_cache: Long
     """
     def __init__(self, follow_symlinks=False, maximum_depth=20, max_cache=50):
