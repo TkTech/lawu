@@ -471,7 +471,7 @@ class ConstantPool(object):
         while constant_pool_count > 1:
             constant_pool_count -= 1
             # The 1-byte prefix identifies the type of constant.
-            tag = unpack('>B', read(1))[0]
+            tag = ord(read(1))
 
             if tag == 1:
                 # CONSTANT_Utf8_info, a length prefixed UTF-8-ish string.
@@ -488,7 +488,7 @@ class ConstantPool(object):
                 # Every other constant type is trivial.
                 fmt, size = _constant_fmts[tag]
                 self.append((tag,) + unpack(fmt, read(size)))
-                if tag in (5, 6):
+                if tag == 5 or tag == 6:
                     # LONG (5) and DOUBLE (6) count as two entries in the
                     # pool.
                     self.append(None)
