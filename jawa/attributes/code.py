@@ -3,7 +3,7 @@ from struct import pack
 from itertools import repeat
 from collections import namedtuple
 
-from jawa.attribute import Attribute, AttributeTable, lazy_attribute_property
+from jawa.attribute import Attribute, AttributeTable
 from jawa.util.bytecode import (
     read_instruction,
     write_instruction
@@ -118,7 +118,6 @@ class CodeAttribute(Attribute):
         return fout.getvalue()
 
     @property
-    @lazy_attribute_property
     def max_stack(self):
         """The maximum size of the stack."""
         return self._max_stack
@@ -128,7 +127,6 @@ class CodeAttribute(Attribute):
         self._max_stack = value
 
     @property
-    @lazy_attribute_property
     def max_locals(self):
         """The maximum number of locals."""
         return self._max_locals
@@ -138,17 +136,14 @@ class CodeAttribute(Attribute):
         self._max_locals = value
 
     @property
-    @lazy_attribute_property
     def exception_table(self):
         return self._ex_table
 
     @property
-    @lazy_attribute_property
     def code(self):
         return self._code
 
     @property
-    @lazy_attribute_property
     def attributes(self):
         """
         An :class:`~jawa.attribute.AttributeTable` containing all of the

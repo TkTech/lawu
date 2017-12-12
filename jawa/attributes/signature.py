@@ -1,6 +1,6 @@
 # -*- coding: utf8 -*-
 from struct import pack
-from jawa.attribute import Attribute, lazy_attribute_property
+from jawa.attribute import Attribute
 
 
 class SignatureAttribute(Attribute):
@@ -24,6 +24,5 @@ class SignatureAttribute(Attribute):
         return pack('>H', self._signature_index)
 
     @property
-    @lazy_attribute_property
     def signature(self):
         return self._cf.constants[self._signature_index]
