@@ -73,7 +73,7 @@ def encode_modified_utf8(u):
             )
         elif c < 0x7F:
             final_string.append(c)
-        elif c > 0x800 and c < 0xFFFF:
+        elif 0x800 < c < 0xFFFF:
             final_string.extend([
                 (0xE0 | (0x0F & (c >> 12))),
                 (0x80 | (0x3F & (c >> 6))),
