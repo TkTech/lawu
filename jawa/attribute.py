@@ -84,7 +84,7 @@ class AttributeTable(object):
 
         if not isinstance(attr, Attribute):
             name_index, info = attr[0], attr[1]
-            name = self.cf.constants[attr[0]].value
+            name = self.cf.constants[name_index].value
 
             attribute_type = ATTRIBUTE_CLASSES.get(name, UnknownAttribute)
             self._table[key] = attr = attribute_type(self, name_index)
@@ -129,9 +129,20 @@ class AttributeTable(object):
         return attribute
 
     def find(self, name=None, f=None):
-        for attribute in self:
-            if name is not None and not attribute.name.value == name:
-                continue
+        for idx, attribute in enumerate(self._table):
+            if name is not None:
+                # Optimization to filter solely on name without causing
+                # a full attribute load.
+                if not isinstance(attribute, Attribute) and f is None:
+                    attr_name = self.cf.constants[attribute[0]].value
+                    if attr_name != name:
+                        continue
+                elif name != attribute.name.value:
+                    continue
+
+            # Force an attribute load.
+            if not isinstance(attribute, Attribute):
+                attribute = self[idx]
 
             if f is not None and not f(attribute):
                 continue
