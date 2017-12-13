@@ -5,6 +5,7 @@ try:
     from IPython.terminal import embed
 except ImportError:
     IPYTHON_SHELL_AVAILABLE = False
+    embed = None
 else:
     IPYTHON_SHELL_AVAILABLE = True
 

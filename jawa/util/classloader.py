@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
 import os.path
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
 from itertools import izip, repeat
 from zipfile import ZipFile
 from collections import OrderedDict
+
+import six
+import six.moves
 
 from jawa.cf import ClassFile
 
@@ -112,15 +111,15 @@ class ClassLoader(object):
         try:
             r = self.class_cache.pop(path)
         except KeyError:
-            if isinstance(full_path, basestring):
+            if isinstance(full_path, six.string_types):
                 with open(full_path, 'rb') as fio:
                     r = ClassFile(fio)
             else:
                 # It's 2x as fast to read the entire file at once using
                 # read and wrapping it in a StringIO then it is to just
                 # ZipFile.open() it...
+                fio = six.moves.cStringIO(full_path.read(path))
                 try:
-                    fio = StringIO(full_path.read(path))
                     r = ClassFile(fio)
                 finally:
                     fio.close()

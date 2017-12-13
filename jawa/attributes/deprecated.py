@@ -16,3 +16,9 @@ class DeprecatedAttribute(Attribute):
 
     def __repr__(self):
         return '<DeprecatedAttribute()>'
+
+    def pack(self):
+        pass
+
+    def unpack(self, info):
+        pass

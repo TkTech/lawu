@@ -64,7 +64,7 @@ def ins(mnemonic):
 
     click.echo(u'{mnemonic} (0x{op})'.format(
         mnemonic=click.style(mnemonic, fg='green', underline=True),
-        op=click.style(format(op, u'02x'), fg='green')
+        op=click.style(format(op, '02x'), fg='green')
     ))
 
     if op in bytecode.can_be_wide:

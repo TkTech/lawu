@@ -381,10 +381,12 @@ def read_instruction(fio, start_pos):
     :param fio: Any file-like object providing ``read()``.
     :param start_pos: The current position in the stream.
     """
-    try:
-        op = ubyte.unpack(fio.read(1))[0]
-    except struct.error:
+    op = fio.read(1)
+
+    if not op:
         return None
+
+    op = ord(op)
 
     name, operands = opcode_table[op][:2]
 

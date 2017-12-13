@@ -106,7 +106,7 @@ class FieldTable(object):
         """
         Creates a new field from `name` and `descriptor`. For example::
 
-            >>> from jawa import ClassFile
+            >>> from jawa.cf import ClassFile
             >>> cf = ClassFile.create('BeerCounter')
             >>> field = cf.fields.create('BeerCount', 'I')
 
@@ -127,7 +127,7 @@ class FieldTable(object):
         set to the :class:`~jawa.constants.Constant` `value`. For example,
         to create a string with the classic "Hello World!"::
 
-            >>> from jawa import ClassFile
+            >>> from jawa.cf import ClassFile
             >>> cf = ClassFile.create('BeerCounter')
             >>> field = cf.fields.create_static(
             ...    'HelloWorld',

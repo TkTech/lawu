@@ -7,22 +7,25 @@ class SourceFileAttribute(Attribute):
     ADDED_IN = '1.0.2'
     MINIMUM_CLASS_VERSION = (45, 3)
 
-    def __init__(self, table, sourcefile=None, name_index=None):
+    def __init__(self, table, name_index=None):
         super(SourceFileAttribute, self).__init__(
             table,
             name_index or table.cf.constants.create_utf8(
-                'SourceFile'
+                u'SourceFile'
             ).index
         )
-        self._sourcefile_index = sourcefile.index if sourcefile else None
+        self.source_file_index = None
 
     def unpack(self, info):
-        self._sourcefile_index = info.u2()
+        self.source_file_index = info.u2()
+
+    def pack(self):
+        return pack('>H', self.source_file_index)
 
     @property
-    def info(self):
-        return pack('>H', self._sourcefile_index)
+    def source_file(self):
+        return self.cf.constants[self.source_file_index]
 
-    @property
-    def sourcefile(self):
-        return self._cf.constants[self._sourcefile_index]
+    @source_file.setter
+    def source_file(self, value):
+        self.source_file_index = value.index

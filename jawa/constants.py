@@ -94,6 +94,8 @@ class ConstantString(Constant):
 
 
 class ConstantRef(Constant):
+    TAG = None
+
     def __init__(self, pool, index, class_index, name_and_type_index):
         super(ConstantRef, self).__init__(pool, index)
         self._class_index = class_index
@@ -192,18 +194,19 @@ class ConstantInvokeDynamic(Constant):
         self._name_and_type_index = name_and_type_index
 
     @property
-    def methodAttr(self):
+    def method_attr(self):
         return self.pool.get(self._bootstrap_method_attr_index)
 
     @property
-    def nameAndType(self):
+    def name_and_type(self):
         return self.pool.get(self._name_and_type_index)
 
     def __repr__(self):
         return (
             'ConstantInvokeDynamic(methodAttr={0!r}, '
             'nameAndType={1!r})'
-        ).format(self.methodAttr, self.nameAndType)
+        ).format(self.method_attr, self.name_and_type)
+
 
 _constant_types = (
     None,
@@ -317,7 +320,8 @@ class ConstantPool(object):
 
         :param value: The value of the new UTF8 string.
         """
-        self.append((1, unicode(value)))
+        assert isinstance(value, unicode)
+        self.append((1, value))
         return self.get(self.raw_count - 1)
 
     def create_integer(self, value):

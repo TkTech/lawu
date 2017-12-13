@@ -99,7 +99,7 @@ class ClassFile(object):
             self._from_io(fio)
 
     @classmethod
-    def create(cls, this, super_='java/lang/Object'):
+    def create(cls, this, super_=u'java/lang/Object'):
         """
         A utility which sets up reasonable defaults for a new public class.
 

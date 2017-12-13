@@ -15,8 +15,8 @@ def cf():
     )
 
     with open(sample_path, 'rb') as fin:
-        cf = ClassFile(fin)
-        yield cf
+        class_file = ClassFile(fin)
+        yield class_file
 
 
 def test_exceptions_read(cf):
@@ -33,4 +33,4 @@ def test_exceptions_write(cf):
     m = cf.methods.find_one(name='main')
     a = m.code.attributes.find_one(name='LineNumberTable')
 
-    assert a.info == b'\x00\x02\x00\x00\x00\x03\x00\x08\x00\x04'
+    assert a.pack() == b'\x00\x02\x00\x00\x00\x03\x00\x08\x00\x04'

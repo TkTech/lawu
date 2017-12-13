@@ -97,7 +97,6 @@ def assemble(code):
     # The third pass, now that we know where each label is we can figure
     # out the offset for each jump.
     current_pc = 0
-    offset = lambda l: Operand(40, label_pcs[l.name] - current_pc)
 
     for ins in final:
         if isinstance(ins, Label):
@@ -108,9 +107,9 @@ def assemble(code):
                 # lookupswitch is a special case
                 for k, v in operand.items():
                     if isinstance(v, Label):
-                        operand[k] = offset(v)
+                        operand[k] = Operand(40, label_pcs[v.name] - current_pc)
             elif isinstance(operand, Label):
-                ins.operands[i] = offset(operand)
+                ins.operands[i] = Operand(40, label_pcs[operand.name] - current_pc)
 
         current_pc += ins.size_on_disk(current_pc)
 

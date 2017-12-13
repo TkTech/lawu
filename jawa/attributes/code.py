@@ -3,16 +3,13 @@ from struct import pack
 from itertools import repeat
 from collections import namedtuple
 
+import six.moves
+
 from jawa.attribute import Attribute, AttributeTable
 from jawa.util.bytecode import (
     read_instruction,
     write_instruction
 )
-
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
 
 CodeException = namedtuple('CodeException', [
     'start_pc', 'end_pc', 'handler_pc', 'catch_type'
@@ -95,11 +92,10 @@ class CodeAttribute(Attribute):
             self._ex_table.append(CodeException(
                 *info.unpack('>HHHH')
             ))
-        self._attributes = AttributeTable(self._cf, parent=self)
+        self._attributes = AttributeTable(self.cf, parent=self)
         self._attributes.unpack(info)
 
-    @property
-    def info(self):
+    def pack(self):
         """
         The `CodeAttribute` in packed byte string form.
         """
@@ -156,7 +152,7 @@ class CodeAttribute(Attribute):
         Assembles an iterable of :class:`~jawa.util.bytecode.Instruction`
         objects into a method's code body.
         """
-        fout = StringIO()
+        fout = six.moves.cStringIO()
         for ins in code:
             write_instruction(fout, fout.tell(), ins)
         self._code = fout.getvalue()
@@ -167,7 +163,7 @@ class CodeAttribute(Attribute):
         Disassembles this method, yielding an iterable of
         :class:`~jawa.util.bytecode.Instruction` objects.
         """
-        fio = StringIO(self._code)
+        fio = six.moves.cStringIO(self._code)
 
         for ins in iter(lambda: read_instruction(fio, fio.tell()), None):
             yield ins

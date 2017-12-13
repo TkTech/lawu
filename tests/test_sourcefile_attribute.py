@@ -26,19 +26,17 @@ def test_sourcefile_read():
 
         source_file = cf.attributes.find_one(name='SourceFile')
 
-        assert(source_file.sourcefile.value == 'HelloWorldDebug.java')
+        assert(source_file.source_file.value == 'HelloWorldDebug.java')
 
 
 def test_sourcefile_write():
     """
     Ensure SourceFileAttribute can be written and read back.
     """
-    cf_one = ClassFile.create('SourceFileTest')
+    cf_one = ClassFile.create(u'SourceFileTest')
 
-    cf_one.attributes.create(
-        SourceFileAttribute,
-        sourcefile=cf_one.constants.create_utf8('SourceFileTest.java')
-    )
+    sfa = cf_one.attributes.create(SourceFileAttribute)
+    sfa.source_file = cf_one.constants.create_utf8(u'SourceFileTest.java')
 
     fout = StringIO()
     cf_one.save(fout)
@@ -46,5 +44,5 @@ def test_sourcefile_write():
     fin = StringIO(fout.getvalue())
     cf_two = ClassFile(fin)
 
-    source_file = cf_two.attributes.find_one(name='SourceFile')
-    assert(source_file.sourcefile.value == 'SourceFileTest.java')
+    source_file = cf_two.attributes.find_one(name=u'SourceFile')
+    assert(source_file.source_file.value == u'SourceFileTest.java')

@@ -21,8 +21,7 @@ class ExceptionsAttribute(Attribute):
         length = info.u2()
         self.exceptions = list(info.unpack('>{0}H'.format(length)))
 
-    @property
-    def info(self):
+    def pack(self):
         return pack(
             '>H{0}H'.format(
                 len(self.exceptions)

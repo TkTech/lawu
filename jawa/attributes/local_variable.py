@@ -36,8 +36,7 @@ class LocalVariableTableAttribute(Attribute):
             for x in zip(*[iter(table)] * 5)
         ]
 
-    @property
-    def info(self):
+    def pack(self):
         return pack(
             '>H{0}H'.format(len(self.local_variables) * 5),
             len(self.local_variables),

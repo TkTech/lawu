@@ -15,8 +15,8 @@ def cf():
     )
 
     with open(sample_path, 'rb') as fin:
-        cf = ClassFile(fin)
-        yield cf
+        class_file = ClassFile(fin)
+        yield class_file
 
 
 def test_exceptions_read(cf):
@@ -33,7 +33,7 @@ def test_exceptions_write(cf):
     m = cf.methods.find_one(name='test')
     a = m.attributes.find_one(name='Exceptions')
 
-    assert a.info == b'\x00\x01\x00\x0A'
+    assert a.pack() == b'\x00\x01\x00\x0A'
 
     a.exceptions.append(
         cf.constants.create_class(
@@ -41,4 +41,4 @@ def test_exceptions_write(cf):
         ).index
     )
 
-    assert a.info == b'\x00\x02\x00\x0A\x00\x12'
+    assert a.pack() == b'\x00\x02\x00\x0A\x00\x12'

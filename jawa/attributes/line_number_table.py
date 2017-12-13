@@ -30,8 +30,7 @@ class LineNumberTableAttribute(Attribute):
             for x in zip(*[iter(table)] * 2)
         ]
 
-    @property
-    def info(self):
+    def pack(self):
         return pack(
             '>H{0}H'.format(len(self.line_no) * 2),
             len(self.line_no),

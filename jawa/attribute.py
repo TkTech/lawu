@@ -9,17 +9,9 @@ from jawa.util.stream import BufferStreamReader
 
 
 class Attribute(object):
-    def __init__(self, table, name_index=None):
-        self._table = table
-        self._cf = table.cf
-        self._name_index = name_index
-
-    @property
-    def info(self):
-        """
-        This attribute packed into its on-disk representation.
-        """
-        raise NotImplementedError()
+    def __init__(self, parent, name_index):
+        self.parent = parent
+        self.name_index = name_index
 
     @property
     def name(self):
@@ -27,21 +19,14 @@ class Attribute(object):
         The :class:`~jawa.constants.ConstantUtf8` with the name of this
         attribute.
         """
-        return self._cf.constants[self._name_index]
-
-    @property
-    def table(self):
-        """
-        The AttributeTable that owns this attribute, if any.
-        """
-        return self._table
+        return self.cf.constants[self.name_index]
 
     @property
     def cf(self):
         """
         The ClassFile that owns this attribute, if any.
         """
-        return self._cf
+        return self.parent.cf
 
     def unpack(self, info):
         """
@@ -53,31 +38,29 @@ class Attribute(object):
         """
         This attribute packed into its on-disk representation.
         """
-        return self.info
+        raise NotImplementedError()
 
 
 class UnknownAttribute(Attribute):
-    def unpack(self, info):
-        self._info = info
+    def __init__(self, parent, name_index):
+        super(UnknownAttribute, self).__init__(parent, name_index)
+        self.info = None
 
-    @property
-    def info(self):
-        return self._info
+    def unpack(self, info):
+        self.info = info
+
+    def pack(self):
+        return self.info
 
 
 class AttributeTable(object):
     def __init__(self, cf, parent=None):
-        self._cf = cf
+        super(AttributeTable, self).__init__()
+        #: The ClassFile that ultimately owns this AttributeTable.
+        self.cf = cf
+        #: The parent AttributeTable, if one exists.
+        self.parent = parent
         self._table = []
-        self._parent = parent
-
-    def _get_type(self, name):
-        """
-        Returns a `Attribute` subclass that can handle the attribute
-        of type `name`, or :class:~jawa.attribute.UnknownAttribute if
-        none is found.
-        """
-        return ATTRIBUTE_CLASSES.get(name, UnknownAttribute)
 
     def unpack(self, fio):
         """
@@ -93,17 +76,27 @@ class AttributeTable(object):
         count = unpack('>H', fio.read(2))[0]
         for _ in repeat(None, count):
             name_index, length = unpack('>HI', fio.read(6))
-            name = self._cf.constants[name_index].value
+            info_blob = fio.read(length)
+            self._table.append((name_index, info_blob))
 
-            type_ = self._get_type(name)
-            attribute = type_(self, name_index=name_index)
-            attribute_info = fio.read(length)
+    def __getitem__(self, key):
+        attr = self._table[key]
 
-            if isinstance(attribute, UnknownAttribute):
-                attribute.unpack(attribute_info)
+        if not isinstance(attr, Attribute):
+            name_index, info = attr[0], attr[1]
+            name = self.cf.constants[attr[0]].value
+
+            attribute_type = ATTRIBUTE_CLASSES.get(name, UnknownAttribute)
+            self._table[key] = attr = attribute_type(self, name_index)
+            if attribute_type is UnknownAttribute:
+                attr.unpack(info)
             else:
-                attribute.unpack(BufferStreamReader(attribute_info))
-            self._table.append(attribute)
+                attr.unpack(BufferStreamReader(info))
+
+        return attr
+
+    def __len__(self):
+        return len(self._table)
 
     def pack(self, fout):
         """
@@ -116,9 +109,9 @@ class AttributeTable(object):
 
         :param fout: Any file-like object providing `write()`
         """
-        fout.write(pack('>H', len(self)))
-        for attribute in self._table:
-            info = attribute.info
+        fout.write(pack('>H', len(self._table)))
+        for attribute in self:
+            info = attribute.pack()
             fout.write(pack(
                 '>HI',
                 attribute.name.index,
@@ -132,17 +125,11 @@ class AttributeTable(object):
         table and returning it.
         """
         attribute = type_(self, *args, **kwargs)
-        self.append(attribute)
+        self._table.append(attribute)
         return attribute
 
-    def __len__(self):
-        return len(self._table)
-
-    def append(self, attribute):
-        self._table.append(attribute)
-
     def find(self, name=None, f=None):
-        for attribute in self._table:
+        for attribute in self:
             if name is not None and not attribute.name.value == name:
                 continue
 
@@ -160,24 +147,6 @@ class AttributeTable(object):
             return next(self.find(*args, **kwargs))
         except StopIteration:
             return None
-
-    @property
-    def cf(self):
-        """
-        The ClassFile that owns this Attribute, if any.
-        """
-        return self._cf
-
-    @property
-    def parent(self):
-        """
-        The parent attribute, if any.
-
-        If this AttributeTable belongs to another Attribute, this will
-        reference that attribute. For example, when parsing a StackMapTable
-        attribute, this would point to the owning Code attribute.
-        """
-        return self._parent
 
 
 def get_attribute_classes():
@@ -209,4 +178,6 @@ def get_attribute_classes():
     return result
 
 
+#: A dictionary of known attribute subclasses at the time this module
+#: was loaded.
 ATTRIBUTE_CLASSES = get_attribute_classes()
