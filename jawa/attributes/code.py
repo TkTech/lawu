@@ -3,7 +3,10 @@ from struct import pack
 from itertools import repeat
 from collections import namedtuple
 
-import six.moves
+try:
+    from cStringIO import StringIO as BytesIO
+except ImportError:
+    from io import BytesIO
 
 from jawa.attribute import Attribute, AttributeTable
 from jawa.util.bytecode import (
@@ -99,7 +102,7 @@ class CodeAttribute(Attribute):
         """
         The `CodeAttribute` in packed byte string form.
         """
-        fout = StringIO()
+        fout = BytesIO()
         fout.write(pack(
             '>HHI',
             self._max_stack,
@@ -152,7 +155,7 @@ class CodeAttribute(Attribute):
         Assembles an iterable of :class:`~jawa.util.bytecode.Instruction`
         objects into a method's code body.
         """
-        fout = six.moves.cStringIO()
+        fout = BytesIO()
         for ins in code:
             write_instruction(fout, fout.tell(), ins)
         self._code = fout.getvalue()
@@ -163,7 +166,7 @@ class CodeAttribute(Attribute):
         Disassembles this method, yielding an iterable of
         :class:`~jawa.util.bytecode.Instruction` objects.
         """
-        fio = six.moves.cStringIO(self._code)
+        fio = BytesIO(self._code)
 
         for ins in iter(lambda: read_instruction(fio, fio.tell()), None):
             yield ins

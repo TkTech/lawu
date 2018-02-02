@@ -3,9 +3,9 @@
 import os
 
 try:
-    from cStringIO import StringIO
+    from cStringIO import StringIO as BytesIO
 except ImportError:
-    from StringIO import StringIO
+    from io import BytesIO
 
 from jawa.cf import ClassFile
 from jawa.attributes.source_file import SourceFileAttribute
@@ -38,10 +38,10 @@ def test_sourcefile_write():
     sfa = cf_one.attributes.create(SourceFileAttribute)
     sfa.source_file = cf_one.constants.create_utf8(u'SourceFileTest.java')
 
-    fout = StringIO()
+    fout = BytesIO()
     cf_one.save(fout)
 
-    fin = StringIO(fout.getvalue())
+    fin = BytesIO(fout.getvalue())
     cf_two = ClassFile(fin)
 
     source_file = cf_two.attributes.find_one(name=u'SourceFile')
