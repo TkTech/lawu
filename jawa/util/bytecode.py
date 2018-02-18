@@ -201,7 +201,7 @@ opcode_table = {
     0xB2: ('getstatic', [(ushort, 30)]),
     0xA7: ('goto', [(short, 40)]),
     0xC8: ('goto_w', [(integer, 40)]),
-    0x91: ('ib2', None),
+    0x91: ('i2b', None),
     0x92: ('i2c', None),
     0x87: ('i2d', None),
     0x86: ('i2f', None),

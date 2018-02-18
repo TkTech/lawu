@@ -3,7 +3,7 @@ from struct import pack
 from itertools import repeat
 from collections import namedtuple
 
-import six.moves
+import six
 
 from jawa.attribute import Attribute, AttributeTable
 from jawa.util.bytecode import (
@@ -152,7 +152,7 @@ class CodeAttribute(Attribute):
         Assembles an iterable of :class:`~jawa.util.bytecode.Instruction`
         objects into a method's code body.
         """
-        fout = six.moves.cStringIO()
+        fout = six.BytesIO()
         for ins in code:
             write_instruction(fout, fout.tell(), ins)
         self._code = fout.getvalue()
@@ -163,7 +163,7 @@ class CodeAttribute(Attribute):
         Disassembles this method, yielding an iterable of
         :class:`~jawa.util.bytecode.Instruction` objects.
         """
-        fio = six.moves.cStringIO(self._code)
+        fio = six.BytesIO(self._code)
 
         for ins in iter(lambda: read_instruction(fio, fio.tell()), None):
             yield ins

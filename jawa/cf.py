@@ -189,8 +189,8 @@ class ClassFile(object):
         return self._version
 
     @version.setter
-    def version(self, (major, minor)):
-        self._version = ClassVersion(major, minor)
+    def version(self, major_minor):
+        self._version = ClassVersion(major_minor[0], major_minor[1])
 
     @property
     def constants(self):
