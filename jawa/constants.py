@@ -8,26 +8,16 @@ class Constant(object):
     """
     The base class for all ``Constant*`` types.
     """
+    __slots__ = ('pool', 'index')
+
     def __init__(self, pool, index):
-        self._pool = pool
-        self._index = index
-
-    @property
-    def pool(self):
-        """
-        The constant pool this constant belongs to.
-        """
-        return self._pool
-
-    @property
-    def index(self):
-        """
-        The index of this constant in the constant pool.
-        """
-        return self._index
+        self.pool = pool
+        self.index = index
 
 
 class Number(Constant):
+    __slots__ = ('value',)
+
     def __init__(self, pool, index, value):
         super(Number, self).__init__(pool, index)
         self.value = value
@@ -37,6 +27,7 @@ class Number(Constant):
 
 
 class UTF8(Constant):
+    __slots__ = ('value',)
     TAG = 1
 
     def __init__(self, pool, index, value):
@@ -80,6 +71,7 @@ class Double(Number):
 
 
 class ConstantClass(Constant):
+    __slots__ = ('name_index',)
     TAG = 7
 
     def __init__(self, pool, index, name_index):
@@ -98,6 +90,7 @@ class ConstantClass(Constant):
 
 
 class String(Constant):
+    __slots__ = ('string_index',)
     TAG = 8
 
     def __init__(self, pool, index, string_index):
@@ -116,6 +109,7 @@ class String(Constant):
 
 
 class Reference(Constant):
+    __slots__ = ('class_index', 'name_and_type_index')
     TAG = None
 
     def __init__(self, pool, index, class_index, name_and_type_index):
@@ -157,6 +151,7 @@ class InterfaceMethodRef(Reference):
 
 
 class NameAndType(Constant):
+    __slots__ = ('name_index', 'descriptor_index')
     TAG = 12
 
     def __init__(self, pool, index, name_index, descriptor_index):
@@ -181,6 +176,7 @@ class NameAndType(Constant):
 
 
 class MethodHandle(Constant):
+    __slots__ = ('reference_kind', 'reference_index')
     TAG = 15
 
     def __init__(self, pool, index, reference_kind, reference_index):
@@ -201,6 +197,7 @@ class MethodHandle(Constant):
 
 
 class MethodType(Constant):
+    __slots__ = ('descriptor_index',)
     TAG = 16
 
     def __init__(self, pool, index, descriptor_index):
@@ -220,6 +217,7 @@ class MethodType(Constant):
 
 
 class InvokeDynamic(Constant):
+    __slots__ = ('bootstrap_method_attr_index', 'name_and_type_index')
     TAG = 18
 
     def __init__(self, pool, index, bootstrap_method_attr_index,
