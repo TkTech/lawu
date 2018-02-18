@@ -46,21 +46,37 @@ class UTF8(Constant):
     def __repr__(self):
         return 'ConstantUTF8(value={0!r})'.format(self.value)
 
+    def pack(self):
+        encoded_value = encode_modified_utf8(self.value)
+        return pack('>BH', self.TAG, len(encoded_value)) + encoded_value
+
 
 class Integer(Number):
     TAG = 3
+
+    def pack(self):
+        return pack('>Bi', self.TAG, self.value)
 
 
 class Float(Number):
     TAG = 4
 
+    def pack(self):
+        return pack('>Bf', self.TAG, self.value)
+
 
 class Long(Number):
     TAG = 5
 
+    def pack(self):
+        return pack('>Bq', self.TAG, self.value)
+
 
 class Double(Number):
     TAG = 6
+
+    def pack(self):
+        return pack('>Bd', self.TAG, self.value)
 
 
 class ConstantClass(Constant):
@@ -77,6 +93,9 @@ class ConstantClass(Constant):
     def __repr__(self):
         return 'ConstantClass(name={0!r})'.format(self.name)
 
+    def pack(self):
+        return pack('>BH', self.TAG, self.name_index)
+
 
 class String(Constant):
     TAG = 8
@@ -91,6 +110,9 @@ class String(Constant):
 
     def __repr__(self):
         return 'ConstantString(string={0!r})'.format(self.string)
+
+    def pack(self):
+        return pack('>BH', self.TAG, self.string_index)
 
 
 class Reference(Constant):
@@ -112,6 +134,14 @@ class Reference(Constant):
     def __repr__(self):
         return '{0}(class_={1!r}, name_and_type={2!r})'.format(
             self.__class__.__name__, self.class_, self.name_and_type)
+
+    def pack(self):
+        return pack(
+            '>BHHH',
+            self.TAG,
+            self.class_index,
+            self.name_and_type_index
+        )
 
 
 class FieldReference(Reference):
@@ -146,6 +176,9 @@ class NameAndType(Constant):
         return 'ConstantNameAndType(name={0!r}, descriptor={1!r})'.format(
             self.name, self.descriptor)
 
+    def pack(self):
+        return pack('>BHH', self.TAG, self.name_index, self.descriptor_index)
+
 
 class MethodHandle(Constant):
     TAG = 15
@@ -167,6 +200,9 @@ class MethodHandle(Constant):
         return 'ConstantMethodHandle(kind={0!r}, index={1!r})'.format(
             self.kind, self.reference)
 
+    def pack(self):
+        return pack('>BBH', self.TAG, self.reference_kind, self.reference_index)
+
 
 class MethodType(Constant):
     TAG = 16
@@ -182,6 +218,9 @@ class MethodType(Constant):
     def __repr__(self):
         return 'ConstantMethodType(descriptor={0!r})'.format(
             self.descriptor)
+
+    def pack(self):
+        return pack('>BH', self.TAG, self.descriptor_index)
 
 
 class InvokeDynamic(Constant):
@@ -206,6 +245,14 @@ class InvokeDynamic(Constant):
             'ConstantInvokeDynamic(method_attr_index={0!r}, '
             'name_and_type={1!r})'
         ).format(self.method_attr_index, self.name_and_type)
+
+    def pack(self):
+        return pack(
+            '>BHH',
+            self.TAG,
+            self.bootstrap_method_attr_index,
+            self.name_and_type_index
+        )
 
 
 _constant_types = (
@@ -513,85 +560,7 @@ class ConstantPool(object):
         write(pack('>H', self.raw_count))
 
         for constant in self:
-            if isinstance(constant, UTF8):
-                encoded_value = encode_modified_utf8(constant.value)
-                length = len(encoded_value)
-                write(pack(
-                    '>BH',
-                    constant.TAG,
-                    length
-                ))
-                write(encoded_value)
-            elif isinstance(constant, Integer):
-                write(pack(
-                    '>Bi',
-                    constant.TAG,
-                    constant.value
-                ))
-            elif isinstance(constant, Float):
-                write(pack(
-                    '>Bf',
-                    constant.TAG,
-                    constant.value
-                ))
-            elif isinstance(constant, Long):
-                write(pack(
-                    '>Bq',
-                    constant.TAG,
-                    constant.value
-                ))
-            elif isinstance(constant, Double):
-                write(pack(
-                    '>Bd',
-                    constant.TAG,
-                    constant.value
-                ))
-            elif isinstance(constant, ConstantClass):
-                write(pack(
-                    '>BH',
-                    constant.TAG,
-                    constant.name_index
-                ))
-            elif isinstance(constant, String):
-                write(pack(
-                    '>BH',
-                    constant.TAG,
-                    constant.string_index
-                ))
-            elif isinstance(constant, Reference):
-                write(pack(
-                    '>BHH',
-                    constant.TAG,
-                    constant.class_index,
-                    constant.name_and_type_index
-                ))
-            elif isinstance(constant, NameAndType):
-                write(pack(
-                    '>BHH',
-                    constant.TAG,
-                    constant.name_index,
-                    constant.descriptor_index
-                ))
-            elif isinstance(constant, MethodHandle):
-                write(pack(
-                    '>BBH',
-                    constant.TAG,
-                    constant.reference_kind,
-                    constant.reference_index
-                ))
-            elif isinstance(constant, MethodType):
-                write(pack(
-                    '>BH',
-                    constant.TAG,
-                    constant.descriptor_index
-                ))
-            elif isinstance(constant, InvokeDynamic):
-                write(pack(
-                    '>BHH',
-                    constant.TAG,
-                    constant.bootstrap_method_attr_index,
-                    constant.name_and_type_index
-                ))
+            write(constant.pack())
 
     def __len__(self):
         """
