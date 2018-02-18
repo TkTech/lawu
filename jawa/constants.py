@@ -27,39 +27,39 @@ class Constant(object):
         return self._index
 
 
-class ConstantNumber(Constant):
+class Number(Constant):
     def __init__(self, pool, index, value):
-        super(ConstantNumber, self).__init__(pool, index)
+        super(Number, self).__init__(pool, index)
         self.value = value
 
     def __repr__(self):
         return '{0}(value={1!r})'.format(self.__class__.__name__, self.value)
 
 
-class ConstantUTF8(Constant):
+class UTF8(Constant):
     TAG = 1
 
     def __init__(self, pool, index, value):
-        super(ConstantUTF8, self).__init__(pool, index)
+        super(UTF8, self).__init__(pool, index)
         self.value = value
 
     def __repr__(self):
         return 'ConstantUTF8(value={0!r})'.format(self.value)
 
 
-class ConstantInteger(ConstantNumber):
+class Integer(Number):
     TAG = 3
 
 
-class ConstantFloat(ConstantNumber):
+class Float(Number):
     TAG = 4
 
 
-class ConstantLong(ConstantNumber):
+class Long(Number):
     TAG = 5
 
 
-class ConstantDouble(ConstantNumber):
+class Double(Number):
     TAG = 6
 
 
@@ -78,11 +78,11 @@ class ConstantClass(Constant):
         return 'ConstantClass(name={0!r})'.format(self.name)
 
 
-class ConstantString(Constant):
+class String(Constant):
     TAG = 8
 
     def __init__(self, pool, index, string_index):
-        super(ConstantString, self).__init__(pool, index)
+        super(String, self).__init__(pool, index)
         self._string_index = string_index
 
     @property
@@ -93,11 +93,11 @@ class ConstantString(Constant):
         return 'ConstantString(string={0!r})'.format(self.string)
 
 
-class ConstantRef(Constant):
+class Reference(Constant):
     TAG = None
 
     def __init__(self, pool, index, class_index, name_and_type_index):
-        super(ConstantRef, self).__init__(pool, index)
+        super(Reference, self).__init__(pool, index)
         self._class_index = class_index
         self._name_and_type_index = name_and_type_index
 
@@ -114,23 +114,23 @@ class ConstantRef(Constant):
             self.__class__.__name__, self.class_, self.name_and_type)
 
 
-class ConstantFieldRef(ConstantRef):
+class FieldReference(Reference):
     TAG = 9
 
 
-class ConstantMethodRef(ConstantRef):
+class MethodReference(Reference):
     TAG = 10
 
 
-class ConstantInterfaceMethodRef(ConstantRef):
+class InterfaceMethodRef(Reference):
     TAG = 11
 
 
-class ConstantNameAndType(Constant):
+class NameAndType(Constant):
     TAG = 12
 
     def __init__(self, pool, index, name_index, descriptor_index):
-        super(ConstantNameAndType, self).__init__(pool, index)
+        super(NameAndType, self).__init__(pool, index)
         self._name_index = name_index
         self._descriptor_index = descriptor_index
 
@@ -147,11 +147,11 @@ class ConstantNameAndType(Constant):
             self.name, self.descriptor)
 
 
-class ConstantMethodHandle(Constant):
+class MethodHandle(Constant):
     TAG = 15
 
     def __init__(self, pool, index, reference_kind, reference_index):
-        super(ConstantMethodHandle, self).__init__(pool, index)
+        super(MethodHandle, self).__init__(pool, index)
         self._reference_kind = reference_kind
         self._reference_index = reference_index
 
@@ -168,11 +168,11 @@ class ConstantMethodHandle(Constant):
             self.kind, self.reference)
 
 
-class ConstantMethodType(Constant):
+class MethodType(Constant):
     TAG = 16
 
     def __init__(self, pool, index, descriptor_index):
-        super(ConstantMethodType, self).__init__(pool, index)
+        super(MethodType, self).__init__(pool, index)
         self._descriptor_index = descriptor_index
 
     @property
@@ -184,12 +184,12 @@ class ConstantMethodType(Constant):
             self.descriptor)
 
 
-class ConstantInvokeDynamic(Constant):
+class InvokeDynamic(Constant):
     TAG = 18
 
     def __init__(self, pool, index, bootstrap_method_attr_index,
                  name_and_type_index):
-        super(ConstantInvokeDynamic, self).__init__(pool, index)
+        super(InvokeDynamic, self).__init__(pool, index)
         self._bootstrap_method_attr_index = bootstrap_method_attr_index
         self._name_and_type_index = name_and_type_index
 
@@ -210,24 +210,24 @@ class ConstantInvokeDynamic(Constant):
 
 _constant_types = (
     None,
-    ConstantUTF8,
+    UTF8,
     None,
-    ConstantInteger,
-    ConstantFloat,
-    ConstantLong,
-    ConstantDouble,
+    Integer,
+    Float,
+    Long,
+    Double,
     ConstantClass,
-    ConstantString,
-    ConstantFieldRef,
-    ConstantMethodRef,
-    ConstantInterfaceMethodRef,
-    ConstantNameAndType,
+    String,
+    FieldReference,
+    MethodReference,
+    InterfaceMethodRef,
+    NameAndType,
     None,
     None,
-    ConstantMethodHandle,
-    ConstantMethodType,
+    MethodHandle,
+    MethodType,
     None,
-    ConstantInvokeDynamic
+    InvokeDynamic
 )
 
 
@@ -513,7 +513,7 @@ class ConstantPool(object):
         write(pack('>H', self.raw_count))
 
         for constant in self:
-            if isinstance(constant, ConstantUTF8):
+            if isinstance(constant, UTF8):
                 encoded_value = encode_modified_utf8(constant.value)
                 length = len(encoded_value)
                 write(pack(
@@ -522,25 +522,25 @@ class ConstantPool(object):
                     length
                 ))
                 write(encoded_value)
-            elif isinstance(constant, ConstantInteger):
+            elif isinstance(constant, Integer):
                 write(pack(
                     '>Bi',
                     constant.TAG,
                     constant.value
                 ))
-            elif isinstance(constant, ConstantFloat):
+            elif isinstance(constant, Float):
                 write(pack(
                     '>Bf',
                     constant.TAG,
                     constant.value
                 ))
-            elif isinstance(constant, ConstantLong):
+            elif isinstance(constant, Long):
                 write(pack(
                     '>Bq',
                     constant.TAG,
                     constant.value
                 ))
-            elif isinstance(constant, ConstantDouble):
+            elif isinstance(constant, Double):
                 write(pack(
                     '>Bd',
                     constant.TAG,
@@ -552,40 +552,40 @@ class ConstantPool(object):
                     constant.TAG,
                     constant._name_index
                 ))
-            elif isinstance(constant, ConstantString):
+            elif isinstance(constant, String):
                 write(pack(
                     '>BH',
                     constant.TAG,
                     constant._string_index
                 ))
-            elif isinstance(constant, ConstantRef):
+            elif isinstance(constant, Reference):
                 write(pack(
                     '>BHH',
                     constant.TAG,
                     constant._class_index,
                     constant._name_and_type_index
                 ))
-            elif isinstance(constant, ConstantNameAndType):
+            elif isinstance(constant, NameAndType):
                 write(pack(
                     '>BHH',
                     constant.TAG,
                     constant._name_index,
                     constant._descriptor_index
                 ))
-            elif isinstance(constant, ConstantMethodHandle):
+            elif isinstance(constant, MethodHandle):
                 write(pack(
                     '>BBH',
                     constant.TAG,
                     constant._reference_kind,
                     constant._reference_index
                 ))
-            elif isinstance(constant, ConstantMethodType):
+            elif isinstance(constant, MethodType):
                 write(pack(
                     '>BH',
                     constant.TAG,
                     constant._descriptor_index
                 ))
-            elif isinstance(constant, ConstantInvokeDynamic):
+            elif isinstance(constant, InvokeDynamic):
                 write(pack(
                     '>BHH',
                     constant.TAG,
