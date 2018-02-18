@@ -99,7 +99,7 @@ class CodeAttribute(Attribute):
         """
         The `CodeAttribute` in packed byte string form.
         """
-        fout = StringIO()
+        fout = six.BytesIO()
         fout.write(pack(
             '>HHI',
             self._max_stack,

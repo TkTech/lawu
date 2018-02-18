@@ -60,9 +60,21 @@ class Method(object):
         """
         A shortcut for::
 
-            method.attributes.find_one(name='Code')
+            >> method.attributes.find_one(name='Code')
         """
         return self.attributes.find_one(name='Code')
+
+    @property
+    def bootstrap(self):
+        """
+        A shortcut for::
+
+            >> method.attributes.find_one(name='BootstrapMethods')
+        """
+        return self.attributes.find_one(name='BootstrapMethods')
+
+    def __repr__(self):
+        return '<Method(name={self.name})>'.format(self=self)
 
     def unpack(self, fio):
         """

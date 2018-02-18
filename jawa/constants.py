@@ -194,18 +194,18 @@ class ConstantInvokeDynamic(Constant):
         self._name_and_type_index = name_and_type_index
 
     @property
-    def method_attr(self):
-        return self.pool.get(self._bootstrap_method_attr_index)
+    def method_attr_index(self):
+        return self._bootstrap_method_attr_index
 
     @property
     def name_and_type(self):
-        return self.pool.get(self._name_and_type_index)
+        return self.pool[self._name_and_type_index]
 
     def __repr__(self):
         return (
-            'ConstantInvokeDynamic(methodAttr={0!r}, '
-            'nameAndType={1!r})'
-        ).format(self.method_attr, self.name_and_type)
+            'ConstantInvokeDynamic(method_attr_index={0!r}, '
+            'name_and_type={1!r})'
+        ).format(self.method_attr_index, self.name_and_type)
 
 
 _constant_types = (
@@ -289,7 +289,7 @@ class ConstantPool(object):
     def find(self, type_=None, f=None):
         """
         Iterates over the pool, yielding each matching ``Constant``. Calling
-        without any arguments is equivelent to iterating over the pool.
+        without any arguments is equivalent to iterating over the pool.
 
         :param type_: Any subclass of :class:`Constant` or ``None``.
         :param f: Any callable which takes one argument (the constant).
