@@ -189,16 +189,12 @@ class MethodHandle(Constant):
         self.reference_index = reference_index
 
     @property
-    def kind(self):
-        return self.pool.get(self.reference_kind)
-
-    @property
     def reference(self):
         return self.pool.get(self.reference_index)
 
     def __repr__(self):
         return 'ConstantMethodHandle(kind={0!r}, index={1!r})'.format(
-            self.kind, self.reference)
+            self.reference_kind, self.reference)
 
     def pack(self):
         return pack('>BBH', self.TAG, self.reference_kind, self.reference_index)
