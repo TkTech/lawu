@@ -68,11 +68,11 @@ class ConstantClass(Constant):
 
     def __init__(self, pool, index, name_index):
         super(ConstantClass, self).__init__(pool, index)
-        self._name_index = name_index
+        self.name_index = name_index
 
     @property
     def name(self):
-        return self.pool.get(self._name_index)
+        return self.pool.get(self.name_index)
 
     def __repr__(self):
         return 'ConstantClass(name={0!r})'.format(self.name)
@@ -83,11 +83,11 @@ class String(Constant):
 
     def __init__(self, pool, index, string_index):
         super(String, self).__init__(pool, index)
-        self._string_index = string_index
+        self.string_index = string_index
 
     @property
     def string(self):
-        return self.pool.get(self._string_index)
+        return self.pool.get(self.string_index)
 
     def __repr__(self):
         return 'ConstantString(string={0!r})'.format(self.string)
@@ -98,16 +98,16 @@ class Reference(Constant):
 
     def __init__(self, pool, index, class_index, name_and_type_index):
         super(Reference, self).__init__(pool, index)
-        self._class_index = class_index
-        self._name_and_type_index = name_and_type_index
+        self.class_index = class_index
+        self.name_and_type_index = name_and_type_index
 
     @property
     def class_(self):
-        return self.pool.get(self._class_index)
+        return self.pool.get(self.class_index)
 
     @property
     def name_and_type(self):
-        return self.pool.get(self._name_and_type_index)
+        return self.pool.get(self.name_and_type_index)
 
     def __repr__(self):
         return '{0}(class_={1!r}, name_and_type={2!r})'.format(
@@ -131,16 +131,16 @@ class NameAndType(Constant):
 
     def __init__(self, pool, index, name_index, descriptor_index):
         super(NameAndType, self).__init__(pool, index)
-        self._name_index = name_index
-        self._descriptor_index = descriptor_index
+        self.name_index = name_index
+        self.descriptor_index = descriptor_index
 
     @property
     def name(self):
-        return self.pool.get(self._name_index)
+        return self.pool.get(self.name_index)
 
     @property
     def descriptor(self):
-        return self.pool.get(self._descriptor_index)
+        return self.pool.get(self.descriptor_index)
 
     def __repr__(self):
         return 'ConstantNameAndType(name={0!r}, descriptor={1!r})'.format(
@@ -152,16 +152,16 @@ class MethodHandle(Constant):
 
     def __init__(self, pool, index, reference_kind, reference_index):
         super(MethodHandle, self).__init__(pool, index)
-        self._reference_kind = reference_kind
-        self._reference_index = reference_index
+        self.reference_kind = reference_kind
+        self.reference_index = reference_index
 
     @property
     def kind(self):
-        return self.pool.get(self._reference_kind)
+        return self.pool.get(self.reference_kind)
 
     @property
     def reference(self):
-        return self.pool.get(self._reference_index)
+        return self.pool.get(self.reference_index)
 
     def __repr__(self):
         return 'ConstantMethodHandle(kind={0!r}, index={1!r})'.format(
@@ -173,11 +173,11 @@ class MethodType(Constant):
 
     def __init__(self, pool, index, descriptor_index):
         super(MethodType, self).__init__(pool, index)
-        self._descriptor_index = descriptor_index
+        self.descriptor_index = descriptor_index
 
     @property
     def descriptor(self):
-        return self.pool.get(self._descriptor_index)
+        return self.pool.get(self.descriptor_index)
 
     def __repr__(self):
         return 'ConstantMethodType(descriptor={0!r})'.format(
@@ -190,16 +190,16 @@ class InvokeDynamic(Constant):
     def __init__(self, pool, index, bootstrap_method_attr_index,
                  name_and_type_index):
         super(InvokeDynamic, self).__init__(pool, index)
-        self._bootstrap_method_attr_index = bootstrap_method_attr_index
-        self._name_and_type_index = name_and_type_index
+        self.bootstrap_method_attr_index = bootstrap_method_attr_index
+        self.name_and_type_index = name_and_type_index
 
     @property
     def method_attr_index(self):
-        return self._bootstrap_method_attr_index
+        return self.bootstrap_method_attr_index
 
     @property
     def name_and_type(self):
-        return self.pool[self._name_and_type_index]
+        return self.pool[self.name_and_type_index]
 
     def __repr__(self):
         return (
@@ -550,47 +550,47 @@ class ConstantPool(object):
                 write(pack(
                     '>BH',
                     constant.TAG,
-                    constant._name_index
+                    constant.name_index
                 ))
             elif isinstance(constant, String):
                 write(pack(
                     '>BH',
                     constant.TAG,
-                    constant._string_index
+                    constant.string_index
                 ))
             elif isinstance(constant, Reference):
                 write(pack(
                     '>BHH',
                     constant.TAG,
-                    constant._class_index,
-                    constant._name_and_type_index
+                    constant.class_index,
+                    constant.name_and_type_index
                 ))
             elif isinstance(constant, NameAndType):
                 write(pack(
                     '>BHH',
                     constant.TAG,
-                    constant._name_index,
-                    constant._descriptor_index
+                    constant.name_index,
+                    constant.descriptor_index
                 ))
             elif isinstance(constant, MethodHandle):
                 write(pack(
                     '>BBH',
                     constant.TAG,
-                    constant._reference_kind,
-                    constant._reference_index
+                    constant.reference_kind,
+                    constant.reference_index
                 ))
             elif isinstance(constant, MethodType):
                 write(pack(
                     '>BH',
                     constant.TAG,
-                    constant._descriptor_index
+                    constant.descriptor_index
                 ))
             elif isinstance(constant, InvokeDynamic):
                 write(pack(
                     '>BHH',
                     constant.TAG,
-                    constant._bootstrap_method_attr_index,
-                    constant._name_and_type_index
+                    constant.bootstrap_method_attr_index,
+                    constant.name_and_type_index
                 ))
 
     def __len__(self):
