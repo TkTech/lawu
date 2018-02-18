@@ -9,6 +9,11 @@ try:
     from cStringIO import StringIO as BytesIO
 except ImportError:
     from io import BytesIO
+try:
+    from itertools import izip
+except ImportError:
+    izip = zip
+
 import six
 
 from jawa.cf import ClassFile
@@ -76,7 +81,7 @@ class ClassLoader(object):
             # get the index, and unpack it into our path map.
             if path.lower().endswith(('.zip', '.jar')):
                 zf = ZipFile(path, 'r')
-                self.path_map.update(six.zip(zf.namelist(), repeat(zf)))
+                self.path_map.update(izip(zf.namelist(), repeat(zf)))
             elif os.path.isdir(path):
                 walker = _walk(
                     path,

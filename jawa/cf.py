@@ -12,7 +12,7 @@ from collections import namedtuple
 from jawa.constants import ConstantPool
 from jawa.fields import FieldTable
 from jawa.methods import MethodTable
-from jawa.attribute import AttributeTable
+from jawa.attribute import AttributeTable, ATTRIBUTE_CLASSES
 from jawa.util.flags import Flags
 
 
@@ -254,3 +254,20 @@ class ClassFile(object):
         The :class:`~jawa.attribute.AttributeTable` for this class.
         """
         return self._attributes
+
+    @property
+    def bootstrap_methods(self):
+        """
+        Returns the bootstrap methods table from the BootstrapMethods attribute,
+        if one exists. If it does not, one will be created.
+
+        :returns: Table of `BootstrapMethod` objects.
+        """
+        bootstrap = self.attributes.find_one(name='BootstrapMethods')
+
+        if bootstrap is None:
+            bootstrap = self.attributes.create(
+                ATTRIBUTE_CLASSES['BootstrapMethods']
+            )
+
+        return bootstrap.table

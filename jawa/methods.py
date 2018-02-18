@@ -64,15 +64,6 @@ class Method(object):
         """
         return self.attributes.find_one(name='Code')
 
-    @property
-    def bootstrap(self):
-        """
-        A shortcut for::
-
-            >> method.attributes.find_one(name='BootstrapMethods')
-        """
-        return self.attributes.find_one(name='BootstrapMethods')
-
     def __repr__(self):
         return '<Method(name={self.name})>'.format(self=self)
 
@@ -188,7 +179,7 @@ class MethodTable(object):
     def find(self, name=None, args=None, returns=None, f=None):
         """
         Iterates over the methods table, yielding each matching method. Calling
-        without any arguments is equivelent to iterating over the table. For
+        without any arguments is equivalent to iterating over the table. For
         example, to get all methods that take three integers and return void::
 
             for method in cf.methods.find(args='III', returns='V'):
