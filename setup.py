@@ -11,6 +11,7 @@ setup(
     author_email="tk@tkte.ch",
     url="http://github.com/TkTech/Jawa",
     keywords=["java", "disassembly", "disassembler"],
+    include_package_data=True,
     classifiers=[
         "Programming Language :: Python",
         "License :: OSI Approved :: MIT License",

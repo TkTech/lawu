@@ -1,0 +1,1022 @@
+{
+  "aaload": {
+    "op": 50,
+    "desc": "load onto the stack a reference from an array",
+    "stack": {
+      "before": [
+        "ArrayRef",
+        "Index"
+      ],
+      "after": [
+        "Value"
+      ]
+    },
+    "runtime": [
+      "NullPointerException",
+      "ArrayIndexOutOfBoundsException"
+    ]
+  },
+  "aastore": {
+    "op": 83,
+    "desc": "store into a reference in an array",
+    "stack": {
+      "before": [
+        "ArrayRef",
+        "Index",
+        "Value"
+      ]
+    },
+    "runtime": [
+      "NullPointerException",
+      "ArrayIndexOutOfBoundsException",
+      "ArrayStoreException"
+    ]
+  },
+  "aconst_null": {
+    "op": 1,
+    "stack": {
+      "after": [
+        "NullReference"
+      ]
+    }
+  },
+  "aload": {
+    "op": 25,
+    "operands": [
+      [
+        "UBYTE",
+        "LOCAL_INDEX"
+      ]
+    ],
+    "stack": {
+      "after": [
+        "ObjectRef"
+      ]
+    },
+    "can_be_wide": true
+  },
+  "aload_0": {
+    "op": 42,
+    "stack": {
+      "after": [
+        "ObjectRef"
+      ]
+    }
+  },
+  "aload_1": {
+    "op": 43,
+    "stack": {
+      "after": [
+        "ObjectRef"
+      ]
+    }
+  },
+  "aload_2": {
+    "op": 44,
+    "stack": {
+      "after": [
+        "ObjectRef"
+      ]
+    }
+  },
+  "aload_3": {
+    "op": 45,
+    "stack": {
+      "after": [
+        "ObjectRef"
+      ]
+    }
+  },
+  "anewarray": {
+    "op": 189,
+    "operands": [
+      [
+        "USHORT",
+        "LITERAL"
+      ]
+    ]
+  },
+  "areturn": {
+    "op": 176
+  },
+  "arraylength": {
+    "op": 190
+  },
+  "astore": {
+    "op": 58,
+    "operands": [
+      [
+        "UBYTE",
+        "LOCAL_INDEX"
+      ]
+    ],
+    "can_be_wide": true
+  },
+  "astore_0": {
+    "op": 75
+  },
+  "astore_1": {
+    "op": 76
+  },
+  "astore_2": {
+    "op": 77
+  },
+  "astore_3": {
+    "op": 78
+  },
+  "athrow": {
+    "op": 191
+  },
+  "baload": {
+    "op": 51
+  },
+  "bastore": {
+    "op": 84
+  },
+  "bipush": {
+    "op": 16,
+    "operands": [
+      [
+        "UBYTE",
+        "LITERAL"
+      ]
+    ]
+  },
+  "caload": {
+    "op": 52
+  },
+  "castore": {
+    "op": 85
+  },
+  "checkcast": {
+    "op": 192,
+    "operands": [
+      [
+        "USHORT",
+        "CONSTANT_INDEX"
+      ]
+    ]
+  },
+  "d2f": {
+    "op": 144
+  },
+  "d2i": {
+    "op": 142
+  },
+  "d2l": {
+    "op": 143
+  },
+  "dadd": {
+    "op": 99
+  },
+  "daload": {
+    "op": 49
+  },
+  "dastore": {
+    "op": 82
+  },
+  "dcmpg": {
+    "op": 152
+  },
+  "dcmpl": {
+    "op": 151
+  },
+  "dconst_0": {
+    "op": 14
+  },
+  "dconst_1": {
+    "op": 15
+  },
+  "ddiv": {
+    "op": 111
+  },
+  "dload": {
+    "op": 24,
+    "operands": [
+      [
+        "UBYTE",
+        "LOCAL_INDEX"
+      ]
+    ],
+    "can_be_wide": true
+  },
+  "dload_0": {
+    "op": 38
+  },
+  "dload_1": {
+    "op": 39
+  },
+  "dload_2": {
+    "op": 40
+  },
+  "dload_3": {
+    "op": 41
+  },
+  "dmul": {
+    "op": 107
+  },
+  "dneg": {
+    "op": 119
+  },
+  "drem": {
+    "op": 115
+  },
+  "dreturn": {
+    "op": 175
+  },
+  "dstore": {
+    "op": 57,
+    "operands": [
+      [
+        "UBYTE",
+        "LOCAL_INDEX"
+      ]
+    ],
+    "can_be_wide": true
+  },
+  "dstore_0": {
+    "op": 71
+  },
+  "dstore_1": {
+    "op": 72
+  },
+  "dstore_2": {
+    "op": 73
+  },
+  "dstore_3": {
+    "op": 74
+  },
+  "dsub": {
+    "op": 103
+  },
+  "dup": {
+    "op": 89
+  },
+  "dup_x1": {
+    "op": 90
+  },
+  "dup_x2": {
+    "op": 91
+  },
+  "dup2": {
+    "op": 92
+  },
+  "dup2_x1": {
+    "op": 93
+  },
+  "dup2_x2": {
+    "op": 94
+  },
+  "f2d": {
+    "op": 141
+  },
+  "f2i": {
+    "op": 139
+  },
+  "f2l": {
+    "op": 140
+  },
+  "fadd": {
+    "op": 98
+  },
+  "faload": {
+    "op": 48
+  },
+  "fastore": {
+    "op": 81
+  },
+  "fcmpg": {
+    "op": 150
+  },
+  "fcmpl": {
+    "op": 149
+  },
+  "fconst_0": {
+    "op": 11
+  },
+  "fconst_1": {
+    "op": 12
+  },
+  "fconst_2": {
+    "op": 13
+  },
+  "fdiv": {
+    "op": 110
+  },
+  "fload": {
+    "op": 23,
+    "operands": [
+      [
+        "UBYTE",
+        "LOCAL_INDEX"
+      ]
+    ],
+    "can_be_wide": true
+  },
+  "fload_0": {
+    "op": 34
+  },
+  "fload_1": {
+    "op": 35
+  },
+  "fload_2": {
+    "op": 36
+  },
+  "fload_3": {
+    "op": 37
+  },
+  "fmul": {
+    "op": 106
+  },
+  "fneg": {
+    "op": 118
+  },
+  "frem": {
+    "op": 114
+  },
+  "freturn": {
+    "op": 174
+  },
+  "fstore": {
+    "op": 56,
+    "operands": [
+      [
+        "UBYTE",
+        "LOCAL_INDEX"
+      ]
+    ],
+    "can_be_wide": true
+  },
+  "fstore_0": {
+    "op": 67
+  },
+  "fstore_1": {
+    "op": 68
+  },
+  "fstore_2": {
+    "op": 69
+  },
+  "fstore_3": {
+    "op": 70
+  },
+  "fsub": {
+    "op": 102
+  },
+  "getfield": {
+    "op": 180,
+    "operands": [
+      [
+        "USHORT",
+        "CONSTANT_INDEX"
+      ]
+    ]
+  },
+  "getstatic": {
+    "op": 178,
+    "operands": [
+      [
+        "USHORT",
+        "CONSTANT_INDEX"
+      ]
+    ]
+  },
+  "goto": {
+    "op": 167,
+    "operands": [
+      [
+        "SHORT",
+        "BRANCH"
+      ]
+    ]
+  },
+  "goto_w": {
+    "op": 200,
+    "operands": [
+      [
+        "INTEGER",
+        "BRANCH"
+      ]
+    ]
+  },
+  "i2b": {
+    "op": 145
+  },
+  "i2c": {
+    "op": 146
+  },
+  "i2d": {
+    "op": 135
+  },
+  "i2f": {
+    "op": 134
+  },
+  "i2l": {
+    "op": 133
+  },
+  "i2s": {
+    "op": 147
+  },
+  "iadd": {
+    "op": 96
+  },
+  "iaload": {
+    "op": 46
+  },
+  "iand": {
+    "op": 126
+  },
+  "iastore": {
+    "op": 79
+  },
+  "iconst_m1": {
+    "op": 2
+  },
+  "iconst_0": {
+    "op": 3
+  },
+  "iconst_1": {
+    "op": 4
+  },
+  "iconst_2": {
+    "op": 5
+  },
+  "iconst_3": {
+    "op": 6
+  },
+  "iconst_4": {
+    "op": 7
+  },
+  "iconst_5": {
+    "op": 8
+  },
+  "idiv": {
+    "op": 108
+  },
+  "if_acmpeg": {
+    "op": 165,
+    "operands": [
+      [
+        "SHORT",
+        "BRANCH"
+      ]
+    ]
+  },
+  "if_acmpne": {
+    "op": 166,
+    "operands": [
+      [
+        "SHORT",
+        "BRANCH"
+      ]
+    ]
+  },
+  "if_icmpeg": {
+    "op": 159,
+    "operands": [
+      [
+        "SHORT",
+        "BRANCH"
+      ]
+    ]
+  },
+  "if_icmpne": {
+    "op": 160,
+    "operands": [
+      [
+        "SHORT",
+        "BRANCH"
+      ]
+    ]
+  },
+  "if_icmplt": {
+    "op": 161,
+    "operands": [
+      [
+        "SHORT",
+        "BRANCH"
+      ]
+    ]
+  },
+  "if_icmpge": {
+    "op": 162,
+    "operands": [
+      [
+        "SHORT",
+        "BRANCH"
+      ]
+    ]
+  },
+  "if_icmpgt": {
+    "op": 163,
+    "operands": [
+      [
+        "SHORT",
+        "BRANCH"
+      ]
+    ]
+  },
+  "if_icmple": {
+    "op": 164,
+    "operands": [
+      [
+        "SHORT",
+        "BRANCH"
+      ]
+    ]
+  },
+  "ifeq": {
+    "op": 153,
+    "operands": [
+      [
+        "SHORT",
+        "BRANCH"
+      ]
+    ]
+  },
+  "ifne": {
+    "op": 154,
+    "operands": [
+      [
+        "SHORT",
+        "BRANCH"
+      ]
+    ]
+  },
+  "iflt": {
+    "op": 155,
+    "operands": [
+      [
+        "SHORT",
+        "BRANCH"
+      ]
+    ]
+  },
+  "ifge": {
+    "op": 156,
+    "operands": [
+      [
+        "SHORT",
+        "BRANCH"
+      ]
+    ]
+  },
+  "ifgt": {
+    "op": 157,
+    "operands": [
+      [
+        "SHORT",
+        "BRANCH"
+      ]
+    ]
+  },
+  "ifle": {
+    "op": 158,
+    "operands": [
+      [
+        "SHORT",
+        "BRANCH"
+      ]
+    ]
+  },
+  "ifnonnull": {
+    "op": 199,
+    "operands": [
+      [
+        "SHORT",
+        "BRANCH"
+      ]
+    ]
+  },
+  "ifnull": {
+    "op": 198,
+    "operands": [
+      [
+        "SHORT",
+        "BRANCH"
+      ]
+    ]
+  },
+  "iinc": {
+    "op": 132,
+    "operands": [
+      [
+        "UBYTE",
+        "LOCAL_INDEX"
+      ],
+      [
+        "UBYTE",
+        "LITERAL"
+      ]
+    ],
+    "can_be_wide": true
+  },
+  "iload": {
+    "op": 21,
+    "operands": [
+      [
+        "UBYTE",
+        "LOCAL_INDEX"
+      ]
+    ],
+    "can_be_wide": true
+  },
+  "iload_0": {
+    "op": 26
+  },
+  "iload_1": {
+    "op": 27
+  },
+  "iload_2": {
+    "op": 28
+  },
+  "iload_3": {
+    "op": 29
+  },
+  "imul": {
+    "op": 104
+  },
+  "ineg": {
+    "op": 116
+  },
+  "instanceof": {
+    "op": 193,
+    "operands": [
+      [
+        "USHORT",
+        "CONSTANT_INDEX"
+      ]
+    ]
+  },
+  "invokedynamic": {
+    "op": 186,
+    "operands": [
+      [
+        "USHORT",
+        "CONSTANT_INDEX"
+      ],
+      [
+        "UBYTE",
+        "PADDING"
+      ],
+      [
+        "UBYTE",
+        "PADDING"
+      ]
+    ]
+  },
+  "invokeinterface": {
+    "op": 185,
+    "operands": [
+      [
+        "USHORT",
+        "CONSTANT_INDEX"
+      ],
+      [
+        "UBYTE",
+        "LITERAL"
+      ],
+      [
+        "UBYTE",
+        "PADDING"
+      ]
+    ]
+  },
+  "invokespecial": {
+    "op": 183,
+    "operands": [
+      [
+        "USHORT",
+        "CONSTANT_INDEX"
+      ]
+    ]
+  },
+  "invokestatic": {
+    "op": 184,
+    "operands": [
+      [
+        "USHORT",
+        "CONSTANT_INDEX"
+      ]
+    ]
+  },
+  "invokevirtual": {
+    "op": 182,
+    "operands": [
+      [
+        "USHORT",
+        "CONSTANT_INDEX"
+      ]
+    ]
+  },
+  "ior": {
+    "op": 128
+  },
+  "irem": {
+    "op": 112
+  },
+  "ireturn": {
+    "op": 172
+  },
+  "ishl": {
+    "op": 120
+  },
+  "ishr": {
+    "op": 122
+  },
+  "istore": {
+    "op": 54,
+    "operands": [
+      [
+        "UBYTE",
+        "LOCAL_INDEX"
+      ]
+    ],
+    "can_be_wide": true
+  },
+  "istore_0": {
+    "op": 59
+  },
+  "istore_1": {
+    "op": 60
+  },
+  "istore_2": {
+    "op": 61
+  },
+  "istore_3": {
+    "op": 62
+  },
+  "isub": {
+    "op": 100
+  },
+  "iushr": {
+    "op": 124
+  },
+  "ixor": {
+    "op": 130
+  },
+  "jsr": {
+    "op": 168,
+    "operands": [
+      [
+        "SHORT",
+        "BRANCH"
+      ]
+    ]
+  },
+  "jsr_w": {
+    "op": 201,
+    "operands": [
+      [
+        "INTEGER",
+        "BRANCH"
+      ]
+    ]
+  },
+  "l2d": {
+    "op": 138
+  },
+  "l2f": {
+    "op": 137
+  },
+  "l2i": {
+    "op": 136
+  },
+  "ladd": {
+    "op": 97
+  },
+  "laload": {
+    "op": 47
+  },
+  "land": {
+    "op": 127
+  },
+  "lastore": {
+    "op": 80
+  },
+  "lcmp": {
+    "op": 148
+  },
+  "lconst_0": {
+    "op": 9
+  },
+  "lcons_1": {
+    "op": 10
+  },
+  "ldc": {
+    "op": 18,
+    "operands": [
+      [
+        "UBYTE",
+        "CONSTANT_INDEX"
+      ]
+    ]
+  },
+  "ldc_w": {
+    "op": 19,
+    "operands": [
+      [
+        "USHORT",
+        "CONSTANT_INDEX"
+      ]
+    ]
+  },
+  "ldc2_w": {
+    "op": 20,
+    "operands": [
+      [
+        "USHORT",
+        "CONSTANT_INDEX"
+      ]
+    ]
+  },
+  "ldiv": {
+    "op": 109
+  },
+  "lload": {
+    "op": 22,
+    "operands": [
+      [
+        "UBYTE",
+        "LOCAL_INDEX"
+      ]
+    ],
+    "can_be_wide": true
+  },
+  "lload_0": {
+    "op": 30
+  },
+  "lload_1": {
+    "op": 31
+  },
+  "lload_2": {
+    "op": 32
+  },
+  "lload_3": {
+    "op": 33
+  },
+  "lmul": {
+    "op": 105
+  },
+  "lneg": {
+    "op": 117
+  },
+  "lookupswitch": {
+    "op": 171
+  },
+  "lor": {
+    "op": 129
+  },
+  "lrem": {
+    "op": 113
+  },
+  "lreturn": {
+    "op": 173
+  },
+  "lshl": {
+    "op": 121
+  },
+  "lshr": {
+    "op": 123
+  },
+  "lstore": {
+    "op": 55,
+    "operands": [
+      [
+        "UBYTE",
+        "LOCAL_INDEX"
+      ]
+    ],
+    "can_be_wide": true
+  },
+  "lstore_0": {
+    "op": 63
+  },
+  "lstore_1": {
+    "op": 64
+  },
+  "lstore_2": {
+    "op": 65
+  },
+  "lstore_3": {
+    "op": 66
+  },
+  "lsub": {
+    "op": 101
+  },
+  "lushr": {
+    "op": 125
+  },
+  "lxor": {
+    "op": 131
+  },
+  "monitorenter": {
+    "op": 194
+  },
+  "monitorexit": {
+    "op": 195
+  },
+  "multianewarray": {
+    "op": 197,
+    "operands": [
+      [
+        "USHORT",
+        "CONSTANT_INDEX"
+      ],
+      [
+        "UBYTE",
+        "LITERAL"
+      ]
+    ]
+  },
+  "new": {
+    "op": 187,
+    "operands": [
+      [
+        "USHORT",
+        "CONSTANT_INDEX"
+      ]
+    ]
+  },
+  "newarray": {
+    "op": 188,
+    "operands": [
+      [
+        "UBYTE",
+        "LITERAL"
+      ]
+    ]
+  },
+  "nop": {
+    "op": 0
+  },
+  "pop": {
+    "op": 87
+  },
+  "pop2": {
+    "op": 88
+  },
+  "putfield": {
+    "op": 181,
+    "operands": [
+      [
+        "USHORT",
+        "CONSTANT_INDEX"
+      ]
+    ]
+  },
+  "putstatic": {
+    "op": 179,
+    "operands": [
+      [
+        "USHORT",
+        "CONSTANT_INDEX"
+      ]
+    ]
+  },
+  "ret": {
+    "op": 169,
+    "operands": [
+      [
+        "UBYTE",
+        "LOCAL_INDEX"
+      ]
+    ],
+    "can_be_wide": true
+  },
+  "return": {
+    "op": 177
+  },
+  "saload": {
+    "op": 53
+  },
+  "sastore": {
+    "op": 86
+  },
+  "sipush": {
+    "op": 17,
+    "operands": [
+      [
+        "USHORT",
+        "LITERAL"
+      ]
+    ]
+  },
+  "swap": {
+    "op": 95
+  },
+  "tableswitch": {
+    "op": 170
+  },
+  "wide": {
+    "op": 196
+  },
+  "breakpoint": {
+    "op": 202
+  },
+  "impdep1": {
+    "op": 254
+  },
+  "impdep2": {
+    "op": 255
+  }
+}

@@ -39,44 +39,28 @@ def ins(mnemonic):
 
     Lookup an instruction by its mnemonic.
     """
-    operand_types = {
-        10: u'Literal',
-        20: u'Local Index',
-        30: u'Constant Index',
-        40: u'Branch',
-        50: u'Padding'
-    }
-
-    operand_sizes = {
-        bytecode.ubyte: u'ubyte',
-        bytecode.ushort: u'ushort',
-        bytecode.byte: u'byte',
-        bytecode.short: u'short',
-        bytecode.integer: u'integer'
-    }
-
     try:
-        op, fmt = bytecode.definition_from_mnemonic(mnemonic)
+        opcode = bytecode.opcode_table[mnemonic]
     except KeyError:
         click.secho(u'No definition found.', fg='red')
         return
 
     click.echo(u'{mnemonic} (0x{op})'.format(
-        mnemonic=click.style(mnemonic, fg='green', underline=True),
-        op=click.style(format(op, '02x'), fg='green')
+        mnemonic=click.style(opcode['mnemonic'], fg='green', underline=True),
+        op=click.style(format(opcode['op'], '02x'), fg='green')
     ))
 
-    if op in bytecode.can_be_wide:
+    if opcode['can_be_wide']:
         click.echo(u'This instruction can be prefixed by the WIDE opcode.')
 
-    if fmt:
+    if opcode['operands']:
         click.secho(u'Operand Format:', fg='yellow')
-        for operand_fmt, operand_type in fmt:
+        for operand_fmt, operand_type in opcode['operands']:
             click.echo(u'- {ty} as a {fmt}'.format(
-                ty=click.style(operand_types[operand_type], fg='yellow'),
-                fmt=click.style(operand_sizes[operand_fmt], fg='yellow')
+                ty=click.style(operand_type.name, fg='yellow'),
+                fmt=click.style(operand_fmt.name, fg='yellow')
             ))
-    elif op in (0xAB, 0xAA, 0xC4):
+    elif opcode['op'] in (0xAB, 0xAA, 0xC4):
         # lookup[table|switch] and WIDE.
         click.secho(u'\nOperand Format:', fg='yellow')
         click.echo(
