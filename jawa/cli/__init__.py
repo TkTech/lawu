@@ -50,8 +50,19 @@ def ins(mnemonic):
         op=click.style(format(opcode['op'], '02x'), fg='green')
     ))
 
+    if opcode.get('desc'):
+        click.secho('Description:', fg='yellow')
+        click.echo(opcode['desc'])
+
     if opcode['can_be_wide']:
         click.echo(u'This instruction can be prefixed by the WIDE opcode.')
+
+    if opcode.get('runtime'):
+        click.secho('Possible runtime exceptions:', fg='yellow')
+        for runtime_exception in opcode['runtime']:
+            click.echo('- {runtime_exception}'.format(
+                runtime_exception=click.style(runtime_exception, fg='red')
+            ))
 
     if opcode['operands']:
         click.secho(u'Operand Format:', fg='yellow')
