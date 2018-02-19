@@ -98,19 +98,21 @@ class CodeAttribute(Attribute):
         """
         The `CodeAttribute` in packed byte string form.
         """
-        fout = io.BytesIO()
-        fout.write(pack(
-            '>HHI',
-            self._max_stack,
-            self._max_locals,
-            len(self._code)
-        ))
-        fout.write(self._code)
-        fout.write(pack('>H', len(self._ex_table)))
-        for exception in self._ex_table:
-            fout.write(pack('>HHHH', *exception))
-        self._attributes.pack(fout)
-        return fout.getvalue()
+        with io.BytesIO() as file_out:
+            file_out.write(pack(
+                '>HHI',
+                self._max_stack,
+                self._max_locals,
+                len(self._code)
+            ))
+            file_out.write(self._code)
+
+            file_out.write(pack('>H', len(self._ex_table)))
+            for exception in self._ex_table:
+                file_out.write(pack('>HHHH', *exception))
+
+            self._attributes.pack(file_out)
+            return file_out.getvalue()
 
     @property
     def max_stack(self):
@@ -151,18 +153,16 @@ class CodeAttribute(Attribute):
         Assembles an iterable of :class:`~jawa.util.bytecode.Instruction`
         objects into a method's code body.
         """
-        fout = io.BytesIO()
-        for ins in code:
-            write_instruction(fout, fout.tell(), ins)
-        self._code = fout.getvalue()
-        fout.close()
+        with io.BytesIO as code_out:
+            for ins in code:
+                write_instruction(code_out, code_out.tell(), ins)
+            self._code = code_out.getvalue()
 
     def disassemble(self):
         """
         Disassembles this method, yielding an iterable of
         :class:`~jawa.util.bytecode.Instruction` objects.
         """
-        fio = io.BytesIO(self._code)
-
-        for ins in iter(lambda: read_instruction(fio, fio.tell()), None):
-            yield ins
+        with io.BytesIO(self._code) as code:
+            for ins in iter(lambda: read_instruction(code, code.tell()), None):
+                yield ins
