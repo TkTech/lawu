@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 setup(
     name="jawa",
     packages=find_packages(),
-    version="1.1",
+    version="2.0",
     description="Doing fun stuff with JVM ClassFiles.",
     author="Tyler Kennedy",
     author_email="tk@tkte.ch",
@@ -20,8 +20,7 @@ setup(
         "Topic :: Software Development :: Disassemblers"
     ],
     install_requires=[
-        'click>=5.0',
-        'six'
+        'click>=5.0'
     ],
     tests_require=[
         'pytest>=2.10',

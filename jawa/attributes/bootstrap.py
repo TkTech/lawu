@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
+import io
 from collections import namedtuple
 from itertools import repeat
 from struct import pack
-
-import six
 
 from jawa.attribute import Attribute
 
@@ -32,7 +31,7 @@ class BootstrapMethodsAttribute(Attribute):
         )
 
     def pack(self):
-        out = six.BytesIO()
+        out = io.BytesIO()
         out.write(pack('>H', len(self.table)))
 
         for table_entry in self.table:

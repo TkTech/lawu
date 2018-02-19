@@ -1,20 +1,10 @@
 # -*- coding: utf-8 -*-
+import io
 import os
 import os.path
 from itertools import repeat
 from zipfile import ZipFile
 from collections import OrderedDict
-
-try:
-    from cStringIO import StringIO as BytesIO
-except ImportError:
-    from io import BytesIO
-try:
-    from itertools import izip
-except ImportError:
-    izip = zip
-
-import six
 
 from jawa.cf import ClassFile
 
@@ -81,7 +71,7 @@ class ClassLoader(object):
             # get the index, and unpack it into our path map.
             if path.lower().endswith(('.zip', '.jar')):
                 zf = ZipFile(path, 'r')
-                self.path_map.update(izip(zf.namelist(), repeat(zf)))
+                self.path_map.update(zip(zf.namelist(), repeat(zf)))
             elif os.path.isdir(path):
                 walker = _walk(
                     path,
@@ -119,14 +109,14 @@ class ClassLoader(object):
         try:
             r = self.class_cache.pop(path)
         except KeyError:
-            if isinstance(full_path, six.string_types):
+            if isinstance(full_path, str):
                 with open(full_path, 'rb') as fio:
                     r = ClassFile(fio)
             else:
                 # It's 2x as fast to read the entire file at once using
                 # read and wrapping it in a StringIO then it is to just
                 # ZipFile.open() it...
-                fio = BytesIO(full_path.read(path))
+                fio = io.BytesIO(full_path.read(path))
                 try:
                     r = ClassFile(fio)
                 finally:

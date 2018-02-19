@@ -8,7 +8,6 @@ ClassFiles.
 from struct import pack, unpack
 from collections import namedtuple
 
-
 from jawa.constants import ConstantPool
 from jawa.fields import FieldTable
 from jawa.methods import MethodTable

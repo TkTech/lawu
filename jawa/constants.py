@@ -361,11 +361,10 @@ class ConstantPool(object):
 
         :param value: The value of the new UTF8 string.
         """
-        assert isinstance(value, unicode)
         self.append((1, value))
         return self.get(self.raw_count - 1)
 
-    def create_integer(self, value):
+    def create_integer(self, value: int) -> Integer:
         """
         Creates a new :class:`ConstantInteger`, adding it to the pool and
         returning it.
@@ -375,7 +374,7 @@ class ConstantPool(object):
         self.append((3, value))
         return self.get(self.raw_count - 1)
 
-    def create_float(self, value):
+    def create_float(self, value: float) -> Float:
         """
         Creates a new :class:`ConstantFloat`, adding it to the pool and
         returning it.
@@ -385,7 +384,7 @@ class ConstantPool(object):
         self.append((4, value))
         return self.get(self.raw_count - 1)
 
-    def create_long(self, value):
+    def create_long(self, value: int) -> Long:
         """
         Creates a new :class:`ConstantLong`, adding it to the pool and
         returning it.
@@ -396,7 +395,7 @@ class ConstantPool(object):
         self.append(None)
         return self.get(self.raw_count - 2)
 
-    def create_double(self, value):
+    def create_double(self, value: float) -> Double:
         """
         Creates a new :class:`ConstantDouble`, adding it to the pool and
         returning it.
@@ -407,7 +406,7 @@ class ConstantPool(object):
         self.append(None)
         return self.get(self.raw_count - 2)
 
-    def create_class(self, name):
+    def create_class(self, name: str) -> ConstantClass:
         """
         Creates a new :class:`ConstantClass`, adding it to the pool and
         returning it.
@@ -420,7 +419,7 @@ class ConstantPool(object):
         ))
         return self.get(self.raw_count - 1)
 
-    def create_string(self, value):
+    def create_string(self, value: str) -> String:
         """
         Creates a new :class:`ConstantString`, adding it to the pool and
         returning it.
@@ -433,7 +432,7 @@ class ConstantPool(object):
         ))
         return self.get(self.raw_count - 1)
 
-    def create_name_and_type(self, name, descriptor):
+    def create_name_and_type(self, name: str, descriptor: str) -> NameAndType:
         """
         Creates a new :class:`ConstantNameAndType`, adding it to the pool and
         returning it.
@@ -448,7 +447,8 @@ class ConstantPool(object):
         ))
         return self.get(self.raw_count - 1)
 
-    def create_field_ref(self, class_, field, descriptor):
+    def create_field_ref(self, class_: str, field: str, descriptor: str) \
+            -> FieldReference:
         """
         Creates a new :class:`ConstantFieldRef`, adding it to the pool and
         returning it.
@@ -464,7 +464,8 @@ class ConstantPool(object):
         ))
         return self.get(self.raw_count - 1)
 
-    def create_method_ref(self, class_, method, descriptor):
+    def create_method_ref(self, class_: str, method: str, descriptor: str) \
+            -> MethodReference:
         """
         Creates a new :class:`ConstantMethodRef`, adding it to the pool and
         returning it.
@@ -480,7 +481,8 @@ class ConstantPool(object):
         ))
         return self.get(self.raw_count - 1)
 
-    def create_interface_method_ref(self, class_, if_method, descriptor):
+    def create_interface_method_ref(self, class_: str, if_method: str,
+                                    descriptor: str) -> InterfaceMethodRef:
         """
         Creates a new :class:`ConstantInterfaceMethodRef`, adding it to the
         pool and returning it.
@@ -556,7 +558,7 @@ class ConstantPool(object):
         for constant in self:
             write(constant.pack())
 
-    def __len__(self):
+    def __len__(self) -> int:
         """
         The number of `Constants` in the `ConstantPool`, excluding padding.
         """
@@ -567,7 +569,7 @@ class ConstantPool(object):
         return count
 
     @property
-    def raw_count(self):
+    def raw_count(self) -> int:
         """
         The number of `Constants` in the `ConstantPool`, including padding.
         """

@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from itertools import repeat
 
-import six.moves
-
 from jawa.attribute import Attribute
 from jawa.util.verifier import VerificationTypes
 
@@ -62,7 +60,7 @@ class StackMapTableAttribute(Attribute):
         length = info.u2()
         # Start with a null-state FULL_FRAME.
         previous_frame = StackMapFrame(255)
-        for i in six.moves.range(length):
+        for i in range(length):
             frame_type = info.u1()
             frame = StackMapFrame(frame_type)
             if frame_type < 64:
