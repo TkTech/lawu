@@ -108,7 +108,7 @@ def write_instruction(fout, start_pos, ins):
     :param ins: The `Instruction` to write.
     """
     opcode, operands = ins.opcode, ins.operands
-    fmt_operands = definition_from_opcode(opcode)[1]
+    fmt_operands = opcode_table[opcode]['operands']
 
     if ins.wide:
         # The "WIDE" prefix
@@ -183,11 +183,11 @@ def read_instruction(fio, start_pos):
         fio.read(padding)
 
         # Default branch address and branch count.
-        default, npairs = struct.unpack('>ii', fio.read(8))
+        default, npairs = unpack('>ii', fio.read(8))
 
         pairs = {}
         for _ in repeat(None, npairs):
-            match, offset = struct.unpack('>ii', fio.read(8))
+            match, offset = unpack('>ii', fio.read(8))
             pairs[match] = offset
 
         final_operands.append(pairs)
@@ -209,7 +209,7 @@ def read_instruction(fio, start_pos):
             final_operands.append(Operand(OperandTypes.BRANCH, offset))
     # Special case for the wide prefix
     elif op == 0xC4:
-        real_op = unpack(fio.read(1))[0]
+        real_op = unpack('>B', fio.read(1))[0]
         ins = opcode_table[real_op]
         name = ins['mnemonic']
 

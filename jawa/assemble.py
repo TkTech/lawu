@@ -6,7 +6,7 @@ from jawa.util.bytecode import (
     Operand,
     OperandTypes,
     Instruction,
-    definition_from_mnemonic
+    opcode_table
 )
 
 
@@ -46,7 +46,7 @@ def assemble(code):
             continue
 
         mnemonic, operands = line[0], line[1:]
-        operand_fmts = definition_from_mnemonic(mnemonic)[1]
+        operand_fmts = opcode_table[mnemonic]['operands']
 
         # We need to coerce each opcodes operands into their
         # final `Operand` form.
