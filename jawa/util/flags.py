@@ -5,7 +5,7 @@ import struct
 
 class Flags(object):
     """
-    Convience class for handling bit flags.
+    Convenience class for handling bit flags.
     """
     def __init__(self, binary_format, flags):
         object.__setattr__(self, 'binary_format', binary_format)

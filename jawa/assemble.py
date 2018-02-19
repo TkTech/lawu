@@ -109,7 +109,10 @@ def assemble(code):
                     if isinstance(v, Label):
                         operand[k] = Operand(40, label_pcs[v.name] - current_pc)
             elif isinstance(operand, Label):
-                ins.operands[i] = Operand(40, label_pcs[operand.name] - current_pc)
+                ins.operands[i] = Operand(
+                    40,
+                    label_pcs[operand.name] - current_pc
+                )
 
         current_pc += ins.size_on_disk(current_pc)
 
