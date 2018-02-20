@@ -534,7 +534,7 @@ class ConstantPool(object):
             else:
                 # Every other constant type is trivial.
                 fmt, size = _constant_fmts[tag]
-                self.append((tag,) + unpack(fmt, read(size)))
+                self.append((tag, *unpack(fmt, read(size))))
                 if tag == 5 or tag == 6:
                     # LONG (5) and DOUBLE (6) count as two entries in the
                     # pool.
