@@ -158,11 +158,16 @@ class CodeAttribute(Attribute):
                 write_instruction(code_out, code_out.tell(), ins)
             self._code = code_out.getvalue()
 
-    def disassemble(self):
+    def disassemble(self, *, transforms=None):
         """
         Disassembles this method, yielding an iterable of
         :class:`~jawa.util.bytecode.Instruction` objects.
         """
+        transforms = transforms or []
+
         with io.BytesIO(self._code) as code:
-            for ins in iter(lambda: read_instruction(code, code.tell()), None):
+            ins_iter = iter(lambda: read_instruction(code, code.tell()), None)
+            for ins in ins_iter:
+                for transform in transforms:
+                    ins = transform(ins)
                 yield ins

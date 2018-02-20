@@ -61,6 +61,14 @@
       "after": [
         "ObjectRef"
       ]
+    },
+    "transform": {
+      "simple_swap": {
+        "op": "aload",
+        "operands": [
+          0
+        ]
+      }
     }
   },
   "aload_1": {
@@ -69,6 +77,14 @@
       "after": [
         "ObjectRef"
       ]
+    },
+    "transform": {
+      "simple_swap": {
+        "op": "aload",
+        "operands": [
+          1
+        ]
+      }
     }
   },
   "aload_2": {
@@ -77,6 +93,14 @@
       "after": [
         "ObjectRef"
       ]
+    },
+    "transform": {
+      "simple_swap": {
+        "op": "aload",
+        "operands": [
+          2
+        ]
+      }
     }
   },
   "aload_3": {
@@ -85,6 +109,14 @@
       "after": [
         "ObjectRef"
       ]
+    },
+    "transform": {
+      "simple_swap": {
+        "op": "aload",
+        "operands": [
+          3
+        ]
+      }
     }
   },
   "anewarray": {
@@ -113,16 +145,48 @@
     "can_be_wide": true
   },
   "astore_0": {
-    "op": 75
+    "op": 75,
+    "transform": {
+      "simple_swap": {
+        "op": "astore",
+        "operands": [
+          0
+        ]
+      }
+    }
   },
   "astore_1": {
-    "op": 76
+    "op": 76,
+    "transform": {
+      "simple_swap": {
+        "op": "astore",
+        "operands": [
+          1
+        ]
+      }
+    }
   },
   "astore_2": {
-    "op": 77
+    "op": 77,
+    "transform": {
+      "simple_swap": {
+        "op": "astore",
+        "operands": [
+          2
+        ]
+      }
+    }
   },
   "astore_3": {
-    "op": 78
+    "op": 78,
+    "transform": {
+      "simple_swap": {
+        "op": "astore",
+        "operands": [
+          3
+        ]
+      }
+    }
   },
   "athrow": {
     "op": 191
@@ -201,16 +265,48 @@
     "can_be_wide": true
   },
   "dload_0": {
-    "op": 38
+    "op": 38,
+    "transform": {
+      "simple_swap": {
+        "op": 24,
+        "operands": [
+          0
+        ]
+      }
+    }
   },
   "dload_1": {
-    "op": 39
+    "op": 39,
+    "transform": {
+      "simple_swap": {
+        "op": 24,
+        "operands": [
+          1
+        ]
+      }
+    }
   },
   "dload_2": {
-    "op": 40
+    "op": 40,
+    "transform": {
+      "simple_swap": {
+        "op": 24,
+        "operands": [
+          2
+        ]
+      }
+    }
   },
   "dload_3": {
-    "op": 41
+    "op": 41,
+    "transform": {
+      "simple_swap": {
+        "op": 24,
+        "operands": [
+          3
+        ]
+      }
+    }
   },
   "dmul": {
     "op": 107
@@ -235,16 +331,48 @@
     "can_be_wide": true
   },
   "dstore_0": {
-    "op": 71
+    "op": 71,
+    "transform": {
+      "simple_swap": {
+        "op": "dstore",
+        "operands": [
+          0
+        ]
+      }
+    }
   },
   "dstore_1": {
-    "op": 72
+    "op": 72,
+    "transform": {
+      "simple_swap": {
+        "op": "dstore",
+        "operands": [
+          1
+        ]
+      }
+    }
   },
   "dstore_2": {
-    "op": 73
+    "op": 73,
+    "transform": {
+      "simple_swap": {
+        "op": "dstore",
+        "operands": [
+          2
+        ]
+      }
+    }
   },
   "dstore_3": {
-    "op": 74
+    "op": 74,
+    "transform": {
+      "simple_swap": {
+        "op": "dstore",
+        "operands": [
+          3
+        ]
+      }
+    }
   },
   "dsub": {
     "op": 103
@@ -314,16 +442,48 @@
     "can_be_wide": true
   },
   "fload_0": {
-    "op": 34
+    "op": 34,
+    "transform": {
+      "simple_swap": {
+        "op": "fload",
+        "operands": [
+          0
+        ]
+      }
+    }
   },
   "fload_1": {
-    "op": 35
+    "op": 35,
+    "transform": {
+      "simple_swap": {
+        "op": "fload",
+        "operands": [
+          1
+        ]
+      }
+    }
   },
   "fload_2": {
-    "op": 36
+    "op": 36,
+    "transform": {
+      "simple_swap": {
+        "op": "fload",
+        "operands": [
+          2
+        ]
+      }
+    }
   },
   "fload_3": {
-    "op": 37
+    "op": 37,
+    "transform": {
+      "simple_swap": {
+        "op": "fload",
+        "operands": [
+          3
+        ]
+      }
+    }
   },
   "fmul": {
     "op": 106
@@ -348,16 +508,48 @@
     "can_be_wide": true
   },
   "fstore_0": {
-    "op": 67
+    "op": 67,
+    "transform": {
+      "simple_swap": {
+        "op": "fstore",
+        "operands": [
+          0
+        ]
+      }
+    }
   },
   "fstore_1": {
-    "op": 68
+    "op": 68,
+    "transform": {
+      "simple_swap": {
+        "op": "fstore",
+        "operands": [
+          0
+        ]
+      }
+    }
   },
   "fstore_2": {
-    "op": 69
+    "op": 69,
+    "transform": {
+      "simple_swap": {
+        "op": "fstore",
+        "operands": [
+          0
+        ]
+      }
+    }
   },
   "fstore_3": {
-    "op": 70
+    "op": 70,
+    "transform": {
+      "simple_swap": {
+        "op": "fstore",
+        "operands": [
+          0
+        ]
+      }
+    }
   },
   "fsub": {
     "op": 102
@@ -432,22 +624,70 @@
     "op": 2
   },
   "iconst_0": {
-    "op": 3
+    "op": 3,
+    "transform": {
+      "simple_swap": {
+        "op": "bipush",
+        "operands": [
+          0
+        ]
+      }
+    }
   },
   "iconst_1": {
-    "op": 4
+    "op": 4,
+    "transform": {
+      "simple_swap": {
+        "op": "bipush",
+        "operands": [
+          1
+        ]
+      }
+    }
   },
   "iconst_2": {
-    "op": 5
+    "op": 5,
+    "transform": {
+      "simple_swap": {
+        "op": "bipush",
+        "operands": [
+          2
+        ]
+      }
+    }
   },
   "iconst_3": {
-    "op": 6
+    "op": 6,
+    "transform": {
+      "simple_swap": {
+        "op": "bipush",
+        "operands": [
+          3
+        ]
+      }
+    }
   },
   "iconst_4": {
-    "op": 7
+    "op": 7,
+    "transform": {
+      "simple_swap": {
+        "op": "bipush",
+        "operands": [
+          4
+        ]
+      }
+    }
   },
   "iconst_5": {
-    "op": 8
+    "op": 8,
+    "transform": {
+      "simple_swap": {
+        "op": "bipush",
+        "operands": [
+          5
+        ]
+      }
+    }
   },
   "idiv": {
     "op": 108
@@ -621,16 +861,48 @@
     "can_be_wide": true
   },
   "iload_0": {
-    "op": 26
+    "op": 26,
+    "transform": {
+      "simple_swap": {
+        "op": "iload",
+        "operands": [
+          0
+        ]
+      }
+    }
   },
   "iload_1": {
-    "op": 27
+    "op": 27,
+    "transform": {
+      "simple_swap": {
+        "op": "iload",
+        "operands": [
+          1
+        ]
+      }
+    }
   },
   "iload_2": {
-    "op": 28
+    "op": 28,
+    "transform": {
+      "simple_swap": {
+        "op": "iload",
+        "operands": [
+          2
+        ]
+      }
+    }
   },
   "iload_3": {
-    "op": 29
+    "op": 29,
+    "transform": {
+      "simple_swap": {
+        "op": "iload",
+        "operands": [
+          3
+        ]
+      }
+    }
   },
   "imul": {
     "op": 104
@@ -734,16 +1006,48 @@
     "can_be_wide": true
   },
   "istore_0": {
-    "op": 59
+    "op": 59,
+    "transform": {
+      "simple_swap": {
+        "op": "istore",
+        "operands": [
+          0
+        ]
+      }
+    }
   },
   "istore_1": {
-    "op": 60
+    "op": 60,
+    "transform": {
+      "simple_swap": {
+        "op": "istore",
+        "operands": [
+          1
+        ]
+      }
+    }
   },
   "istore_2": {
-    "op": 61
+    "op": 61,
+    "transform": {
+      "simple_swap": {
+        "op": "istore",
+        "operands": [
+          2
+        ]
+      }
+    }
   },
   "istore_3": {
-    "op": 62
+    "op": 62,
+    "transform": {
+      "simple_swap": {
+        "op": "istore",
+        "operands": [
+          3
+        ]
+      }
+    }
   },
   "isub": {
     "op": 100
@@ -799,7 +1103,7 @@
   "lconst_0": {
     "op": 9
   },
-  "lcons_1": {
+  "lconst_1": {
     "op": 10
   },
   "ldc": {
@@ -843,16 +1147,48 @@
     "can_be_wide": true
   },
   "lload_0": {
-    "op": 30
+    "op": 30,
+    "transform": {
+      "simple_swap": {
+        "op": "lload",
+        "operands": [
+          0
+        ]
+      }
+    }
   },
   "lload_1": {
-    "op": 31
+    "op": 31,
+    "transform": {
+      "simple_swap": {
+        "op": "lload",
+        "operands": [
+          1
+        ]
+      }
+    }
   },
   "lload_2": {
-    "op": 32
+    "op": 32,
+    "transform": {
+      "simple_swap": {
+        "op": "lload",
+        "operands": [
+          2
+        ]
+      }
+    }
   },
   "lload_3": {
-    "op": 33
+    "op": 33,
+    "transform": {
+      "simple_swap": {
+        "op": "lload",
+        "operands": [
+          3
+        ]
+      }
+    }
   },
   "lmul": {
     "op": 105
@@ -889,16 +1225,48 @@
     "can_be_wide": true
   },
   "lstore_0": {
-    "op": 63
+    "op": 63,
+    "transform": {
+      "simple_swap": {
+        "op": "lstore",
+        "operands": [
+          0
+        ]
+      }
+    }
   },
   "lstore_1": {
-    "op": 64
+    "op": 64,
+    "transform": {
+      "simple_swap": {
+        "op": "lstore",
+        "operands": [
+          1
+        ]
+      }
+    }
   },
   "lstore_2": {
-    "op": 65
+    "op": 65,
+    "transform": {
+      "simple_swap": {
+        "op": "lstore",
+        "operands": [
+          2
+        ]
+      }
+    }
   },
   "lstore_3": {
-    "op": 66
+    "op": 66,
+    "transform": {
+      "simple_swap": {
+        "op": "lstore",
+        "operands": [
+          3
+        ]
+      }
+    }
   },
   "lsub": {
     "op": 101

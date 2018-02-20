@@ -40,21 +40,41 @@ aload_0:
     stack:
         after:
             - ObjectRef
+    transform:
+      simple_swap:
+        op: aload
+        operands:
+          - 0
 aload_1:
     op: 0x2B
     stack:
         after:
             - ObjectRef
+    transform:
+      simple_swap:
+        op: aload
+        operands:
+          - 1
 aload_2:
     op: 0x2C
     stack:
         after:
             - ObjectRef
+    transform:
+      simple_swap:
+        op: aload
+        operands:
+          - 2
 aload_3:
     op: 0x2D
     stack:
         after:
             - ObjectRef
+    transform:
+      simple_swap:
+        op: aload
+        operands:
+          - 3
 anewarray:
     op: 0xBD
     operands:
@@ -70,12 +90,32 @@ astore:
     can_be_wide: True
 astore_0:
     op: 0x4B
+    transform:
+      simple_swap:
+        op: astore
+        operands:
+          - 0
 astore_1:
     op: 0x4C
+    transform:
+      simple_swap:
+        op: astore
+        operands:
+          - 1
 astore_2:
     op: 0x4D
+    transform:
+      simple_swap:
+        op: astore
+        operands:
+          - 2
 astore_3:
     op: 0x4E
+    transform:
+      simple_swap:
+        op: astore
+        operands:
+          - 3
 athrow:
     op: 0xBF
 baload:
@@ -123,12 +163,32 @@ dload:
     can_be_wide: True
 dload_0:
     op: 0x26
+    transform:
+      simple_swap:
+        op: 0x18
+        operands:
+          - 0
 dload_1:
     op: 0x27
+    transform:
+      simple_swap:
+        op: 0x18
+        operands:
+          - 1
 dload_2:
     op: 0x28
+    transform:
+      simple_swap:
+        op: 0x18
+        operands:
+          - 2
 dload_3:
     op: 0x29
+    transform:
+      simple_swap:
+        op: 0x18
+        operands:
+          - 3
 dmul:
     op: 0x6B
 dneg:
@@ -144,12 +204,32 @@ dstore:
     can_be_wide: True
 dstore_0:
     op: 0x47
+    transform:
+      simple_swap:
+        op: dstore
+        operands:
+          - 0
 dstore_1:
     op: 0x48
+    transform:
+      simple_swap:
+        op: dstore
+        operands:
+          - 1
 dstore_2:
     op: 0x49
+    transform:
+      simple_swap:
+        op: dstore
+        operands:
+          - 2
 dstore_3:
     op: 0x4A
+    transform:
+      simple_swap:
+        op: dstore
+        operands:
+          - 3
 dsub:
     op: 0x67
 dup:
@@ -195,12 +275,32 @@ fload:
     can_be_wide: True
 fload_0:
     op: 0x22
+    transform:
+      simple_swap:
+        op: fload
+        operands:
+          - 0
 fload_1:
     op: 0x23
+    transform:
+      simple_swap:
+        op: fload
+        operands:
+          - 1
 fload_2:
     op: 0x24
+    transform:
+      simple_swap:
+        op: fload
+        operands:
+          - 2
 fload_3:
     op: 0x25
+    transform:
+      simple_swap:
+        op: fload
+        operands:
+          - 3
 fmul:
     op: 0x6A
 fneg:
@@ -216,12 +316,32 @@ fstore:
     can_be_wide: True
 fstore_0:
     op: 0x43
+    transform:
+      simple_swap:
+        op: fstore
+        operands:
+          - 0
 fstore_1:
     op: 0x44
+    transform:
+      simple_swap:
+        op: fstore
+        operands:
+          - 0
 fstore_2:
     op: 0x45
+    transform:
+      simple_swap:
+        op: fstore
+        operands:
+          - 0
 fstore_3:
     op: 0x46
+    transform:
+      simple_swap:
+        op: fstore
+        operands:
+          - 0
 fsub:
     op: 0x66
 getfield:
@@ -264,16 +384,46 @@ iconst_m1:
     op: 0x02
 iconst_0:
     op: 0x03
+    transform:
+      simple_swap:
+        op: bipush
+        operands:
+          - 0
 iconst_1:
     op: 0x04
+    transform:
+      simple_swap:
+        op: bipush
+        operands:
+          - 1
 iconst_2:
     op: 0x05
+    transform:
+      simple_swap:
+        op: bipush
+        operands:
+          - 2
 iconst_3:
     op: 0x06
+    transform:
+      simple_swap:
+        op: bipush
+        operands:
+          - 3
 iconst_4:
     op: 0x07
+    transform:
+      simple_swap:
+        op: bipush
+        operands:
+          - 4
 iconst_5:
     op: 0x08
+    transform:
+      simple_swap:
+        op: bipush
+        operands:
+          - 5
 idiv:
     op: 0x6C
 if_acmpeg:
@@ -353,12 +503,32 @@ iload:
     can_be_wide: True
 iload_0:
     op: 0x1A
+    transform:
+      simple_swap:
+        op: iload
+        operands:
+          - 0
 iload_1:
     op: 0x1B
+    transform:
+      simple_swap:
+        op: iload
+        operands:
+          - 1
 iload_2:
     op: 0x1C
+    transform:
+      simple_swap:
+        op: iload
+        operands:
+          - 2
 iload_3:
     op: 0x1D
+    transform:
+      simple_swap:
+        op: iload
+        operands:
+          - 3
 imul:
     op: 0x68
 ineg:
@@ -408,12 +578,32 @@ istore:
     can_be_wide: True
 istore_0:
     op: 0x3B
+    transform:
+      simple_swap:
+        op: istore
+        operands:
+          - 0
 istore_1:
     op: 0x3C
+    transform:
+      simple_swap:
+        op: istore
+        operands:
+          - 1
 istore_2:
     op: 0x3D
+    transform:
+      simple_swap:
+        op: istore
+        operands:
+          - 2
 istore_3:
     op: 0x3E
+    transform:
+      simple_swap:
+        op: istore
+        operands:
+          - 3
 isub:
     op: 0x64
 iushr:
@@ -446,7 +636,7 @@ lcmp:
     op: 0x94
 lconst_0:
     op: 0x09
-lcons_1:
+lconst_1:
     op: 0x0A
 ldc:
     op: 0x12
@@ -469,12 +659,32 @@ lload:
     can_be_wide: True
 lload_0:
     op: 0x1E
+    transform:
+      simple_swap:
+        op: lload
+        operands:
+          - 0
 lload_1:
     op: 0x1F
+    transform:
+      simple_swap:
+        op: lload
+        operands:
+          - 1
 lload_2:
     op: 0x20
+    transform:
+      simple_swap:
+        op: lload
+        operands:
+          - 2
 lload_3:
     op: 0x21
+    transform:
+      simple_swap:
+        op: lload
+        operands:
+          - 3
 lmul:
     op: 0x69
 lneg:
@@ -498,12 +708,32 @@ lstore:
     can_be_wide: True
 lstore_0:
     op: 0x3F
+    transform:
+      simple_swap:
+        op: lstore
+        operands:
+          - 0
 lstore_1:
     op: 0x40
+    transform:
+      simple_swap:
+        op: lstore
+        operands:
+          - 1
 lstore_2:
     op: 0x41
+    transform:
+      simple_swap:
+        op: lstore
+        operands:
+          - 2
 lstore_3:
     op: 0x42
+    transform:
+      simple_swap:
+        op: lstore
+        operands:
+          - 3
 lsub:
     op: 0x65
 lushr:

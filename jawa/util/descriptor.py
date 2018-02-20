@@ -20,7 +20,7 @@ MethodDescriptor = namedtuple('MethodDescriptor', [
 ])
 
 
-def method_descriptor(descriptor):
+def method_descriptor(descriptor: str) -> MethodDescriptor:
     """
     Parses a Method descriptor as described in section 4.3.3 of the JVM
     specification.
@@ -38,7 +38,7 @@ def method_descriptor(descriptor):
     )
 
 
-def field_descriptor(descriptor):
+def field_descriptor(descriptor: str) -> str:
     """
     Parses a Field descriptor as described in section 4.3.2 of the JVM
     specification.
@@ -62,7 +62,7 @@ _HUMAN_NAMES = {
 }
 
 
-def parse_descriptor(descriptor):
+def parse_descriptor(descriptor: str) -> list:
     """
     Uses a tiny state machine to parse JVM descriptors. To get useful wrappers
     around the results, use :py:func:`jawa.core.descriptor.method_descriptor`

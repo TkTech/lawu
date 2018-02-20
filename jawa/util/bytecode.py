@@ -78,6 +78,11 @@ class Instruction(_Instruction):
         """Alias for mnemonic."""
         return self.mnemonic
 
+    @property
+    def details(self):
+        """Extended opcode information."""
+        return opcode_table[self.opcode]
+
 
 class OperandTypes(enum.IntEnum):
     """
@@ -251,9 +256,10 @@ def load_bytecode_definitions(*, path=None) -> dict:
                 for oo in o
             ]
 
+        # TODO: The bytecode.yaml -> bytecode.json step should do this instead.
         value['mnemonic'] = key
-        if 'can_be_wide' not in value:
-            value['can_be_wide'] = False
+        value.setdefault('can_be_wide', False)
+        value.setdefault('transform', {})
 
     # Return one dict that contains both mnemonic keys and opcode keys.
     return {**j, **{v['op']: v for v in j.values()}}
