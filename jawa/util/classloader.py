@@ -113,14 +113,11 @@ class ClassLoader(object):
                 with open(full_path, 'rb') as fio:
                     r = ClassFile(fio)
             else:
-                # It's 2x as fast to read the entire file at once using
-                # read and wrapping it in a StringIO then it is to just
-                # ZipFile.open() it...
-                fio = io.BytesIO(full_path.read(path))
-                try:
-                    r = ClassFile(fio)
-                finally:
-                    fio.close()
+                # # It's 2x as fast to read the entire file at once using
+                # # read and wrapping it in a StringIO then it is to just
+                # # ZipFile.open() it...
+                with io.BytesIO(full_path.read(path)) as zip_in:
+                    r = ClassFile(zip_in)
 
         # Even if it was found re-set the key to update the OrderedDict
         # ordering.
