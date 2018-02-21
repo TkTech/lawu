@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import json
+
 import click
 
 from jawa.cf import ClassVersion, ClassFile
@@ -95,3 +97,38 @@ def shell_command(class_path):
         'load': loader.load,
         'loader': loader
     })
+
+
+@cli.command(name='def2json')
+@click.argument('source', type=click.File('rb'))
+def definition_to_json(source):
+    """Convert a bytecode.yaml file into a prepared bytecode.json.
+
+    Jawa internally uses a YAML file to define all bytecode opcodes, operands,
+    runtime exceptions, default transforms, etc...
+
+    However since JSON is available in the python stdlib and YAML is not, we
+    process this YAML file before distribution to prevent adding an unnecessary
+    dependency.
+    """
+    try:
+        import yaml
+    except ImportError:
+        click.echo(
+            'The pyyaml module could not be found and is required'
+            ' to use this command.',
+            err=True
+        )
+        return
+
+    y = yaml.load(source)
+
+    for k, v in y.items():
+        # We guarantee some keys should always exist to make life easier for
+        # developers.
+        v.setdefault('operands', None)
+        v.setdefault('can_be_wide', False)
+        v.setdefault('transform', {})
+        v['mnemonic'] = k
+
+    click.echo(json.dumps(y, indent=4, sort_keys=True))
