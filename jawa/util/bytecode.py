@@ -244,22 +244,23 @@ def load_bytecode_definitions(*, path=None) -> dict:
         with open(path, 'rb') as file_in:
             j = json.load(file_in)
     else:
-        j = json.loads(pkgutil.get_data('jawa.util', 'bytecode.json'))
+        try:
+            j = json.loads(pkgutil.get_data('jawa.util', 'bytecode.json'))
+        except json.JSONDecodeError:
+            # Unfortunately our best way to handle missing/malformed/empty
+            # bytecode.json files since it may not actually be backed by a
+            # "real" file.
+            return {}
 
-    for key, value in j.items():
+    for definition in j.values():
         # If the entry has any operands take the text labels and convert
         # them into pre-cached struct objects and operand types.
-        o = value.setdefault('operands', None)
-        if o:
-            value['operands'] = [
+        operands = definition['operands']
+        if operands:
+            definition['operands'] = [
                 [getattr(OperandFmts, oo[0]), OperandTypes[oo[1]]]
-                for oo in o
+                for oo in operands
             ]
-
-        # TODO: The bytecode.yaml -> bytecode.json step should do this instead.
-        value['mnemonic'] = key
-        value.setdefault('can_be_wide', False)
-        value.setdefault('transform', {})
 
     # Return one dict that contains both mnemonic keys and opcode keys.
     return {**j, **{v['op']: v for v in j.values()}}
