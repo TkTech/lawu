@@ -426,7 +426,7 @@ iconst_5:
           - 5
 idiv:
     op: 0x6C
-if_acmpeg:
+if_acmpeq:
     op: 0xA5
     operands:
         - ['SHORT', 'BRANCH']
@@ -434,7 +434,7 @@ if_acmpne:
     op: 0xA6
     operands:
         - ['SHORT', 'BRANCH']
-if_icmpeg:
+if_icmpeq:
     op: 0x9F
     operands:
         - ['SHORT', 'BRANCH']
