@@ -40,10 +40,10 @@ class BootstrapMethodsAttribute(Attribute):
                 table_entry.method_ref,
                 len(table_entry.bootstrap_args)
             ))
-            out.write(pack('>{0}H'.format(
-                len(table_entry.bootstrap_args),
+            out.write(pack(
+                '>{0}H'.format(len(table_entry.bootstrap_args)),
                 table_entry.bootstrap_args
-            )))
+            ))
 
         return out.getvalue()
 
