@@ -2,9 +2,11 @@
 import io
 import os
 import os.path
+import typing
 from itertools import repeat
 from zipfile import ZipFile
 from collections import OrderedDict
+from contextlib import contextmanager
 
 from jawa.cf import ClassFile
 
@@ -38,7 +40,8 @@ class ClassLoader(object):
                       If set to 0, the cache will be unlimited. [default: 50]
     :type max_cache: Long
     """
-    def __init__(self, follow_symlinks=False, maximum_depth=20, max_cache=50):
+    def __init__(self, *, follow_symlinks: bool=False, maximum_depth: int=20,
+                 max_cache: int=50):
         #: A mapping of all known classes to their source location.
         self.path_map = {}
         #: Should symlinks be followed when traversing directories?
@@ -84,38 +87,29 @@ class ClassLoader(object):
                         path_suffix = os.path.relpath(path_full, path)
                         self.path_map[path_suffix] = path_full
 
-    def load(self, path):
-        """Load the class at `path` or return an asset path.
+    def load(self, path: str) -> ClassFile:
+        """Load the class at `path` and return it.
 
-        If `path` points to a valid fully-qualified class it will be loaded
-        and returned.
-
-        :param path: Fully-qualified path to a ClassFile or an asset file.
-        :type path: unicode
+        :param path: Fully-qualified path to a ClassFile.
         """
-        # Try both with-and-without the class suffix.
         try:
             full_path = self.path_map[path]
-        except KeyError as original_e:
-            try:
-                full_path = self.path_map[path + '.class']
-            except KeyError:
-                raise original_e
-            else:
-                path = path + '.class'
+        except KeyError:
+            raise FileNotFoundError()
 
         # Try to refresh the class from the cache, loading it from disk
         # if not found.
         try:
             r = self.class_cache.pop(path)
         except KeyError:
+            # The entry in the path is an on-disk location.
             if isinstance(full_path, str):
                 with open(full_path, 'rb') as fio:
                     r = ClassFile(fio)
             else:
-                # # It's 2x as fast to read the entire file at once using
-                # # read and wrapping it in a StringIO then it is to just
-                # # ZipFile.open() it...
+                # It's 2x as fast to read the entire file at once using
+                # read and wrapping it in a StringIO then it is to just
+                # ZipFile.open() it...
                 with io.BytesIO(full_path.read(path)) as zip_in:
                     r = ClassFile(zip_in)
 
@@ -131,6 +125,29 @@ class ClassLoader(object):
                 self.class_cache.popitem(last=False)
 
         return r
+
+    @contextmanager
+    def load_asset(self, path: str) -> typing.IO:
+        """Load the asset at `path` and return a read-only file-like object.
+
+        .. note::
+
+            This method must always be used as a context manager to ensure file
+            handles are closed properly.
+
+        :param path: Fully-qualified path to an asset.
+        """
+        try:
+            full_path = self.path_map[path]
+        except KeyError:
+            raise FileNotFoundError()
+
+        if isinstance(full_path, str):
+            with open(full_path, 'rb') as fio:
+                yield fio
+        else:
+            with full_path.open(path, 'r') as fio:
+                yield fio
 
     def clear(self):
         """Erase all stored paths and all cached classes."""
