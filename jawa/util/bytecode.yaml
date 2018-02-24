@@ -382,6 +382,11 @@ iastore:
     op: 0x4F
 iconst_m1:
     op: 0x02
+    transform:
+      simple_swap:
+        op: bipush
+        operands:
+          - -1
 iconst_0:
     op: 0x03
     transform:
