@@ -266,7 +266,7 @@
         "op": 16,
         "operands": [
             [
-                "UBYTE",
+                "BYTE",
                 "LITERAL"
             ]
         ],
@@ -1057,7 +1057,14 @@
         "mnemonic": "iconst_m1",
         "op": 2,
         "operands": null,
-        "transform": {}
+        "transform": {
+            "simple_swap": {
+                "op": "bipush",
+                "operands": [
+                    -1
+                ]
+            }
+        }
     },
     "idiv": {
         "can_be_wide": false,
