@@ -125,7 +125,7 @@ bastore:
 bipush:
     op: 0x10
     operands:
-        - ['UBYTE', 'LITERAL']
+        - ['BYTE', 'LITERAL']
 caload:
     op: 0x34
 castore:
