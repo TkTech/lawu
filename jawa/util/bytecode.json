@@ -2077,7 +2077,7 @@
         "op": 17,
         "operands": [
             [
-                "USHORT",
+                "SHORT",
                 "LITERAL"
             ]
         ],

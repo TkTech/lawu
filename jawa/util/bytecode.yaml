@@ -790,7 +790,7 @@ sastore:
 sipush:
     op: 0x11
     operands:
-        - ['USHORT', 'LITERAL']
+        - ['SHORT', 'LITERAL']
 swap:
     op: 0x5F
 tableswitch:
