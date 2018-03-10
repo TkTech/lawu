@@ -53,26 +53,28 @@ class ClassLoader(object):
         self.max_cache = max_cache
         self.class_cache = OrderedDict()
         self.klass = klass
-        self.transforms = transforms or []
+        self.bytecode_transforms = bytecode_transforms or []
 
-    def add_path(self, *paths):
-        """Add a new path to the class loader.
+    def update(self, *sources):
+        """Add one or more ClassFile sources to the class loader.
 
-        If the given `path` is a directory, it is traversed up to the maximum
-        set depth and all files under it are added to the class loader lookup
-        table.
+        If a given source is a directory path, it is traversed up to the
+        maximum set depth and all files under it are added to the class loader
+        lookup table.
 
-        If the given `path` is a .jar or .zip file it will be opened and the
+        If a given source is a .jar or .zip file it will be opened and the
         file index added to the class loader lookup table.
 
-        :param paths: Any number of paths to either a ZIP/JAR or a directory to
-                      be added to the classpath.
-        :type paths: unicode
+        If a given source is a ClassFile or a subclass, it's immediately
+        added to the class loader lookup table and the class cache.
+
+        :param sources: One or more ClassFile sources to be added.
         """
-        for path in paths:
-            # We're adding an archive to the classpath so we want to open it,
-            # get the index, and unpack it into our path map.
-            if path.lower().endswith(('.zip', '.jar')):
+        for source in sources:
+            if isinstance(source, self.klass):
+                self.path_map[source.this.name.value] = source
+                self.class_cache[source.this.name.value] = source
+            elif path.lower().endswith(('.zip', '.jar')):
                 zf = ZipFile(path, 'r')
                 self.path_map.update(zip(zf.namelist(), repeat(zf)))
             elif os.path.isdir(path):
