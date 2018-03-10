@@ -83,6 +83,17 @@ class Instruction(_Instruction):
         """Extended opcode information."""
         return opcode_table[self.opcode]
 
+    @classmethod
+    def create(cls, mnemonic_or_op, operands=None):
+        op = opcode_table[mnemonic_or_op]
+
+        return cls(
+            op['mnemonic'],
+            op['op'],
+            operands or [],
+            0
+        )
+
 
 class OperandTypes(enum.IntEnum):
     """

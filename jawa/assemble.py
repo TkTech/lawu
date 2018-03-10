@@ -76,10 +76,7 @@ def assemble(code):
                 ))
 
         # Build the final, immutable `Instruction`.
-        final.append(Instruction.from_mnemonic(
-            mnemonic,
-            operands=final_operands
-        ))
+        final.append(Instruction.create(mnemonic, final_operands))
 
     label_pcs = {}
 

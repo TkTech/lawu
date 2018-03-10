@@ -153,7 +153,7 @@ class CodeAttribute(Attribute):
         Assembles an iterable of :class:`~jawa.util.bytecode.Instruction`
         objects into a method's code body.
         """
-        with io.BytesIO as code_out:
+        with io.BytesIO() as code_out:
             for ins in code:
                 write_instruction(code_out, code_out.tell(), ins)
             self._code = code_out.getvalue()
