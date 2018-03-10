@@ -97,7 +97,12 @@ class ClassLoader(object):
         try:
             full_path = self.path_map[path]
         except KeyError:
-            raise FileNotFoundError()
+            try:
+                full_path = self.path_map[path + '.class']
+            except KeyError:
+                raise FileNotFoundError()
+            else:
+                path = path + '.class'
 
         # Try to refresh the class from the cache, loading it from disk
         # if not found.
