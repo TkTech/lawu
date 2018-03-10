@@ -163,7 +163,10 @@ class CodeAttribute(Attribute):
         Disassembles this method, yielding an iterable of
         :class:`~jawa.util.bytecode.Instruction` objects.
         """
-        transforms = transforms or []
+        if transforms is None and self.cf.classloader:
+            transforms = self.cf.classloader.bytecode_transforms
+        elif transforms is None:
+            transforms = []
 
         with io.BytesIO(self._code) as code:
             ins_iter = iter(lambda: read_instruction(code, code.tell()), None)

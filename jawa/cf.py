@@ -93,6 +93,8 @@ class ClassFile(object):
         self._fields = FieldTable(self)
         self._methods = MethodTable(self)
         self._attributes = AttributeTable(self)
+        #: The ClassLoader bound to this ClassFile, if any.
+        self.classloader = None
 
         if fio:
             self._from_io(fio)

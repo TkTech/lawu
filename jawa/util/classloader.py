@@ -39,21 +39,21 @@ class ClassLoader(object):
     :param max_cache: The maximum number of ClassFile's to store in the cache.
                       If set to 0, the cache will be unlimited. [default: 50]
     :type max_cache: Long
+    :param klass: The class to use when constructing ClassFiles.
+    :type klass: ClassFile or subclass.
+    :param bytecode_transforms: Default transforms to apply when disassembling
+                                a method.
     """
     def __init__(self, *, follow_symlinks: bool=False, maximum_depth: int=20,
-                 max_cache: int=50):
+                 max_cache: int=50, klass=ClassFile, bytecode_transforms=None):
         #: A mapping of all known classes to their source location.
         self.path_map = {}
-        #: Should symlinks be followed when traversing directories?
         self.follow_symlinks = follow_symlinks
-        #: The maximum number of directories to traverse.
         self.maximum_depth = maximum_depth
-
-        #: The maximum number of entries that may live in the class cache
-        #: at any one time. Setting this to 0 will cause the cache to become
-        #: infinite.
         self.max_cache = max_cache
         self.class_cache = OrderedDict()
+        self.klass = klass
+        self.transforms = transforms or []
 
     def add_path(self, *paths):
         """Add a new path to the class loader.
@@ -105,14 +105,15 @@ class ClassLoader(object):
             # The entry in the path is an on-disk location.
             if isinstance(full_path, str):
                 with open(full_path, 'rb') as fio:
-                    r = ClassFile(fio)
+                    r = self.klass(fio)
             else:
                 # It's 2x as fast to read the entire file at once using
                 # read and wrapping it in a StringIO then it is to just
                 # ZipFile.open() it...
                 with io.BytesIO(full_path.read(path)) as zip_in:
-                    r = ClassFile(zip_in)
+                    r = self.klass(zip_in)
 
+        r.classloader = self
         # Even if it was found re-set the key to update the OrderedDict
         # ordering.
         self.class_cache[path] = r
