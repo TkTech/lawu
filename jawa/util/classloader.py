@@ -29,13 +29,6 @@ class ClassLoader(object):
     Provides utilities for managing a java classpath as well as loading
     classes from those paths.
 
-    :param follow_symlinks: True if symlinks should be followed when traversing
-                            filesystem directories. [default: False]
-    :type follow_symlinks: True
-    :param maximum_depth: The maximum sub-directory depth when traversing
-                          filesystem directories. If set to `None` no limit
-                          will be enforced. [default: 20]
-    :type maximum_depth: Long or None.
     :param max_cache: The maximum number of ClassFile's to store in the cache.
                       If set to 0, the cache will be unlimited. [default: 50]
     :type max_cache: Long
@@ -44,18 +37,17 @@ class ClassLoader(object):
     :param bytecode_transforms: Default transforms to apply when disassembling
                                 a method.
     """
-    def __init__(self, *, follow_symlinks: bool=False, maximum_depth: int=20,
-                 max_cache: int=50, klass=ClassFile, bytecode_transforms=None):
+    def __init__(self, *, max_cache: int=50, klass=ClassFile,
+                 bytecode_transforms=None):
         #: A mapping of all known classes to their source location.
         self.path_map = {}
-        self.follow_symlinks = follow_symlinks
-        self.maximum_depth = maximum_depth
         self.max_cache = max_cache
         self.class_cache = OrderedDict()
         self.klass = klass
         self.bytecode_transforms = bytecode_transforms or []
 
-    def update(self, *sources):
+    def update(self, *sources, follow_symlinks: bool=False,
+               maximum_depth: int=20):
         """Add one or more ClassFile sources to the class loader.
 
         If a given source is a directory path, it is traversed up to the
@@ -69,24 +61,30 @@ class ClassLoader(object):
         added to the class loader lookup table and the class cache.
 
         :param sources: One or more ClassFile sources to be added.
+        :param follow_symlinks: True if symlinks should be followed when
+                                traversing filesystem directories.
+                                [default: False]
+        :param maximum_depth: The maximum sub-directory depth when traversing
+                              filesystem directories. If set to `None` no limit
+                              will be enforced. [default: 20]
         """
         for source in sources:
             if isinstance(source, self.klass):
                 self.path_map[source.this.name.value] = source
                 self.class_cache[source.this.name.value] = source
-            elif path.lower().endswith(('.zip', '.jar')):
-                zf = ZipFile(path, 'r')
+            elif source.lower().endswith(('.zip', '.jar')):
+                zf = ZipFile(source, 'r')
                 self.path_map.update(zip(zf.namelist(), repeat(zf)))
-            elif os.path.isdir(path):
+            elif os.path.isdir(source):
                 walker = _walk(
-                    path,
-                    follow_links=self.follow_symlinks,
-                    maximum_depth=self.maximum_depth
+                    source,
+                    follow_links=follow_symlinks,
+                    maximum_depth=maximum_depth
                 )
                 for root, dirs, files in walker:
                     for file_ in files:
                         path_full = os.path.join(root, file_)
-                        path_suffix = os.path.relpath(path_full, path)
+                        path_suffix = os.path.relpath(path_full, source)
                         self.path_map[path_suffix] = path_full
 
     def load(self, path: str) -> ClassFile:
