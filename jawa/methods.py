@@ -224,7 +224,7 @@ class MethodTable(object):
         try:
             return next(self.find(*args, **kwargs))
         except StopIteration:
-            return None
+            return
 
     def __len__(self):
         return len(self._table)

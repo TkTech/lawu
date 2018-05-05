@@ -1,11 +1,10 @@
-# -*- coding: utf8 -*-
 """
-ClassFile support.
+ClassFile reader & writer.
 
 The :mod:`jawa.cf` module provides tools for working with JVM ``.class``
 ClassFiles.
 """
-from typing import IO, Iterable
+from typing import IO, Iterable, Union, Sequence
 from struct import pack, unpack
 from collections import namedtuple
 
@@ -14,6 +13,7 @@ from jawa.fields import FieldTable
 from jawa.methods import MethodTable
 from jawa.attribute import AttributeTable, ATTRIBUTE_CLASSES
 from jawa.util.flags import Flags
+from jawa.attributes.bootstrap import BootstrapMethod
 
 
 class ClassVersion(namedtuple('ClassVersion', ['major', 'minor'])):
@@ -22,7 +22,7 @@ class ClassVersion(namedtuple('ClassVersion', ['major', 'minor'])):
     __slots__ = ()
 
     @property
-    def human(self):
+    def human(self) -> str:
         """
         A human-readable string identifying this version.
 
@@ -45,40 +45,33 @@ class ClassFile(object):
 
     To open an existing ClassFile::
 
-        from jawa import ClassFile
-        with open('HelloWorld.class', 'rb') as fin:
-            cf = ClassFile(fin)
+        >>> with open('HelloWorld.class', 'rb') as fin:
+        ...    cf = ClassFile(fin)
 
     To save a newly created or modified ClassFile::
 
-        with open('HelloWorld.class', 'wb') as fout:
-            cf.save(fout)
+        >>> cf = ClassFile.create('HelloWorld')
+        >>> with open('HelloWorld.class', 'wb') as out:
+        ...    cf.save(out)
 
-    To create a new ClassFile, use the helper :meth:`~ClassFile.create`::
-
-        from jawa import ClassFile
-        cf = ClassFile.create('HelloWorld')
-        with open('HelloWorld.class', 'wb') as fout:
-            cf.save(fout)
-
-    :meth:`~ClassFile.create` sets up some reasonable defaults equivelent to:
+    :meth:`~ClassFile.create` sets up some reasonable defaults equivalent to:
 
     .. code-block:: java
 
         public class HelloWorld extends java.lang.Object{
         }
 
-    :param fio: any file-like object providing ``.read()``.
+    :param source: any file-like object providing ``.read()``.
     """
 
     #: The JVM ClassFile magic number.
     MAGIC = 0xCAFEBABE
 
-    def __init__(self, fio=None):
+    def __init__(self, source: IO=None):
         # Default to J2SE_7
         self._version = ClassVersion(0x32, 0)
         self._constants = ConstantPool()
-        self._access_flags = Flags('>H', {
+        self.access_flags = Flags('>H', {
             'acc_public': 0x0001,
             'acc_final': 0x0010,
             'acc_super': 0x0020,
@@ -97,8 +90,8 @@ class ClassFile(object):
         #: The ClassLoader bound to this ClassFile, if any.
         self.classloader = None
 
-        if fio:
-            self._from_io(fio)
+        if source:
+            self._from_io(source)
 
     @classmethod
     def create(cls, this: str, super_: str=u'java/lang/Object') -> 'ClassFile':
@@ -117,11 +110,13 @@ class ClassFile(object):
 
         return cf
 
-    def save(self, fout: IO):
+    def save(self, source: IO):
         """
-        Saves the class to the file-like object `fout`.
+        Saves the class to the file-like object `source`.
+
+        :param source: Any file-like object providing write().
         """
-        write = fout.write
+        write = source.write
 
         write(pack(
             '>IHH',
@@ -130,34 +125,34 @@ class ClassFile(object):
             self.version.major
         ))
 
-        self._constants.pack(fout)
+        self._constants.pack(source)
 
         write(self.access_flags.pack())
         write(pack(
-            '>HHH{0}H'.format(len(self._interfaces)),
+            f'>HHH{len(self._interfaces)}H',
             self._this,
             self._super,
             len(self._interfaces),
             *self._interfaces
         ))
 
-        self.fields.pack(fout)
-        self.methods.pack(fout)
-        self.attributes.pack(fout)
+        self.fields.pack(source)
+        self.methods.pack(source)
+        self.attributes.pack(source)
 
-    def _from_io(self, fio: IO):
+    def _from_io(self, source: IO):
         """
         Loads an existing JVM ClassFile from any file-like object.
         """
-        read = fio.read
+        read = source.read
 
-        if unpack('>I', fio.read(4))[0] != ClassFile.MAGIC:
+        if unpack('>I', source.read(4))[0] != ClassFile.MAGIC:
             raise ValueError('invalid magic number')
 
         # The version is swapped on disk to (minor, major), so swap it back.
-        self.version = unpack('>HH', fio.read(4))[::-1]
+        self.version = unpack('>HH', source.read(4))[::-1]
 
-        self._constants.unpack(fio)
+        self._constants.unpack(source)
 
         # ClassFile access_flags, see section #4.1 of the JVM specs.
         self.access_flags.unpack(read(2))
@@ -166,13 +161,13 @@ class ClassFile(object):
         # Interfaces are a simple list of CONSTANT_Class indexes.
         self._this, self._super, interfaces_count = unpack('>HHH', read(6))
         self._interfaces = unpack(
-            '>{0}H'.format(interfaces_count),
+            f'>{interfaces_count}H',
             read(2 * interfaces_count)
         )
 
-        self.fields.unpack(fio)
-        self.methods.unpack(fio)
-        self.attributes.unpack(fio)
+        self.fields.unpack(source)
+        self.methods.unpack(source)
+        self.attributes.unpack(source)
 
     @property
     def version(self) -> ClassVersion:
@@ -191,8 +186,8 @@ class ClassFile(object):
         return self._version
 
     @version.setter
-    def version(self, major_minor):
-        self._version = ClassVersion(major_minor[0], major_minor[1])
+    def version(self, major_minor: Union[ClassVersion, Sequence]):
+        self._version = ClassVersion(*major_minor)
 
     @property
     def constants(self) -> ConstantPool:
@@ -200,10 +195,6 @@ class ClassFile(object):
         The :class:`~jawa.cp.ConstantPool` for this class.
         """
         return self._constants
-
-    @property
-    def access_flags(self):
-        return self._access_flags
 
     @property
     def this(self) -> ConstantClass:
@@ -237,7 +228,7 @@ class ClassFile(object):
         return [self._constants[idx] for idx in self._interfaces]
 
     @property
-    def bootstrap_methods(self):
+    def bootstrap_methods(self) -> BootstrapMethod:
         """
         Returns the bootstrap methods table from the BootstrapMethods attribute,
         if one exists. If it does not, one will be created.
