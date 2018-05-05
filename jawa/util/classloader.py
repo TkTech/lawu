@@ -2,7 +2,7 @@
 import io
 import os
 import os.path
-import typing
+from typing import IO, Callable, Iterable
 from itertools import repeat
 from zipfile import ZipFile
 from collections import OrderedDict
@@ -38,13 +38,17 @@ class ClassLoader(object):
                                 a method.
     """
     def __init__(self, *, max_cache: int=50, klass=ClassFile,
-                 bytecode_transforms=None):
+                 bytecode_transforms: Iterable[Callable]=None):
         #: A mapping of all known classes to their source location.
         self.path_map = {}
         self.max_cache = max_cache
+        #: FIFO cache of ClassFile instances.
         self.class_cache = OrderedDict()
         self.klass = klass
         self.bytecode_transforms = bytecode_transforms or []
+
+    def __getitem__(self, path: str) -> ClassFile:
+        return self.load(path)
 
     def update(self, *sources, follow_symlinks: bool=False,
                maximum_depth: int=20):
@@ -133,7 +137,7 @@ class ClassLoader(object):
         return r
 
     @contextmanager
-    def load_asset(self, path: str) -> typing.IO:
+    def load_asset(self, path: str) -> IO:
         """Load the asset at `path` and return a read-only file-like object.
 
         .. note::
