@@ -252,3 +252,6 @@ class ClassFile(object):
             )
 
         return bootstrap.table
+
+    def __repr__(self):
+        return f'<ClassFile(this={self.this.name.value!r})>'

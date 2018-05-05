@@ -23,7 +23,10 @@ class Number(Constant):
         self.value = value
 
     def __repr__(self):
-        return '{0}(value={1!r})'.format(self.__class__.__name__, self.value)
+        return (
+            f'{self.__class__.__name__}('
+            f'index={self.index}, value={self.value!r})'
+        )
 
 
 class UTF8(Constant):
@@ -34,12 +37,12 @@ class UTF8(Constant):
         super(UTF8, self).__init__(pool, index)
         self.value = value
 
-    def __repr__(self):
-        return 'ConstantUTF8(value={0!r})'.format(self.value)
-
     def pack(self):
         encoded_value = encode_modified_utf8(self.value)
         return pack('>BH', self.TAG, len(encoded_value)) + encoded_value
+
+    def __repr__(self):
+        return f'<UTF8(index={self.index}, value={self.value!r}>)'
 
 
 class Integer(Number):
@@ -82,11 +85,11 @@ class ConstantClass(Constant):
     def name(self):
         return self.pool.get(self.name_index)
 
-    def __repr__(self):
-        return 'ConstantClass(name={0!r})'.format(self.name)
-
     def pack(self):
         return pack('>BH', self.TAG, self.name_index)
+
+    def __repr__(self):
+        return f'<ConstantClass(index={self.index}, name={self.name!r})>'
 
 
 class String(Constant):
@@ -101,11 +104,11 @@ class String(Constant):
     def string(self):
         return self.pool.get(self.string_index)
 
-    def __repr__(self):
-        return 'ConstantString(string={0!r})'.format(self.string)
-
     def pack(self):
         return pack('>BH', self.TAG, self.string_index)
+
+    def __repr__(self):
+        return f'<String(index={self.index}, string={self.string!r})>'
 
 
 class Reference(Constant):
@@ -125,16 +128,20 @@ class Reference(Constant):
     def name_and_type(self):
         return self.pool.get(self.name_and_type_index)
 
-    def __repr__(self):
-        return '{0}(class_={1!r}, name_and_type={2!r})'.format(
-            self.__class__.__name__, self.class_, self.name_and_type)
-
     def pack(self):
         return pack(
             '>BHHH',
             self.TAG,
             self.class_index,
             self.name_and_type_index
+        )
+
+    def __repr__(self):
+        return (
+            f'<{self.__class__.__name__}('
+            f'index={self.index},'
+            f'class_={self.class_!r},'
+            f'name_and_type={self.name_and_type!r})>'
         )
 
 
@@ -167,12 +174,16 @@ class NameAndType(Constant):
     def descriptor(self):
         return self.pool.get(self.descriptor_index)
 
-    def __repr__(self):
-        return 'ConstantNameAndType(name={0!r}, descriptor={1!r})'.format(
-            self.name, self.descriptor)
-
     def pack(self):
         return pack('>BHH', self.TAG, self.name_index, self.descriptor_index)
+
+    def __repr__(self):
+        return (
+            f'<NameAndType('
+            f'index={self.index},'
+            f'name={self.name!r},'
+            f'descriptor={self.descriptor!r})>'
+        )
 
 
 class MethodHandle(Constant):
@@ -188,12 +199,13 @@ class MethodHandle(Constant):
     def reference(self):
         return self.pool.get(self.reference_index)
 
-    def __repr__(self):
-        return 'ConstantMethodHandle(kind={0!r}, index={1!r})'.format(
-            self.reference_kind, self.reference)
-
     def pack(self):
         return pack('>BBH', self.TAG, self.reference_kind, self.reference_index)
+
+    def __repr__(self):
+        return (
+            f'<MethodHandle(index={self.index}, reference={self.reference!r})>'
+        )
 
 
 class MethodType(Constant):
@@ -208,12 +220,11 @@ class MethodType(Constant):
     def descriptor(self):
         return self.pool.get(self.descriptor_index)
 
-    def __repr__(self):
-        return 'ConstantMethodType(descriptor={0!r})'.format(
-            self.descriptor)
-
     def pack(self):
         return pack('>BH', self.TAG, self.descriptor_index)
+
+    def __repr__(self):
+        return f'<MethodType(index={self.index},descriptor={self.descriptor})>'
 
 
 class InvokeDynamic(Constant):
@@ -234,18 +245,20 @@ class InvokeDynamic(Constant):
     def name_and_type(self):
         return self.pool[self.name_and_type_index]
 
-    def __repr__(self):
-        return (
-            'ConstantInvokeDynamic(method_attr_index={0!r}, '
-            'name_and_type={1!r})'
-        ).format(self.method_attr_index, self.name_and_type)
-
     def pack(self):
         return pack(
             '>BHH',
             self.TAG,
             self.bootstrap_method_attr_index,
             self.name_and_type_index
+        )
+
+    def __repr__(self):
+        return (
+            f'<InvokeDynamic('
+            f'index={self.index},'
+            f'method_attr_index={self.method_attr_index},'
+            f'name_and_type={self.name_and_type!r})>'
         )
 
 
