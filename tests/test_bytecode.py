@@ -1,6 +1,4 @@
-from pathlib import Path
 from jawa.util.bytecode import Instruction, Operand, OperandTypes
-from jawa.util.classloader import ClassLoader
 
 
 GOOD_TABLE_SWITCH = [
@@ -35,11 +33,8 @@ GOOD_LOOKUP_SWITCH = [
 ]
 
 
-def test_table_switch():
+def test_table_switch(loader):
     # Ensure we can both read and write table switch opcodes.
-    loader = ClassLoader()
-    loader.update(str(Path(__file__).parent / 'data'))
-
     cf = loader['TableSwitch']
     main = cf.methods.find_one(name='main')
 
@@ -52,11 +47,8 @@ def test_table_switch():
     assert instructions == GOOD_TABLE_SWITCH
 
 
-def test_lookup_switch():
+def test_lookup_switch(loader):
     # Ensure we can both read and write lookup switch opcodes.
-    loader = ClassLoader()
-    loader.update(str(Path(__file__).parent / 'data'))
-
     cf = loader['LookupSwitch']
     main = cf.methods.find_one(name='main')
 

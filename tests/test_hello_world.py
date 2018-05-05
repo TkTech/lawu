@@ -1,27 +1,7 @@
-#!/usr/bin/env python
-# encoding: utf-8
-import os
-
-import pytest
-
-from jawa.cf import ClassFile
 from jawa.util.bytecode import Instruction, Operand
 
 
-@pytest.fixture
-def cf():
-    sample_path = os.path.join(
-        os.path.dirname(__file__),
-        'data',
-        'HelloWorld.class'
-    )
-
-    with open(sample_path, 'rb') as fin:
-        cf = ClassFile(fin)
-        yield cf
-
-
-def test_hello_world(cf):
+def test_hello_world(loader):
     """
     An integration test for the complete parsing of a simple HelloWorld
     example.
@@ -36,6 +16,8 @@ def test_hello_world(cf):
             }
         }
     """
+    cf = loader['HelloWorld']
+
     assert len(cf.constants) == 21
     assert len(cf.attributes) == 0
     assert len(cf.fields) == 0

@@ -1,25 +1,5 @@
-# -*- coding: utf-8 -*-
-import os.path
-
-import pytest
-
-from jawa.cf import ClassFile
-
-
-@pytest.fixture
-def cf():
-    sample_path = os.path.join(
-        os.path.dirname(__file__),
-        'data',
-        'HelloWorldDebug.class'
-    )
-
-    with open(sample_path, 'rb') as fin:
-        class_file = ClassFile(fin)
-        yield class_file
-
-
-def test_exceptions_read(cf):
+def test_exceptions_read(loader):
+    cf = loader['HelloWorldDebug']
     m = cf.methods.find_one(name='main')
     a = m.code.attributes.find_one(name='LineNumberTable')
 
@@ -29,7 +9,8 @@ def test_exceptions_read(cf):
     assert a.line_no[1] == (8, 4)
 
 
-def test_exceptions_write(cf):
+def test_exceptions_write(loader):
+    cf = loader['HelloWorldDebug']
     m = cf.methods.find_one(name='main')
     a = m.code.attributes.find_one(name='LineNumberTable')
 

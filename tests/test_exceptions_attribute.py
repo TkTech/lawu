@@ -1,25 +1,6 @@
-# -*- coding: utf-8 -*-
-import os.path
+def test_exceptions_read(loader):
+    cf = loader['ExceptionsTest']
 
-import pytest
-
-from jawa.cf import ClassFile
-
-
-@pytest.fixture
-def cf():
-    sample_path = os.path.join(
-        os.path.dirname(__file__),
-        'data',
-        'ExceptionsTest.class'
-    )
-
-    with open(sample_path, 'rb') as fin:
-        class_file = ClassFile(fin)
-        yield class_file
-
-
-def test_exceptions_read(cf):
     m = cf.methods.find_one(name='test')
     a = m.attributes.find_one(name='Exceptions')
 
@@ -29,7 +10,9 @@ def test_exceptions_read(cf):
         u'java/lang/IndexOutOfBoundsException'
 
 
-def test_exceptions_write(cf):
+def test_exceptions_write(loader):
+    cf = loader['ExceptionsTest']
+
     m = cf.methods.find_one(name='test')
     a = m.attributes.find_one(name='Exceptions')
 

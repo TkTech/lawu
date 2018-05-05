@@ -1,26 +1,16 @@
 #!/usr/bin/env python
-# encoding: utf-8
-import os
-
-from jawa.cf import ClassFile
 from jawa.util.utf import encode_modified_utf8, decode_modified_utf8
 
 
-def test_decode_modified_utf8():
+def test_decode_modified_utf8(loader):
     """
     JVM ClassFile's use a "modified" form of UTF8 which cannot always be
     parsed by python's UTF-8 decoder.
-    """
-    sample_path = os.path.join(
-        os.path.dirname(__file__),
-        'data',
-        'ModifiedUTF8.class'
-    )
 
-    with open(sample_path, 'rb') as fin:
-        # We simply need to make sure no encoding exceptions are raised
-        # when we parse the ClassFile.
-        ClassFile(fin)
+    We simply need to make sure no encoding exceptions are raised
+    when we parse the sample ClassFile.
+    """
+    loader.load('ModifiedUTF8')
 
 
 def test_encode_utf8_1():
