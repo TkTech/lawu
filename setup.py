@@ -32,7 +32,9 @@ setup(
             'sphinx',
             'sphinxcontrib-googleanalytics',
             'sphinx_rtd_theme',
-            'ghp-import'
+            'ghp-import',
+            'pyyaml',
+            'ipython'
         ]
     },
     entry_points='''
