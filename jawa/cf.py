@@ -5,10 +5,11 @@ ClassFile support.
 The :mod:`jawa.cf` module provides tools for working with JVM ``.class``
 ClassFiles.
 """
+from typing import IO, Iterable
 from struct import pack, unpack
 from collections import namedtuple
 
-from jawa.constants import ConstantPool
+from jawa.constants import ConstantPool, ConstantClass
 from jawa.fields import FieldTable
 from jawa.methods import MethodTable
 from jawa.attribute import AttributeTable, ATTRIBUTE_CLASSES
@@ -90,9 +91,9 @@ class ClassFile(object):
         self._this = 0
         self._super = 0
         self._interfaces = []
-        self._fields = FieldTable(self)
-        self._methods = MethodTable(self)
-        self._attributes = AttributeTable(self)
+        self.fields = FieldTable(self)
+        self.methods = MethodTable(self)
+        self.attributes = AttributeTable(self)
         #: The ClassLoader bound to this ClassFile, if any.
         self.classloader = None
 
@@ -100,7 +101,7 @@ class ClassFile(object):
             self._from_io(fio)
 
     @classmethod
-    def create(cls, this, super_=u'java/lang/Object'):
+    def create(cls, this: str, super_: str=u'java/lang/Object') -> 'ClassFile':
         """
         A utility which sets up reasonable defaults for a new public class.
 
@@ -116,7 +117,7 @@ class ClassFile(object):
 
         return cf
 
-    def save(self, fout):
+    def save(self, fout: IO):
         """
         Saves the class to the file-like object `fout`.
         """
@@ -140,11 +141,11 @@ class ClassFile(object):
             *self._interfaces
         ))
 
-        self._fields.pack(fout)
-        self._methods.pack(fout)
-        self._attributes.pack(fout)
+        self.fields.pack(fout)
+        self.methods.pack(fout)
+        self.attributes.pack(fout)
 
-    def _from_io(self, fio):
+    def _from_io(self, fio: IO):
         """
         Loads an existing JVM ClassFile from any file-like object.
         """
@@ -169,12 +170,12 @@ class ClassFile(object):
             read(2 * interfaces_count)
         )
 
-        self._fields.unpack(fio)
-        self._methods.unpack(fio)
-        self._attributes.unpack(fio)
+        self.fields.unpack(fio)
+        self.methods.unpack(fio)
+        self.attributes.unpack(fio)
 
     @property
-    def version(self):
+    def version(self) -> ClassVersion:
         """
         The :class:`~jawa.cf.ClassVersion` for this class.
 
@@ -194,7 +195,7 @@ class ClassFile(object):
         self._version = ClassVersion(major_minor[0], major_minor[1])
 
     @property
-    def constants(self):
+    def constants(self) -> ConstantPool:
         """
         The :class:`~jawa.cp.ConstantPool` for this class.
         """
@@ -205,7 +206,7 @@ class ClassFile(object):
         return self._access_flags
 
     @property
-    def this(self):
+    def this(self) -> ConstantClass:
         """
         The :class:`~jawa.constants.ConstantClass` which represents this class.
         """
@@ -216,7 +217,7 @@ class ClassFile(object):
         self._this = value.index
 
     @property
-    def super_(self):
+    def super_(self) -> ConstantClass:
         """
         The :class:`~jawa.constants.ConstantClass` which represents this
         class's superclass.
@@ -224,37 +225,16 @@ class ClassFile(object):
         return self.constants.get(self._super)
 
     @super_.setter
-    def super_(self, value):
+    def super_(self, value: ConstantClass):
         self._super = value.index
 
     @property
-    def interfaces(self):
+    def interfaces(self) -> Iterable[ConstantClass]:
         """
         A list of direct superinterfaces of this class as indexes into
         the constant pool, in left-to-right order.
         """
         return [self._constants[idx] for idx in self._interfaces]
-
-    @property
-    def fields(self):
-        """
-        The :class:`~jawa.fields.FieldTable` for this class.
-        """
-        return self._fields
-
-    @property
-    def methods(self):
-        """
-        The :class:`~jawa.methods.MethodTable` for this class.
-        """
-        return self._methods
-
-    @property
-    def attributes(self):
-        """
-        The :class:`~jawa.attribute.AttributeTable` for this class.
-        """
-        return self._attributes
 
     @property
     def bootstrap_methods(self):
