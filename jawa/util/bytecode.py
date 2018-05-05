@@ -150,13 +150,24 @@ def write_instruction(fout, start_pos, ins):
         # ])
         padding = 4 - (start_pos + 1) % 4
         padding = padding if padding != 4 else 0
-        fout.write(pack('{0}x'.format(padding)))
+        fout.write(pack(f'{padding}x'))
         fout.write(pack('>ii', operands[1].value, len(operands[0])))
         for key in sorted(operands[0].keys()):
             fout.write(pack('>ii', key, operands[0][key].value))
     elif opcode == 0xAA:
         # Special case for tableswitch.
-        raise NotImplementedError()
+        fout.write(pack('>B', opcode))
+        padding = 4 - (start_pos + 1) % 4
+        padding = padding if padding != 4 else 0
+        fout.write(pack(f'{padding}x'))
+        fout.write(pack(
+            f'>iii{len(operands) - 3}i',
+            # Default branch offset
+            operands[0].value,
+            operands[1].value,
+            operands[2].value,
+            *(o.value for o in operands[3:])
+        ))
     else:
         # opcode with no operands.
         fout.write(pack('>B', opcode))

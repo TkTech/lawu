@@ -62,7 +62,7 @@ def assemble(code):
                     operand.index
                 ))
             elif isinstance(operand, dict):
-                    # lookupswitch's operand is a dict as
+                # lookupswitch's operand is a dict as
                 # a special usability case.
                 final_operands.append(operand)
             elif isinstance(operand, Label):

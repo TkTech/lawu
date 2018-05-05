@@ -56,7 +56,7 @@ class Method(object):
         return method_descriptor(self.descriptor.value).args
 
     @property
-    def code(self):
+    def code(self) -> CodeAttribute:
         """
         A shortcut for::
 
@@ -216,7 +216,7 @@ class MethodTable(object):
 
             yield method
 
-    def find_one(self, *args, **kwargs):
+    def find_one(self, *args, **kwargs) -> Method:
         """
         Same as ``find()`` but returns only the first result, or `None` if
         nothing was found.
