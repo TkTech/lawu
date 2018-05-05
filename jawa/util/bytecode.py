@@ -153,9 +153,9 @@ def write_instruction(fout, start_pos, ins):
         fout.write(pack(f'{padding}x'))
         fout.write(pack('>ii', operands[1].value, len(operands[0])))
         for key in sorted(operands[0].keys()):
-            fout.write(pack('>ii', key, operands[0][key].value))
+            fout.write(pack('>ii', key, operands[0][key]))
     elif opcode == 0xAA:
-        # Special case for tableswitch.
+        # Special case for table switch.
         fout.write(pack('>B', opcode))
         padding = 4 - (start_pos + 1) % 4
         padding = padding if padding != 4 else 0
