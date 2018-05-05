@@ -90,7 +90,7 @@ def shell_command(class_path):
     any class on the set classpath.
     """
     loader = classloader.ClassLoader()
-    loader.add_path(*class_path)
+    loader.update(*class_path)
 
     shell.start_shell(local_ns={
         'ClassFile': ClassFile,
