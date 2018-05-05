@@ -28,6 +28,7 @@ class ClassLoader(object):
     Provides utilities for managing a java classpath as well as loading
     classes from those paths.
 
+    :param sources: Optional sources to pass into update().
     :param max_cache: The maximum number of ClassFile's to store in the cache.
                       If set to 0, the cache will be unlimited. [default: 50]
     :type max_cache: Long
@@ -36,7 +37,7 @@ class ClassLoader(object):
     :param bytecode_transforms: Default transforms to apply when disassembling
                                 a method.
     """
-    def __init__(self, *, max_cache: int=50, klass=ClassFile,
+    def __init__(self, *sources, max_cache: int=50, klass=ClassFile,
                  bytecode_transforms: Iterable[Callable]=None):
         #: A mapping of all known classes to their source location.
         self.path_map = {}
@@ -45,6 +46,9 @@ class ClassLoader(object):
         self.class_cache = OrderedDict()
         self.klass = klass
         self.bytecode_transforms = bytecode_transforms or []
+
+        if sources:
+            self.update(*sources)
 
     def __getitem__(self, path: str) -> ClassFile:
         return self.load(path)
@@ -75,7 +79,11 @@ class ClassLoader(object):
             if isinstance(source, self.klass):
                 self.path_map[source.this.name.value] = source
                 self.class_cache[source.this.name.value] = source
-            elif source.lower().endswith(('.zip', '.jar')):
+                return
+  
+            # Explicit cast to str to support Path objects.
+            source = str(source)
+            if source.lower().endswith(('.zip', '.jar')):
                 zf = ZipFile(source, 'r')
                 self.path_map.update(zip(zf.namelist(), repeat(zf)))
             elif os.path.isdir(source):
