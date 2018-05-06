@@ -1,7 +1,7 @@
 import io
 import os
 import os.path
-from typing import IO, Callable, Iterable, Set, Iterator
+from typing import IO, Callable, Iterable, Set, Iterator, Dict, Union
 from itertools import repeat
 from zipfile import ZipFile
 from collections import OrderedDict
@@ -40,13 +40,11 @@ class ClassLoader(object):
     """
     def __init__(self, *sources, max_cache: int=50, klass=ClassFile,
                  bytecode_transforms: Iterable[Callable]=None):
-        #: A mapping of all known classes to their source location.
         self.path_map = {}
         self.max_cache = max_cache
-        #: FIFO cache of ClassFile instances.
         self.class_cache = OrderedDict()
-        self.klass = klass
         self.bytecode_transforms = bytecode_transforms or []
+        self.klass = klass
 
         if sources:
             self.update(*sources)
@@ -88,7 +86,7 @@ class ClassLoader(object):
                 self.path_map[source.this.name.value] = source
                 self.class_cache[source.this.name.value] = source
                 continue
-  
+
             # Explicit cast to str to support Path objects.
             source = str(source)
             if source.lower().endswith(('.zip', '.jar')):
@@ -106,36 +104,46 @@ class ClassLoader(object):
                         path_suffix = os.path.relpath(path_full, source)
                         self.path_map[path_suffix] = path_full
 
+    @contextmanager
+    def open(self, path: str, mode: str='r') -> IO:
+        """Open an IO-like object for `path`.
+
+        .. note::
+
+            Mode *must* be either 'r' or 'w', as the underlying objects
+            do not understand the full range of modes.
+
+        :param path: The path to open.
+        :param mode: The mode of the file being opened, either 'r' or 'w'.
+        """
+        entry = self.path_map.get(path)
+        if entry is None:
+            raise FileNotFoundError()
+
+        if isinstance(entry, str):
+            with open(entry, 'rb' if mode == 'r' else mode) as source:
+                yield source
+        elif isinstance(entry, ZipFile):
+            with entry.open(path, mode) as source:
+                yield source
+        else:
+            raise NotImplementedError()
+
     def load(self, path: str) -> ClassFile:
         """Load the class at `path` and return it.
 
+        Load will attempt to load the file at `path` and `path` + .class
+        before failing.
+
         :param path: Fully-qualified path to a ClassFile.
         """
-        try:
-            full_path = self.path_map[path]
-        except KeyError:
-            try:
-                full_path = self.path_map[path + '.class']
-            except KeyError:
-                raise FileNotFoundError()
-            else:
-                path = path + '.class'
-
         # Try to refresh the class from the cache, loading it from disk
         # if not found.
         try:
             r = self.class_cache.pop(path)
         except KeyError:
-            # The entry in the path is an on-disk location.
-            if isinstance(full_path, str):
-                with open(full_path, 'rb') as fio:
-                    r = self.klass(fio)
-            else:
-                # It's 2x as fast to read the entire file at once using
-                # read and wrapping it in a StringIO then it is to just
-                # ZipFile.open() it...
-                with io.BytesIO(full_path.read(path)) as zip_in:
-                    r = self.klass(zip_in)
+            with self.open(f'{path}.class') as source:
+                r = self.klass(source)
 
         r.classloader = self
         # Even if it was found re-set the key to update the OrderedDict
@@ -150,29 +158,6 @@ class ClassLoader(object):
                 self.class_cache.popitem(last=False)
 
         return r
-
-    @contextmanager
-    def load_asset(self, path: str) -> IO:
-        """Load the asset at `path` and return a read-only file-like object.
-
-        .. note::
-
-            This method must always be used as a context manager to ensure file
-            handles are closed properly.
-
-        :param path: Fully-qualified path to an asset.
-        """
-        try:
-            full_path = self.path_map[path]
-        except KeyError:
-            raise FileNotFoundError()
-
-        if isinstance(full_path, str):
-            with open(full_path, 'rb') as fio:
-                yield fio
-        else:
-            with full_path.open(path, 'r') as fio:
-                yield fio
 
     def clear(self):
         """Erase all stored paths and all cached classes."""
@@ -203,28 +188,12 @@ class ClassLoader(object):
         :param path: Fully-qualified path to a ClassFile.
         :param options: A list of options to pass into `ConstantPool.find()`
         """
-        try:
-            full_path = self.path_map[path]
-        except KeyError:
-            try:
-                full_path = self.path_map[path + '.class']
-            except KeyError:
-                raise FileNotFoundError()
-            path = path + '.class'
-
-        if isinstance(full_path, str):
-            source = open(full_path, 'rb')
-        else:
-            source = full_path.open(path, 'r')
-
-        try:
+        with self.open(f'{path}.class') as source:
             # Skip over the magic, minor, and major version.
             source.read(8)
             pool = ConstantPool()
             pool.unpack(source)
             yield from pool.find(**options)
-        finally:
-            source.close()
 
     @property
     def classes(self) -> Iterator[str]:
