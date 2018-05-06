@@ -180,6 +180,11 @@ class ClassLoader(object):
         self.class_cache.clear()
 
     def dependencies(self, path: str) -> Set[str]:
+        """Returns a set of all classes referenced by the ClassFile at
+        `path` without reading the entire ClassFile.
+
+        :param path: Fully-qualified path to a ClassFile.
+        """
         try:
             full_path = self.path_map[path]
         except KeyError:
@@ -187,15 +192,16 @@ class ClassLoader(object):
                 full_path = self.path_map[path + '.class']
             except KeyError:
                 raise FileNotFoundError()
+            path = path + '.class'
 
         if isinstance(full_path, str):
             source = open(full_path, 'rb')
         else:
-            source = open(full_path.open('rb'))
+            source = full_path.open(path, 'r')
 
         try:
             # Skip over the magic, minor, and major version.
-            source.seek(8)
+            source.read(8)
             pool = ConstantPool()
             pool.unpack(source)
             return set(c.name.value for c in pool.find(type_=ConstantClass))

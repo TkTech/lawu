@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import json
+from pathlib import Path
 
 import click
 
@@ -132,3 +133,18 @@ def definition_to_json(source):
         v['mnemonic'] = k
 
     click.echo(json.dumps(y, indent=4, sort_keys=True))
+
+
+@cli.command()
+@click.argument('source', type=click.Path(exists=True))
+def dependencies(source):
+    """Output a list of all classes referenced by the given source."""
+    loader = classloader.ClassLoader(source)
+    classes = {c for c in loader.path_map.keys() if c.endswith('.class')}
+
+    all_dependencies = set()
+    for klass in classes:
+        new_dependencies = loader.dependencies(klass) - all_dependencies
+        all_dependencies.update(new_dependencies)
+        for new_dep in new_dependencies:
+            print(new_dep)
