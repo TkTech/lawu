@@ -1,7 +1,7 @@
 import io
 import os
 import os.path
-from typing import IO, Callable, Iterable, Set
+from typing import IO, Callable, Iterable, Set, Iterator
 from itertools import repeat
 from zipfile import ZipFile
 from collections import OrderedDict
@@ -87,7 +87,7 @@ class ClassLoader(object):
             if isinstance(source, self.klass):
                 self.path_map[source.this.name.value] = source
                 self.class_cache[source.this.name.value] = source
-                return
+                continue
   
             # Explicit cast to str to support Path objects.
             source = str(source)
@@ -183,7 +183,25 @@ class ClassLoader(object):
         """Returns a set of all classes referenced by the ClassFile at
         `path` without reading the entire ClassFile.
 
+        This is an optimization method that does not load a complete ClassFile,
+        nor does it add the results to the ClassLoader cache.
+
         :param path: Fully-qualified path to a ClassFile.
+        """
+        return set(c.name.value for c in self.search_constant_pool(
+            path=path,
+            type_=ConstantClass
+        ))
+
+    def search_constant_pool(self, *, path: str, **options):
+        """Partially load the class at `path`, yield all matching constants
+        from the ConstantPool.
+
+        This is an optimization method that does not load a complete ClassFile,
+        nor does it add the results to the ClassLoader cache.
+
+        :param path: Fully-qualified path to a ClassFile.
+        :param options: A list of options to pass into `ConstantPool.find()`
         """
         try:
             full_path = self.path_map[path]
@@ -204,6 +222,11 @@ class ClassLoader(object):
             source.read(8)
             pool = ConstantPool()
             pool.unpack(source)
-            return set(c.name.value for c in pool.find(type_=ConstantClass))
+            yield from pool.find(**options)
         finally:
             source.close()
+
+    @property
+    def classes(self) -> Iterator[str]:
+        """Yield the name of all classes discovered in the path map."""
+        yield from (c for c in self.path_map.keys() if c.endswith('.class'))

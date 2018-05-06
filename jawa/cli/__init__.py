@@ -90,9 +90,7 @@ def shell_command(class_path):
     Once the shell is loaded you can use `load(<class name>)` to load
     any class on the set classpath.
     """
-    loader = classloader.ClassLoader()
-    loader.update(*class_path)
-
+    loader = classloader.ClassLoader(*class_path)
     shell.start_shell(local_ns={
         'ClassFile': ClassFile,
         'load': loader.load,
@@ -139,7 +137,7 @@ def definition_to_json(source):
 @click.argument('source', type=click.Path(exists=True))
 def dependencies(source):
     """Output a list of all classes referenced by the given source."""
-    loader = classloader.ClassLoader(source)
+    loader = classloader.ClassLoader(source, max_cache=-1)
     classes = {c for c in loader.path_map.keys() if c.endswith('.class')}
 
     all_dependencies = set()
