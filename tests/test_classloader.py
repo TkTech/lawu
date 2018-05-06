@@ -94,3 +94,12 @@ def test_load_from_zipfile():
 
 def test_contains(loader):
     assert 'HelloWorld' in loader
+
+
+def test_dependencies(loader):
+    assert loader.dependencies('HelloWorld') == {
+        'java/lang/Object',
+        'java/io/PrintStream',
+        'HelloWorld',
+        'java/lang/System'
+    }

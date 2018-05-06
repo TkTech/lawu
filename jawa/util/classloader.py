@@ -1,13 +1,14 @@
 import io
 import os
 import os.path
-from typing import IO, Callable, Iterable
+from typing import IO, Callable, Iterable, Set
 from itertools import repeat
 from zipfile import ZipFile
 from collections import OrderedDict
 from contextlib import contextmanager
 
 from jawa.cf import ClassFile
+from jawa.constants import ConstantPool, ConstantClass
 
 
 def _walk(path, follow_links=False, maximum_depth=None):
@@ -177,3 +178,26 @@ class ClassLoader(object):
         """Erase all stored paths and all cached classes."""
         self.path_map.clear()
         self.class_cache.clear()
+
+    def dependencies(self, path: str) -> Set[str]:
+        try:
+            full_path = self.path_map[path]
+        except KeyError:
+            try:
+                full_path = self.path_map[path + '.class']
+            except KeyError:
+                raise FileNotFoundError()
+
+        if isinstance(full_path, str):
+            source = open(full_path, 'rb')
+        else:
+            source = open(full_path.open('rb'))
+
+        try:
+            # Skip over the magic, minor, and major version.
+            source.seek(8)
+            pool = ConstantPool()
+            pool.unpack(source)
+            return set(c.name.value for c in pool.find(type_=ConstantClass))
+        finally:
+            source.close()
