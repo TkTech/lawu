@@ -53,6 +53,13 @@ class ClassLoader(object):
     def __getitem__(self, path: str) -> ClassFile:
         return self.load(path)
 
+    def __contains__(self, path: str) -> bool:
+        if path in self.path_map:
+            return True
+        elif path + '.class' in self.path_map:
+            return True
+        return False
+
     def update(self, *sources, follow_symlinks: bool=False,
                maximum_depth: int=20):
         """Add one or more ClassFile sources to the class loader.

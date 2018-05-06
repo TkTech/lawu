@@ -90,3 +90,7 @@ def test_load_from_zipfile():
 
         assert isinstance(cl.load('HelloWorld'), cl.klass)
         assert isinstance(cl.load('HelloWorld.class'), cl.klass)
+
+
+def test_contains(loader):
+    assert 'HelloWorld' in loader

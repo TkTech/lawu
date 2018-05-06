@@ -5,6 +5,7 @@ from typing import IO, Callable, Iterator, Union, Dict, Any, Tuple
 from struct import unpack, pack
 from itertools import repeat
 
+from jawa.constants import UTF8
 from jawa.util.stream import BufferStreamReader
 
 
@@ -17,10 +18,9 @@ class Attribute(object):
         self.name_index = name_index
 
     @property
-    def name(self):
+    def name(self) -> UTF8:
         """
-        The :class:`~jawa.constants.ConstantUtf8` with the name of this
-        attribute.
+        The name of this attribute.
         """
         return self.cf.constants[self.name_index]
 
@@ -64,7 +64,7 @@ class AttributeTable(object):
         self.parent = parent
         self._table = []
 
-    def unpack(self, source):
+    def unpack(self, source: IO):
         """
         Read the ConstantPool from the file-like object `source`.
 
