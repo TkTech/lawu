@@ -94,6 +94,9 @@ class Instruction(_Instruction):
             0
         )
 
+    def __eq__(self, other):
+        return other == self.mnemonic or super().__eq__(other)
+
 
 class OperandTypes(enum.IntEnum):
     """

@@ -59,3 +59,10 @@ def test_lookup_switch(loader):
 
     instructions = list(main.code.disassemble())
     assert instructions == GOOD_LOOKUP_SWITCH
+
+
+def test_compare():
+    ins = Instruction.create('return')
+    assert ins == 'return'
+    assert ins == ins
+    assert ins != 'not_return'
