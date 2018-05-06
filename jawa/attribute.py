@@ -1,7 +1,7 @@
-# -*- coding: utf8 -*-
 import inspect
 import pkgutil
 import importlib
+from typing import IO, Callable, Iterator, Union, Dict, Any, Tuple
 from struct import unpack, pack
 from itertools import repeat
 
@@ -9,7 +9,10 @@ from jawa.util.stream import BufferStreamReader
 
 
 class Attribute(object):
-    def __init__(self, parent, name_index):
+    ADDED_IN: int = None
+    MINIMUM_CLASS_VERSION: Tuple[int, int] = None
+
+    def __init__(self, parent: 'AttributeTable', name_index: int):
         self.parent = parent
         self.name_index = name_index
 
@@ -28,13 +31,13 @@ class Attribute(object):
         """
         return self.parent.cf
 
-    def unpack(self, info):
+    def unpack(self, info: Union[bytes, BufferStreamReader]):
         """
         Parses an instance of this attribute from the blob `info`.
         """
         raise NotImplementedError()
 
-    def pack(self):
+    def pack(self) -> bytes:
         """
         This attribute packed into its on-disk representation.
         """
@@ -42,41 +45,40 @@ class Attribute(object):
 
 
 class UnknownAttribute(Attribute):
-    def __init__(self, parent, name_index):
-        super(UnknownAttribute, self).__init__(parent, name_index)
+    def __init__(self, parent: 'AttributeTable', name_index: int):
+        super().__init__(parent, name_index)
         self.info = None
 
-    def unpack(self, info):
+    def unpack(self, info: Union[bytes, BufferStreamReader]):
         self.info = info
 
-    def pack(self):
+    def pack(self) -> bytes:
         return self.info
 
 
 class AttributeTable(object):
-    def __init__(self, cf, parent=None):
-        super(AttributeTable, self).__init__()
+    def __init__(self, cf, parent: Attribute=None):
         #: The ClassFile that ultimately owns this AttributeTable.
         self.cf = cf
-        #: The parent AttributeTable, if one exists.
+        #: The parent Attribute, if one exists.
         self.parent = parent
         self._table = []
 
-    def unpack(self, fio):
+    def unpack(self, source):
         """
-        Read the ConstantPool from the file-like object `fio`.
+        Read the ConstantPool from the file-like object `source`.
 
         .. note::
 
             Advanced usage only. You will typically never need to call this
             method as it will be called for you when loading a ClassFile.
 
-        :param fio: Any file-like object providing `read()`
+        :param source: Any file-like object providing `read()`
         """
-        count = unpack('>H', fio.read(2))[0]
+        count = unpack('>H', source.read(2))[0]
         for _ in repeat(None, count):
-            name_index, length = unpack('>HI', fio.read(6))
-            info_blob = fio.read(length)
+            name_index, length = unpack('>HI', source.read(6))
+            info_blob = source.read(length)
             self._table.append((name_index, info_blob))
 
     def __getitem__(self, key):
@@ -98,28 +100,28 @@ class AttributeTable(object):
     def __len__(self):
         return len(self._table)
 
-    def pack(self, fout):
+    def pack(self, out: IO):
         """
-        Write the AttributeTable to the file-like object `fout`.
+        Write the AttributeTable to the file-like object `out`.
 
         .. note::
 
             Advanced usage only. You will typically never need to call this
             method as it will be called for you when saving a ClassFile.
 
-        :param fout: Any file-like object providing `write()`
+        :param out: Any file-like object providing `write()`
         """
-        fout.write(pack('>H', len(self._table)))
+        out.write(pack('>H', len(self._table)))
         for attribute in self:
             info = attribute.pack()
-            fout.write(pack(
+            out.write(pack(
                 '>HI',
                 attribute.name.index,
                 len(info)
             ))
-            fout.write(info)
+            out.write(info)
 
-    def create(self, type_, *args, **kwargs):
+    def create(self, type_, *args, **kwargs) -> Any:
         """
         Creates a new attribute of `type_`, appending it to the attribute
         table and returning it.
@@ -128,7 +130,7 @@ class AttributeTable(object):
         self._table.append(attribute)
         return attribute
 
-    def find(self, name=None, f=None):
+    def find(self, *, name: str=None, f: Callable=None) -> Iterator[Any]:
         for idx, attribute in enumerate(self._table):
             if name is not None:
                 # Optimization to filter solely on name without causing
@@ -149,23 +151,16 @@ class AttributeTable(object):
 
             yield attribute
 
-    def find_one(self, *args, **kwargs):
+    def find_one(self, **kwargs) -> Any:
         """
-        Same as ``find()`` but returns only the first result, or `None` if
-        nothing was found.
+        Same as ``find()`` but returns only the first result.
         """
-        try:
-            return next(self.find(*args, **kwargs))
-        except StopIteration:
-            return None
+        return next(self.find(**kwargs), None)
 
 
-def get_attribute_classes():
+def get_attribute_classes() -> Dict[str, Attribute]:
     """
     Lookup all builtin Attribute subclasses, load them, and return a dict
-    of attribute name to class.
-
-    :rtype: dict
     """
     attribute_children = pkgutil.iter_modules(
         importlib.import_module('jawa.attributes').__path__,
