@@ -197,4 +197,7 @@ class ClassLoader(object):
     @property
     def classes(self) -> Iterator[str]:
         """Yield the name of all classes discovered in the path map."""
-        yield from (c for c in self.path_map.keys() if c.endswith('.class'))
+        yield from (
+            c[:-6]
+            for c in self.path_map.keys() if c.endswith('.class')
+        )

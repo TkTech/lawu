@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import re
 import json
 
 import click
 
+from jawa.classloader import ClassLoader
 from jawa.cf import ClassVersion, ClassFile
 from jawa.attribute import get_attribute_classes
 from jawa.util import bytecode, shell
-from jawa import classloader
+from jawa.constants import UTF8
 
 
 @click.group()
@@ -90,7 +92,7 @@ def shell_command(class_path):
     Once the shell is loaded you can use `load(<class name>)` to load
     any class on the set classpath.
     """
-    loader = classloader.ClassLoader(*class_path)
+    loader = ClassLoader(*class_path)
     shell.start_shell(local_ns={
         'ClassFile': ClassFile,
         'load': loader.load,
@@ -137,12 +139,35 @@ def definition_to_json(source):
 @click.argument('source', type=click.Path(exists=True))
 def dependencies(source):
     """Output a list of all classes referenced by the given source."""
-    loader = classloader.ClassLoader(source, max_cache=-1)
-    classes = {c for c in loader.path_map.keys() if c.endswith('.class')}
-
+    loader = ClassLoader(source, max_cache=-1)
     all_dependencies = set()
-    for klass in classes:
+    for klass in loader.classes:
         new_dependencies = loader.dependencies(klass) - all_dependencies
         all_dependencies.update(new_dependencies)
         for new_dep in new_dependencies:
             click.echo(new_dep)
+
+
+@cli.command()
+@click.argument('source', type=click.Path(exists=True))
+@click.argument('regex')
+@click.option(
+    '--stop-on-first',
+    default=False,
+    is_flag=True,
+    help='Stop iteration on first matching class.'
+)
+def grep(source, regex, stop_on_first=False):
+    """Grep the constant pool of all classes in source."""
+    loader = ClassLoader(source, max_cache=-1)
+    r = re.compile(regex)
+
+    def _matches(constant):
+        return r.match(constant.value)
+
+    for klass in loader.classes:
+        it = loader.search_constant_pool(path=klass, type_=UTF8, f=_matches)
+        if next(it, None):
+            print(klass)
+            if stop_on_first:
+                break
