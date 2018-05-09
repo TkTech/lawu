@@ -1,5 +1,7 @@
 # -*- coding: utf8 -*-
 import io
+import inspect
+import functools
 from struct import pack
 from itertools import repeat
 from collections import namedtuple
@@ -167,6 +169,17 @@ class CodeAttribute(Attribute):
             transforms = self.cf.classloader.bytecode_transforms
         elif transforms is None:
             transforms = []
+
+        for i, transform in enumerate(transforms):
+            sig = inspect.signature(transform, follow_wrapped=True)
+            kws = {}
+            if 'cf' in sig.parameters:
+                kws['cf'] = self.cf
+
+            if 'attribute' in sig.parameters:
+                kws['attribute'] = self
+
+            transforms[i] = functools.partial(transform, **kws)
 
         with io.BytesIO(self._code) as code:
             ins_iter = iter(lambda: read_instruction(code, code.tell()), None)
