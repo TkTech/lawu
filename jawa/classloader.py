@@ -1,7 +1,6 @@
-import io
 import os
 import os.path
-from typing import IO, Callable, Iterable, Set, Iterator, Dict, Union
+from typing import IO, Callable, Iterable, Set, Iterator
 from itertools import repeat
 from zipfile import ZipFile
 from collections import OrderedDict

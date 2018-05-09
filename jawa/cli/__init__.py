@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import json
-from pathlib import Path
 
 import click
 
 from jawa.cf import ClassVersion, ClassFile
 from jawa.attribute import get_attribute_classes
-from jawa.util import bytecode, shell, classloader
+from jawa.util import bytecode, shell
+from jawa import classloader
 
 
 @click.group()
@@ -145,4 +145,4 @@ def dependencies(source):
         new_dependencies = loader.dependencies(klass) - all_dependencies
         all_dependencies.update(new_dependencies)
         for new_dep in new_dependencies:
-            print(new_dep)
+            click.echo(new_dep)

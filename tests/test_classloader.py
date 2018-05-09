@@ -4,7 +4,7 @@ import tempfile
 import zipfile
 
 from jawa.cf import ClassFile
-from jawa.util.classloader import ClassLoader
+from jawa.classloader import ClassLoader
 from jawa.transforms.simple_swap import simple_swap
 from jawa.assemble import assemble
 
@@ -68,7 +68,6 @@ def test_load_from_directory():
         cl.update(dir)
 
         assert isinstance(cl.load('HelloWorld'), cl.klass)
-        assert isinstance(cl.load('HelloWorld.class'), cl.klass)
 
 
 def test_load_from_zipfile():
@@ -89,7 +88,6 @@ def test_load_from_zipfile():
         cl.update(tmp.name)
 
         assert isinstance(cl.load('HelloWorld'), cl.klass)
-        assert isinstance(cl.load('HelloWorld.class'), cl.klass)
 
 
 def test_contains(loader):
