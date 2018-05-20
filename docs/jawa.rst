@@ -1,50 +1,31 @@
-Core APIs
-=========
+jawa package
+============
 
-jawa.cf module
---------------
-
-.. automodule:: jawa.cf
+.. automodule:: jawa
     :members:
     :undoc-members:
     :show-inheritance:
 
-jawa.assemble module
---------------------
+Subpackages
+-----------
 
-.. automodule:: jawa.assemble
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. toctree::
 
-jawa.attribute module
----------------------
+    jawa.attributes
+    jawa.cli
+    jawa.transforms
+    jawa.util
 
-.. automodule:: jawa.attribute
-    :members:
-    :undoc-members:
-    :show-inheritance:
+Submodules
+----------
 
-jawa.constants module
----------------------
+.. toctree::
 
-.. automodule:: jawa.constants
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   jawa.assemble
+   jawa.attribute
+   jawa.cf
+   jawa.classloader
+   jawa.constants
+   jawa.fields
+   jawa.methods
 
-jawa.fields module
-------------------
-
-.. automodule:: jawa.fields
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-jawa.methods module
--------------------
-
-.. automodule:: jawa.methods
-    :members:
-    :undoc-members:
-    :show-inheritance:
