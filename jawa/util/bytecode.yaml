@@ -1,0 +1,805 @@
+aaload:
+    op: 0x32
+    desc: load onto the stack a reference from an array
+    stack:
+        before:
+            - ArrayRef
+            - Index
+        after:
+            - Value
+    runtime:
+        - NullPointerException
+        - ArrayIndexOutOfBoundsException
+aastore:
+    op: 0x53
+    desc: store into a reference in an array
+    stack:
+        before:
+            - ArrayRef
+            - Index
+            - Value
+    runtime:
+        - NullPointerException
+        - ArrayIndexOutOfBoundsException
+        - ArrayStoreException
+aconst_null:
+    op: 0x01
+    stack:
+        after:
+            - NullReference
+aload:
+    op: 0x19
+    operands:
+        - ['UBYTE', 'LOCAL_INDEX']
+    stack:
+        after:
+            - ObjectRef
+    can_be_wide: True
+aload_0:
+    op: 0x2A
+    stack:
+        after:
+            - ObjectRef
+    transform:
+      simple_swap:
+        op: aload
+        operands:
+          - 0
+aload_1:
+    op: 0x2B
+    stack:
+        after:
+            - ObjectRef
+    transform:
+      simple_swap:
+        op: aload
+        operands:
+          - 1
+aload_2:
+    op: 0x2C
+    stack:
+        after:
+            - ObjectRef
+    transform:
+      simple_swap:
+        op: aload
+        operands:
+          - 2
+aload_3:
+    op: 0x2D
+    stack:
+        after:
+            - ObjectRef
+    transform:
+      simple_swap:
+        op: aload
+        operands:
+          - 3
+anewarray:
+    op: 0xBD
+    operands:
+        - ['USHORT', 'LITERAL']
+areturn:
+    op: 0xB0
+arraylength:
+    op: 0xBE
+astore:
+    op: 0x3A
+    operands:
+        - ['UBYTE', 'LOCAL_INDEX']
+    can_be_wide: True
+astore_0:
+    op: 0x4B
+    transform:
+      simple_swap:
+        op: astore
+        operands:
+          - 0
+astore_1:
+    op: 0x4C
+    transform:
+      simple_swap:
+        op: astore
+        operands:
+          - 1
+astore_2:
+    op: 0x4D
+    transform:
+      simple_swap:
+        op: astore
+        operands:
+          - 2
+astore_3:
+    op: 0x4E
+    transform:
+      simple_swap:
+        op: astore
+        operands:
+          - 3
+athrow:
+    op: 0xBF
+baload:
+    op: 0x33
+bastore:
+    op: 0x54
+bipush:
+    op: 0x10
+    operands:
+        - ['BYTE', 'LITERAL']
+caload:
+    op: 0x34
+castore:
+    op: 0x55
+checkcast:
+    op: 0xC0
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+d2f:
+    op: 0x90
+d2i:
+    op: 0x8E
+d2l:
+    op: 0x8F
+dadd:
+    op: 0x63
+daload:
+    op: 0x31
+dastore:
+    op: 0x52
+dcmpg:
+    op: 0x98
+dcmpl:
+    op: 0x97
+dconst_0:
+    op: 0x0E
+dconst_1:
+    op: 0x0F
+ddiv:
+    op: 0x6F
+dload:
+    op: 0x18
+    operands:
+        - ['UBYTE', 'LOCAL_INDEX']
+    can_be_wide: True
+dload_0:
+    op: 0x26
+    transform:
+      simple_swap:
+        op: 0x18
+        operands:
+          - 0
+dload_1:
+    op: 0x27
+    transform:
+      simple_swap:
+        op: 0x18
+        operands:
+          - 1
+dload_2:
+    op: 0x28
+    transform:
+      simple_swap:
+        op: 0x18
+        operands:
+          - 2
+dload_3:
+    op: 0x29
+    transform:
+      simple_swap:
+        op: 0x18
+        operands:
+          - 3
+dmul:
+    op: 0x6B
+dneg:
+    op: 0x77
+drem:
+    op: 0x73
+dreturn:
+    op: 0xAF
+dstore:
+    op: 0x39
+    operands:
+        - ['UBYTE', 'LOCAL_INDEX']
+    can_be_wide: True
+dstore_0:
+    op: 0x47
+    transform:
+      simple_swap:
+        op: dstore
+        operands:
+          - 0
+dstore_1:
+    op: 0x48
+    transform:
+      simple_swap:
+        op: dstore
+        operands:
+          - 1
+dstore_2:
+    op: 0x49
+    transform:
+      simple_swap:
+        op: dstore
+        operands:
+          - 2
+dstore_3:
+    op: 0x4A
+    transform:
+      simple_swap:
+        op: dstore
+        operands:
+          - 3
+dsub:
+    op: 0x67
+dup:
+    op: 0x59
+dup_x1:
+    op: 0x5A
+dup_x2:
+    op: 0x5B
+dup2:
+    op: 0x5C
+dup2_x1:
+    op: 0x5D
+dup2_x2:
+    op: 0x5E
+f2d:
+    op: 0x8D
+f2i:
+    op: 0x8B
+f2l:
+    op: 0x8C
+fadd:
+    op: 0x62
+faload:
+    op: 0x30
+fastore:
+    op: 0x51
+fcmpg:
+    op: 0x96
+fcmpl:
+    op: 0x95
+fconst_0:
+    op: 0x0B
+fconst_1:
+    op: 0x0C
+fconst_2:
+    op: 0x0D
+fdiv:
+    op: 0x6E
+fload:
+    op: 0x17
+    operands:
+        - ['UBYTE', 'LOCAL_INDEX']
+    can_be_wide: True
+fload_0:
+    op: 0x22
+    transform:
+      simple_swap:
+        op: fload
+        operands:
+          - 0
+fload_1:
+    op: 0x23
+    transform:
+      simple_swap:
+        op: fload
+        operands:
+          - 1
+fload_2:
+    op: 0x24
+    transform:
+      simple_swap:
+        op: fload
+        operands:
+          - 2
+fload_3:
+    op: 0x25
+    transform:
+      simple_swap:
+        op: fload
+        operands:
+          - 3
+fmul:
+    op: 0x6A
+fneg:
+    op: 0x76
+frem:
+    op: 0x72
+freturn:
+    op: 0xAE
+fstore:
+    op: 0x38
+    operands:
+        - ['UBYTE', 'LOCAL_INDEX']
+    can_be_wide: True
+fstore_0:
+    op: 0x43
+    transform:
+      simple_swap:
+        op: fstore
+        operands:
+          - 0
+fstore_1:
+    op: 0x44
+    transform:
+      simple_swap:
+        op: fstore
+        operands:
+          - 0
+fstore_2:
+    op: 0x45
+    transform:
+      simple_swap:
+        op: fstore
+        operands:
+          - 0
+fstore_3:
+    op: 0x46
+    transform:
+      simple_swap:
+        op: fstore
+        operands:
+          - 0
+fsub:
+    op: 0x66
+getfield:
+    op: 0xB4
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+getstatic:
+    op: 0xB2
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+goto:
+    op: 0xA7
+    operands:
+        - ['SHORT', 'BRANCH']
+goto_w:
+    op: 0xC8
+    operands:
+        - ['INTEGER', 'BRANCH']
+i2b:
+    op: 0x91
+i2c:
+    op: 0x92
+i2d:
+    op: 0x87
+i2f:
+    op: 0x86
+i2l:
+    op: 0x85
+i2s:
+    op: 0x93
+iadd:
+    op: 0x60
+iaload:
+    op: 0x2E
+iand:
+    op: 0x7E
+iastore:
+    op: 0x4F
+iconst_m1:
+    op: 0x02
+    transform:
+      simple_swap:
+        op: bipush
+        operands:
+          - -1
+iconst_0:
+    op: 0x03
+    transform:
+      simple_swap:
+        op: bipush
+        operands:
+          - 0
+iconst_1:
+    op: 0x04
+    transform:
+      simple_swap:
+        op: bipush
+        operands:
+          - 1
+iconst_2:
+    op: 0x05
+    transform:
+      simple_swap:
+        op: bipush
+        operands:
+          - 2
+iconst_3:
+    op: 0x06
+    transform:
+      simple_swap:
+        op: bipush
+        operands:
+          - 3
+iconst_4:
+    op: 0x07
+    transform:
+      simple_swap:
+        op: bipush
+        operands:
+          - 4
+iconst_5:
+    op: 0x08
+    transform:
+      simple_swap:
+        op: bipush
+        operands:
+          - 5
+idiv:
+    op: 0x6C
+if_acmpeq:
+    op: 0xA5
+    operands:
+        - ['SHORT', 'BRANCH']
+if_acmpne:
+    op: 0xA6
+    operands:
+        - ['SHORT', 'BRANCH']
+if_icmpeq:
+    op: 0x9F
+    operands:
+        - ['SHORT', 'BRANCH']
+if_icmpne:
+    op: 0xA0
+    operands:
+        - ['SHORT', 'BRANCH']
+if_icmplt:
+    op: 0xA1
+    operands:
+        - ['SHORT', 'BRANCH']
+if_icmpge:
+    op: 0xA2
+    operands:
+        - ['SHORT', 'BRANCH']
+if_icmpgt:
+    op: 0xA3
+    operands:
+        - ['SHORT', 'BRANCH']
+if_icmple:
+    op: 0xA4
+    operands:
+        - ['SHORT', 'BRANCH']
+ifeq:
+    op: 0x99
+    operands:
+        - ['SHORT', 'BRANCH']
+ifne:
+    op: 0x9A
+    operands:
+        - ['SHORT', 'BRANCH']
+iflt:
+    op: 0x9B
+    operands:
+        - ['SHORT', 'BRANCH']
+ifge:
+    op: 0x9C
+    operands:
+        - ['SHORT', 'BRANCH']
+ifgt:
+    op: 0x9D
+    operands:
+        - ['SHORT', 'BRANCH']
+ifle:
+    op: 0x9E
+    operands:
+        - ['SHORT', 'BRANCH']
+ifnonnull:
+    op: 0xC7
+    operands:
+        - ['SHORT', 'BRANCH']
+ifnull:
+    op: 0xC6
+    operands:
+        - ['SHORT', 'BRANCH']
+iinc:
+    op: 0x84
+    operands:
+        - ['UBYTE', 'LOCAL_INDEX']
+        - ['UBYTE', 'LITERAL']
+    can_be_wide: True
+iload:
+    op: 0x15
+    operands:
+        - ['UBYTE', 'LOCAL_INDEX']
+    can_be_wide: True
+iload_0:
+    op: 0x1A
+    transform:
+      simple_swap:
+        op: iload
+        operands:
+          - 0
+iload_1:
+    op: 0x1B
+    transform:
+      simple_swap:
+        op: iload
+        operands:
+          - 1
+iload_2:
+    op: 0x1C
+    transform:
+      simple_swap:
+        op: iload
+        operands:
+          - 2
+iload_3:
+    op: 0x1D
+    transform:
+      simple_swap:
+        op: iload
+        operands:
+          - 3
+imul:
+    op: 0x68
+ineg:
+    op: 0x74
+instanceof:
+    op: 0xC1
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+invokedynamic:
+    op: 0xBA
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+        - ['UBYTE', 'PADDING']
+        - ['UBYTE', 'PADDING']
+invokeinterface:
+    op: 0xB9
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+        - ['UBYTE', 'LITERAL']
+        - ['UBYTE', 'PADDING']
+invokespecial:
+    op: 0xB7
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+invokestatic:
+    op: 0xB8
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+invokevirtual:
+    op: 0xB6
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+ior:
+    op: 0x80
+irem:
+    op: 0x70
+ireturn:
+    op: 0xAC
+ishl:
+    op: 0x78
+ishr:
+    op: 0x7A
+istore:
+    op: 0x36
+    operands:
+        - ['UBYTE', 'LOCAL_INDEX']
+    can_be_wide: True
+istore_0:
+    op: 0x3B
+    transform:
+      simple_swap:
+        op: istore
+        operands:
+          - 0
+istore_1:
+    op: 0x3C
+    transform:
+      simple_swap:
+        op: istore
+        operands:
+          - 1
+istore_2:
+    op: 0x3D
+    transform:
+      simple_swap:
+        op: istore
+        operands:
+          - 2
+istore_3:
+    op: 0x3E
+    transform:
+      simple_swap:
+        op: istore
+        operands:
+          - 3
+isub:
+    op: 0x64
+iushr:
+    op: 0x7C
+ixor:
+    op: 0x82
+jsr:
+    op: 0xA8
+    operands:
+        - ['SHORT', 'BRANCH']
+jsr_w:
+    op: 0xC9
+    operands:
+        - ['INTEGER', 'BRANCH']
+l2d:
+    op: 0x8A
+l2f:
+    op: 0x89
+l2i:
+    op: 0x88
+ladd:
+    op: 0x61
+laload:
+    op: 0x2F
+land:
+    op: 0x7F
+lastore:
+    op: 0x50
+lcmp:
+    op: 0x94
+lconst_0:
+    op: 0x09
+lconst_1:
+    op: 0x0A
+ldc:
+    op: 0x12
+    operands:
+        - ['UBYTE', 'CONSTANT_INDEX']
+ldc_w:
+    op: 0x13
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+ldc2_w:
+    op: 0x14
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+ldiv:
+    op: 0x6D
+lload:
+    op: 0x16
+    operands:
+        - ['UBYTE', 'LOCAL_INDEX']
+    can_be_wide: True
+lload_0:
+    op: 0x1E
+    transform:
+      simple_swap:
+        op: lload
+        operands:
+          - 0
+lload_1:
+    op: 0x1F
+    transform:
+      simple_swap:
+        op: lload
+        operands:
+          - 1
+lload_2:
+    op: 0x20
+    transform:
+      simple_swap:
+        op: lload
+        operands:
+          - 2
+lload_3:
+    op: 0x21
+    transform:
+      simple_swap:
+        op: lload
+        operands:
+          - 3
+lmul:
+    op: 0x69
+lneg:
+    op: 0x75
+lookupswitch:
+    op: 0xAB
+lor:
+    op: 0x81
+lrem:
+    op: 0x71
+lreturn:
+    op: 0xAD
+lshl:
+    op: 0x79
+lshr:
+    op: 0x7B
+lstore:
+    op: 0x37
+    operands:
+        - ['UBYTE', 'LOCAL_INDEX']
+    can_be_wide: True
+lstore_0:
+    op: 0x3F
+    transform:
+      simple_swap:
+        op: lstore
+        operands:
+          - 0
+lstore_1:
+    op: 0x40
+    transform:
+      simple_swap:
+        op: lstore
+        operands:
+          - 1
+lstore_2:
+    op: 0x41
+    transform:
+      simple_swap:
+        op: lstore
+        operands:
+          - 2
+lstore_3:
+    op: 0x42
+    transform:
+      simple_swap:
+        op: lstore
+        operands:
+          - 3
+lsub:
+    op: 0x65
+lushr:
+    op: 0x7D
+lxor:
+    op: 0x83
+monitorenter:
+    op: 0xC2
+monitorexit:
+    op: 0xC3
+multianewarray:
+    op: 0xC5
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+        - ['UBYTE', 'LITERAL']
+new:
+    op: 0xBB
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+newarray:
+    op: 0xBC
+    operands:
+        - ['UBYTE', 'LITERAL']
+nop:
+    op: 0x00
+pop:
+    op: 0x57
+pop2:
+    op: 0x58
+putfield:
+    op: 0xB5
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+putstatic:
+    op: 0xB3
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+ret:
+    op: 0xA9
+    operands:
+        - ['UBYTE', 'LOCAL_INDEX']
+    can_be_wide: True
+return:
+    op: 0xB1
+saload:
+    op: 0x35
+sastore:
+    op: 0x56
+sipush:
+    op: 0x11
+    operands:
+        - ['SHORT', 'LITERAL']
+swap:
+    op: 0x5F
+tableswitch:
+    op: 0xAA
+wide:
+    op: 0xC4
+breakpoint:
+    op: 0xCA
+impdep1:
+    op: 0xFE
+impdep2:
+    op: 0xFF

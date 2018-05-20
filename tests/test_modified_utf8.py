@@ -1,28 +1,15 @@
-#!/usr/bin/env python
-# encoding: utf-8
-import os
-
-import binascii
-
-from jawa import ClassFile
 from jawa.util.utf import encode_modified_utf8, decode_modified_utf8
 
 
-def test_decode_modified_utf8():
+def test_decode_modified_utf8(loader):
     """
     JVM ClassFile's use a "modified" form of UTF8 which cannot always be
     parsed by python's UTF-8 decoder.
-    """
-    sample_path = os.path.join(
-        os.path.dirname(__file__),
-        'data',
-        'ModifiedUTF8.class'
-    )
 
-    with open(sample_path, 'rb') as fin:
-        # We simply need to make sure no encoding exceptions are raised
-        # when we parse the ClassFile.
-        ClassFile(fin)
+    We simply need to make sure no encoding exceptions are raised
+    when we parse the sample ClassFile.
+    """
+    loader.load('ModifiedUTF8')
 
 
 def test_encode_utf8_1():
@@ -35,28 +22,26 @@ def test_encode_utf8_1():
         six bytes then U+10400 (represented as \uD801\uDC00) will be encoded as
         'eda081edb080'
     """
-    # string containing byte 00
-    str1 = u'1\x002'
-    bb = encode_modified_utf8(str1)
-    assert '31c08032' == binascii.hexlify(bb), binascii.hexlify(bb)
-
-    # Unicode supplementary character U+10400
-    str1 = u'\uD801\uDC00'
-    bb = encode_modified_utf8(str1)
-    assert 'eda081edb080' == binascii.hexlify(bb), binascii.hexlify(bb)
+    pairs = (
+        (u'1\x002', b'\x31\xc0\x80\x32'),
+        (u'\uD801\uDC00', b'\xed\xa0\x81\xed\xb0\x80')
+    )
+    for original, encoded in pairs:
+        assert encode_modified_utf8(original) == encoded
 
 
 def test_decode_utf8_1():
     """
     Counterpart of test_encode_utf8_1.
+
     Tests decoding of some special cases:
         1 - c080 must be decoded as byte 00
         2 - eda081edb080 must be decoded as \uD801\uDC00 (representing U+10400)
     """
-    str1 = '31c08032'
-    str2 = decode_modified_utf8(binascii.unhexlify(str1))
-    assert u'1\x002' == str2
+    pairs = (
+        (b'\x31\xc0\x80\x32', '1\x002'),
+        (b'\xed\xa0\x81\xed\xb0\x80', '\uD801\uDC00')
+    )
 
-    str1 = 'eda081edb080'
-    str2 = decode_modified_utf8(binascii.unhexlify(str1))
-    assert u'\uD801\uDC00' == str2
+    for original, decoded in pairs:
+        assert decode_modified_utf8(original) == decoded

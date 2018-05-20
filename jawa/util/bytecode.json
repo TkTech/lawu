@@ -1,0 +1,2107 @@
+{
+    "aaload": {
+        "can_be_wide": false,
+        "desc": "load onto the stack a reference from an array",
+        "mnemonic": "aaload",
+        "op": 50,
+        "operands": null,
+        "runtime": [
+            "NullPointerException",
+            "ArrayIndexOutOfBoundsException"
+        ],
+        "stack": {
+            "after": [
+                "Value"
+            ],
+            "before": [
+                "ArrayRef",
+                "Index"
+            ]
+        },
+        "transform": {}
+    },
+    "aastore": {
+        "can_be_wide": false,
+        "desc": "store into a reference in an array",
+        "mnemonic": "aastore",
+        "op": 83,
+        "operands": null,
+        "runtime": [
+            "NullPointerException",
+            "ArrayIndexOutOfBoundsException",
+            "ArrayStoreException"
+        ],
+        "stack": {
+            "before": [
+                "ArrayRef",
+                "Index",
+                "Value"
+            ]
+        },
+        "transform": {}
+    },
+    "aconst_null": {
+        "can_be_wide": false,
+        "mnemonic": "aconst_null",
+        "op": 1,
+        "operands": null,
+        "stack": {
+            "after": [
+                "NullReference"
+            ]
+        },
+        "transform": {}
+    },
+    "aload": {
+        "can_be_wide": true,
+        "mnemonic": "aload",
+        "op": 25,
+        "operands": [
+            [
+                "UBYTE",
+                "LOCAL_INDEX"
+            ]
+        ],
+        "stack": {
+            "after": [
+                "ObjectRef"
+            ]
+        },
+        "transform": {}
+    },
+    "aload_0": {
+        "can_be_wide": false,
+        "mnemonic": "aload_0",
+        "op": 42,
+        "operands": null,
+        "stack": {
+            "after": [
+                "ObjectRef"
+            ]
+        },
+        "transform": {
+            "simple_swap": {
+                "op": "aload",
+                "operands": [
+                    0
+                ]
+            }
+        }
+    },
+    "aload_1": {
+        "can_be_wide": false,
+        "mnemonic": "aload_1",
+        "op": 43,
+        "operands": null,
+        "stack": {
+            "after": [
+                "ObjectRef"
+            ]
+        },
+        "transform": {
+            "simple_swap": {
+                "op": "aload",
+                "operands": [
+                    1
+                ]
+            }
+        }
+    },
+    "aload_2": {
+        "can_be_wide": false,
+        "mnemonic": "aload_2",
+        "op": 44,
+        "operands": null,
+        "stack": {
+            "after": [
+                "ObjectRef"
+            ]
+        },
+        "transform": {
+            "simple_swap": {
+                "op": "aload",
+                "operands": [
+                    2
+                ]
+            }
+        }
+    },
+    "aload_3": {
+        "can_be_wide": false,
+        "mnemonic": "aload_3",
+        "op": 45,
+        "operands": null,
+        "stack": {
+            "after": [
+                "ObjectRef"
+            ]
+        },
+        "transform": {
+            "simple_swap": {
+                "op": "aload",
+                "operands": [
+                    3
+                ]
+            }
+        }
+    },
+    "anewarray": {
+        "can_be_wide": false,
+        "mnemonic": "anewarray",
+        "op": 189,
+        "operands": [
+            [
+                "USHORT",
+                "LITERAL"
+            ]
+        ],
+        "transform": {}
+    },
+    "areturn": {
+        "can_be_wide": false,
+        "mnemonic": "areturn",
+        "op": 176,
+        "operands": null,
+        "transform": {}
+    },
+    "arraylength": {
+        "can_be_wide": false,
+        "mnemonic": "arraylength",
+        "op": 190,
+        "operands": null,
+        "transform": {}
+    },
+    "astore": {
+        "can_be_wide": true,
+        "mnemonic": "astore",
+        "op": 58,
+        "operands": [
+            [
+                "UBYTE",
+                "LOCAL_INDEX"
+            ]
+        ],
+        "transform": {}
+    },
+    "astore_0": {
+        "can_be_wide": false,
+        "mnemonic": "astore_0",
+        "op": 75,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "astore",
+                "operands": [
+                    0
+                ]
+            }
+        }
+    },
+    "astore_1": {
+        "can_be_wide": false,
+        "mnemonic": "astore_1",
+        "op": 76,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "astore",
+                "operands": [
+                    1
+                ]
+            }
+        }
+    },
+    "astore_2": {
+        "can_be_wide": false,
+        "mnemonic": "astore_2",
+        "op": 77,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "astore",
+                "operands": [
+                    2
+                ]
+            }
+        }
+    },
+    "astore_3": {
+        "can_be_wide": false,
+        "mnemonic": "astore_3",
+        "op": 78,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "astore",
+                "operands": [
+                    3
+                ]
+            }
+        }
+    },
+    "athrow": {
+        "can_be_wide": false,
+        "mnemonic": "athrow",
+        "op": 191,
+        "operands": null,
+        "transform": {}
+    },
+    "baload": {
+        "can_be_wide": false,
+        "mnemonic": "baload",
+        "op": 51,
+        "operands": null,
+        "transform": {}
+    },
+    "bastore": {
+        "can_be_wide": false,
+        "mnemonic": "bastore",
+        "op": 84,
+        "operands": null,
+        "transform": {}
+    },
+    "bipush": {
+        "can_be_wide": false,
+        "mnemonic": "bipush",
+        "op": 16,
+        "operands": [
+            [
+                "BYTE",
+                "LITERAL"
+            ]
+        ],
+        "transform": {}
+    },
+    "breakpoint": {
+        "can_be_wide": false,
+        "mnemonic": "breakpoint",
+        "op": 202,
+        "operands": null,
+        "transform": {}
+    },
+    "caload": {
+        "can_be_wide": false,
+        "mnemonic": "caload",
+        "op": 52,
+        "operands": null,
+        "transform": {}
+    },
+    "castore": {
+        "can_be_wide": false,
+        "mnemonic": "castore",
+        "op": 85,
+        "operands": null,
+        "transform": {}
+    },
+    "checkcast": {
+        "can_be_wide": false,
+        "mnemonic": "checkcast",
+        "op": 192,
+        "operands": [
+            [
+                "USHORT",
+                "CONSTANT_INDEX"
+            ]
+        ],
+        "transform": {}
+    },
+    "d2f": {
+        "can_be_wide": false,
+        "mnemonic": "d2f",
+        "op": 144,
+        "operands": null,
+        "transform": {}
+    },
+    "d2i": {
+        "can_be_wide": false,
+        "mnemonic": "d2i",
+        "op": 142,
+        "operands": null,
+        "transform": {}
+    },
+    "d2l": {
+        "can_be_wide": false,
+        "mnemonic": "d2l",
+        "op": 143,
+        "operands": null,
+        "transform": {}
+    },
+    "dadd": {
+        "can_be_wide": false,
+        "mnemonic": "dadd",
+        "op": 99,
+        "operands": null,
+        "transform": {}
+    },
+    "daload": {
+        "can_be_wide": false,
+        "mnemonic": "daload",
+        "op": 49,
+        "operands": null,
+        "transform": {}
+    },
+    "dastore": {
+        "can_be_wide": false,
+        "mnemonic": "dastore",
+        "op": 82,
+        "operands": null,
+        "transform": {}
+    },
+    "dcmpg": {
+        "can_be_wide": false,
+        "mnemonic": "dcmpg",
+        "op": 152,
+        "operands": null,
+        "transform": {}
+    },
+    "dcmpl": {
+        "can_be_wide": false,
+        "mnemonic": "dcmpl",
+        "op": 151,
+        "operands": null,
+        "transform": {}
+    },
+    "dconst_0": {
+        "can_be_wide": false,
+        "mnemonic": "dconst_0",
+        "op": 14,
+        "operands": null,
+        "transform": {}
+    },
+    "dconst_1": {
+        "can_be_wide": false,
+        "mnemonic": "dconst_1",
+        "op": 15,
+        "operands": null,
+        "transform": {}
+    },
+    "ddiv": {
+        "can_be_wide": false,
+        "mnemonic": "ddiv",
+        "op": 111,
+        "operands": null,
+        "transform": {}
+    },
+    "dload": {
+        "can_be_wide": true,
+        "mnemonic": "dload",
+        "op": 24,
+        "operands": [
+            [
+                "UBYTE",
+                "LOCAL_INDEX"
+            ]
+        ],
+        "transform": {}
+    },
+    "dload_0": {
+        "can_be_wide": false,
+        "mnemonic": "dload_0",
+        "op": 38,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": 24,
+                "operands": [
+                    0
+                ]
+            }
+        }
+    },
+    "dload_1": {
+        "can_be_wide": false,
+        "mnemonic": "dload_1",
+        "op": 39,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": 24,
+                "operands": [
+                    1
+                ]
+            }
+        }
+    },
+    "dload_2": {
+        "can_be_wide": false,
+        "mnemonic": "dload_2",
+        "op": 40,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": 24,
+                "operands": [
+                    2
+                ]
+            }
+        }
+    },
+    "dload_3": {
+        "can_be_wide": false,
+        "mnemonic": "dload_3",
+        "op": 41,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": 24,
+                "operands": [
+                    3
+                ]
+            }
+        }
+    },
+    "dmul": {
+        "can_be_wide": false,
+        "mnemonic": "dmul",
+        "op": 107,
+        "operands": null,
+        "transform": {}
+    },
+    "dneg": {
+        "can_be_wide": false,
+        "mnemonic": "dneg",
+        "op": 119,
+        "operands": null,
+        "transform": {}
+    },
+    "drem": {
+        "can_be_wide": false,
+        "mnemonic": "drem",
+        "op": 115,
+        "operands": null,
+        "transform": {}
+    },
+    "dreturn": {
+        "can_be_wide": false,
+        "mnemonic": "dreturn",
+        "op": 175,
+        "operands": null,
+        "transform": {}
+    },
+    "dstore": {
+        "can_be_wide": true,
+        "mnemonic": "dstore",
+        "op": 57,
+        "operands": [
+            [
+                "UBYTE",
+                "LOCAL_INDEX"
+            ]
+        ],
+        "transform": {}
+    },
+    "dstore_0": {
+        "can_be_wide": false,
+        "mnemonic": "dstore_0",
+        "op": 71,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "dstore",
+                "operands": [
+                    0
+                ]
+            }
+        }
+    },
+    "dstore_1": {
+        "can_be_wide": false,
+        "mnemonic": "dstore_1",
+        "op": 72,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "dstore",
+                "operands": [
+                    1
+                ]
+            }
+        }
+    },
+    "dstore_2": {
+        "can_be_wide": false,
+        "mnemonic": "dstore_2",
+        "op": 73,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "dstore",
+                "operands": [
+                    2
+                ]
+            }
+        }
+    },
+    "dstore_3": {
+        "can_be_wide": false,
+        "mnemonic": "dstore_3",
+        "op": 74,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "dstore",
+                "operands": [
+                    3
+                ]
+            }
+        }
+    },
+    "dsub": {
+        "can_be_wide": false,
+        "mnemonic": "dsub",
+        "op": 103,
+        "operands": null,
+        "transform": {}
+    },
+    "dup": {
+        "can_be_wide": false,
+        "mnemonic": "dup",
+        "op": 89,
+        "operands": null,
+        "transform": {}
+    },
+    "dup2": {
+        "can_be_wide": false,
+        "mnemonic": "dup2",
+        "op": 92,
+        "operands": null,
+        "transform": {}
+    },
+    "dup2_x1": {
+        "can_be_wide": false,
+        "mnemonic": "dup2_x1",
+        "op": 93,
+        "operands": null,
+        "transform": {}
+    },
+    "dup2_x2": {
+        "can_be_wide": false,
+        "mnemonic": "dup2_x2",
+        "op": 94,
+        "operands": null,
+        "transform": {}
+    },
+    "dup_x1": {
+        "can_be_wide": false,
+        "mnemonic": "dup_x1",
+        "op": 90,
+        "operands": null,
+        "transform": {}
+    },
+    "dup_x2": {
+        "can_be_wide": false,
+        "mnemonic": "dup_x2",
+        "op": 91,
+        "operands": null,
+        "transform": {}
+    },
+    "f2d": {
+        "can_be_wide": false,
+        "mnemonic": "f2d",
+        "op": 141,
+        "operands": null,
+        "transform": {}
+    },
+    "f2i": {
+        "can_be_wide": false,
+        "mnemonic": "f2i",
+        "op": 139,
+        "operands": null,
+        "transform": {}
+    },
+    "f2l": {
+        "can_be_wide": false,
+        "mnemonic": "f2l",
+        "op": 140,
+        "operands": null,
+        "transform": {}
+    },
+    "fadd": {
+        "can_be_wide": false,
+        "mnemonic": "fadd",
+        "op": 98,
+        "operands": null,
+        "transform": {}
+    },
+    "faload": {
+        "can_be_wide": false,
+        "mnemonic": "faload",
+        "op": 48,
+        "operands": null,
+        "transform": {}
+    },
+    "fastore": {
+        "can_be_wide": false,
+        "mnemonic": "fastore",
+        "op": 81,
+        "operands": null,
+        "transform": {}
+    },
+    "fcmpg": {
+        "can_be_wide": false,
+        "mnemonic": "fcmpg",
+        "op": 150,
+        "operands": null,
+        "transform": {}
+    },
+    "fcmpl": {
+        "can_be_wide": false,
+        "mnemonic": "fcmpl",
+        "op": 149,
+        "operands": null,
+        "transform": {}
+    },
+    "fconst_0": {
+        "can_be_wide": false,
+        "mnemonic": "fconst_0",
+        "op": 11,
+        "operands": null,
+        "transform": {}
+    },
+    "fconst_1": {
+        "can_be_wide": false,
+        "mnemonic": "fconst_1",
+        "op": 12,
+        "operands": null,
+        "transform": {}
+    },
+    "fconst_2": {
+        "can_be_wide": false,
+        "mnemonic": "fconst_2",
+        "op": 13,
+        "operands": null,
+        "transform": {}
+    },
+    "fdiv": {
+        "can_be_wide": false,
+        "mnemonic": "fdiv",
+        "op": 110,
+        "operands": null,
+        "transform": {}
+    },
+    "fload": {
+        "can_be_wide": true,
+        "mnemonic": "fload",
+        "op": 23,
+        "operands": [
+            [
+                "UBYTE",
+                "LOCAL_INDEX"
+            ]
+        ],
+        "transform": {}
+    },
+    "fload_0": {
+        "can_be_wide": false,
+        "mnemonic": "fload_0",
+        "op": 34,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "fload",
+                "operands": [
+                    0
+                ]
+            }
+        }
+    },
+    "fload_1": {
+        "can_be_wide": false,
+        "mnemonic": "fload_1",
+        "op": 35,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "fload",
+                "operands": [
+                    1
+                ]
+            }
+        }
+    },
+    "fload_2": {
+        "can_be_wide": false,
+        "mnemonic": "fload_2",
+        "op": 36,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "fload",
+                "operands": [
+                    2
+                ]
+            }
+        }
+    },
+    "fload_3": {
+        "can_be_wide": false,
+        "mnemonic": "fload_3",
+        "op": 37,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "fload",
+                "operands": [
+                    3
+                ]
+            }
+        }
+    },
+    "fmul": {
+        "can_be_wide": false,
+        "mnemonic": "fmul",
+        "op": 106,
+        "operands": null,
+        "transform": {}
+    },
+    "fneg": {
+        "can_be_wide": false,
+        "mnemonic": "fneg",
+        "op": 118,
+        "operands": null,
+        "transform": {}
+    },
+    "frem": {
+        "can_be_wide": false,
+        "mnemonic": "frem",
+        "op": 114,
+        "operands": null,
+        "transform": {}
+    },
+    "freturn": {
+        "can_be_wide": false,
+        "mnemonic": "freturn",
+        "op": 174,
+        "operands": null,
+        "transform": {}
+    },
+    "fstore": {
+        "can_be_wide": true,
+        "mnemonic": "fstore",
+        "op": 56,
+        "operands": [
+            [
+                "UBYTE",
+                "LOCAL_INDEX"
+            ]
+        ],
+        "transform": {}
+    },
+    "fstore_0": {
+        "can_be_wide": false,
+        "mnemonic": "fstore_0",
+        "op": 67,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "fstore",
+                "operands": [
+                    0
+                ]
+            }
+        }
+    },
+    "fstore_1": {
+        "can_be_wide": false,
+        "mnemonic": "fstore_1",
+        "op": 68,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "fstore",
+                "operands": [
+                    0
+                ]
+            }
+        }
+    },
+    "fstore_2": {
+        "can_be_wide": false,
+        "mnemonic": "fstore_2",
+        "op": 69,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "fstore",
+                "operands": [
+                    0
+                ]
+            }
+        }
+    },
+    "fstore_3": {
+        "can_be_wide": false,
+        "mnemonic": "fstore_3",
+        "op": 70,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "fstore",
+                "operands": [
+                    0
+                ]
+            }
+        }
+    },
+    "fsub": {
+        "can_be_wide": false,
+        "mnemonic": "fsub",
+        "op": 102,
+        "operands": null,
+        "transform": {}
+    },
+    "getfield": {
+        "can_be_wide": false,
+        "mnemonic": "getfield",
+        "op": 180,
+        "operands": [
+            [
+                "USHORT",
+                "CONSTANT_INDEX"
+            ]
+        ],
+        "transform": {}
+    },
+    "getstatic": {
+        "can_be_wide": false,
+        "mnemonic": "getstatic",
+        "op": 178,
+        "operands": [
+            [
+                "USHORT",
+                "CONSTANT_INDEX"
+            ]
+        ],
+        "transform": {}
+    },
+    "goto": {
+        "can_be_wide": false,
+        "mnemonic": "goto",
+        "op": 167,
+        "operands": [
+            [
+                "SHORT",
+                "BRANCH"
+            ]
+        ],
+        "transform": {}
+    },
+    "goto_w": {
+        "can_be_wide": false,
+        "mnemonic": "goto_w",
+        "op": 200,
+        "operands": [
+            [
+                "INTEGER",
+                "BRANCH"
+            ]
+        ],
+        "transform": {}
+    },
+    "i2b": {
+        "can_be_wide": false,
+        "mnemonic": "i2b",
+        "op": 145,
+        "operands": null,
+        "transform": {}
+    },
+    "i2c": {
+        "can_be_wide": false,
+        "mnemonic": "i2c",
+        "op": 146,
+        "operands": null,
+        "transform": {}
+    },
+    "i2d": {
+        "can_be_wide": false,
+        "mnemonic": "i2d",
+        "op": 135,
+        "operands": null,
+        "transform": {}
+    },
+    "i2f": {
+        "can_be_wide": false,
+        "mnemonic": "i2f",
+        "op": 134,
+        "operands": null,
+        "transform": {}
+    },
+    "i2l": {
+        "can_be_wide": false,
+        "mnemonic": "i2l",
+        "op": 133,
+        "operands": null,
+        "transform": {}
+    },
+    "i2s": {
+        "can_be_wide": false,
+        "mnemonic": "i2s",
+        "op": 147,
+        "operands": null,
+        "transform": {}
+    },
+    "iadd": {
+        "can_be_wide": false,
+        "mnemonic": "iadd",
+        "op": 96,
+        "operands": null,
+        "transform": {}
+    },
+    "iaload": {
+        "can_be_wide": false,
+        "mnemonic": "iaload",
+        "op": 46,
+        "operands": null,
+        "transform": {}
+    },
+    "iand": {
+        "can_be_wide": false,
+        "mnemonic": "iand",
+        "op": 126,
+        "operands": null,
+        "transform": {}
+    },
+    "iastore": {
+        "can_be_wide": false,
+        "mnemonic": "iastore",
+        "op": 79,
+        "operands": null,
+        "transform": {}
+    },
+    "iconst_0": {
+        "can_be_wide": false,
+        "mnemonic": "iconst_0",
+        "op": 3,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "bipush",
+                "operands": [
+                    0
+                ]
+            }
+        }
+    },
+    "iconst_1": {
+        "can_be_wide": false,
+        "mnemonic": "iconst_1",
+        "op": 4,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "bipush",
+                "operands": [
+                    1
+                ]
+            }
+        }
+    },
+    "iconst_2": {
+        "can_be_wide": false,
+        "mnemonic": "iconst_2",
+        "op": 5,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "bipush",
+                "operands": [
+                    2
+                ]
+            }
+        }
+    },
+    "iconst_3": {
+        "can_be_wide": false,
+        "mnemonic": "iconst_3",
+        "op": 6,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "bipush",
+                "operands": [
+                    3
+                ]
+            }
+        }
+    },
+    "iconst_4": {
+        "can_be_wide": false,
+        "mnemonic": "iconst_4",
+        "op": 7,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "bipush",
+                "operands": [
+                    4
+                ]
+            }
+        }
+    },
+    "iconst_5": {
+        "can_be_wide": false,
+        "mnemonic": "iconst_5",
+        "op": 8,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "bipush",
+                "operands": [
+                    5
+                ]
+            }
+        }
+    },
+    "iconst_m1": {
+        "can_be_wide": false,
+        "mnemonic": "iconst_m1",
+        "op": 2,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "bipush",
+                "operands": [
+                    -1
+                ]
+            }
+        }
+    },
+    "idiv": {
+        "can_be_wide": false,
+        "mnemonic": "idiv",
+        "op": 108,
+        "operands": null,
+        "transform": {}
+    },
+    "if_acmpeq": {
+        "can_be_wide": false,
+        "mnemonic": "if_acmpeq",
+        "op": 165,
+        "operands": [
+            [
+                "SHORT",
+                "BRANCH"
+            ]
+        ],
+        "transform": {}
+    },
+    "if_acmpne": {
+        "can_be_wide": false,
+        "mnemonic": "if_acmpne",
+        "op": 166,
+        "operands": [
+            [
+                "SHORT",
+                "BRANCH"
+            ]
+        ],
+        "transform": {}
+    },
+    "if_icmpeq": {
+        "can_be_wide": false,
+        "mnemonic": "if_icmpeq",
+        "op": 159,
+        "operands": [
+            [
+                "SHORT",
+                "BRANCH"
+            ]
+        ],
+        "transform": {}
+    },
+    "if_icmpge": {
+        "can_be_wide": false,
+        "mnemonic": "if_icmpge",
+        "op": 162,
+        "operands": [
+            [
+                "SHORT",
+                "BRANCH"
+            ]
+        ],
+        "transform": {}
+    },
+    "if_icmpgt": {
+        "can_be_wide": false,
+        "mnemonic": "if_icmpgt",
+        "op": 163,
+        "operands": [
+            [
+                "SHORT",
+                "BRANCH"
+            ]
+        ],
+        "transform": {}
+    },
+    "if_icmple": {
+        "can_be_wide": false,
+        "mnemonic": "if_icmple",
+        "op": 164,
+        "operands": [
+            [
+                "SHORT",
+                "BRANCH"
+            ]
+        ],
+        "transform": {}
+    },
+    "if_icmplt": {
+        "can_be_wide": false,
+        "mnemonic": "if_icmplt",
+        "op": 161,
+        "operands": [
+            [
+                "SHORT",
+                "BRANCH"
+            ]
+        ],
+        "transform": {}
+    },
+    "if_icmpne": {
+        "can_be_wide": false,
+        "mnemonic": "if_icmpne",
+        "op": 160,
+        "operands": [
+            [
+                "SHORT",
+                "BRANCH"
+            ]
+        ],
+        "transform": {}
+    },
+    "ifeq": {
+        "can_be_wide": false,
+        "mnemonic": "ifeq",
+        "op": 153,
+        "operands": [
+            [
+                "SHORT",
+                "BRANCH"
+            ]
+        ],
+        "transform": {}
+    },
+    "ifge": {
+        "can_be_wide": false,
+        "mnemonic": "ifge",
+        "op": 156,
+        "operands": [
+            [
+                "SHORT",
+                "BRANCH"
+            ]
+        ],
+        "transform": {}
+    },
+    "ifgt": {
+        "can_be_wide": false,
+        "mnemonic": "ifgt",
+        "op": 157,
+        "operands": [
+            [
+                "SHORT",
+                "BRANCH"
+            ]
+        ],
+        "transform": {}
+    },
+    "ifle": {
+        "can_be_wide": false,
+        "mnemonic": "ifle",
+        "op": 158,
+        "operands": [
+            [
+                "SHORT",
+                "BRANCH"
+            ]
+        ],
+        "transform": {}
+    },
+    "iflt": {
+        "can_be_wide": false,
+        "mnemonic": "iflt",
+        "op": 155,
+        "operands": [
+            [
+                "SHORT",
+                "BRANCH"
+            ]
+        ],
+        "transform": {}
+    },
+    "ifne": {
+        "can_be_wide": false,
+        "mnemonic": "ifne",
+        "op": 154,
+        "operands": [
+            [
+                "SHORT",
+                "BRANCH"
+            ]
+        ],
+        "transform": {}
+    },
+    "ifnonnull": {
+        "can_be_wide": false,
+        "mnemonic": "ifnonnull",
+        "op": 199,
+        "operands": [
+            [
+                "SHORT",
+                "BRANCH"
+            ]
+        ],
+        "transform": {}
+    },
+    "ifnull": {
+        "can_be_wide": false,
+        "mnemonic": "ifnull",
+        "op": 198,
+        "operands": [
+            [
+                "SHORT",
+                "BRANCH"
+            ]
+        ],
+        "transform": {}
+    },
+    "iinc": {
+        "can_be_wide": true,
+        "mnemonic": "iinc",
+        "op": 132,
+        "operands": [
+            [
+                "UBYTE",
+                "LOCAL_INDEX"
+            ],
+            [
+                "UBYTE",
+                "LITERAL"
+            ]
+        ],
+        "transform": {}
+    },
+    "iload": {
+        "can_be_wide": true,
+        "mnemonic": "iload",
+        "op": 21,
+        "operands": [
+            [
+                "UBYTE",
+                "LOCAL_INDEX"
+            ]
+        ],
+        "transform": {}
+    },
+    "iload_0": {
+        "can_be_wide": false,
+        "mnemonic": "iload_0",
+        "op": 26,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "iload",
+                "operands": [
+                    0
+                ]
+            }
+        }
+    },
+    "iload_1": {
+        "can_be_wide": false,
+        "mnemonic": "iload_1",
+        "op": 27,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "iload",
+                "operands": [
+                    1
+                ]
+            }
+        }
+    },
+    "iload_2": {
+        "can_be_wide": false,
+        "mnemonic": "iload_2",
+        "op": 28,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "iload",
+                "operands": [
+                    2
+                ]
+            }
+        }
+    },
+    "iload_3": {
+        "can_be_wide": false,
+        "mnemonic": "iload_3",
+        "op": 29,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "iload",
+                "operands": [
+                    3
+                ]
+            }
+        }
+    },
+    "impdep1": {
+        "can_be_wide": false,
+        "mnemonic": "impdep1",
+        "op": 254,
+        "operands": null,
+        "transform": {}
+    },
+    "impdep2": {
+        "can_be_wide": false,
+        "mnemonic": "impdep2",
+        "op": 255,
+        "operands": null,
+        "transform": {}
+    },
+    "imul": {
+        "can_be_wide": false,
+        "mnemonic": "imul",
+        "op": 104,
+        "operands": null,
+        "transform": {}
+    },
+    "ineg": {
+        "can_be_wide": false,
+        "mnemonic": "ineg",
+        "op": 116,
+        "operands": null,
+        "transform": {}
+    },
+    "instanceof": {
+        "can_be_wide": false,
+        "mnemonic": "instanceof",
+        "op": 193,
+        "operands": [
+            [
+                "USHORT",
+                "CONSTANT_INDEX"
+            ]
+        ],
+        "transform": {}
+    },
+    "invokedynamic": {
+        "can_be_wide": false,
+        "mnemonic": "invokedynamic",
+        "op": 186,
+        "operands": [
+            [
+                "USHORT",
+                "CONSTANT_INDEX"
+            ],
+            [
+                "UBYTE",
+                "PADDING"
+            ],
+            [
+                "UBYTE",
+                "PADDING"
+            ]
+        ],
+        "transform": {}
+    },
+    "invokeinterface": {
+        "can_be_wide": false,
+        "mnemonic": "invokeinterface",
+        "op": 185,
+        "operands": [
+            [
+                "USHORT",
+                "CONSTANT_INDEX"
+            ],
+            [
+                "UBYTE",
+                "LITERAL"
+            ],
+            [
+                "UBYTE",
+                "PADDING"
+            ]
+        ],
+        "transform": {}
+    },
+    "invokespecial": {
+        "can_be_wide": false,
+        "mnemonic": "invokespecial",
+        "op": 183,
+        "operands": [
+            [
+                "USHORT",
+                "CONSTANT_INDEX"
+            ]
+        ],
+        "transform": {}
+    },
+    "invokestatic": {
+        "can_be_wide": false,
+        "mnemonic": "invokestatic",
+        "op": 184,
+        "operands": [
+            [
+                "USHORT",
+                "CONSTANT_INDEX"
+            ]
+        ],
+        "transform": {}
+    },
+    "invokevirtual": {
+        "can_be_wide": false,
+        "mnemonic": "invokevirtual",
+        "op": 182,
+        "operands": [
+            [
+                "USHORT",
+                "CONSTANT_INDEX"
+            ]
+        ],
+        "transform": {}
+    },
+    "ior": {
+        "can_be_wide": false,
+        "mnemonic": "ior",
+        "op": 128,
+        "operands": null,
+        "transform": {}
+    },
+    "irem": {
+        "can_be_wide": false,
+        "mnemonic": "irem",
+        "op": 112,
+        "operands": null,
+        "transform": {}
+    },
+    "ireturn": {
+        "can_be_wide": false,
+        "mnemonic": "ireturn",
+        "op": 172,
+        "operands": null,
+        "transform": {}
+    },
+    "ishl": {
+        "can_be_wide": false,
+        "mnemonic": "ishl",
+        "op": 120,
+        "operands": null,
+        "transform": {}
+    },
+    "ishr": {
+        "can_be_wide": false,
+        "mnemonic": "ishr",
+        "op": 122,
+        "operands": null,
+        "transform": {}
+    },
+    "istore": {
+        "can_be_wide": true,
+        "mnemonic": "istore",
+        "op": 54,
+        "operands": [
+            [
+                "UBYTE",
+                "LOCAL_INDEX"
+            ]
+        ],
+        "transform": {}
+    },
+    "istore_0": {
+        "can_be_wide": false,
+        "mnemonic": "istore_0",
+        "op": 59,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "istore",
+                "operands": [
+                    0
+                ]
+            }
+        }
+    },
+    "istore_1": {
+        "can_be_wide": false,
+        "mnemonic": "istore_1",
+        "op": 60,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "istore",
+                "operands": [
+                    1
+                ]
+            }
+        }
+    },
+    "istore_2": {
+        "can_be_wide": false,
+        "mnemonic": "istore_2",
+        "op": 61,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "istore",
+                "operands": [
+                    2
+                ]
+            }
+        }
+    },
+    "istore_3": {
+        "can_be_wide": false,
+        "mnemonic": "istore_3",
+        "op": 62,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "istore",
+                "operands": [
+                    3
+                ]
+            }
+        }
+    },
+    "isub": {
+        "can_be_wide": false,
+        "mnemonic": "isub",
+        "op": 100,
+        "operands": null,
+        "transform": {}
+    },
+    "iushr": {
+        "can_be_wide": false,
+        "mnemonic": "iushr",
+        "op": 124,
+        "operands": null,
+        "transform": {}
+    },
+    "ixor": {
+        "can_be_wide": false,
+        "mnemonic": "ixor",
+        "op": 130,
+        "operands": null,
+        "transform": {}
+    },
+    "jsr": {
+        "can_be_wide": false,
+        "mnemonic": "jsr",
+        "op": 168,
+        "operands": [
+            [
+                "SHORT",
+                "BRANCH"
+            ]
+        ],
+        "transform": {}
+    },
+    "jsr_w": {
+        "can_be_wide": false,
+        "mnemonic": "jsr_w",
+        "op": 201,
+        "operands": [
+            [
+                "INTEGER",
+                "BRANCH"
+            ]
+        ],
+        "transform": {}
+    },
+    "l2d": {
+        "can_be_wide": false,
+        "mnemonic": "l2d",
+        "op": 138,
+        "operands": null,
+        "transform": {}
+    },
+    "l2f": {
+        "can_be_wide": false,
+        "mnemonic": "l2f",
+        "op": 137,
+        "operands": null,
+        "transform": {}
+    },
+    "l2i": {
+        "can_be_wide": false,
+        "mnemonic": "l2i",
+        "op": 136,
+        "operands": null,
+        "transform": {}
+    },
+    "ladd": {
+        "can_be_wide": false,
+        "mnemonic": "ladd",
+        "op": 97,
+        "operands": null,
+        "transform": {}
+    },
+    "laload": {
+        "can_be_wide": false,
+        "mnemonic": "laload",
+        "op": 47,
+        "operands": null,
+        "transform": {}
+    },
+    "land": {
+        "can_be_wide": false,
+        "mnemonic": "land",
+        "op": 127,
+        "operands": null,
+        "transform": {}
+    },
+    "lastore": {
+        "can_be_wide": false,
+        "mnemonic": "lastore",
+        "op": 80,
+        "operands": null,
+        "transform": {}
+    },
+    "lcmp": {
+        "can_be_wide": false,
+        "mnemonic": "lcmp",
+        "op": 148,
+        "operands": null,
+        "transform": {}
+    },
+    "lconst_0": {
+        "can_be_wide": false,
+        "mnemonic": "lconst_0",
+        "op": 9,
+        "operands": null,
+        "transform": {}
+    },
+    "lconst_1": {
+        "can_be_wide": false,
+        "mnemonic": "lconst_1",
+        "op": 10,
+        "operands": null,
+        "transform": {}
+    },
+    "ldc": {
+        "can_be_wide": false,
+        "mnemonic": "ldc",
+        "op": 18,
+        "operands": [
+            [
+                "UBYTE",
+                "CONSTANT_INDEX"
+            ]
+        ],
+        "transform": {}
+    },
+    "ldc2_w": {
+        "can_be_wide": false,
+        "mnemonic": "ldc2_w",
+        "op": 20,
+        "operands": [
+            [
+                "USHORT",
+                "CONSTANT_INDEX"
+            ]
+        ],
+        "transform": {}
+    },
+    "ldc_w": {
+        "can_be_wide": false,
+        "mnemonic": "ldc_w",
+        "op": 19,
+        "operands": [
+            [
+                "USHORT",
+                "CONSTANT_INDEX"
+            ]
+        ],
+        "transform": {}
+    },
+    "ldiv": {
+        "can_be_wide": false,
+        "mnemonic": "ldiv",
+        "op": 109,
+        "operands": null,
+        "transform": {}
+    },
+    "lload": {
+        "can_be_wide": true,
+        "mnemonic": "lload",
+        "op": 22,
+        "operands": [
+            [
+                "UBYTE",
+                "LOCAL_INDEX"
+            ]
+        ],
+        "transform": {}
+    },
+    "lload_0": {
+        "can_be_wide": false,
+        "mnemonic": "lload_0",
+        "op": 30,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "lload",
+                "operands": [
+                    0
+                ]
+            }
+        }
+    },
+    "lload_1": {
+        "can_be_wide": false,
+        "mnemonic": "lload_1",
+        "op": 31,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "lload",
+                "operands": [
+                    1
+                ]
+            }
+        }
+    },
+    "lload_2": {
+        "can_be_wide": false,
+        "mnemonic": "lload_2",
+        "op": 32,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "lload",
+                "operands": [
+                    2
+                ]
+            }
+        }
+    },
+    "lload_3": {
+        "can_be_wide": false,
+        "mnemonic": "lload_3",
+        "op": 33,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "lload",
+                "operands": [
+                    3
+                ]
+            }
+        }
+    },
+    "lmul": {
+        "can_be_wide": false,
+        "mnemonic": "lmul",
+        "op": 105,
+        "operands": null,
+        "transform": {}
+    },
+    "lneg": {
+        "can_be_wide": false,
+        "mnemonic": "lneg",
+        "op": 117,
+        "operands": null,
+        "transform": {}
+    },
+    "lookupswitch": {
+        "can_be_wide": false,
+        "mnemonic": "lookupswitch",
+        "op": 171,
+        "operands": null,
+        "transform": {}
+    },
+    "lor": {
+        "can_be_wide": false,
+        "mnemonic": "lor",
+        "op": 129,
+        "operands": null,
+        "transform": {}
+    },
+    "lrem": {
+        "can_be_wide": false,
+        "mnemonic": "lrem",
+        "op": 113,
+        "operands": null,
+        "transform": {}
+    },
+    "lreturn": {
+        "can_be_wide": false,
+        "mnemonic": "lreturn",
+        "op": 173,
+        "operands": null,
+        "transform": {}
+    },
+    "lshl": {
+        "can_be_wide": false,
+        "mnemonic": "lshl",
+        "op": 121,
+        "operands": null,
+        "transform": {}
+    },
+    "lshr": {
+        "can_be_wide": false,
+        "mnemonic": "lshr",
+        "op": 123,
+        "operands": null,
+        "transform": {}
+    },
+    "lstore": {
+        "can_be_wide": true,
+        "mnemonic": "lstore",
+        "op": 55,
+        "operands": [
+            [
+                "UBYTE",
+                "LOCAL_INDEX"
+            ]
+        ],
+        "transform": {}
+    },
+    "lstore_0": {
+        "can_be_wide": false,
+        "mnemonic": "lstore_0",
+        "op": 63,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "lstore",
+                "operands": [
+                    0
+                ]
+            }
+        }
+    },
+    "lstore_1": {
+        "can_be_wide": false,
+        "mnemonic": "lstore_1",
+        "op": 64,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "lstore",
+                "operands": [
+                    1
+                ]
+            }
+        }
+    },
+    "lstore_2": {
+        "can_be_wide": false,
+        "mnemonic": "lstore_2",
+        "op": 65,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "lstore",
+                "operands": [
+                    2
+                ]
+            }
+        }
+    },
+    "lstore_3": {
+        "can_be_wide": false,
+        "mnemonic": "lstore_3",
+        "op": 66,
+        "operands": null,
+        "transform": {
+            "simple_swap": {
+                "op": "lstore",
+                "operands": [
+                    3
+                ]
+            }
+        }
+    },
+    "lsub": {
+        "can_be_wide": false,
+        "mnemonic": "lsub",
+        "op": 101,
+        "operands": null,
+        "transform": {}
+    },
+    "lushr": {
+        "can_be_wide": false,
+        "mnemonic": "lushr",
+        "op": 125,
+        "operands": null,
+        "transform": {}
+    },
+    "lxor": {
+        "can_be_wide": false,
+        "mnemonic": "lxor",
+        "op": 131,
+        "operands": null,
+        "transform": {}
+    },
+    "monitorenter": {
+        "can_be_wide": false,
+        "mnemonic": "monitorenter",
+        "op": 194,
+        "operands": null,
+        "transform": {}
+    },
+    "monitorexit": {
+        "can_be_wide": false,
+        "mnemonic": "monitorexit",
+        "op": 195,
+        "operands": null,
+        "transform": {}
+    },
+    "multianewarray": {
+        "can_be_wide": false,
+        "mnemonic": "multianewarray",
+        "op": 197,
+        "operands": [
+            [
+                "USHORT",
+                "CONSTANT_INDEX"
+            ],
+            [
+                "UBYTE",
+                "LITERAL"
+            ]
+        ],
+        "transform": {}
+    },
+    "new": {
+        "can_be_wide": false,
+        "mnemonic": "new",
+        "op": 187,
+        "operands": [
+            [
+                "USHORT",
+                "CONSTANT_INDEX"
+            ]
+        ],
+        "transform": {}
+    },
+    "newarray": {
+        "can_be_wide": false,
+        "mnemonic": "newarray",
+        "op": 188,
+        "operands": [
+            [
+                "UBYTE",
+                "LITERAL"
+            ]
+        ],
+        "transform": {}
+    },
+    "nop": {
+        "can_be_wide": false,
+        "mnemonic": "nop",
+        "op": 0,
+        "operands": null,
+        "transform": {}
+    },
+    "pop": {
+        "can_be_wide": false,
+        "mnemonic": "pop",
+        "op": 87,
+        "operands": null,
+        "transform": {}
+    },
+    "pop2": {
+        "can_be_wide": false,
+        "mnemonic": "pop2",
+        "op": 88,
+        "operands": null,
+        "transform": {}
+    },
+    "putfield": {
+        "can_be_wide": false,
+        "mnemonic": "putfield",
+        "op": 181,
+        "operands": [
+            [
+                "USHORT",
+                "CONSTANT_INDEX"
+            ]
+        ],
+        "transform": {}
+    },
+    "putstatic": {
+        "can_be_wide": false,
+        "mnemonic": "putstatic",
+        "op": 179,
+        "operands": [
+            [
+                "USHORT",
+                "CONSTANT_INDEX"
+            ]
+        ],
+        "transform": {}
+    },
+    "ret": {
+        "can_be_wide": true,
+        "mnemonic": "ret",
+        "op": 169,
+        "operands": [
+            [
+                "UBYTE",
+                "LOCAL_INDEX"
+            ]
+        ],
+        "transform": {}
+    },
+    "return": {
+        "can_be_wide": false,
+        "mnemonic": "return",
+        "op": 177,
+        "operands": null,
+        "transform": {}
+    },
+    "saload": {
+        "can_be_wide": false,
+        "mnemonic": "saload",
+        "op": 53,
+        "operands": null,
+        "transform": {}
+    },
+    "sastore": {
+        "can_be_wide": false,
+        "mnemonic": "sastore",
+        "op": 86,
+        "operands": null,
+        "transform": {}
+    },
+    "sipush": {
+        "can_be_wide": false,
+        "mnemonic": "sipush",
+        "op": 17,
+        "operands": [
+            [
+                "SHORT",
+                "LITERAL"
+            ]
+        ],
+        "transform": {}
+    },
+    "swap": {
+        "can_be_wide": false,
+        "mnemonic": "swap",
+        "op": 95,
+        "operands": null,
+        "transform": {}
+    },
+    "tableswitch": {
+        "can_be_wide": false,
+        "mnemonic": "tableswitch",
+        "op": 170,
+        "operands": null,
+        "transform": {}
+    },
+    "wide": {
+        "can_be_wide": false,
+        "mnemonic": "wide",
+        "op": 196,
+        "operands": null,
+        "transform": {}
+    }
+}

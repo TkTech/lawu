@@ -1,18 +1,17 @@
-# -*- coding: utf8 -*-
-__all__ = ('FieldTable', 'Field')
-
+from typing import IO, Callable, Iterator, Optional
 from struct import unpack, pack
 from itertools import repeat
 
 from jawa.util.flags import Flags
 from jawa.attribute import AttributeTable
+from jawa.constants import Constant, UTF8
 from jawa.attributes.constant_value import ConstantValueAttribute
 
 
 class Field(object):
     def __init__(self, cf):
         self._cf = cf
-        self._access_flags = Flags('>H', {
+        self.access_flags = Flags('>H', {
             'acc_public': 0x0001,
             'acc_private': 0x0002,
             'acc_protected': 0x0004,
@@ -25,33 +24,24 @@ class Field(object):
         })
         self._name_index = 0
         self._descriptor_index = 0
-        self._attributes = AttributeTable(cf)
+        self.attributes = AttributeTable(cf)
 
     @property
-    def descriptor(self):
+    def descriptor(self) -> UTF8:
         return self._cf.constants[self._descriptor_index]
 
     @property
-    def name(self):
+    def name(self) -> UTF8:
         return self._cf.constants[self._name_index]
 
     @property
-    def access_flags(self):
-        return self._access_flags
-
-    @property
-    def attributes(self):
-        return self._attributes
-
-    @property
-    def value(self):
+    def value(self) -> ConstantValueAttribute:
         """
         A shortcut for the field's ConstantValue attribute, should one exist.
         """
-        constant_value = self.attributes.find_one(name='ConstantValue')
-        return constant_value
+        return self.attributes.find_one(name='ConstantValue')
 
-    def unpack(self, fio):
+    def unpack(self, source: IO):
         """
         Read the Field from the file-like object `fio`.
 
@@ -60,26 +50,26 @@ class Field(object):
             Advanced usage only. You will typically never need to call this
             method as it will be called for you when loading a ClassFile.
 
-        :param fio: Any file-like object providing `read()`
+        :param source: Any file-like object providing `read()`
         """
-        self.access_flags.unpack(fio.read(2))
-        self._name_index, self._descriptor_index = unpack('>HH', fio.read(4))
-        self._attributes.unpack(fio)
+        self.access_flags.unpack(source.read(2))
+        self._name_index, self._descriptor_index = unpack('>HH', source.read(4))
+        self.attributes.unpack(source)
 
-    def pack(self, fout):
+    def pack(self, out: IO):
         """
-        Write the Field to the file-like object `fout`.
+        Write the Field to the file-like object `out`.
 
         .. note::
 
             Advanced usage only. You will typically never need to call this
-            method as it will be calle=d for you when saving a ClassFile.
+            method as it will be called for you when saving a ClassFile.
 
-        :param fout: Any file-like object providing `write()`
+        :param out: Any file-like object providing `write()`
         """
-        fout.write(self.access_flags.pack())
-        fout.write(pack('>HH', self._name_index, self._descriptor_index))
-        self._attributes.pack(fout)
+        out.write(self.access_flags.pack())
+        out.write(pack('>HH', self._name_index, self._descriptor_index))
+        self.attributes.pack(out)
 
 
 class FieldTable(object):
@@ -87,29 +77,42 @@ class FieldTable(object):
         self._cf = cf
         self._table = []
 
-    def append(self, field):
+    def append(self, field: Field):
         self._table.append(field)
 
-    def find_and_remove(self, f):
+    def find_and_remove(self, f: Callable):
         """
         Removes any and all fields for which `f(field)` returns `True`.
         """
         self._table = [fld for fld in self._table if not f(fld)]
 
-    def remove(self, field):
+    def remove(self, field: Field):
         """
         Removes a `Field` from the table by identity.
         """
         self._table = [fld for fld in self._table if fld is not field]
 
-    def create(self, name, descriptor):
+    def create(self, name: str, descriptor: str, value: Constant=None) -> Field:
         """
         Creates a new field from `name` and `descriptor`. For example::
 
-            >>> from jawa import ClassFile
+            >>> from jawa.cf import ClassFile
             >>> cf = ClassFile.create('BeerCounter')
             >>> field = cf.fields.create('BeerCount', 'I')
 
+        To automatically create a static field, pass a value::
+
+            >>> from jawa.cf import ClassFile
+            >>> cf = ClassFile.create('BeerCounter')
+            >>> field = cf.fields.create(
+            ...     'MaxBeer',
+            ...     'I',
+            ...     cf.constants.create_integer(99)
+            ... )
+
+        :param name: Name of the new field.
+        :param descriptor: Type descriptor of the new field.
+        :param value: Optional static value for the field.
         """
         field = Field(self._cf)
         name = self._cf.constants.create_utf8(name)
@@ -117,72 +120,58 @@ class FieldTable(object):
         field._name_index = name.index
         field._descriptor_index = descriptor.index
         field.access_flags.acc_public = True
+
+        if value is not None:
+            field.attributes.create(ConstantValueAttribute, value)
+            field.access_flags.acc_static = True
+
         self.append(field)
-        return field
-
-    def create_static(self, name, descriptor, value):
-        """
-        A shortcut for creating a static field with a
-        :class:`~jawa.attributes.constant_value.ConstantValueAttribute`
-        set to the :class:`~jawa.constants.Constant` `value`. For example,
-        to create a string with the classic "Hello World!"::
-
-            >>> from jawa import ClassFile
-            >>> cf = ClassFile.create('BeerCounter')
-            >>> field = cf.fields.create_static(
-            ...    'HelloWorld',
-            ...    'Ljava/lang/String;',
-            ...    cf.constants.create_string('Hello World!')
-            ... )
-        """
-        field = self.create(name, descriptor)
-        field.attributes.create(ConstantValueAttribute, value)
-        field.access_flags.acc_static = True
         return field
 
     def __iter__(self):
         for field in self._table:
             yield field
 
-    def unpack(self, fio):
+    def unpack(self, source: IO):
         """
-        Read the FieldTable from the file-like object `fio`.
+        Read the FieldTable from the file-like object `source`.
 
         .. note::
 
             Advanced usage only. You will typically never need to call this
             method as it will be called for you when loading a ClassFile.
 
-        :param fio: Any file-like object providing `read()`
+        :param source: Any file-like object providing `read()`
         """
-        field_count = unpack('>H', fio.read(2))[0]
+        field_count = unpack('>H', source.read(2))[0]
         for _ in repeat(None, field_count):
             field = Field(self._cf)
-            field.unpack(fio)
+            field.unpack(source)
             self.append(field)
 
-    def pack(self, fout):
+    def pack(self, out: IO):
         """
-        Write the FieldTable to the file-like object `fout`.
+        Write the FieldTable to the file-like object `out`.
 
         .. note::
 
             Advanced usage only. You will typically never need to call this
-            method as it will be calle=d for you when saving a ClassFile.
+            method as it will be called for you when saving a ClassFile.
 
-        :param fout: Any file-like object providing `write()`
+        :param out: Any file-like object providing `write()`
         """
-        fout.write(pack('>H', len(self)))
+        out.write(pack('>H', len(self)))
         for field in self._table:
-            field.pack(fout)
+            field.pack(out)
 
     def __len__(self):
         return len(self._table)
 
-    def find(self, name=None, type_=None, f=None):
+    def find(self, *, name: str=None, type_: str=None,
+             f: Callable=None) -> Iterator[Field]:
         """
         Iterates over the fields table, yielding each matching method. Calling
-        without any arguments is equivelent to iterating over the table.
+        without any arguments is equivalent to iterating over the table.
 
         :param name: The name of the field(s) to find.
         :param type_: The field descriptor (Ex: 'I')
@@ -201,12 +190,8 @@ class FieldTable(object):
 
             yield field
 
-    def find_one(self, *args, **kwargs):
+    def find_one(self, **kwargs) -> Optional[Field]:
         """
-        Same as ``find()`` but returns only the first result, or `None` if
-        nothing was found.
+        Same as ``find()`` but returns only the first result.
         """
-        try:
-            return next(self.find(*args, **kwargs))
-        except StopIteration:
-            return None
+        return next(self.find(**kwargs), None)

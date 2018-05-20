@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf8 -*-
 """
 An example showing how to create fields on a new class.
 """

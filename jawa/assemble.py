@@ -1,4 +1,3 @@
-# -*- coding: utf8 -*-
 from collections import namedtuple
 
 from jawa.constants import Constant
@@ -6,7 +5,7 @@ from jawa.util.bytecode import (
     Operand,
     OperandTypes,
     Instruction,
-    definition_from_mnemonic
+    opcode_table
 )
 
 
@@ -46,7 +45,7 @@ def assemble(code):
             continue
 
         mnemonic, operands = line[0], line[1:]
-        operand_fmts = definition_from_mnemonic(mnemonic)[1]
+        operand_fmts = opcode_table[mnemonic]['operands']
 
         # We need to coerce each opcodes operands into their
         # final `Operand` form.
@@ -62,7 +61,7 @@ def assemble(code):
                     operand.index
                 ))
             elif isinstance(operand, dict):
-                    # lookupswitch's operand is a dict as
+                # lookupswitch's operand is a dict as
                 # a special usability case.
                 final_operands.append(operand)
             elif isinstance(operand, Label):
@@ -76,10 +75,7 @@ def assemble(code):
                 ))
 
         # Build the final, immutable `Instruction`.
-        final.append(Instruction.from_mnemonic(
-            mnemonic,
-            operands=final_operands
-        ))
+        final.append(Instruction.create(mnemonic, final_operands))
 
     label_pcs = {}
 
@@ -97,7 +93,6 @@ def assemble(code):
     # The third pass, now that we know where each label is we can figure
     # out the offset for each jump.
     current_pc = 0
-    offset = lambda l: Operand(40, label_pcs[l.name] - current_pc)
 
     for ins in final:
         if isinstance(ins, Label):
@@ -108,9 +103,12 @@ def assemble(code):
                 # lookupswitch is a special case
                 for k, v in operand.items():
                     if isinstance(v, Label):
-                        operand[k] = offset(v)
+                        operand[k] = Operand(40, label_pcs[v.name] - current_pc)
             elif isinstance(operand, Label):
-                ins.operands[i] = offset(operand)
+                ins.operands[i] = Operand(
+                    40,
+                    label_pcs[operand.name] - current_pc
+                )
 
         current_pc += ins.size_on_disk(current_pc)
 

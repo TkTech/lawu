@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf8 -*-
 """
 A simple example disassembler.
 """

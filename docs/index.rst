@@ -1,23 +1,10 @@
-.. include:: links.rst
-
 Jawa - JVM ClassFile Library
 ================================
 
-Jawa_ is a pure-python library for examining and disassembling JVM (Java)
-class files.
+Jawa_ is a human-friendly library for assembling, disassembling, and exploring
+JVM class files. It's highly suitable for automation tasks.
 
 .. note:: This documentation is up to date as of |today|.
-
-Getting Jawa
-------------
-
-Jawa_ is now available on pypi. You can install the latest release with:
-
-    pip install jawa
-
-Alternatively, you can install the latest work directly from github:
-
-    pip install git+https://github.com/TkTech/Jawa.git
 
 Why Jawa?
 ---------
@@ -32,32 +19,55 @@ bytecode. For example, Jawa has been used for:
 - Automatic extraction of "private" API keys embedded in Android APKs.
 - Automated reverse engineering of the Minecraft server and client.
 
-Unlike most projects of its kind (like `Krakatau`_) Jawa is also very
-permissively licenced under the MIT licence. You're free to use it in any
-type of project should it be commercial, closed source or open source.
+Jawa is permissively licenced under the MIT licence. You're free to use it in
+any type of project should it be commercial, closed source or open source.
 
 
-Basic Examples
---------------
+Getting Started
+---------------
 
-.. toctree::
-    :maxdepth: 2
+It's recommended to use the :class:`~jawa.classloader.ClassLoader` when working
+with JARs/directories, as it offers a number of conveniences. Here's an example
+of loading each of the classes in the Minecraft_ server.
 
-    examples/index
+.. code-block:: python
 
-Jawa API
+    from jawa.classloader import ClassLoader
+
+    loader = ClassLoader('minecraft_server.jar')
+    for class_path in loader.classes:
+        cf = loader[class_path]
+
+
+Alternatively you can create & load a :class:`~jawa.cf.ClassFile` directly.
+
+.. code-block:: python
+
+    from jawa.cf import ClassFile
+
+    with open('HelloWorld.class') as file_in:
+        cf = ClassFile(file_in)
+
+
+Examples
 --------
 
 .. toctree::
     :maxdepth: 2
 
-    jawa
-    attributes/index
-    util/index
+    examples/hello_world.rst
+    examples/dism.rst
 
+
+Jawa API
+--------
+
+.. toctree::
+    :maxdepth: 3
+
+    jawa
 
 * :ref:`genindex`
+* :ref:`search`
 
-
-.. _to this day: http://wiki.vg
-.. _Krakatau: https://github.com/Storyyeller/Krakatau
+.. include:: links.rst

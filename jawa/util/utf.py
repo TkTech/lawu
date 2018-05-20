@@ -9,7 +9,7 @@ when parsing and writing JVM ClassFiles or object serialization archives.
 """
 
 
-def decode_modified_utf8(s):
+def decode_modified_utf8(s: bytes) -> str:
     """
     Decodes a bytestring containing modified UTF-8 as defined in section
     4.4.7 of the JVM specification.
@@ -49,20 +49,17 @@ def decode_modified_utf8(s):
             ix += 1
             x = 0
         buffer_append(x)
-    return u''.join(map(unichr, buff))
+    return u''.join(chr(b) for b in buff)
 
 
-def encode_modified_utf8(u):
+def encode_modified_utf8(u: str) -> bytearray:
     """
     Encodes a unicode string as modified UTF-8 as defined in section 4.4.7
     of the JVM specification.
 
-    :param u: unicode to be converted.
-    :returns: A decoded bytestring.
+    :param u: unicode string to be converted.
+    :returns: A decoded bytearray.
     """
-    # Trying to encode a non-unicode string will result in some serious
-    # abnormalities.
-    assert(isinstance(u, unicode))
     final_string = bytearray()
 
     for c in [ord(char) for char in u]:
@@ -73,7 +70,7 @@ def encode_modified_utf8(u):
             )
         elif c < 0x7F:
             final_string.append(c)
-        elif c > 0x800 and c < 0xFFFF:
+        elif 0x800 < c < 0xFFFF:
             final_string.extend([
                 (0xE0 | (0x0F & (c >> 12))),
                 (0x80 | (0x3F & (c >> 6))),
