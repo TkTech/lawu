@@ -37,7 +37,7 @@ class StackMapTableAttribute(Attribute):
     """
     .. note::
 
-        Consider this experimental. This is an uncessary 'feature' added
+        Consider this experimental. This is an unnecessary 'feature' added
         in Java6 that even the official JDK has multiple bugs with. Proper
         generation of a StackMapTableAttribute requires a complete class
         hierarchy among other things.

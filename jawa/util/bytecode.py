@@ -1,3 +1,6 @@
+"""
+Utilities for reading & writing JVM method bytecode.
+"""
 import json
 import enum
 import pkgutil
