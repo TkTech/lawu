@@ -24,6 +24,8 @@
 
   
   
+  
+  
 
   
 
@@ -34,24 +36,19 @@
   
 
   
-  
     <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="jawa  documentation" href="../index.html"/>
-        <link rel="next" title="Utility APIs" href="../util/index.html"/>
-        <link rel="prev" title="Core APIs" href="../jawa.html"/> 
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -88,18 +85,15 @@
           
             
             
-                <ul>
-<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/hello_world.html">Generating Classes From Scratch - Hello World!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/dism.html">Disassembly - A Simple javap Clone</a></li>
 </ul>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../jawa.html">Core APIs</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Implemented Attributes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-jawa.attributes.code">jawa.attributes.code module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-jawa.attributes.constant_value">jawa.attributes.constant_value module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-jawa.attributes.source_file">jawa.attributes.source_file module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../util/index.html">Utility APIs</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../jawa.html">jawa package</a></li>
 </ul>
 
             
@@ -111,34 +105,54 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">jawa</a>
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">jawa</a>
+        
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
-      
-    <li>Implemented Attributes</li>
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Implemented Attributes</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="../_sources/attributes/index.txt" rel="nofollow"> View page source</a>
+            
+            <a href="../_sources/attributes/index.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -148,20 +162,20 @@
 <h1>Implemented Attributes<a class="headerlink" href="#implemented-attributes" title="Permalink to this headline">¶</a></h1>
 <p>Standard attributes are defined in <a class="reference external" href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7">Section 4.7 - Attributes</a>. In addition to
 these attributes, various compilers, debuggers, obfuscators, and other tools
-may insert additional unknown attributes into a <a class="reference internal" href="../jawa.html#jawa.cf.ClassFile" title="jawa.cf.ClassFile"><code class="xref py py-class docutils literal"><span class="pre">ClassFile</span></code></a>.</p>
+may insert additional unknown attributes into a <a class="reference internal" href="../jawa.cf.html#jawa.cf.ClassFile" title="jawa.cf.ClassFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClassFile</span></code></a>.</p>
 <p>Not all standard attributes are currently implemented. When an unknown
-attribute is encountered, an <a class="reference internal" href="../jawa.html#jawa.attribute.UnknownAttribute" title="jawa.attribute.UnknownAttribute"><code class="xref py py-class docutils literal"><span class="pre">UnknownAttribute</span></code></a> object
+attribute is encountered, an <a class="reference internal" href="../jawa.attribute.html#jawa.attribute.UnknownAttribute" title="jawa.attribute.UnknownAttribute"><code class="xref py py-class docutils literal notranslate"><span class="pre">UnknownAttribute</span></code></a> object
 is created instead.</p>
 <div class="section" id="module-jawa.attributes.code">
 <span id="jawa-attributes-code-module"></span><h2>jawa.attributes.code module<a class="headerlink" href="#module-jawa.attributes.code" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="jawa.attributes.code.CodeAttribute">
 <em class="property">class </em><code class="descclassname">jawa.attributes.code.</code><code class="descname">CodeAttribute</code><span class="sig-paren">(</span><em>table</em>, <em>name_index=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/attributes/code.html#CodeAttribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attributes.code.CodeAttribute" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../jawa.html#jawa.attribute.Attribute" title="jawa.attribute.Attribute"><code class="xref py py-class docutils literal"><span class="pre">jawa.attribute.Attribute</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="../jawa.attribute.html#jawa.attribute.Attribute" title="jawa.attribute.Attribute"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.attribute.Attribute</span></code></a></p>
 <p>A <cite>CodeAttribute</cite> contains the executable bytecode of a single method.</p>
-<p>As a quick example, lets make a &#8220;HelloWorld&#8221; class with a single method
-that simply returns when it&#8217;s called:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">jawa</span> <span class="kn">import</span> <span class="n">ClassFile</span>
+<p>As a quick example, lets make a “HelloWorld” class with a single method
+that simply returns when it’s called:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">jawa</span> <span class="kn">import</span> <span class="n">ClassFile</span>
 <span class="kn">from</span> <span class="nn">jawa.util.bytecode</span> <span class="kn">import</span> <span class="n">Instruction</span>
 
 <span class="n">cf</span> <span class="o">=</span> <span class="n">ClassFile</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;HelloWorld&#39;</span><span class="p">)</span>
@@ -186,59 +200,34 @@ that simply returns when it&#8217;s called:</p>
     <span class="n">cf</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Not all <a class="reference internal" href="../jawa.html#jawa.methods.Method" title="jawa.methods.Method"><code class="xref py py-class docutils literal"><span class="pre">Method</span></code></a> objects will have an associated
-<cite>CodeAttribute</cite> - methods that are flagged as <cite>acc_native</cite> or
-<cite>acc_abstract</cite> will never have one.</p>
-</div>
+<dl class="attribute">
+<dt id="jawa.attributes.code.CodeAttribute.ADDED_IN">
+<code class="descname">ADDED_IN</code><em class="property"> = '1.0.2'</em><a class="headerlink" href="#jawa.attributes.code.CodeAttribute.ADDED_IN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.attributes.code.CodeAttribute.MINIMUM_CLASS_VERSION">
+<code class="descname">MINIMUM_CLASS_VERSION</code><em class="property"> = (45, 3)</em><a class="headerlink" href="#jawa.attributes.code.CodeAttribute.MINIMUM_CLASS_VERSION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="jawa.attributes.code.CodeAttribute.assemble">
 <code class="descname">assemble</code><span class="sig-paren">(</span><em>code</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/attributes/code.html#CodeAttribute.assemble"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attributes.code.CodeAttribute.assemble" title="Permalink to this definition">¶</a></dt>
-<dd><p>Assembles an iterable of <a class="reference internal" href="../util/index.html#jawa.util.bytecode.Instruction" title="jawa.util.bytecode.Instruction"><code class="xref py py-class docutils literal"><span class="pre">Instruction</span></code></a>
-objects into a method&#8217;s code body.</p>
+<dd><p>Assembles an iterable of <a class="reference internal" href="../util/index.html#jawa.util.bytecode.Instruction" title="jawa.util.bytecode.Instruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">Instruction</span></code></a>
+objects into a method’s code body.</p>
 </dd></dl>
-
-<dl class="attribute">
-<dt id="jawa.attributes.code.CodeAttribute.attributes">
-<code class="descname">attributes</code><a class="headerlink" href="#jawa.attributes.code.CodeAttribute.attributes" title="Permalink to this definition">¶</a></dt>
-<dd><p>An <a class="reference internal" href="../jawa.html#jawa.attribute.AttributeTable" title="jawa.attribute.AttributeTable"><code class="xref py py-class docutils literal"><span class="pre">AttributeTable</span></code></a> containing all of the
-attributes associated with this <cite>CodeAttribute</cite>.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="jawa.attributes.code.CodeAttribute.code">
-<code class="descname">code</code><a class="headerlink" href="#jawa.attributes.code.CodeAttribute.code" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="method">
 <dt id="jawa.attributes.code.CodeAttribute.disassemble">
-<code class="descname">disassemble</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/attributes/code.html#CodeAttribute.disassemble"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attributes.code.CodeAttribute.disassemble" title="Permalink to this definition">¶</a></dt>
+<code class="descname">disassemble</code><span class="sig-paren">(</span><em>*</em>, <em>transforms=None</em><span class="sig-paren">)</span> &#x2192; Iterator[jawa.util.bytecode.Instruction]<a class="reference internal" href="../_modules/jawa/attributes/code.html#CodeAttribute.disassemble"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attributes.code.CodeAttribute.disassemble" title="Permalink to this definition">¶</a></dt>
 <dd><p>Disassembles this method, yielding an iterable of
-<a class="reference internal" href="../util/index.html#jawa.util.bytecode.Instruction" title="jawa.util.bytecode.Instruction"><code class="xref py py-class docutils literal"><span class="pre">Instruction</span></code></a> objects.</p>
+<a class="reference internal" href="../util/index.html#jawa.util.bytecode.Instruction" title="jawa.util.bytecode.Instruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">Instruction</span></code></a> objects.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="jawa.attributes.code.CodeAttribute.exception_table">
-<code class="descname">exception_table</code><a class="headerlink" href="#jawa.attributes.code.CodeAttribute.exception_table" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="jawa.attributes.code.CodeAttribute.info">
-<code class="descname">info</code><a class="headerlink" href="#jawa.attributes.code.CodeAttribute.info" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="jawa.attributes.code.CodeAttribute.pack">
+<code class="descname">pack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/attributes/code.html#CodeAttribute.pack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attributes.code.CodeAttribute.pack" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <cite>CodeAttribute</cite> in packed byte string form.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="jawa.attributes.code.CodeAttribute.max_locals">
-<code class="descname">max_locals</code><a class="headerlink" href="#jawa.attributes.code.CodeAttribute.max_locals" title="Permalink to this definition">¶</a></dt>
-<dd><p>The maximum number of locals.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="jawa.attributes.code.CodeAttribute.max_stack">
-<code class="descname">max_stack</code><a class="headerlink" href="#jawa.attributes.code.CodeAttribute.max_stack" title="Permalink to this definition">¶</a></dt>
-<dd><p>The maximum size of the stack.</p>
 </dd></dl>
 
 <dl class="method">
@@ -254,7 +243,7 @@ method as it will be called for you when loading a ClassFile.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>info</strong> &#8211; A byte string containing an unparsed CodeAttribute.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>info</strong> – A byte string containing an unparsed CodeAttribute.</td>
 </tr>
 </tbody>
 </table>
@@ -265,7 +254,7 @@ method as it will be called for you when loading a ClassFile.</p>
 <dl class="class">
 <dt id="jawa.attributes.code.CodeException">
 <em class="property">class </em><code class="descclassname">jawa.attributes.code.</code><code class="descname">CodeException</code><span class="sig-paren">(</span><em>start_pc</em>, <em>end_pc</em>, <em>handler_pc</em>, <em>catch_type</em><span class="sig-paren">)</span><a class="headerlink" href="#jawa.attributes.code.CodeException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
 <dl class="attribute">
 <dt id="jawa.attributes.code.CodeException.catch_type">
 <code class="descname">catch_type</code><a class="headerlink" href="#jawa.attributes.code.CodeException.catch_type" title="Permalink to this definition">¶</a></dt>
@@ -298,21 +287,33 @@ method as it will be called for you when loading a ClassFile.</p>
 <dl class="class">
 <dt id="jawa.attributes.constant_value.ConstantValueAttribute">
 <em class="property">class </em><code class="descclassname">jawa.attributes.constant_value.</code><code class="descname">ConstantValueAttribute</code><span class="sig-paren">(</span><em>table</em>, <em>value=None</em>, <em>name_index=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/attributes/constant_value.html#ConstantValueAttribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attributes.constant_value.ConstantValueAttribute" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../jawa.html#jawa.attribute.Attribute" title="jawa.attribute.Attribute"><code class="xref py py-class docutils literal"><span class="pre">jawa.attribute.Attribute</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="../jawa.attribute.html#jawa.attribute.Attribute" title="jawa.attribute.Attribute"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.attribute.Attribute</span></code></a></p>
 <dl class="attribute">
-<dt id="jawa.attributes.constant_value.ConstantValueAttribute.constantvalue">
-<code class="descname">constantvalue</code><a class="headerlink" href="#jawa.attributes.constant_value.ConstantValueAttribute.constantvalue" title="Permalink to this definition">¶</a></dt>
+<dt id="jawa.attributes.constant_value.ConstantValueAttribute.ADDED_IN">
+<code class="descname">ADDED_IN</code><em class="property"> = '1.0.2'</em><a class="headerlink" href="#jawa.attributes.constant_value.ConstantValueAttribute.ADDED_IN" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="jawa.attributes.constant_value.ConstantValueAttribute.info">
-<code class="descname">info</code><a class="headerlink" href="#jawa.attributes.constant_value.ConstantValueAttribute.info" title="Permalink to this definition">¶</a></dt>
+<dt id="jawa.attributes.constant_value.ConstantValueAttribute.MINIMUM_CLASS_VERSION">
+<code class="descname">MINIMUM_CLASS_VERSION</code><em class="property"> = (45, 3)</em><a class="headerlink" href="#jawa.attributes.constant_value.ConstantValueAttribute.MINIMUM_CLASS_VERSION" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.attributes.constant_value.ConstantValueAttribute.constant_value">
+<code class="descname">constant_value</code><a class="headerlink" href="#jawa.attributes.constant_value.ConstantValueAttribute.constant_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jawa.attributes.constant_value.ConstantValueAttribute.pack">
+<code class="descname">pack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/attributes/constant_value.html#ConstantValueAttribute.pack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attributes.constant_value.ConstantValueAttribute.pack" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute packed into its on-disk representation.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="jawa.attributes.constant_value.ConstantValueAttribute.unpack">
 <code class="descname">unpack</code><span class="sig-paren">(</span><em>info</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/attributes/constant_value.html#ConstantValueAttribute.unpack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attributes.constant_value.ConstantValueAttribute.unpack" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Parses an instance of this attribute from the blob <cite>info</cite>.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -321,22 +322,34 @@ method as it will be called for you when loading a ClassFile.</p>
 <span id="jawa-attributes-source-file-module"></span><h2>jawa.attributes.source_file module<a class="headerlink" href="#module-jawa.attributes.source_file" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="jawa.attributes.source_file.SourceFileAttribute">
-<em class="property">class </em><code class="descclassname">jawa.attributes.source_file.</code><code class="descname">SourceFileAttribute</code><span class="sig-paren">(</span><em>table</em>, <em>sourcefile=None</em>, <em>name_index=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/attributes/source_file.html#SourceFileAttribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attributes.source_file.SourceFileAttribute" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../jawa.html#jawa.attribute.Attribute" title="jawa.attribute.Attribute"><code class="xref py py-class docutils literal"><span class="pre">jawa.attribute.Attribute</span></code></a></p>
+<em class="property">class </em><code class="descclassname">jawa.attributes.source_file.</code><code class="descname">SourceFileAttribute</code><span class="sig-paren">(</span><em>table</em>, <em>name_index=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/attributes/source_file.html#SourceFileAttribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attributes.source_file.SourceFileAttribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../jawa.attribute.html#jawa.attribute.Attribute" title="jawa.attribute.Attribute"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.attribute.Attribute</span></code></a></p>
 <dl class="attribute">
-<dt id="jawa.attributes.source_file.SourceFileAttribute.info">
-<code class="descname">info</code><a class="headerlink" href="#jawa.attributes.source_file.SourceFileAttribute.info" title="Permalink to this definition">¶</a></dt>
+<dt id="jawa.attributes.source_file.SourceFileAttribute.ADDED_IN">
+<code class="descname">ADDED_IN</code><em class="property"> = '1.0.2'</em><a class="headerlink" href="#jawa.attributes.source_file.SourceFileAttribute.ADDED_IN" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="jawa.attributes.source_file.SourceFileAttribute.sourcefile">
-<code class="descname">sourcefile</code><a class="headerlink" href="#jawa.attributes.source_file.SourceFileAttribute.sourcefile" title="Permalink to this definition">¶</a></dt>
+<dt id="jawa.attributes.source_file.SourceFileAttribute.MINIMUM_CLASS_VERSION">
+<code class="descname">MINIMUM_CLASS_VERSION</code><em class="property"> = (45, 3)</em><a class="headerlink" href="#jawa.attributes.source_file.SourceFileAttribute.MINIMUM_CLASS_VERSION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jawa.attributes.source_file.SourceFileAttribute.pack">
+<code class="descname">pack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/attributes/source_file.html#SourceFileAttribute.pack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attributes.source_file.SourceFileAttribute.pack" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute packed into its on-disk representation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.attributes.source_file.SourceFileAttribute.source_file">
+<code class="descname">source_file</code><a class="headerlink" href="#jawa.attributes.source_file.SourceFileAttribute.source_file" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="jawa.attributes.source_file.SourceFileAttribute.unpack">
 <code class="descname">unpack</code><span class="sig-paren">(</span><em>info</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/attributes/source_file.html#SourceFileAttribute.unpack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attributes.source_file.SourceFileAttribute.unpack" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Parses an instance of this attribute from the blob <cite>info</cite>.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -345,17 +358,9 @@ method as it will be called for you when loading a ClassFile.</p>
 
 
            </div>
+           
           </div>
           <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="../util/index.html" class="btn btn-neutral float-right" title="Utility APIs" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="../jawa.html" class="btn btn-neutral" title="Core APIs" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-    </div>
   
 
   <hr/>
@@ -366,7 +371,7 @@ method as it will be called for you when loading a ClassFile.</p>
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -385,9 +390,11 @@ method as it will be called for you when loading a ClassFile.</p>
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
             VERSION:'',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -401,14 +408,11 @@ method as it will be called for you when loading a ClassFile.</p>
     <script type="text/javascript" src="../_static/js/theme.js"></script>
   
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

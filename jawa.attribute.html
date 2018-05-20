@@ -1,0 +1,396 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-11145163-14']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>jawa.attribute module &mdash; jawa  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="jawa.cf module" href="jawa.cf.html" />
+    <link rel="prev" title="jawa.assemble module" href="jawa.assemble.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> jawa
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/hello_world.html">Generating Classes From Scratch - Hello World!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/dism.html">Disassembly - A Simple javap Clone</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="jawa.html">jawa package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="jawa.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="jawa.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="jawa.assemble.html">jawa.assemble module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">jawa.attribute module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.cf.html">jawa.cf module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.classloader.html">jawa.classloader module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.constants.html">jawa.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.fields.html">jawa.fields module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.methods.html">jawa.methods module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.transforms.html">jawa.transforms module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">jawa</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="jawa.html">jawa package</a> &raquo;</li>
+        
+      <li>jawa.attribute module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/jawa.attribute.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-jawa.attribute">
+<span id="jawa-attribute-module"></span><h1>jawa.attribute module<a class="headerlink" href="#module-jawa.attribute" title="Permalink to this headline">¶</a></h1>
+<dl class="data">
+<dt id="jawa.attribute.ATTRIBUTE_CLASSES">
+<code class="descclassname">jawa.attribute.</code><code class="descname">ATTRIBUTE_CLASSES</code><em class="property"> = {'BootstrapMethods': &lt;class 'jawa.attributes.bootstrap.BootstrapMethodsAttribute'&gt;, 'Code': &lt;class 'jawa.attributes.code.CodeAttribute'&gt;, 'ConstantValue': &lt;class 'jawa.attributes.constant_value.ConstantValueAttribute'&gt;, 'Deprecated': &lt;class 'jawa.attributes.deprecated.DeprecatedAttribute'&gt;, 'EnclosingMethod': &lt;class 'jawa.attributes.enclosing_method.EnclosingMethodAttribute'&gt;, 'Exceptions': &lt;class 'jawa.attributes.exceptions.ExceptionsAttribute'&gt;, 'InnerClasses': &lt;class 'jawa.attributes.inner_classes.InnerClassesAttribute'&gt;, 'LineNumberTable': &lt;class 'jawa.attributes.line_number_table.LineNumberTableAttribute'&gt;, 'LocalVariableTable': &lt;class 'jawa.attributes.local_variable.LocalVariableTableAttribute'&gt;, 'LocalVariableTypeTable': &lt;class 'jawa.attributes.local_variable_type.LocalVariableTypeTableAttribute'&gt;, 'Signature': &lt;class 'jawa.attributes.signature.SignatureAttribute'&gt;, 'SourceFile': &lt;class 'jawa.attributes.source_file.SourceFileAttribute'&gt;, 'StackMapTable': &lt;class 'jawa.attributes.stack_map_table.StackMapTableAttribute'&gt;, 'Synthetic': &lt;class 'jawa.attributes.synthetic.SyntheticAttribute'&gt;}</em><a class="headerlink" href="#jawa.attribute.ATTRIBUTE_CLASSES" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary of known attribute subclasses at the time this module
+was loaded.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.attribute.Attribute">
+<em class="property">class </em><code class="descclassname">jawa.attribute.</code><code class="descname">Attribute</code><span class="sig-paren">(</span><em>parent: jawa.attribute.AttributeTable</em>, <em>name_index: int</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/attribute.html#Attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attribute.Attribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="jawa.attribute.Attribute.ADDED_IN">
+<code class="descname">ADDED_IN</code><em class="property"> = None</em><a class="headerlink" href="#jawa.attribute.Attribute.ADDED_IN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.attribute.Attribute.MINIMUM_CLASS_VERSION">
+<code class="descname">MINIMUM_CLASS_VERSION</code><em class="property"> = None</em><a class="headerlink" href="#jawa.attribute.Attribute.MINIMUM_CLASS_VERSION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.attribute.Attribute.cf">
+<code class="descname">cf</code><a class="headerlink" href="#jawa.attribute.Attribute.cf" title="Permalink to this definition">¶</a></dt>
+<dd><p>The ClassFile that owns this attribute, if any.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.attribute.Attribute.name">
+<code class="descname">name</code><a class="headerlink" href="#jawa.attribute.Attribute.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of this attribute.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.attribute.Attribute.pack">
+<code class="descname">pack</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bytes<a class="reference internal" href="_modules/jawa/attribute.html#Attribute.pack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attribute.Attribute.pack" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute packed into its on-disk representation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.attribute.Attribute.unpack">
+<code class="descname">unpack</code><span class="sig-paren">(</span><em>info: Union[bytes, jawa.util.stream.BufferStreamReader]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/attribute.html#Attribute.unpack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attribute.Attribute.unpack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses an instance of this attribute from the blob <cite>info</cite>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.attribute.AttributeTable">
+<em class="property">class </em><code class="descclassname">jawa.attribute.</code><code class="descname">AttributeTable</code><span class="sig-paren">(</span><em>cf</em>, <em>parent: jawa.attribute.Attribute = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/attribute.html#AttributeTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attribute.AttributeTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="jawa.attribute.AttributeTable.cf">
+<code class="descname">cf</code><em class="property"> = None</em><a class="headerlink" href="#jawa.attribute.AttributeTable.cf" title="Permalink to this definition">¶</a></dt>
+<dd><p>The ClassFile that ultimately owns this AttributeTable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.attribute.AttributeTable.create">
+<code class="descname">create</code><span class="sig-paren">(</span><em>type_</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; Any<a class="reference internal" href="_modules/jawa/attribute.html#AttributeTable.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attribute.AttributeTable.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new attribute of <cite>type_</cite>, appending it to the attribute
+table and returning it.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.attribute.AttributeTable.find">
+<code class="descname">find</code><span class="sig-paren">(</span><em>*</em>, <em>name: str = None</em>, <em>f: Callable = None</em><span class="sig-paren">)</span> &#x2192; Iterator[Any]<a class="reference internal" href="_modules/jawa/attribute.html#AttributeTable.find"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attribute.AttributeTable.find" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jawa.attribute.AttributeTable.find_one">
+<code class="descname">find_one</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span> &#x2192; Any<a class="reference internal" href="_modules/jawa/attribute.html#AttributeTable.find_one"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attribute.AttributeTable.find_one" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <code class="docutils literal notranslate"><span class="pre">find()</span></code> but returns only the first result.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.attribute.AttributeTable.pack">
+<code class="descname">pack</code><span class="sig-paren">(</span><em>out: IO</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/attribute.html#AttributeTable.pack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attribute.AttributeTable.pack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the AttributeTable to the file-like object <cite>out</cite>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Advanced usage only. You will typically never need to call this
+method as it will be called for you when saving a ClassFile.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>out</strong> – Any file-like object providing <cite>write()</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.attribute.AttributeTable.parent">
+<code class="descname">parent</code><em class="property"> = None</em><a class="headerlink" href="#jawa.attribute.AttributeTable.parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>The parent Attribute, if one exists.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.attribute.AttributeTable.unpack">
+<code class="descname">unpack</code><span class="sig-paren">(</span><em>source: IO</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/attribute.html#AttributeTable.unpack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attribute.AttributeTable.unpack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the ConstantPool from the file-like object <cite>source</cite>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Advanced usage only. You will typically never need to call this
+method as it will be called for you when loading a ClassFile.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>source</strong> – Any file-like object providing <cite>read()</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.attribute.UnknownAttribute">
+<em class="property">class </em><code class="descclassname">jawa.attribute.</code><code class="descname">UnknownAttribute</code><span class="sig-paren">(</span><em>parent: jawa.attribute.AttributeTable</em>, <em>name_index: int</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/attribute.html#UnknownAttribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attribute.UnknownAttribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.attribute.Attribute" title="jawa.attribute.Attribute"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.attribute.Attribute</span></code></a></p>
+<dl class="method">
+<dt id="jawa.attribute.UnknownAttribute.pack">
+<code class="descname">pack</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bytes<a class="reference internal" href="_modules/jawa/attribute.html#UnknownAttribute.pack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attribute.UnknownAttribute.pack" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute packed into its on-disk representation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.attribute.UnknownAttribute.unpack">
+<code class="descname">unpack</code><span class="sig-paren">(</span><em>info: Union[bytes, jawa.util.stream.BufferStreamReader]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/attribute.html#UnknownAttribute.unpack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attribute.UnknownAttribute.unpack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses an instance of this attribute from the blob <cite>info</cite>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="jawa.attribute.get_attribute_classes">
+<code class="descclassname">jawa.attribute.</code><code class="descname">get_attribute_classes</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Dict[str, jawa.attribute.Attribute]<a class="reference internal" href="_modules/jawa/attribute.html#get_attribute_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attribute.get_attribute_classes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lookup all builtin Attribute subclasses, load them, and return a dict</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="jawa.cf.html" class="btn btn-neutral float-right" title="jawa.cf module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="jawa.assemble.html" class="btn btn-neutral" title="jawa.assemble module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2012, Author.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

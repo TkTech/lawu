@@ -1,0 +1,252 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-11145163-14']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>jawa.attributes.enclosing_method module &mdash; jawa  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> jawa
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/hello_world.html">Generating Classes From Scratch - Hello World!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/dism.html">Disassembly - A Simple javap Clone</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="jawa.html">jawa package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">jawa</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>jawa.attributes.enclosing_method module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/jawa.attributes.enclosing_method.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-jawa.attributes.enclosing_method">
+<span id="jawa-attributes-enclosing-method-module"></span><h1>jawa.attributes.enclosing_method module<a class="headerlink" href="#module-jawa.attributes.enclosing_method" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="jawa.attributes.enclosing_method.EnclosingMethodAttribute">
+<em class="property">class </em><code class="descclassname">jawa.attributes.enclosing_method.</code><code class="descname">EnclosingMethodAttribute</code><span class="sig-paren">(</span><em>table</em>, <em>name_index=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/attributes/enclosing_method.html#EnclosingMethodAttribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attributes.enclosing_method.EnclosingMethodAttribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="jawa.attribute.html#jawa.attribute.Attribute" title="jawa.attribute.Attribute"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.attribute.Attribute</span></code></a></p>
+<dl class="attribute">
+<dt id="jawa.attributes.enclosing_method.EnclosingMethodAttribute.ADDED_IN">
+<code class="descname">ADDED_IN</code><em class="property"> = '5.0.0'</em><a class="headerlink" href="#jawa.attributes.enclosing_method.EnclosingMethodAttribute.ADDED_IN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.attributes.enclosing_method.EnclosingMethodAttribute.MINIMUM_CLASS_VERSION">
+<code class="descname">MINIMUM_CLASS_VERSION</code><em class="property"> = (49, 0)</em><a class="headerlink" href="#jawa.attributes.enclosing_method.EnclosingMethodAttribute.MINIMUM_CLASS_VERSION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jawa.attributes.enclosing_method.EnclosingMethodAttribute.pack">
+<code class="descname">pack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/attributes/enclosing_method.html#EnclosingMethodAttribute.pack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attributes.enclosing_method.EnclosingMethodAttribute.pack" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute packed into its on-disk representation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.attributes.enclosing_method.EnclosingMethodAttribute.unpack">
+<code class="descname">unpack</code><span class="sig-paren">(</span><em>info</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/attributes/enclosing_method.html#EnclosingMethodAttribute.unpack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attributes.enclosing_method.EnclosingMethodAttribute.unpack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses an instance of this attribute from the blob <cite>info</cite>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2012, Author.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

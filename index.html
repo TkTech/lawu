@@ -24,6 +24,8 @@
 
   
   
+  
+  
 
   
 
@@ -34,23 +36,20 @@
   
 
   
-  
     <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="jawa  documentation" href="#"/>
-        <link rel="next" title="Examples" href="examples/index.html"/> 
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Generating Classes From Scratch - Hello World!" href="examples/hello_world.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -87,13 +86,15 @@
           
             
             
-                <ul>
-<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples</a></li>
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/hello_world.html">Generating Classes From Scratch - Hello World!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/dism.html">Disassembly - A Simple javap Clone</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="jawa.html">Core APIs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="attributes/index.html">Implemented Attributes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="util/index.html">Utility APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jawa.html">jawa package</a></li>
 </ul>
 
             
@@ -105,34 +106,54 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="#">jawa</a>
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">jawa</a>
+        
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="#">Docs</a> &raquo;</li>
-      
-    <li>Jawa - JVM ClassFile Library</li>
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>Jawa - JVM ClassFile Library</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="_sources/index.txt" rel="nofollow"> View page source</a>
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -140,46 +161,53 @@
             
   <div class="section" id="jawa-jvm-classfile-library">
 <h1>Jawa - JVM ClassFile Library<a class="headerlink" href="#jawa-jvm-classfile-library" title="Permalink to this headline">¶</a></h1>
-<p><a class="reference external" href="http://github.com/TkTech/Jawa">Jawa</a> is a pure-python library for examining and disassembling JVM (Java)
-class files.</p>
+<p><a class="reference external" href="http://github.com/TkTech/Jawa">Jawa</a> is a human-friendly library for assembling, disassembling, and exploring
+JVM class files. It’s highly suitable for automation tasks.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">This documentation is up to date as of Jul 26, 2016.</p>
-</div>
-<div class="section" id="getting-jawa">
-<h2>Getting Jawa<a class="headerlink" href="#getting-jawa" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="http://github.com/TkTech/Jawa">Jawa</a> is now available on pypi. You can install the latest release with:</p>
-<blockquote>
-<div>pip install jawa</div></blockquote>
-<p>Alternatively, you can install the latest work directly from github:</p>
-<blockquote>
-<div>pip install git+https://github.com/TkTech/Jawa.git</div></blockquote>
+<p class="last">This documentation is up to date as of May 20, 2018.</p>
 </div>
 <div class="section" id="why-jawa">
 <h2>Why Jawa?<a class="headerlink" href="#why-jawa" title="Permalink to this headline">¶</a></h2>
 <p>Jawa is intended to be used very differently from most projects similar to it.
 Instead of trying to produce a human-readable disassembly or nearly-compilable
-Java, it&#8217;s intended for people that want to dive into or automate work on JVM
+Java, it’s intended for people that want to dive into or automate work on JVM
 bytecode. For example, Jawa has been used for:</p>
 <ul class="simple">
 <li>The automatic verification of community-uploaded plugins</li>
 <li>Analysis and analytics of public Android APKs (thousands at a time)</li>
-<li>Automatic extraction of &#8220;private&#8221; API keys embedded in Android APKs.</li>
+<li>Automatic extraction of “private” API keys embedded in Android APKs.</li>
 <li>Automated reverse engineering of the Minecraft server and client.</li>
 </ul>
-<p>Unlike most projects of its kind (like <a class="reference external" href="https://github.com/Storyyeller/Krakatau">Krakatau</a>) Jawa is also very
-permissively licenced under the MIT licence. You&#8217;re free to use it in any
-type of project should it be commercial, closed source or open source.</p>
+<p>Jawa is permissively licenced under the MIT licence. You’re free to use it in
+any type of project should it be commercial, closed source or open source.</p>
 </div>
-<div class="section" id="basic-examples">
-<h2>Basic Examples<a class="headerlink" href="#basic-examples" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>It’s recommended to use the <a class="reference internal" href="jawa.classloader.html#jawa.classloader.ClassLoader" title="jawa.classloader.ClassLoader"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClassLoader</span></code></a> when working
+with JARs/directories, as it offers a number of conveniences. Here’s an example
+of loading each of the classes in the <a class="reference external" href="http://minecraft.net">Minecraft</a> server.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">jawa.classloader</span> <span class="kn">import</span> <span class="n">ClassLoader</span>
+
+<span class="n">loader</span> <span class="o">=</span> <span class="n">ClassLoader</span><span class="p">(</span><span class="s1">&#39;minecraft_server.jar&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">class_path</span> <span class="ow">in</span> <span class="n">loader</span><span class="o">.</span><span class="n">classes</span><span class="p">:</span>
+    <span class="n">cf</span> <span class="o">=</span> <span class="n">loader</span><span class="p">[</span><span class="n">class_path</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Alternatively you can create &amp; load a <a class="reference internal" href="jawa.cf.html#jawa.cf.ClassFile" title="jawa.cf.ClassFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClassFile</span></code></a> directly.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">jawa.cf</span> <span class="kn">import</span> <span class="n">ClassFile</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;HelloWorld.class&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_in</span><span class="p">:</span>
+    <span class="n">cf</span> <span class="o">=</span> <span class="n">ClassFile</span><span class="p">(</span><span class="n">file_in</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples/hello_world.html">Generating Classes From Scratch - Hello World!</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/dism.html">Disassembly - A Simple javap Clone</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/hello_world.html">Generating Classes From Scratch - Hello World!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/dism.html">Disassembly - A Simple javap Clone</a></li>
 </ul>
 </div>
 </div>
@@ -187,44 +215,44 @@ type of project should it be commercial, closed source or open source.</p>
 <h2>Jawa API<a class="headerlink" href="#jawa-api" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="jawa.html">Core APIs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="jawa.html#module-jawa.cf">jawa.cf module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jawa.html#module-jawa.assemble">jawa.assemble module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jawa.html#module-jawa.attribute">jawa.attribute module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jawa.html#module-jawa.constants">jawa.constants module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jawa.html#module-jawa.fields">jawa.fields module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jawa.html#module-jawa.methods">jawa.methods module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jawa.html">jawa package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="jawa.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="jawa.attributes.html">jawa.attributes package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.cli.html">jawa.cli package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.util.html">jawa.util package</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="attributes/index.html">Implemented Attributes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="attributes/index.html#module-jawa.attributes.code">jawa.attributes.code module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="attributes/index.html#module-jawa.attributes.constant_value">jawa.attributes.constant_value module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="attributes/index.html#module-jawa.attributes.source_file">jawa.attributes.source_file module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jawa.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="jawa.assemble.html">jawa.assemble module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.attribute.html">jawa.attribute module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.cf.html">jawa.cf module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.classloader.html">jawa.classloader module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.constants.html">jawa.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.fields.html">jawa.fields module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.methods.html">jawa.methods module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.transforms.html">jawa.transforms module</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="util/index.html">Utility APIs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="util/index.html#module-jawa.util.bytecode">jawa.util.bytecode module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="util/index.html#module-jawa.util.descriptor">jawa.util.descriptor module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="util/index.html#module-jawa.util.flags">jawa.util.flags module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="util/index.html#module-jawa.util.utf">jawa.util.utf module</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <ul class="simple">
 <li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
 </ul>
 </div>
 </div>
 
 
            </div>
+           
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="examples/index.html" class="btn btn-neutral float-right" title="Examples" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="examples/hello_world.html" class="btn btn-neutral float-right" title="Generating Classes From Scratch - Hello World!" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
     </div>
@@ -238,7 +266,7 @@ type of project should it be commercial, closed source or open source.</p>
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -257,9 +285,11 @@ type of project should it be commercial, closed source or open source.</p>
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
             VERSION:'',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>
@@ -273,14 +303,11 @@ type of project should it be commercial, closed source or open source.</p>
     <script type="text/javascript" src="_static/js/theme.js"></script>
   
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

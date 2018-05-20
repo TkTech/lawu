@@ -1,0 +1,430 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-11145163-14']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>jawa.methods module &mdash; jawa  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="jawa.transforms module" href="jawa.transforms.html" />
+    <link rel="prev" title="jawa.fields module" href="jawa.fields.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> jawa
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/hello_world.html">Generating Classes From Scratch - Hello World!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/dism.html">Disassembly - A Simple javap Clone</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="jawa.html">jawa package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="jawa.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="jawa.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="jawa.assemble.html">jawa.assemble module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.attribute.html">jawa.attribute module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.cf.html">jawa.cf module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.classloader.html">jawa.classloader module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.constants.html">jawa.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.fields.html">jawa.fields module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">jawa.methods module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.transforms.html">jawa.transforms module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">jawa</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="jawa.html">jawa package</a> &raquo;</li>
+        
+      <li>jawa.methods module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/jawa.methods.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-jawa.methods">
+<span id="jawa-methods-module"></span><h1>jawa.methods module<a class="headerlink" href="#module-jawa.methods" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="jawa.methods.Method">
+<em class="property">class </em><code class="descclassname">jawa.methods.</code><code class="descname">Method</code><span class="sig-paren">(</span><em>cf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/methods.html#Method"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.methods.Method" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="jawa.methods.Method.args">
+<code class="descname">args</code><a class="headerlink" href="#jawa.methods.Method.args" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.methods.Method.code">
+<code class="descname">code</code><a class="headerlink" href="#jawa.methods.Method.code" title="Permalink to this definition">¶</a></dt>
+<dd><p>A shortcut for:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">method</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">find_one</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Code&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.methods.Method.descriptor">
+<code class="descname">descriptor</code><a class="headerlink" href="#jawa.methods.Method.descriptor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.methods.Method.name">
+<code class="descname">name</code><a class="headerlink" href="#jawa.methods.Method.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jawa.methods.Method.pack">
+<code class="descname">pack</code><span class="sig-paren">(</span><em>out: IO</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/methods.html#Method.pack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.methods.Method.pack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the Method to the file-like object <cite>out</cite>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Advanced usage only. You will typically never need to call this
+method as it will be called for you when saving a ClassFile.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>out</strong> – Any file-like object providing <cite>write()</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.methods.Method.returns">
+<code class="descname">returns</code><a class="headerlink" href="#jawa.methods.Method.returns" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jawa.methods.Method.unpack">
+<code class="descname">unpack</code><span class="sig-paren">(</span><em>source: IO</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/methods.html#Method.unpack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.methods.Method.unpack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the Method from the file-like object <cite>fio</cite>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Advanced usage only. You will typically never need to call this
+method as it will be called for you when loading a ClassFile.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>source</strong> – Any file-like object providing <cite>read()</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.methods.MethodTable">
+<em class="property">class </em><code class="descclassname">jawa.methods.</code><code class="descname">MethodTable</code><span class="sig-paren">(</span><em>cf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/methods.html#MethodTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.methods.MethodTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="jawa.methods.MethodTable.append">
+<code class="descname">append</code><span class="sig-paren">(</span><em>method: jawa.methods.Method</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/methods.html#MethodTable.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.methods.MethodTable.append" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jawa.methods.MethodTable.create">
+<code class="descname">create</code><span class="sig-paren">(</span><em>name: str</em>, <em>descriptor: str</em>, <em>code: jawa.attributes.code.CodeAttribute = None</em><span class="sig-paren">)</span> &#x2192; jawa.methods.Method<a class="reference internal" href="_modules/jawa/methods.html#MethodTable.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.methods.MethodTable.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new method from <cite>name</cite> and <cite>descriptor</cite>. If <cite>code</cite> is not
+<code class="docutils literal notranslate"><span class="pre">None</span></code>, add a <cite>Code</cite> attribute to this method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.methods.MethodTable.find">
+<code class="descname">find</code><span class="sig-paren">(</span><em>*</em>, <em>name: str = None</em>, <em>args: str = None</em>, <em>returns: str = None</em>, <em>f: Callable = None</em><span class="sig-paren">)</span> &#x2192; Iterator[jawa.methods.Method]<a class="reference internal" href="_modules/jawa/methods.html#MethodTable.find"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.methods.MethodTable.find" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterates over the methods table, yielding each matching method. Calling
+without any arguments is equivalent to iterating over the table. For
+example, to get all methods that take three integers and return void:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">cf</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="s1">&#39;III&#39;</span><span class="p">,</span> <span class="n">returns</span><span class="o">=</span><span class="s1">&#39;V&#39;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">method</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Or to get all private methods:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">is_private</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">acc_private</span>
+<span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">cf</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">is_private</span><span class="p">):</span>
+    <span class="nb">print</span> <span class="n">method</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">value</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> – The name of the method(s) to find.</li>
+<li><strong>args</strong> – The arguments descriptor (ex: <code class="docutils literal notranslate"><span class="pre">III</span></code>)</li>
+<li><strong>returns</strong> – The returns descriptor (Ex: <code class="docutils literal notranslate"><span class="pre">V</span></code>)</li>
+<li><strong>f</strong> – Any callable which takes one argument (the method).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.methods.MethodTable.find_and_remove">
+<code class="descname">find_and_remove</code><span class="sig-paren">(</span><em>f: Callable</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/methods.html#MethodTable.find_and_remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.methods.MethodTable.find_and_remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes any and all methods for which <cite>f(method)</cite> returns <cite>True</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.methods.MethodTable.find_one">
+<code class="descname">find_one</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span> &#x2192; Union[jawa.methods.Method, NoneType]<a class="reference internal" href="_modules/jawa/methods.html#MethodTable.find_one"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.methods.MethodTable.find_one" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <code class="docutils literal notranslate"><span class="pre">find()</span></code> but returns only the first result.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.methods.MethodTable.pack">
+<code class="descname">pack</code><span class="sig-paren">(</span><em>out: IO</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/methods.html#MethodTable.pack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.methods.MethodTable.pack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the MethodTable to the file-like object <cite>out</cite>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Advanced usage only. You will typically never need to call this
+method as it will be called for you when saving a ClassFile.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>out</strong> – Any file-like object providing <cite>write()</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.methods.MethodTable.remove">
+<code class="descname">remove</code><span class="sig-paren">(</span><em>method: jawa.methods.Method</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/methods.html#MethodTable.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.methods.MethodTable.remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes a <cite>method</cite> from the table by identity.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.methods.MethodTable.unpack">
+<code class="descname">unpack</code><span class="sig-paren">(</span><em>source: IO</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/methods.html#MethodTable.unpack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.methods.MethodTable.unpack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the MethodTable from the file-like object <cite>source</cite>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Advanced usage only. You will typically never need to call this
+method as it will be called for you when loading a ClassFile.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>source</strong> – Any file-like object providing <cite>read()</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="jawa.transforms.html" class="btn btn-neutral float-right" title="jawa.transforms module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="jawa.fields.html" class="btn btn-neutral" title="jawa.fields module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2012, Author.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

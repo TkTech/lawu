@@ -1,0 +1,423 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-11145163-14']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>jawa.classloader &mdash; jawa  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> jawa
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/hello_world.html">Generating Classes From Scratch - Hello World!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/dism.html">Disassembly - A Simple javap Clone</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../jawa.html">jawa package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">jawa</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>jawa.classloader</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for jawa.classloader</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">os.path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">IO</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Iterator</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">repeat</span>
+<span class="kn">from</span> <span class="nn">zipfile</span> <span class="k">import</span> <span class="n">ZipFile</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="k">import</span> <span class="n">contextmanager</span>
+
+<span class="kn">from</span> <span class="nn">jawa.cf</span> <span class="k">import</span> <span class="n">ClassFile</span>
+<span class="kn">from</span> <span class="nn">jawa.constants</span> <span class="k">import</span> <span class="n">ConstantPool</span><span class="p">,</span> <span class="n">ConstantClass</span>
+
+
+<span class="k">def</span> <span class="nf">_walk</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">follow_links</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">maximum_depth</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A modified os.walk with support for maximum traversal depth.&quot;&quot;&quot;</span>
+    <span class="n">root_level</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">followlinks</span><span class="o">=</span><span class="n">follow_links</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span>
+        <span class="k">if</span> <span class="n">maximum_depth</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">root_level</span> <span class="o">+</span> <span class="n">maximum_depth</span> <span class="o">&lt;=</span> <span class="n">root</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">):</span>
+            <span class="k">del</span> <span class="n">dirs</span><span class="p">[:]</span>
+
+
+<div class="viewcode-block" id="ClassLoader"><a class="viewcode-back" href="../../jawa.classloader.html#jawa.classloader.ClassLoader">[docs]</a><span class="k">class</span> <span class="nc">ClassLoader</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Emulate the Java ClassPath.</span>
+
+<span class="sd">    Provides utilities for managing a java classpath as well as loading</span>
+<span class="sd">    classes from those paths.</span>
+
+<span class="sd">    :param sources: Optional sources to pass into update().</span>
+<span class="sd">    :param max_cache: The maximum number of ClassFile&#39;s to store in the cache.</span>
+<span class="sd">                      If set to 0, the cache will be unlimited. [default: 50]</span>
+<span class="sd">    :type max_cache: Long</span>
+<span class="sd">    :param klass: The class to use when constructing ClassFiles.</span>
+<span class="sd">    :type klass: ClassFile or subclass.</span>
+<span class="sd">    :param bytecode_transforms: Default transforms to apply when disassembling</span>
+<span class="sd">                                a method.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">sources</span><span class="p">,</span> <span class="n">max_cache</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">klass</span><span class="o">=</span><span class="n">ClassFile</span><span class="p">,</span>
+                 <span class="n">bytecode_transforms</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_cache</span> <span class="o">=</span> <span class="n">max_cache</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">class_cache</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bytecode_transforms</span> <span class="o">=</span> <span class="n">bytecode_transforms</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">klass</span> <span class="o">=</span> <span class="n">klass</span>
+
+        <span class="k">if</span> <span class="n">sources</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">*</span><span class="n">sources</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ClassFile</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_map</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;.class&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_map</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="ClassLoader.update"><a class="viewcode-back" href="../../jawa.classloader.html#jawa.classloader.ClassLoader.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">sources</span><span class="p">,</span> <span class="n">follow_symlinks</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="n">maximum_depth</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add one or more ClassFile sources to the class loader.</span>
+
+<span class="sd">        If a given source is a directory path, it is traversed up to the</span>
+<span class="sd">        maximum set depth and all files under it are added to the class loader</span>
+<span class="sd">        lookup table.</span>
+
+<span class="sd">        If a given source is a .jar or .zip file it will be opened and the</span>
+<span class="sd">        file index added to the class loader lookup table.</span>
+
+<span class="sd">        If a given source is a ClassFile or a subclass, it&#39;s immediately</span>
+<span class="sd">        added to the class loader lookup table and the class cache.</span>
+
+<span class="sd">        :param sources: One or more ClassFile sources to be added.</span>
+<span class="sd">        :param follow_symlinks: True if symlinks should be followed when</span>
+<span class="sd">                                traversing filesystem directories.</span>
+<span class="sd">                                [default: False]</span>
+<span class="sd">        :param maximum_depth: The maximum sub-directory depth when traversing</span>
+<span class="sd">                              filesystem directories. If set to `None` no limit</span>
+<span class="sd">                              will be enforced. [default: 20]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">sources</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">klass</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">path_map</span><span class="p">[</span><span class="n">source</span><span class="o">.</span><span class="n">this</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="n">source</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">class_cache</span><span class="p">[</span><span class="n">source</span><span class="o">.</span><span class="n">this</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="n">source</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Explicit cast to str to support Path objects.</span>
+            <span class="n">source</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">source</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s1">&#39;.zip&#39;</span><span class="p">,</span> <span class="s1">&#39;.jar&#39;</span><span class="p">)):</span>
+                <span class="n">zf</span> <span class="o">=</span> <span class="n">ZipFile</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">path_map</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">zf</span><span class="o">.</span><span class="n">namelist</span><span class="p">(),</span> <span class="n">repeat</span><span class="p">(</span><span class="n">zf</span><span class="p">)))</span>
+            <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">source</span><span class="p">):</span>
+                <span class="n">walker</span> <span class="o">=</span> <span class="n">_walk</span><span class="p">(</span>
+                    <span class="n">source</span><span class="p">,</span>
+                    <span class="n">follow_links</span><span class="o">=</span><span class="n">follow_symlinks</span><span class="p">,</span>
+                    <span class="n">maximum_depth</span><span class="o">=</span><span class="n">maximum_depth</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">walker</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">file_</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+                        <span class="n">path_full</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">file_</span><span class="p">)</span>
+                        <span class="n">path_suffix</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">path_full</span><span class="p">,</span> <span class="n">source</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">path_map</span><span class="p">[</span><span class="n">path_suffix</span><span class="p">]</span> <span class="o">=</span> <span class="n">path_full</span></div>
+
+<div class="viewcode-block" id="ClassLoader.open"><a class="viewcode-back" href="../../jawa.classloader.html#jawa.classloader.ClassLoader.open">[docs]</a>    <span class="nd">@contextmanager</span>
+    <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IO</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Open an IO-like object for `path`.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            Mode *must* be either &#39;r&#39; or &#39;w&#39;, as the underlying objects</span>
+<span class="sd">            do not understand the full range of modes.</span>
+
+<span class="sd">        :param path: The path to open.</span>
+<span class="sd">        :param mode: The mode of the file being opened, either &#39;r&#39; or &#39;w&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">entry</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">entry</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span> <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;r&#39;</span> <span class="k">else</span> <span class="n">mode</span><span class="p">)</span> <span class="k">as</span> <span class="n">source</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">source</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">ZipFile</span><span class="p">):</span>
+            <span class="k">with</span> <span class="n">entry</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span> <span class="k">as</span> <span class="n">source</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">source</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ClassLoader.load"><a class="viewcode-back" href="../../jawa.classloader.html#jawa.classloader.ClassLoader.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ClassFile</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Load the class at `path` and return it.</span>
+
+<span class="sd">        Load will attempt to load the file at `path` and `path` + .class</span>
+<span class="sd">        before failing.</span>
+
+<span class="sd">        :param path: Fully-qualified path to a ClassFile.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Try to refresh the class from the cache, loading it from disk</span>
+        <span class="c1"># if not found.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_cache</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{path}</span><span class="s1">.class&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">source</span><span class="p">:</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">klass</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+
+        <span class="n">r</span><span class="o">.</span><span class="n">classloader</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="c1"># Even if it was found re-set the key to update the OrderedDict</span>
+        <span class="c1"># ordering.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">class_cache</span><span class="p">[</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span>
+
+        <span class="c1"># If the cache is enabled remove every item over N started from</span>
+        <span class="c1"># the least-used.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_cache</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">to_pop</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">class_cache</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_cache</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">repeat</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">to_pop</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">class_cache</span><span class="o">.</span><span class="n">popitem</span><span class="p">(</span><span class="n">last</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">r</span></div>
+
+<div class="viewcode-block" id="ClassLoader.clear"><a class="viewcode-back" href="../../jawa.classloader.html#jawa.classloader.ClassLoader.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Erase all stored paths and all cached classes.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path_map</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">class_cache</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ClassLoader.dependencies"><a class="viewcode-back" href="../../jawa.classloader.html#jawa.classloader.ClassLoader.dependencies">[docs]</a>    <span class="k">def</span> <span class="nf">dependencies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns a set of all classes referenced by the ClassFile at</span>
+<span class="sd">        `path` without reading the entire ClassFile.</span>
+
+<span class="sd">        This is an optimization method that does not load a complete ClassFile,</span>
+<span class="sd">        nor does it add the results to the ClassLoader cache.</span>
+
+<span class="sd">        :param path: Fully-qualified path to a ClassFile.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_constant_pool</span><span class="p">(</span>
+            <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span>
+            <span class="n">type_</span><span class="o">=</span><span class="n">ConstantClass</span>
+        <span class="p">))</span></div>
+
+<div class="viewcode-block" id="ClassLoader.search_constant_pool"><a class="viewcode-back" href="../../jawa.classloader.html#jawa.classloader.ClassLoader.search_constant_pool">[docs]</a>    <span class="k">def</span> <span class="nf">search_constant_pool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Partially load the class at `path`, yield all matching constants</span>
+<span class="sd">        from the ConstantPool.</span>
+
+<span class="sd">        This is an optimization method that does not load a complete ClassFile,</span>
+<span class="sd">        nor does it add the results to the ClassLoader cache.</span>
+
+<span class="sd">        :param path: Fully-qualified path to a ClassFile.</span>
+<span class="sd">        :param options: A list of options to pass into `ConstantPool.find()`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{path}</span><span class="s1">.class&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">source</span><span class="p">:</span>
+            <span class="c1"># Skip over the magic, minor, and major version.</span>
+            <span class="n">source</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+            <span class="n">pool</span> <span class="o">=</span> <span class="n">ConstantPool</span><span class="p">()</span>
+            <span class="n">pool</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+            <span class="k">yield from</span> <span class="n">pool</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="o">**</span><span class="n">options</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">classes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Yield the name of all classes discovered in the path map.&quot;&quot;&quot;</span>
+        <span class="k">yield from</span> <span class="p">(</span>
+            <span class="n">c</span><span class="p">[:</span><span class="o">-</span><span class="mi">6</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_map</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.class&#39;</span><span class="p">)</span>
+        <span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2012, Author.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

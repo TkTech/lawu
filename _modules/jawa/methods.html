@@ -24,6 +24,8 @@
 
   
   
+  
+  
 
   
 
@@ -34,23 +36,19 @@
   
 
   
-  
     <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="jawa  documentation" href="../../index.html"/>
-        <link rel="up" title="Module code" href="../index.html"/> 
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -87,13 +85,15 @@
           
             
             
-                <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/hello_world.html">Generating Classes From Scratch - Hello World!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/dism.html">Disassembly - A Simple javap Clone</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../jawa.html">Core APIs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../attributes/index.html">Implemented Attributes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../util/index.html">Utility APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../jawa.html">jawa package</a></li>
 </ul>
 
             
@@ -105,56 +105,73 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../index.html">jawa</a>
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">jawa</a>
+        
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../index.html">Module code</a> &raquo;</li>
-      
-    <li>jawa.methods</li>
+        
+      <li>jawa.methods</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
   <h1>Source code for jawa.methods</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf8 -*-</span>
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;MethodTable&#39;</span><span class="p">,</span> <span class="s1">&#39;Method&#39;</span><span class="p">)</span>
-
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">IO</span><span class="p">,</span> <span class="n">Sequence</span>
 <span class="kn">from</span> <span class="nn">struct</span> <span class="k">import</span> <span class="n">unpack</span><span class="p">,</span> <span class="n">pack</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">repeat</span>
 
+<span class="kn">from</span> <span class="nn">jawa.constants</span> <span class="k">import</span> <span class="n">UTF8</span>
 <span class="kn">from</span> <span class="nn">jawa.util.flags</span> <span class="k">import</span> <span class="n">Flags</span>
 <span class="kn">from</span> <span class="nn">jawa.util.descriptor</span> <span class="k">import</span> <span class="n">method_descriptor</span>
 <span class="kn">from</span> <span class="nn">jawa.attribute</span> <span class="k">import</span> <span class="n">AttributeTable</span>
 <span class="kn">from</span> <span class="nn">jawa.attributes.code</span> <span class="k">import</span> <span class="n">CodeAttribute</span>
 
 
-<div class="viewcode-block" id="Method"><a class="viewcode-back" href="../../jawa.html#jawa.methods.Method">[docs]</a><span class="k">class</span> <span class="nc">Method</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Method"><a class="viewcode-back" href="../../jawa.methods.html#jawa.methods.Method">[docs]</a><span class="k">class</span> <span class="nc">Method</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cf</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span> <span class="o">=</span> <span class="n">cf</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_access_flags</span> <span class="o">=</span> <span class="n">Flags</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_flags</span> <span class="o">=</span> <span class="n">Flags</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="p">{</span>
             <span class="s1">&#39;acc_public&#39;</span><span class="p">:</span> <span class="mh">0x0001</span><span class="p">,</span>
             <span class="s1">&#39;acc_private&#39;</span><span class="p">:</span> <span class="mh">0x0002</span><span class="p">,</span>
             <span class="s1">&#39;acc_protected&#39;</span><span class="p">:</span> <span class="mh">0x0004</span><span class="p">,</span>
@@ -170,42 +187,37 @@
         <span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_name_index</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_descriptor_index</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span> <span class="o">=</span> <span class="n">AttributeTable</span><span class="p">(</span><span class="n">cf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span> <span class="o">=</span> <span class="n">AttributeTable</span><span class="p">(</span><span class="n">cf</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UTF8</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_descriptor_index</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UTF8</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_name_index</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">access_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_access_flags</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">returns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">returns</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">method_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">returns</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">args</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">args</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">method_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">args</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">code</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CodeAttribute</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A shortcut for::</span>
 
-<span class="sd">            method.attributes.find_one(name=&#39;Code&#39;)</span>
+<span class="sd">            &gt;&gt; method.attributes.find_one(name=&#39;Code&#39;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">find_one</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Code&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Method.unpack"><a class="viewcode-back" href="../../jawa.html#jawa.methods.Method.unpack">[docs]</a>    <span class="k">def</span> <span class="nf">unpack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fio</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s1">&#39;&lt;Method(name=</span><span class="si">{self.name}</span><span class="s1">)&gt;&#39;</span>
+
+<div class="viewcode-block" id="Method.unpack"><a class="viewcode-back" href="../../jawa.methods.html#jawa.methods.Method.unpack">[docs]</a>    <span class="k">def</span> <span class="nf">unpack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">IO</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Read the Method from the file-like object `fio`.</span>
 
@@ -214,53 +226,54 @@
 <span class="sd">            Advanced usage only. You will typically never need to call this</span>
 <span class="sd">            method as it will be called for you when loading a ClassFile.</span>
 
-<span class="sd">        :param fio: Any file-like object providing `read()`</span>
+<span class="sd">        :param source: Any file-like object providing `read()`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_name_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_descriptor_index</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;HH&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_descriptor_index</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;HH&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">source</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Method.pack"><a class="viewcode-back" href="../../jawa.html#jawa.methods.Method.pack">[docs]</a>    <span class="k">def</span> <span class="nf">pack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fout</span><span class="p">):</span>
+<div class="viewcode-block" id="Method.pack"><a class="viewcode-back" href="../../jawa.methods.html#jawa.methods.Method.pack">[docs]</a>    <span class="k">def</span> <span class="nf">pack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out</span><span class="p">:</span> <span class="n">IO</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Write the Method to the file-like object `fout`.</span>
+<span class="sd">        Write the Method to the file-like object `out`.</span>
 
 <span class="sd">        .. note::</span>
 
 <span class="sd">            Advanced usage only. You will typically never need to call this</span>
-<span class="sd">            method as it will be calle=d for you when saving a ClassFile.</span>
+<span class="sd">            method as it will be called for you when saving a ClassFile.</span>
 
-<span class="sd">        :param fout: Any file-like object providing `write()`</span>
+<span class="sd">        :param out: Any file-like object providing `write()`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">pack</span><span class="p">())</span>
-        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">pack</span><span class="p">())</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span>
             <span class="s1">&#39;&gt;HH&#39;</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_name_index</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_descriptor_index</span>
         <span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">out</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="MethodTable"><a class="viewcode-back" href="../../jawa.html#jawa.methods.MethodTable">[docs]</a><span class="k">class</span> <span class="nc">MethodTable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="MethodTable"><a class="viewcode-back" href="../../jawa.methods.html#jawa.methods.MethodTable">[docs]</a><span class="k">class</span> <span class="nc">MethodTable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cf</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span> <span class="o">=</span> <span class="n">cf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_table</span> <span class="o">=</span> <span class="p">[]</span>
 
-<div class="viewcode-block" id="MethodTable.append"><a class="viewcode-back" href="../../jawa.html#jawa.methods.MethodTable.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
+<div class="viewcode-block" id="MethodTable.append"><a class="viewcode-back" href="../../jawa.methods.html#jawa.methods.MethodTable.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="n">Method</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">method</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="MethodTable.find_and_remove"><a class="viewcode-back" href="../../jawa.html#jawa.methods.MethodTable.find_and_remove">[docs]</a>    <span class="k">def</span> <span class="nf">find_and_remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+<div class="viewcode-block" id="MethodTable.find_and_remove"><a class="viewcode-back" href="../../jawa.methods.html#jawa.methods.MethodTable.find_and_remove">[docs]</a>    <span class="k">def</span> <span class="nf">find_and_remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Removes any and all methods for which `f(method)` returns `True`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_table</span> <span class="o">=</span> <span class="p">[</span><span class="n">fld</span> <span class="k">for</span> <span class="n">fld</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">f</span><span class="p">(</span><span class="n">fld</span><span class="p">)]</span></div>
 
-<div class="viewcode-block" id="MethodTable.remove"><a class="viewcode-back" href="../../jawa.html#jawa.methods.MethodTable.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
+<div class="viewcode-block" id="MethodTable.remove"><a class="viewcode-back" href="../../jawa.methods.html#jawa.methods.MethodTable.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="n">Method</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Removes a `method` from the table by identity.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_table</span> <span class="o">=</span> <span class="p">[</span><span class="n">fld</span> <span class="k">for</span> <span class="n">fld</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table</span> <span class="k">if</span> <span class="n">fld</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">method</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="MethodTable.create"><a class="viewcode-back" href="../../jawa.html#jawa.methods.MethodTable.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="MethodTable.create"><a class="viewcode-back" href="../../jawa.methods.html#jawa.methods.MethodTable.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+               <span class="n">code</span><span class="p">:</span> <span class="n">CodeAttribute</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Method</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a new method from `name` and `descriptor`. If `code` is not</span>
 <span class="sd">        ``None``, add a `Code` attribute to this method.</span>
@@ -282,42 +295,43 @@
         <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">method</span>
 
-<div class="viewcode-block" id="MethodTable.unpack"><a class="viewcode-back" href="../../jawa.html#jawa.methods.MethodTable.unpack">[docs]</a>    <span class="k">def</span> <span class="nf">unpack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fio</span><span class="p">):</span>
+<div class="viewcode-block" id="MethodTable.unpack"><a class="viewcode-back" href="../../jawa.methods.html#jawa.methods.MethodTable.unpack">[docs]</a>    <span class="k">def</span> <span class="nf">unpack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">IO</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Read the MethodTable from the file-like object `fio`.</span>
+<span class="sd">        Read the MethodTable from the file-like object `source`.</span>
 
 <span class="sd">        .. note::</span>
 
 <span class="sd">            Advanced usage only. You will typically never need to call this</span>
 <span class="sd">            method as it will be called for you when loading a ClassFile.</span>
 
-<span class="sd">        :param fio: Any file-like object providing `read()`</span>
+<span class="sd">        :param source: Any file-like object providing `read()`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">method_count</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">method_count</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">repeat</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">method_count</span><span class="p">):</span>
             <span class="n">method</span> <span class="o">=</span> <span class="n">Method</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="p">)</span>
-            <span class="n">method</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span>
+            <span class="n">method</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">method</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="MethodTable.pack"><a class="viewcode-back" href="../../jawa.html#jawa.methods.MethodTable.pack">[docs]</a>    <span class="k">def</span> <span class="nf">pack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fout</span><span class="p">):</span>
+<div class="viewcode-block" id="MethodTable.pack"><a class="viewcode-back" href="../../jawa.methods.html#jawa.methods.MethodTable.pack">[docs]</a>    <span class="k">def</span> <span class="nf">pack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out</span><span class="p">:</span> <span class="n">IO</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Write the MethodTable to the file-like object `fout`.</span>
+<span class="sd">        Write the MethodTable to the file-like object `out`.</span>
 
 <span class="sd">        .. note::</span>
 
 <span class="sd">            Advanced usage only. You will typically never need to call this</span>
-<span class="sd">            method as it will be calle=d for you when saving a ClassFile.</span>
+<span class="sd">            method as it will be called for you when saving a ClassFile.</span>
 
-<span class="sd">        :param fout: Any file-like object providing `write()`</span>
+<span class="sd">        :param out: Any file-like object providing `write()`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
         <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table</span><span class="p">:</span>
-            <span class="n">method</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span></div>
+            <span class="n">method</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">out</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="MethodTable.find"><a class="viewcode-back" href="../../jawa.html#jawa.methods.MethodTable.find">[docs]</a>    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">returns</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="MethodTable.find"><a class="viewcode-back" href="../../jawa.methods.html#jawa.methods.MethodTable.find">[docs]</a>    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">returns</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">f</span><span class="p">:</span> <span class="n">Callable</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Method</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Iterates over the methods table, yielding each matching method. Calling</span>
-<span class="sd">        without any arguments is equivelent to iterating over the table. For</span>
+<span class="sd">        without any arguments is equivalent to iterating over the table. For</span>
 <span class="sd">        example, to get all methods that take three integers and return void::</span>
 
 <span class="sd">            for method in cf.methods.find(args=&#39;III&#39;, returns=&#39;V&#39;):</span>
@@ -354,21 +368,18 @@
 
             <span class="k">yield</span> <span class="n">method</span></div>
 
-<div class="viewcode-block" id="MethodTable.find_one"><a class="viewcode-back" href="../../jawa.html#jawa.methods.MethodTable.find_one">[docs]</a>    <span class="k">def</span> <span class="nf">find_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="MethodTable.find_one"><a class="viewcode-back" href="../../jawa.methods.html#jawa.methods.MethodTable.find_one">[docs]</a>    <span class="k">def</span> <span class="nf">find_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Method</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Same as ``find()`` but returns only the first result, or `None` if</span>
-<span class="sd">        nothing was found.</span>
+<span class="sd">        Same as ``find()`` but returns only the first result.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
-        <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span></div>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_table</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
+           
           </div>
           <footer>
   
@@ -381,7 +392,7 @@
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -400,9 +411,11 @@
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
             VERSION:'',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>
@@ -416,14 +429,11 @@
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
   
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

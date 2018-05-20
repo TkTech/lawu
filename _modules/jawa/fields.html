@@ -24,6 +24,8 @@
 
   
   
+  
+  
 
   
 
@@ -34,23 +36,19 @@
   
 
   
-  
     <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="jawa  documentation" href="../../index.html"/>
-        <link rel="up" title="Module code" href="../index.html"/> 
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -87,13 +85,15 @@
           
             
             
-                <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/hello_world.html">Generating Classes From Scratch - Hello World!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/dism.html">Disassembly - A Simple javap Clone</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../jawa.html">Core APIs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../attributes/index.html">Implemented Attributes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../util/index.html">Utility APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../jawa.html">jawa package</a></li>
 </ul>
 
             
@@ -105,55 +105,72 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../index.html">jawa</a>
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">jawa</a>
+        
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../index.html">Module code</a> &raquo;</li>
-      
-    <li>jawa.fields</li>
+        
+      <li>jawa.fields</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
   <h1>Source code for jawa.fields</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf8 -*-</span>
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;FieldTable&#39;</span><span class="p">,</span> <span class="s1">&#39;Field&#39;</span><span class="p">)</span>
-
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">IO</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Optional</span>
 <span class="kn">from</span> <span class="nn">struct</span> <span class="k">import</span> <span class="n">unpack</span><span class="p">,</span> <span class="n">pack</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">repeat</span>
 
 <span class="kn">from</span> <span class="nn">jawa.util.flags</span> <span class="k">import</span> <span class="n">Flags</span>
 <span class="kn">from</span> <span class="nn">jawa.attribute</span> <span class="k">import</span> <span class="n">AttributeTable</span>
+<span class="kn">from</span> <span class="nn">jawa.constants</span> <span class="k">import</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">UTF8</span>
 <span class="kn">from</span> <span class="nn">jawa.attributes.constant_value</span> <span class="k">import</span> <span class="n">ConstantValueAttribute</span>
 
 
-<div class="viewcode-block" id="Field"><a class="viewcode-back" href="../../jawa.html#jawa.fields.Field">[docs]</a><span class="k">class</span> <span class="nc">Field</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Field"><a class="viewcode-back" href="../../jawa.fields.html#jawa.fields.Field">[docs]</a><span class="k">class</span> <span class="nc">Field</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cf</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span> <span class="o">=</span> <span class="n">cf</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_access_flags</span> <span class="o">=</span> <span class="n">Flags</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_flags</span> <span class="o">=</span> <span class="n">Flags</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="p">{</span>
             <span class="s1">&#39;acc_public&#39;</span><span class="p">:</span> <span class="mh">0x0001</span><span class="p">,</span>
             <span class="s1">&#39;acc_private&#39;</span><span class="p">:</span> <span class="mh">0x0002</span><span class="p">,</span>
             <span class="s1">&#39;acc_protected&#39;</span><span class="p">:</span> <span class="mh">0x0004</span><span class="p">,</span>
@@ -166,33 +183,24 @@
         <span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_name_index</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_descriptor_index</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span> <span class="o">=</span> <span class="n">AttributeTable</span><span class="p">(</span><span class="n">cf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span> <span class="o">=</span> <span class="n">AttributeTable</span><span class="p">(</span><span class="n">cf</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UTF8</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_descriptor_index</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UTF8</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_name_index</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">access_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_access_flags</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConstantValueAttribute</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A shortcut for the field&#39;s ConstantValue attribute, should one exist.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">constant_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">find_one</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ConstantValue&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">constant_value</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">find_one</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ConstantValue&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Field.unpack"><a class="viewcode-back" href="../../jawa.html#jawa.fields.Field.unpack">[docs]</a>    <span class="k">def</span> <span class="nf">unpack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fio</span><span class="p">):</span>
+<div class="viewcode-block" id="Field.unpack"><a class="viewcode-back" href="../../jawa.fields.html#jawa.fields.Field.unpack">[docs]</a>    <span class="k">def</span> <span class="nf">unpack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">IO</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Read the Field from the file-like object `fio`.</span>
 
@@ -201,56 +209,69 @@
 <span class="sd">            Advanced usage only. You will typically never need to call this</span>
 <span class="sd">            method as it will be called for you when loading a ClassFile.</span>
 
-<span class="sd">        :param fio: Any file-like object providing `read()`</span>
+<span class="sd">        :param source: Any file-like object providing `read()`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_name_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_descriptor_index</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;HH&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_descriptor_index</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;HH&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">source</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Field.pack"><a class="viewcode-back" href="../../jawa.html#jawa.fields.Field.pack">[docs]</a>    <span class="k">def</span> <span class="nf">pack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fout</span><span class="p">):</span>
+<div class="viewcode-block" id="Field.pack"><a class="viewcode-back" href="../../jawa.fields.html#jawa.fields.Field.pack">[docs]</a>    <span class="k">def</span> <span class="nf">pack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out</span><span class="p">:</span> <span class="n">IO</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Write the Field to the file-like object `fout`.</span>
+<span class="sd">        Write the Field to the file-like object `out`.</span>
 
 <span class="sd">        .. note::</span>
 
 <span class="sd">            Advanced usage only. You will typically never need to call this</span>
-<span class="sd">            method as it will be calle=d for you when saving a ClassFile.</span>
+<span class="sd">            method as it will be called for you when saving a ClassFile.</span>
 
-<span class="sd">        :param fout: Any file-like object providing `write()`</span>
+<span class="sd">        :param out: Any file-like object providing `write()`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">pack</span><span class="p">())</span>
-        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;HH&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_descriptor_index</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span></div></div>
+        <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">pack</span><span class="p">())</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;HH&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_descriptor_index</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">out</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="FieldTable"><a class="viewcode-back" href="../../jawa.html#jawa.fields.FieldTable">[docs]</a><span class="k">class</span> <span class="nc">FieldTable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="FieldTable"><a class="viewcode-back" href="../../jawa.fields.html#jawa.fields.FieldTable">[docs]</a><span class="k">class</span> <span class="nc">FieldTable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cf</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span> <span class="o">=</span> <span class="n">cf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_table</span> <span class="o">=</span> <span class="p">[]</span>
 
-<div class="viewcode-block" id="FieldTable.append"><a class="viewcode-back" href="../../jawa.html#jawa.fields.FieldTable.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+<div class="viewcode-block" id="FieldTable.append"><a class="viewcode-back" href="../../jawa.fields.html#jawa.fields.FieldTable.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">Field</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FieldTable.find_and_remove"><a class="viewcode-back" href="../../jawa.html#jawa.fields.FieldTable.find_and_remove">[docs]</a>    <span class="k">def</span> <span class="nf">find_and_remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+<div class="viewcode-block" id="FieldTable.find_and_remove"><a class="viewcode-back" href="../../jawa.fields.html#jawa.fields.FieldTable.find_and_remove">[docs]</a>    <span class="k">def</span> <span class="nf">find_and_remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Removes any and all fields for which `f(field)` returns `True`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_table</span> <span class="o">=</span> <span class="p">[</span><span class="n">fld</span> <span class="k">for</span> <span class="n">fld</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">f</span><span class="p">(</span><span class="n">fld</span><span class="p">)]</span></div>
 
-<div class="viewcode-block" id="FieldTable.remove"><a class="viewcode-back" href="../../jawa.html#jawa.fields.FieldTable.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+<div class="viewcode-block" id="FieldTable.remove"><a class="viewcode-back" href="../../jawa.fields.html#jawa.fields.FieldTable.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">Field</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Removes a `Field` from the table by identity.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_table</span> <span class="o">=</span> <span class="p">[</span><span class="n">fld</span> <span class="k">for</span> <span class="n">fld</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table</span> <span class="k">if</span> <span class="n">fld</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">field</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="FieldTable.create"><a class="viewcode-back" href="../../jawa.html#jawa.fields.FieldTable.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">):</span>
+<div class="viewcode-block" id="FieldTable.create"><a class="viewcode-back" href="../../jawa.fields.html#jawa.fields.FieldTable.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Constant</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Field</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a new field from `name` and `descriptor`. For example::</span>
 
-<span class="sd">            &gt;&gt;&gt; from jawa import ClassFile</span>
+<span class="sd">            &gt;&gt;&gt; from jawa.cf import ClassFile</span>
 <span class="sd">            &gt;&gt;&gt; cf = ClassFile.create(&#39;BeerCounter&#39;)</span>
 <span class="sd">            &gt;&gt;&gt; field = cf.fields.create(&#39;BeerCount&#39;, &#39;I&#39;)</span>
 
+<span class="sd">        To automatically create a static field, pass a value::</span>
+
+<span class="sd">            &gt;&gt;&gt; from jawa.cf import ClassFile</span>
+<span class="sd">            &gt;&gt;&gt; cf = ClassFile.create(&#39;BeerCounter&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; field = cf.fields.create(</span>
+<span class="sd">            ...     &#39;MaxBeer&#39;,</span>
+<span class="sd">            ...     &#39;I&#39;,</span>
+<span class="sd">            ...     cf.constants.create_integer(99)</span>
+<span class="sd">            ... )</span>
+
+<span class="sd">        :param name: Name of the new field.</span>
+<span class="sd">        :param descriptor: Type descriptor of the new field.</span>
+<span class="sd">        :param value: Optional static value for the field.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">field</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="p">)</span>
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">create_utf8</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -258,72 +279,58 @@
         <span class="n">field</span><span class="o">.</span><span class="n">_name_index</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">index</span>
         <span class="n">field</span><span class="o">.</span><span class="n">_descriptor_index</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">index</span>
         <span class="n">field</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">acc_public</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">field</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">ConstantValueAttribute</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="n">field</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">acc_static</span> <span class="o">=</span> <span class="kc">True</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">field</span></div>
-
-<div class="viewcode-block" id="FieldTable.create_static"><a class="viewcode-back" href="../../jawa.html#jawa.fields.FieldTable.create_static">[docs]</a>    <span class="k">def</span> <span class="nf">create_static</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A shortcut for creating a static field with a</span>
-<span class="sd">        :class:`~jawa.attributes.constant_value.ConstantValueAttribute`</span>
-<span class="sd">        set to the :class:`~jawa.constants.Constant` `value`. For example,</span>
-<span class="sd">        to create a string with the classic &quot;Hello World!&quot;::</span>
-
-<span class="sd">            &gt;&gt;&gt; from jawa import ClassFile</span>
-<span class="sd">            &gt;&gt;&gt; cf = ClassFile.create(&#39;BeerCounter&#39;)</span>
-<span class="sd">            &gt;&gt;&gt; field = cf.fields.create_static(</span>
-<span class="sd">            ...    &#39;HelloWorld&#39;,</span>
-<span class="sd">            ...    &#39;Ljava/lang/String;&#39;,</span>
-<span class="sd">            ...    cf.constants.create_string(&#39;Hello World!&#39;)</span>
-<span class="sd">            ... )</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">)</span>
-        <span class="n">field</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">ConstantValueAttribute</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        <span class="n">field</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">acc_static</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="n">field</span></div>
 
     <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">field</span>
 
-<div class="viewcode-block" id="FieldTable.unpack"><a class="viewcode-back" href="../../jawa.html#jawa.fields.FieldTable.unpack">[docs]</a>    <span class="k">def</span> <span class="nf">unpack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fio</span><span class="p">):</span>
+<div class="viewcode-block" id="FieldTable.unpack"><a class="viewcode-back" href="../../jawa.fields.html#jawa.fields.FieldTable.unpack">[docs]</a>    <span class="k">def</span> <span class="nf">unpack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">IO</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Read the FieldTable from the file-like object `fio`.</span>
+<span class="sd">        Read the FieldTable from the file-like object `source`.</span>
 
 <span class="sd">        .. note::</span>
 
 <span class="sd">            Advanced usage only. You will typically never need to call this</span>
 <span class="sd">            method as it will be called for you when loading a ClassFile.</span>
 
-<span class="sd">        :param fio: Any file-like object providing `read()`</span>
+<span class="sd">        :param source: Any file-like object providing `read()`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">field_count</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">field_count</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">repeat</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">field_count</span><span class="p">):</span>
             <span class="n">field</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="p">)</span>
-            <span class="n">field</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span>
+            <span class="n">field</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FieldTable.pack"><a class="viewcode-back" href="../../jawa.html#jawa.fields.FieldTable.pack">[docs]</a>    <span class="k">def</span> <span class="nf">pack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fout</span><span class="p">):</span>
+<div class="viewcode-block" id="FieldTable.pack"><a class="viewcode-back" href="../../jawa.fields.html#jawa.fields.FieldTable.pack">[docs]</a>    <span class="k">def</span> <span class="nf">pack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out</span><span class="p">:</span> <span class="n">IO</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Write the FieldTable to the file-like object `fout`.</span>
+<span class="sd">        Write the FieldTable to the file-like object `out`.</span>
 
 <span class="sd">        .. note::</span>
 
 <span class="sd">            Advanced usage only. You will typically never need to call this</span>
-<span class="sd">            method as it will be calle=d for you when saving a ClassFile.</span>
+<span class="sd">            method as it will be called for you when saving a ClassFile.</span>
 
-<span class="sd">        :param fout: Any file-like object providing `write()`</span>
+<span class="sd">        :param out: Any file-like object providing `write()`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
         <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table</span><span class="p">:</span>
-            <span class="n">field</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span></div>
+            <span class="n">field</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">out</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_table</span><span class="p">)</span>
 
-<div class="viewcode-block" id="FieldTable.find"><a class="viewcode-back" href="../../jawa.html#jawa.fields.FieldTable.find">[docs]</a>    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">type_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="FieldTable.find"><a class="viewcode-back" href="../../jawa.fields.html#jawa.fields.FieldTable.find">[docs]</a>    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">type_</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">f</span><span class="p">:</span> <span class="n">Callable</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Field</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Iterates over the fields table, yielding each matching method. Calling</span>
-<span class="sd">        without any arguments is equivelent to iterating over the table.</span>
+<span class="sd">        without any arguments is equivalent to iterating over the table.</span>
 
 <span class="sd">        :param name: The name of the field(s) to find.</span>
 <span class="sd">        :param type_: The field descriptor (Ex: &#39;I&#39;)</span>
@@ -342,18 +349,15 @@
 
             <span class="k">yield</span> <span class="n">field</span></div>
 
-<div class="viewcode-block" id="FieldTable.find_one"><a class="viewcode-back" href="../../jawa.html#jawa.fields.FieldTable.find_one">[docs]</a>    <span class="k">def</span> <span class="nf">find_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="FieldTable.find_one"><a class="viewcode-back" href="../../jawa.fields.html#jawa.fields.FieldTable.find_one">[docs]</a>    <span class="k">def</span> <span class="nf">find_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Field</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Same as ``find()`` but returns only the first result, or `None` if</span>
-<span class="sd">        nothing was found.</span>
+<span class="sd">        Same as ``find()`` but returns only the first result.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
-        <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span></div></div>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>
+           
           </div>
           <footer>
   
@@ -366,7 +370,7 @@
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -385,9 +389,11 @@
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
             VERSION:'',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>
@@ -401,14 +407,11 @@
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
   
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

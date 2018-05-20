@@ -24,6 +24,8 @@
 
   
   
+  
+  
 
   
 
@@ -34,25 +36,21 @@
   
 
   
-  
     <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="jawa  documentation" href="../index.html"/>
-        <link rel="up" title="Examples" href="index.html"/>
-        <link rel="next" title="Disassembly - A Simple javap Clone" href="dism.html"/>
-        <link rel="prev" title="Examples" href="index.html"/> 
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Disassembly - A Simple javap Clone" href="dism.html" />
+    <link rel="prev" title="Jawa - JVM ClassFile Library" href="../index.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -89,17 +87,15 @@
           
             
             
-                <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Generating Classes From Scratch - Hello World!</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dism.html">Disassembly - A Simple javap Clone</a></li>
-</ul>
-</li>
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Generating Classes From Scratch - Hello World!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dism.html">Disassembly - A Simple javap Clone</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../jawa.html">Core APIs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../attributes/index.html">Implemented Attributes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../util/index.html">Utility APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jawa.html">jawa package</a></li>
 </ul>
 
             
@@ -111,36 +107,54 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">jawa</a>
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">jawa</a>
+        
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
-      
-          <li><a href="index.html">Examples</a> &raquo;</li>
-      
-    <li>Generating Classes From Scratch - Hello World!</li>
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Generating Classes From Scratch - Hello World!</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="../_sources/examples/hello_world.txt" rel="nofollow"> View page source</a>
+            
+            <a href="../_sources/examples/hello_world.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -148,24 +162,22 @@
             
   <div class="section" id="generating-classes-from-scratch-hello-world">
 <h1>Generating Classes From Scratch - Hello World!<a class="headerlink" href="#generating-classes-from-scratch-hello-world" title="Permalink to this headline">¶</a></h1>
-<p>A simple example of the classic &#8220;Hello World!&#8221; program. The example will
+<p>A simple example of the classic “Hello World!” program. The example will
 generate a ClassFile equivelent to this Java:</p>
-<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">HelloWorld</span> <span class="o">{</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">HelloWorld</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Hello World!&quot;</span><span class="o">);</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>
 </div>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
-<span class="c1"># -*- coding: utf8 -*-</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">An example showing how to create a &quot;Hello World&quot; class from scratch.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">jawa</span> <span class="k">import</span> <span class="n">ClassFile</span>
 <span class="kn">from</span> <span class="nn">jawa.assemble</span> <span class="k">import</span> <span class="n">assemble</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">cf</span> <span class="o">=</span> <span class="n">ClassFile</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;HelloWorld&#39;</span><span class="p">)</span>
 
     <span class="n">main</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;main&#39;</span><span class="p">,</span> <span class="s1">&#39;([Ljava/lang/String;)V&#39;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -196,15 +208,16 @@ generate a ClassFile equivelent to this Java:</p>
 
 
            </div>
+           
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="dism.html" class="btn btn-neutral float-right" title="Disassembly - A Simple javap Clone" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="dism.html" class="btn btn-neutral float-right" title="Disassembly - A Simple javap Clone" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="Examples" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../index.html" class="btn btn-neutral" title="Jawa - JVM ClassFile Library" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -217,7 +230,7 @@ generate a ClassFile equivelent to this Java:</p>
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -236,9 +249,11 @@ generate a ClassFile equivelent to this Java:</p>
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
             VERSION:'',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -252,14 +267,11 @@ generate a ClassFile equivelent to this Java:</p>
     <script type="text/javascript" src="../_static/js/theme.js"></script>
   
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

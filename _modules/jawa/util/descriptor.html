@@ -24,6 +24,8 @@
 
   
   
+  
+  
 
   
 
@@ -34,23 +36,19 @@
   
 
   
-  
     <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="jawa  documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -87,13 +85,15 @@
           
             
             
-                <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/index.html">Examples</a></li>
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/hello_world.html">Generating Classes From Scratch - Hello World!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/dism.html">Disassembly - A Simple javap Clone</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../jawa.html">Core APIs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../attributes/index.html">Implemented Attributes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../util/index.html">Utility APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../jawa.html">jawa package</a></li>
 </ul>
 
             
@@ -105,42 +105,59 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../../index.html">jawa</a>
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">jawa</a>
+        
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../../index.html">Module code</a> &raquo;</li>
-      
-    <li>jawa.util.descriptor</li>
+        
+      <li>jawa.util.descriptor</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
   <h1>Source code for jawa.util.descriptor</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf8 -*-</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Methods for parsing standard JVM type descriptors for fields and methods.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
@@ -161,7 +178,7 @@
 <span class="p">])</span>
 
 
-<div class="viewcode-block" id="method_descriptor"><a class="viewcode-back" href="../../../util/index.html#jawa.util.descriptor.method_descriptor">[docs]</a><span class="k">def</span> <span class="nf">method_descriptor</span><span class="p">(</span><span class="n">descriptor</span><span class="p">):</span>
+<div class="viewcode-block" id="method_descriptor"><a class="viewcode-back" href="../../../jawa.util.descriptor.html#jawa.util.descriptor.method_descriptor">[docs]</a><span class="k">def</span> <span class="nf">method_descriptor</span><span class="p">(</span><span class="n">descriptor</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MethodDescriptor</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parses a Method descriptor as described in section 4.3.3 of the JVM</span>
 <span class="sd">    specification.</span>
@@ -179,7 +196,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="field_descriptor"><a class="viewcode-back" href="../../../util/index.html#jawa.util.descriptor.field_descriptor">[docs]</a><span class="k">def</span> <span class="nf">field_descriptor</span><span class="p">(</span><span class="n">descriptor</span><span class="p">):</span>
+<div class="viewcode-block" id="field_descriptor"><a class="viewcode-back" href="../../../jawa.util.descriptor.html#jawa.util.descriptor.field_descriptor">[docs]</a><span class="k">def</span> <span class="nf">field_descriptor</span><span class="p">(</span><span class="n">descriptor</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parses a Field descriptor as described in section 4.3.2 of the JVM</span>
 <span class="sd">    specification.</span>
@@ -203,7 +220,7 @@
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="parse_descriptor"><a class="viewcode-back" href="../../../util/index.html#jawa.util.descriptor.parse_descriptor">[docs]</a><span class="k">def</span> <span class="nf">parse_descriptor</span><span class="p">(</span><span class="n">descriptor</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_descriptor"><a class="viewcode-back" href="../../../jawa.util.descriptor.html#jawa.util.descriptor.parse_descriptor">[docs]</a><span class="k">def</span> <span class="nf">parse_descriptor</span><span class="p">(</span><span class="n">descriptor</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Uses a tiny state machine to parse JVM descriptors. To get useful wrappers</span>
 <span class="sd">    around the results, use :py:func:`jawa.core.descriptor.method_descriptor`</span>
@@ -235,6 +252,7 @@
 </pre></div>
 
            </div>
+           
           </div>
           <footer>
   
@@ -247,7 +265,7 @@
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -266,9 +284,11 @@
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
             VERSION:'',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>
@@ -282,14 +302,11 @@
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
   
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

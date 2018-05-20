@@ -24,6 +24,8 @@
 
   
   
+  
+  
 
   
 
@@ -34,23 +36,19 @@
   
 
   
-  
     <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="jawa  documentation" href="../index.html"/>
-        <link rel="prev" title="Implemented Attributes" href="../attributes/index.html"/> 
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -87,19 +85,15 @@
           
             
             
-                <ul>
-<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/hello_world.html">Generating Classes From Scratch - Hello World!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/dism.html">Disassembly - A Simple javap Clone</a></li>
 </ul>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../jawa.html">Core APIs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../attributes/index.html">Implemented Attributes</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Utility APIs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-jawa.util.bytecode">jawa.util.bytecode module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-jawa.util.descriptor">jawa.util.descriptor module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-jawa.util.flags">jawa.util.flags module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-jawa.util.utf">jawa.util.utf module</a></li>
-</ul>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../jawa.html">jawa package</a></li>
 </ul>
 
             
@@ -111,34 +105,54 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">jawa</a>
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">jawa</a>
+        
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
-      
-    <li>Utility APIs</li>
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Utility APIs</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="../_sources/util/index.txt" rel="nofollow"> View page source</a>
+            
+            <a href="../_sources/util/index.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -151,18 +165,25 @@
 <dl class="class">
 <dt id="jawa.util.bytecode.Instruction">
 <em class="property">class </em><code class="descclassname">jawa.util.bytecode.</code><code class="descname">Instruction</code><a class="reference internal" href="../_modules/jawa/util/bytecode.html#Instruction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.Instruction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#jawa.util.bytecode.Instruction" title="jawa.util.bytecode.Instruction"><code class="xref py py-class docutils literal"><span class="pre">jawa.util.bytecode.Instruction</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#jawa.util.bytecode.Instruction" title="jawa.util.bytecode.Instruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.util.bytecode.Instruction</span></code></a></p>
 <p>Represents a single JVM instruction, consisting
 of an opcode and its potential operands.</p>
 <dl class="classmethod">
-<dt id="jawa.util.bytecode.Instruction.from_mnemonic">
-<em class="property">classmethod </em><code class="descname">from_mnemonic</code><span class="sig-paren">(</span><em>mnemonic</em>, <em>operands=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/util/bytecode.html#Instruction.from_mnemonic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.Instruction.from_mnemonic" title="Permalink to this definition">¶</a></dt>
+<dt id="jawa.util.bytecode.Instruction.create">
+<em class="property">classmethod </em><code class="descname">create</code><span class="sig-paren">(</span><em>mnemonic_or_op</em>, <em>operands=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/util/bytecode.html#Instruction.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.Instruction.create" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="classmethod">
-<dt id="jawa.util.bytecode.Instruction.from_opcode">
-<em class="property">classmethod </em><code class="descname">from_opcode</code><span class="sig-paren">(</span><em>opcode</em>, <em>operands=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/util/bytecode.html#Instruction.from_opcode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.Instruction.from_opcode" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="attribute">
+<dt id="jawa.util.bytecode.Instruction.details">
+<code class="descname">details</code><a class="headerlink" href="#jawa.util.bytecode.Instruction.details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extended opcode information.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.util.bytecode.Instruction.name">
+<code class="descname">name</code><a class="headerlink" href="#jawa.util.bytecode.Instruction.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for mnemonic.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="jawa.util.bytecode.Instruction.size_on_disk">
@@ -175,7 +196,7 @@ packed. <cite>start_pos</cite> is required for the <cite>tableswitch</cite> and
 <dl class="attribute">
 <dt id="jawa.util.bytecode.Instruction.wide">
 <code class="descname">wide</code><a class="headerlink" href="#jawa.util.bytecode.Instruction.wide" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">True</span></code> if this instruction needs to be prefixed by the WIDE
+<dd><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if this instruction needs to be prefixed by the WIDE
 opcode.</p>
 </dd></dl>
 
@@ -184,7 +205,7 @@ opcode.</p>
 <dl class="class">
 <dt id="jawa.util.bytecode.Operand">
 <em class="property">class </em><code class="descclassname">jawa.util.bytecode.</code><code class="descname">Operand</code><span class="sig-paren">(</span><em>op_type</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#jawa.util.bytecode.Operand" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
 <dl class="attribute">
 <dt id="jawa.util.bytecode.Operand.op_type">
 <code class="descname">op_type</code><a class="headerlink" href="#jawa.util.bytecode.Operand.op_type" title="Permalink to this definition">¶</a></dt>
@@ -200,10 +221,42 @@ opcode.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="jawa.util.bytecode.OperandFmts">
+<em class="property">class </em><code class="descclassname">jawa.util.bytecode.</code><code class="descname">OperandFmts</code><a class="reference internal" href="../_modules/jawa/util/bytecode.html#OperandFmts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.OperandFmts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>An enumeration.</p>
+<dl class="attribute">
+<dt id="jawa.util.bytecode.OperandFmts.BYTE">
+<code class="descname">BYTE</code><em class="property"> = &lt;Struct object&gt;</em><a class="headerlink" href="#jawa.util.bytecode.OperandFmts.BYTE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.util.bytecode.OperandFmts.INTEGER">
+<code class="descname">INTEGER</code><em class="property"> = &lt;Struct object&gt;</em><a class="headerlink" href="#jawa.util.bytecode.OperandFmts.INTEGER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.util.bytecode.OperandFmts.SHORT">
+<code class="descname">SHORT</code><em class="property"> = &lt;Struct object&gt;</em><a class="headerlink" href="#jawa.util.bytecode.OperandFmts.SHORT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.util.bytecode.OperandFmts.UBYTE">
+<code class="descname">UBYTE</code><em class="property"> = &lt;Struct object&gt;</em><a class="headerlink" href="#jawa.util.bytecode.OperandFmts.UBYTE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.util.bytecode.OperandFmts.USHORT">
+<code class="descname">USHORT</code><em class="property"> = &lt;Struct object&gt;</em><a class="headerlink" href="#jawa.util.bytecode.OperandFmts.USHORT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="jawa.util.bytecode.OperandTypes">
 <em class="property">class </em><code class="descclassname">jawa.util.bytecode.</code><code class="descname">OperandTypes</code><a class="reference internal" href="../_modules/jawa/util/bytecode.html#OperandTypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.OperandTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Constants used to determine the &#8220;type&#8221; of operand on an opcode,
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.IntEnum</span></code></p>
+<p>Constants used to determine the “type” of operand on an opcode,
 such as a BRANCH [offset] or a LITERAL [value].</p>
 <dl class="attribute">
 <dt id="jawa.util.bytecode.OperandTypes.BRANCH">
@@ -233,17 +286,33 @@ such as a BRANCH [offset] or a LITERAL [value].</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="jawa.util.bytecode.load_bytecode_definitions">
+<code class="descclassname">jawa.util.bytecode.</code><code class="descname">load_bytecode_definitions</code><span class="sig-paren">(</span><em>*</em>, <em>path=None</em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="../_modules/jawa/util/bytecode.html#load_bytecode_definitions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.load_bytecode_definitions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load bytecode definitions from JSON file.</p>
+<p>If no path is provided the default bytecode.json will be loaded.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – Either None or a path to a JSON file to load containing
+bytecode definitions.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="jawa.util.bytecode.read_instruction">
 <code class="descclassname">jawa.util.bytecode.</code><code class="descname">read_instruction</code><span class="sig-paren">(</span><em>fio</em>, <em>start_pos</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/util/bytecode.html#read_instruction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.read_instruction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reads a single instruction from <cite>fio</cite> and returns it, or <code class="docutils literal"><span class="pre">None</span></code> if
+<dd><p>Reads a single instruction from <cite>fio</cite> and returns it, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if
 the stream is empty.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>fio</strong> &#8211; Any file-like object providing <code class="docutils literal"><span class="pre">read()</span></code>.</li>
-<li><strong>start_pos</strong> &#8211; The current position in the stream.</li>
+<li><strong>fio</strong> – Any file-like object providing <code class="docutils literal notranslate"><span class="pre">read()</span></code>.</li>
+<li><strong>start_pos</strong> – The current position in the stream.</li>
 </ul>
 </td>
 </tr>
@@ -260,35 +329,14 @@ the stream is empty.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>fout</strong> &#8211; Any file-like object providing <code class="docutils literal"><span class="pre">write()</span></code>.</li>
-<li><strong>start_pos</strong> &#8211; The current position in the stream.</li>
-<li><strong>ins</strong> &#8211; The <cite>Instruction</cite> to write.</li>
+<li><strong>fout</strong> – Any file-like object providing <code class="docutils literal notranslate"><span class="pre">write()</span></code>.</li>
+<li><strong>start_pos</strong> – The current position in the stream.</li>
+<li><strong>ins</strong> – The <cite>Instruction</cite> to write.</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-<dl class="data">
-<dt id="jawa.util.bytecode.opcode_table">
-<code class="descclassname">jawa.util.bytecode.</code><code class="descname">opcode_table</code><em class="property"> = {0: ('nop', None), 1: ('aconst_null', None), 2: ('iconst_m1', None), 3: ('iconst_0', None), 4: ('iconst_1', None), 5: ('iconst_2', None), 6: ('iconst_3', None), 7: ('iconst_4', None), 8: ('iconst_5', None), 9: ('lconst_0', None), 10: ('lconst_1', None), 11: ('fconst_0', None), 12: ('fconst_1', None), 13: ('fconst_2', None), 14: ('dconst_0', None), 15: ('dconst_1', None), 16: ('bipush', [(&lt;Struct object&gt;, 10)]), 17: ('sipush', [(&lt;Struct object&gt;, 10)]), 18: ('ldc', [(&lt;Struct object&gt;, 30)]), 19: ('ldc_w', [(&lt;Struct object&gt;, 30)]), 20: ('ldc2_w', [(&lt;Struct object&gt;, 30)]), 21: ('iload', [(&lt;Struct object&gt;, 20)]), 22: ('lload', [(&lt;Struct object&gt;, 20)]), 23: ('fload', [(&lt;Struct object&gt;, 20)]), 24: ('dload', [(&lt;Struct object&gt;, 20)]), 25: ('aload', [(&lt;Struct object&gt;, 20)]), 26: ('iload_0', None), 27: ('iload_1', None), 28: ('iload_2', None), 29: ('iload_3', None), 30: ('lload_0', None), 31: ('lload_1', None), 32: ('lload_2', None), 33: ('lload_3', None), 34: ('fload_0', None), 35: ('fload_1', None), 36: ('fload_2', None), 37: ('fload_3', None), 38: ('dload_0', None), 39: ('dload_1', None), 40: ('dload_2', None), 41: ('dload_3', None), 42: ('aload_0', None), 43: ('aload_1', None), 44: ('aload_2', None), 45: ('aload_3', None), 46: ('iaload', None), 47: ('laload', None), 48: ('faload', None), 49: ('daload', None), 50: ('aaload', None), 51: ('baload', None), 52: ('caload', None), 53: ('saload', None), 54: ('istore', [(&lt;Struct object&gt;, 20)]), 55: ('lstore', [(&lt;Struct object&gt;, 20)]), 56: ('fstore', [(&lt;Struct object&gt;, 20)]), 57: ('dstore', [(&lt;Struct object&gt;, 20)]), 58: ('astore', [(&lt;Struct object&gt;, 20)]), 59: ('istore_0', None), 60: ('istore_1', None), 61: ('istore_2', None), 62: ('istore_3', None), 63: ('lstore_0', None), 64: ('lstore_1', None), 65: ('lstore_2', None), 66: ('lstore_3', None), 67: ('fstore_0', None), 68: ('fstore_1', None), 69: ('fstore_2', None), 70: ('fstore_3', None), 71: ('dstore_0', None), 72: ('dstore_1', None), 73: ('dstore_2', None), 74: ('dstore_3', None), 75: ('astore_0', None), 76: ('astore_1', None), 77: ('astore_2', None), 78: ('astore_3', None), 79: ('iastore', None), 80: ('lastore', None), 81: ('fastore', None), 82: ('dastore', None), 83: ('aastore', None), 84: ('bastore', None), 85: ('castore', None), 86: ('sastore', None), 87: ('pop', None), 88: ('pop2', None), 89: ('dup', None), 90: ('dup_x1', None), 91: ('dup_x2', None), 92: ('dup2', None), 93: ('dup2_x1', None), 94: ('dup2_x2', None), 95: ('swap', None), 96: ('iadd', None), 97: ('ladd', None), 98: ('fadd', None), 99: ('dadd', None), 100: ('isub', None), 101: ('lsub', None), 102: ('fsub', None), 103: ('dsub', None), 104: ('imul', None), 105: ('lmul', None), 106: ('fmul', None), 107: ('dmul', None), 108: ('idiv', None), 109: ('ldiv', None), 110: ('fdiv', None), 111: ('ddiv', None), 112: ('irem', None), 113: ('lrem', None), 114: ('frem', None), 115: ('drem', None), 116: ('ineg', None), 117: ('lneg', None), 118: ('fneg', None), 119: ('dneg', None), 120: ('ishl', None), 121: ('lshl', None), 122: ('ishr', None), 123: ('lshr', None), 124: ('iushr', None), 125: ('lushr', None), 126: ('iand', None), 127: ('land', None), 128: ('ior', None), 129: ('lor', None), 130: ('ixor', None), 131: ('lxor', None), 132: ('iinc', [(&lt;Struct object&gt;, 20), (&lt;Struct object&gt;, 10)]), 133: ('i2l', None), 134: ('i2f', None), 135: ('i2d', None), 136: ('l2i', None), 137: ('l2f', None), 138: ('l2d', None), 139: ('f2i', None), 140: ('f2l', None), 141: ('f2d', None), 142: ('d2i', None), 143: ('d2l', None), 144: ('d2f', None), 145: ('ib2', None), 146: ('i2c', None), 147: ('i2s', None), 148: ('lcmp', None), 149: ('fcmpl', None), 150: ('fcmpg', None), 151: ('dcmpl', None), 152: ('dcmpg', None), 153: ('ifeq', [(&lt;Struct object&gt;, 40)]), 154: ('ifne', [(&lt;Struct object&gt;, 40)]), 155: ('iflt', [(&lt;Struct object&gt;, 40)]), 156: ('ifge', [(&lt;Struct object&gt;, 40)]), 157: ('ifgt', [(&lt;Struct object&gt;, 40)]), 158: ('ifle', [(&lt;Struct object&gt;, 40)]), 159: ('if_icmpeq', [(&lt;Struct object&gt;, 40)]), 160: ('if_icmpne', [(&lt;Struct object&gt;, 40)]), 161: ('if_icmplt', [(&lt;Struct object&gt;, 40)]), 162: ('if_icmpge', [(&lt;Struct object&gt;, 40)]), 163: ('if_icmpgt', [(&lt;Struct object&gt;, 40)]), 164: ('if_icmple', [(&lt;Struct object&gt;, 40)]), 165: ('if_acmpeq', [(&lt;Struct object&gt;, 40)]), 166: ('if_acmpne', [(&lt;Struct object&gt;, 40)]), 167: ('goto', [(&lt;Struct object&gt;, 40)]), 168: ('jsr', [(&lt;Struct object&gt;, 40)]), 169: ('ret', [(&lt;Struct object&gt;, 20)]), 170: ('tableswitch', None), 171: ('lookupswitch', None), 172: ('ireturn', None), 173: ('lreturn', None), 174: ('freturn', None), 175: ('dreturn', None), 176: ('areturn', None), 177: ('return', None), 178: ('getstatic', [(&lt;Struct object&gt;, 30)]), 179: ('putstatic', [(&lt;Struct object&gt;, 30)]), 180: ('getfield', [(&lt;Struct object&gt;, 30)]), 181: ('putfield', [(&lt;Struct object&gt;, 30)]), 182: ('invokevirtual', [(&lt;Struct object&gt;, 30)]), 183: ('invokespecial', [(&lt;Struct object&gt;, 30)]), 184: ('invokestatic', [(&lt;Struct object&gt;, 30)]), 185: ('invokeinterface', [(&lt;Struct object&gt;, 30), (&lt;Struct object&gt;, 10), (&lt;Struct object&gt;, 50)]), 187: ('new', [(&lt;Struct object&gt;, 30)]), 188: ('newarray', [(&lt;Struct object&gt;, 10)]), 189: ('anewarray', [(&lt;Struct object&gt;, 10)]), 190: ('arraylength', None), 191: ('athrow', None), 192: ('checkcast', [(&lt;Struct object&gt;, 30)]), 193: ('instanceof', [(&lt;Struct object&gt;, 30)]), 194: ('monitorenter', None), 195: ('monitorexit', None), 196: ('wide', None), 197: ('multianewarray', [(&lt;Struct object&gt;, 30), (&lt;Struct object&gt;, 10)]), 198: ('ifnull', [(&lt;Struct object&gt;, 40)]), 199: ('ifnonnull', [(&lt;Struct object&gt;, 40)]), 200: ('goto_w', [(&lt;Struct object&gt;, 40)]), 201: ('jsr_w', [(&lt;Struct object&gt;, 40)]), 202: ('breakpoint', None), 254: ('impdep1', None), 255: ('impdep2', None)}</em><a class="headerlink" href="#jawa.util.bytecode.opcode_table" title="Permalink to this definition">¶</a></dt>
-<dd><p>An opcode to mnemonic &amp; operand format mapping for every opcode
-supported by the JVM.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="jawa.util.bytecode.definition_from_mnemonic">
-<code class="descclassname">jawa.util.bytecode.</code><code class="descname">definition_from_mnemonic</code><span class="sig-paren">(</span><em>mnemonic</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/util/bytecode.html#definition_from_mnemonic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.definition_from_mnemonic" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the definition of an instruction by its mnemonic in the
-form: <code class="docutils literal"><span class="pre">(opcode,</span> <span class="pre">operand_fmt)</span></code></p>
-</dd></dl>
-
-<dl class="function">
-<dt id="jawa.util.bytecode.definition_from_opcode">
-<code class="descclassname">jawa.util.bytecode.</code><code class="descname">definition_from_opcode</code><span class="sig-paren">(</span><em>opcode</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/util/bytecode.html#definition_from_opcode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.definition_from_opcode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the definition of an instruction by its opcode in the
-form: <code class="docutils literal"><span class="pre">(mnemonic,</span> <span class="pre">operand_fmt)</span></code></p>
 </dd></dl>
 
 </div>
@@ -298,7 +346,7 @@ form: <code class="docutils literal"><span class="pre">(mnemonic,</span> <span c
 <dl class="class">
 <dt id="jawa.util.descriptor.JVMType">
 <em class="property">class </em><code class="descclassname">jawa.util.descriptor.</code><code class="descname">JVMType</code><span class="sig-paren">(</span><em>base_type</em>, <em>dimensions</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#jawa.util.descriptor.JVMType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
 <dl class="attribute">
 <dt id="jawa.util.descriptor.JVMType.base_type">
 <code class="descname">base_type</code><a class="headerlink" href="#jawa.util.descriptor.JVMType.base_type" title="Permalink to this definition">¶</a></dt>
@@ -322,7 +370,7 @@ form: <code class="docutils literal"><span class="pre">(mnemonic,</span> <span c
 <dl class="class">
 <dt id="jawa.util.descriptor.MethodDescriptor">
 <em class="property">class </em><code class="descclassname">jawa.util.descriptor.</code><code class="descname">MethodDescriptor</code><span class="sig-paren">(</span><em>returns</em>, <em>args</em>, <em>returns_descriptor</em>, <em>args_descriptor</em>, <em>descriptor</em><span class="sig-paren">)</span><a class="headerlink" href="#jawa.util.descriptor.MethodDescriptor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
 <dl class="attribute">
 <dt id="jawa.util.descriptor.MethodDescriptor.args">
 <code class="descname">args</code><a class="headerlink" href="#jawa.util.descriptor.MethodDescriptor.args" title="Permalink to this definition">¶</a></dt>
@@ -357,24 +405,24 @@ form: <code class="docutils literal"><span class="pre">(mnemonic,</span> <span c
 
 <dl class="function">
 <dt id="jawa.util.descriptor.field_descriptor">
-<code class="descclassname">jawa.util.descriptor.</code><code class="descname">field_descriptor</code><span class="sig-paren">(</span><em>descriptor</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/util/descriptor.html#field_descriptor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.descriptor.field_descriptor" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">jawa.util.descriptor.</code><code class="descname">field_descriptor</code><span class="sig-paren">(</span><em>descriptor: str</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../_modules/jawa/util/descriptor.html#field_descriptor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.descriptor.field_descriptor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parses a Field descriptor as described in section 4.3.2 of the JVM
 specification.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="jawa.util.descriptor.method_descriptor">
-<code class="descclassname">jawa.util.descriptor.</code><code class="descname">method_descriptor</code><span class="sig-paren">(</span><em>descriptor</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/util/descriptor.html#method_descriptor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.descriptor.method_descriptor" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">jawa.util.descriptor.</code><code class="descname">method_descriptor</code><span class="sig-paren">(</span><em>descriptor: str</em><span class="sig-paren">)</span> &#x2192; jawa.util.descriptor.MethodDescriptor<a class="reference internal" href="../_modules/jawa/util/descriptor.html#method_descriptor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.descriptor.method_descriptor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parses a Method descriptor as described in section 4.3.3 of the JVM
 specification.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="jawa.util.descriptor.parse_descriptor">
-<code class="descclassname">jawa.util.descriptor.</code><code class="descname">parse_descriptor</code><span class="sig-paren">(</span><em>descriptor</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/util/descriptor.html#parse_descriptor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.descriptor.parse_descriptor" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">jawa.util.descriptor.</code><code class="descname">parse_descriptor</code><span class="sig-paren">(</span><em>descriptor: str</em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="../_modules/jawa/util/descriptor.html#parse_descriptor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.descriptor.parse_descriptor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses a tiny state machine to parse JVM descriptors. To get useful wrappers
-around the results, use <code class="xref py py-func docutils literal"><span class="pre">jawa.core.descriptor.method_descriptor()</span></code>
-or <code class="xref py py-func docutils literal"><span class="pre">jawa.core.descriptor.field_descriptor()</span></code>.</p>
+around the results, use <code class="xref py py-func docutils literal notranslate"><span class="pre">jawa.core.descriptor.method_descriptor()</span></code>
+or <code class="xref py py-func docutils literal notranslate"><span class="pre">jawa.core.descriptor.field_descriptor()</span></code>.</p>
 </dd></dl>
 
 </div>
@@ -383,8 +431,8 @@ or <code class="xref py py-func docutils literal"><span class="pre">jawa.core.de
 <dl class="class">
 <dt id="jawa.util.flags.Flags">
 <em class="property">class </em><code class="descclassname">jawa.util.flags.</code><code class="descname">Flags</code><span class="sig-paren">(</span><em>binary_format</em>, <em>flags</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/util/flags.html#Flags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.flags.Flags" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Convience class for handling bit flags.</p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Convenience class for handling bit flags.</p>
 <dl class="method">
 <dt id="jawa.util.flags.Flags.get">
 <code class="descname">get</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/util/flags.html#Flags.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.flags.Flags.get" title="Permalink to this definition">¶</a></dt>
@@ -407,7 +455,7 @@ or <code class="xref py py-func docutils literal"><span class="pre">jawa.core.de
 <dl class="method">
 <dt id="jawa.util.flags.Flags.to_dict">
 <code class="descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/util/flags.html#Flags.to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.flags.Flags.to_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns this <cite>Flags</cite> object&#8217;s fields as a dictionary.</p>
+<dd><p>Returns this <cite>Flags</cite> object’s fields as a dictionary.</p>
 </dd></dl>
 
 <dl class="method">
@@ -436,14 +484,14 @@ for MUTF-8/CESU-8 into the python core.</p>
 </div>
 <dl class="function">
 <dt id="jawa.util.utf.decode_modified_utf8">
-<code class="descclassname">jawa.util.utf.</code><code class="descname">decode_modified_utf8</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/util/utf.html#decode_modified_utf8"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.utf.decode_modified_utf8" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">jawa.util.utf.</code><code class="descname">decode_modified_utf8</code><span class="sig-paren">(</span><em>s: bytes</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../_modules/jawa/util/utf.html#decode_modified_utf8"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.utf.decode_modified_utf8" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decodes a bytestring containing modified UTF-8 as defined in section
 4.4.7 of the JVM specification.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; bytestring to be converted.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> – bytestring to be converted.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A unicode representation of the original string.</td>
 </tr>
@@ -453,16 +501,16 @@ for MUTF-8/CESU-8 into the python core.</p>
 
 <dl class="function">
 <dt id="jawa.util.utf.encode_modified_utf8">
-<code class="descclassname">jawa.util.utf.</code><code class="descname">encode_modified_utf8</code><span class="sig-paren">(</span><em>u</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jawa/util/utf.html#encode_modified_utf8"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.utf.encode_modified_utf8" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">jawa.util.utf.</code><code class="descname">encode_modified_utf8</code><span class="sig-paren">(</span><em>u: str</em><span class="sig-paren">)</span> &#x2192; bytearray<a class="reference internal" href="../_modules/jawa/util/utf.html#encode_modified_utf8"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.utf.encode_modified_utf8" title="Permalink to this definition">¶</a></dt>
 <dd><p>Encodes a unicode string as modified UTF-8 as defined in section 4.4.7
 of the JVM specification.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>u</strong> &#8211; unicode to be converted.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>u</strong> – unicode string to be converted.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A decoded bytestring.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A decoded bytearray.</td>
 </tr>
 </tbody>
 </table>
@@ -473,15 +521,9 @@ of the JVM specification.</p>
 
 
            </div>
+           
           </div>
           <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-      
-        <a href="../attributes/index.html" class="btn btn-neutral" title="Implemented Attributes" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-    </div>
   
 
   <hr/>
@@ -492,7 +534,7 @@ of the JVM specification.</p>
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -511,9 +553,11 @@ of the JVM specification.</p>
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
             VERSION:'',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -527,14 +571,11 @@ of the JVM specification.</p>
     <script type="text/javascript" src="../_static/js/theme.js"></script>
   
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

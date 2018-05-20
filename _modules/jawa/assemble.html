@@ -24,6 +24,8 @@
 
   
   
+  
+  
 
   
 
@@ -34,23 +36,19 @@
   
 
   
-  
     <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="jawa  documentation" href="../../index.html"/>
-        <link rel="up" title="Module code" href="../index.html"/> 
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -87,13 +85,15 @@
           
             
             
-                <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/hello_world.html">Generating Classes From Scratch - Hello World!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/dism.html">Disassembly - A Simple javap Clone</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../jawa.html">Core APIs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../attributes/index.html">Implemented Attributes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../util/index.html">Utility APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../jawa.html">jawa package</a></li>
 </ul>
 
             
@@ -105,56 +105,73 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../index.html">jawa</a>
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">jawa</a>
+        
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../index.html">Module code</a> &raquo;</li>
-      
-    <li>jawa.assemble</li>
+        
+      <li>jawa.assemble</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
   <h1>Source code for jawa.assemble</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf8 -*-</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
+<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
 
 <span class="kn">from</span> <span class="nn">jawa.constants</span> <span class="k">import</span> <span class="n">Constant</span>
 <span class="kn">from</span> <span class="nn">jawa.util.bytecode</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">Operand</span><span class="p">,</span>
     <span class="n">OperandTypes</span><span class="p">,</span>
     <span class="n">Instruction</span><span class="p">,</span>
-    <span class="n">definition_from_mnemonic</span>
+    <span class="n">opcode_table</span>
 <span class="p">)</span>
 
 
 <span class="n">Label</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;Label&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
 
 
-<div class="viewcode-block" id="assemble"><a class="viewcode-back" href="../../jawa.html#jawa.assemble.assemble">[docs]</a><span class="k">def</span> <span class="nf">assemble</span><span class="p">(</span><span class="n">code</span><span class="p">):</span>
+<div class="viewcode-block" id="assemble"><a class="viewcode-back" href="../../jawa.assemble.html#jawa.assemble.assemble">[docs]</a><span class="k">def</span> <span class="nf">assemble</span><span class="p">(</span><span class="n">code</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Assemble the given iterable of mnemonics, operands, and lables.</span>
 
@@ -187,7 +204,7 @@
             <span class="k">continue</span>
 
         <span class="n">mnemonic</span><span class="p">,</span> <span class="n">operands</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-        <span class="n">operand_fmts</span> <span class="o">=</span> <span class="n">definition_from_mnemonic</span><span class="p">(</span><span class="n">mnemonic</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">operand_fmts</span> <span class="o">=</span> <span class="n">opcode_table</span><span class="p">[</span><span class="n">mnemonic</span><span class="p">][</span><span class="s1">&#39;operands&#39;</span><span class="p">]</span>
 
         <span class="c1"># We need to coerce each opcodes operands into their</span>
         <span class="c1"># final `Operand` form.</span>
@@ -203,7 +220,7 @@
                     <span class="n">operand</span><span class="o">.</span><span class="n">index</span>
                 <span class="p">))</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-                    <span class="c1"># lookupswitch&#39;s operand is a dict as</span>
+                <span class="c1"># lookupswitch&#39;s operand is a dict as</span>
                 <span class="c1"># a special usability case.</span>
                 <span class="n">final_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">operand</span><span class="p">)</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="n">Label</span><span class="p">):</span>
@@ -217,10 +234,7 @@
                 <span class="p">))</span>
 
         <span class="c1"># Build the final, immutable `Instruction`.</span>
-        <span class="n">final</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Instruction</span><span class="o">.</span><span class="n">from_mnemonic</span><span class="p">(</span>
-            <span class="n">mnemonic</span><span class="p">,</span>
-            <span class="n">operands</span><span class="o">=</span><span class="n">final_operands</span>
-        <span class="p">))</span>
+        <span class="n">final</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Instruction</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">mnemonic</span><span class="p">,</span> <span class="n">final_operands</span><span class="p">))</span>
 
     <span class="n">label_pcs</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -238,7 +252,6 @@
     <span class="c1"># The third pass, now that we know where each label is we can figure</span>
     <span class="c1"># out the offset for each jump.</span>
     <span class="n">current_pc</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">offset</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="n">Operand</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="n">label_pcs</span><span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">-</span> <span class="n">current_pc</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">ins</span> <span class="ow">in</span> <span class="n">final</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ins</span><span class="p">,</span> <span class="n">Label</span><span class="p">):</span>
@@ -249,9 +262,12 @@
                 <span class="c1"># lookupswitch is a special case</span>
                 <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">operand</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Label</span><span class="p">):</span>
-                        <span class="n">operand</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">offset</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                        <span class="n">operand</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">Operand</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="n">label_pcs</span><span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">-</span> <span class="n">current_pc</span><span class="p">)</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="n">Label</span><span class="p">):</span>
-                <span class="n">ins</span><span class="o">.</span><span class="n">operands</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">offset</span><span class="p">(</span><span class="n">operand</span><span class="p">)</span>
+                <span class="n">ins</span><span class="o">.</span><span class="n">operands</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Operand</span><span class="p">(</span>
+                    <span class="mi">40</span><span class="p">,</span>
+                    <span class="n">label_pcs</span><span class="p">[</span><span class="n">operand</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">-</span> <span class="n">current_pc</span>
+                <span class="p">)</span>
 
         <span class="n">current_pc</span> <span class="o">+=</span> <span class="n">ins</span><span class="o">.</span><span class="n">size_on_disk</span><span class="p">(</span><span class="n">current_pc</span><span class="p">)</span>
 
@@ -259,6 +275,7 @@
 </pre></div>
 
            </div>
+           
           </div>
           <footer>
   
@@ -271,7 +288,7 @@
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -290,9 +307,11 @@
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
             VERSION:'',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>
@@ -306,14 +325,11 @@
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
   
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

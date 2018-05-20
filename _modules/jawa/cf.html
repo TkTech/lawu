@@ -24,6 +24,8 @@
 
   
   
+  
+  
 
   
 
@@ -34,23 +36,19 @@
   
 
   
-  
     <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="jawa  documentation" href="../../index.html"/>
-        <link rel="up" title="Module code" href="../index.html"/> 
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -87,13 +85,15 @@
           
             
             
-                <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/hello_world.html">Generating Classes From Scratch - Hello World!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/dism.html">Disassembly - A Simple javap Clone</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../jawa.html">Core APIs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../attributes/index.html">Implemented Attributes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../util/index.html">Utility APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../jawa.html">jawa package</a></li>
 </ul>
 
             
@@ -105,65 +105,83 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../index.html">jawa</a>
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">jawa</a>
+        
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../index.html">Module code</a> &raquo;</li>
-      
-    <li>jawa.cf</li>
+        
+      <li>jawa.cf</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
   <h1>Source code for jawa.cf</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf8 -*-</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">ClassFile support.</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">ClassFile reader &amp; writer.</span>
 
 <span class="sd">The :mod:`jawa.cf` module provides tools for working with JVM ``.class``</span>
 <span class="sd">ClassFiles.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">IO</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Sequence</span>
 <span class="kn">from</span> <span class="nn">struct</span> <span class="k">import</span> <span class="n">pack</span><span class="p">,</span> <span class="n">unpack</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
 
-
-<span class="kn">from</span> <span class="nn">jawa.constants</span> <span class="k">import</span> <span class="n">ConstantPool</span>
+<span class="kn">from</span> <span class="nn">jawa.constants</span> <span class="k">import</span> <span class="n">ConstantPool</span><span class="p">,</span> <span class="n">ConstantClass</span>
 <span class="kn">from</span> <span class="nn">jawa.fields</span> <span class="k">import</span> <span class="n">FieldTable</span>
 <span class="kn">from</span> <span class="nn">jawa.methods</span> <span class="k">import</span> <span class="n">MethodTable</span>
-<span class="kn">from</span> <span class="nn">jawa.attribute</span> <span class="k">import</span> <span class="n">AttributeTable</span>
+<span class="kn">from</span> <span class="nn">jawa.attribute</span> <span class="k">import</span> <span class="n">AttributeTable</span><span class="p">,</span> <span class="n">ATTRIBUTE_CLASSES</span>
 <span class="kn">from</span> <span class="nn">jawa.util.flags</span> <span class="k">import</span> <span class="n">Flags</span>
+<span class="kn">from</span> <span class="nn">jawa.attributes.bootstrap</span> <span class="k">import</span> <span class="n">BootstrapMethod</span>
 
 
-<div class="viewcode-block" id="ClassVersion"><a class="viewcode-back" href="../../jawa.html#jawa.cf.ClassVersion">[docs]</a><span class="k">class</span> <span class="nc">ClassVersion</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;ClassVersion&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="s1">&#39;minor&#39;</span><span class="p">])):</span>
+<div class="viewcode-block" id="ClassVersion"><a class="viewcode-back" href="../../jawa.cf.html#jawa.cf.ClassVersion">[docs]</a><span class="k">class</span> <span class="nc">ClassVersion</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;ClassVersion&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="s1">&#39;minor&#39;</span><span class="p">])):</span>
     <span class="sd">&quot;&quot;&quot;ClassFile file format version.&quot;&quot;&quot;</span>
 
-    <span class="n">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">human</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">human</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A human-readable string identifying this version.</span>
 
@@ -180,46 +198,39 @@
         <span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">major</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ClassFile"><a class="viewcode-back" href="../../jawa.html#jawa.cf.ClassFile">[docs]</a><span class="k">class</span> <span class="nc">ClassFile</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="ClassFile"><a class="viewcode-back" href="../../jawa.cf.html#jawa.cf.ClassFile">[docs]</a><span class="k">class</span> <span class="nc">ClassFile</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Implements the JVM ClassFile (files typically ending in ``.class``).</span>
 
 <span class="sd">    To open an existing ClassFile::</span>
 
-<span class="sd">        from jawa import ClassFile</span>
-<span class="sd">        with open(&#39;HelloWorld.class&#39;) as fin:</span>
-<span class="sd">            cf = ClassFile(fin)</span>
+<span class="sd">        &gt;&gt;&gt; with open(&#39;HelloWorld.class&#39;, &#39;rb&#39;) as fin:</span>
+<span class="sd">        ...    cf = ClassFile(fin)</span>
 
 <span class="sd">    To save a newly created or modified ClassFile::</span>
 
-<span class="sd">        with open(&#39;HelloWorld.class&#39;, &#39;wb&#39;) as fout:</span>
-<span class="sd">            cf.save(fout)</span>
+<span class="sd">        &gt;&gt;&gt; cf = ClassFile.create(&#39;HelloWorld&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; with open(&#39;HelloWorld.class&#39;, &#39;wb&#39;) as out:</span>
+<span class="sd">        ...    cf.save(out)</span>
 
-<span class="sd">    To create a new ClassFile, use the helper :meth:`~ClassFile.create`::</span>
-
-<span class="sd">        from jawa import ClassFile</span>
-<span class="sd">        cf = ClassFile.create(&#39;HelloWorld&#39;)</span>
-<span class="sd">        with open(&#39;HelloWorld.class&#39;, &#39;wb&#39;) as fout:</span>
-<span class="sd">            cf.save(fout)</span>
-
-<span class="sd">    :meth:`~ClassFile.create` sets up some reasonable defaults equivelent to:</span>
+<span class="sd">    :meth:`~ClassFile.create` sets up some reasonable defaults equivalent to:</span>
 
 <span class="sd">    .. code-block:: java</span>
 
 <span class="sd">        public class HelloWorld extends java.lang.Object{</span>
 <span class="sd">        }</span>
 
-<span class="sd">    :param fio: any file-like object providing ``.read()``.</span>
+<span class="sd">    :param source: any file-like object providing ``.read()``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1">#: The JVM ClassFile magic number.</span>
     <span class="n">MAGIC</span> <span class="o">=</span> <span class="mh">0xCAFEBABE</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fio</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">IO</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># Default to J2SE_7</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">=</span> <span class="n">ClassVersion</span><span class="p">(</span><span class="mh">0x32</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_constants</span> <span class="o">=</span> <span class="n">ConstantPool</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_access_flags</span> <span class="o">=</span> <span class="n">Flags</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_flags</span> <span class="o">=</span> <span class="n">Flags</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="p">{</span>
             <span class="s1">&#39;acc_public&#39;</span><span class="p">:</span> <span class="mh">0x0001</span><span class="p">,</span>
             <span class="s1">&#39;acc_final&#39;</span><span class="p">:</span> <span class="mh">0x0010</span><span class="p">,</span>
             <span class="s1">&#39;acc_super&#39;</span><span class="p">:</span> <span class="mh">0x0020</span><span class="p">,</span>
@@ -232,15 +243,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_this</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_super</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_interfaces</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="o">=</span> <span class="n">FieldTable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_methods</span> <span class="o">=</span> <span class="n">MethodTable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span> <span class="o">=</span> <span class="n">AttributeTable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="n">FieldTable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">methods</span> <span class="o">=</span> <span class="n">MethodTable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span> <span class="o">=</span> <span class="n">AttributeTable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="c1">#: The ClassLoader bound to this ClassFile, if any.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classloader</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="k">if</span> <span class="n">fio</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_from_io</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">source</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_from_io</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="ClassFile.create"><a class="viewcode-back" href="../../jawa.html#jawa.cf.ClassFile.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">this</span><span class="p">,</span> <span class="n">super_</span><span class="o">=</span><span class="s1">&#39;java/lang/Object&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="ClassFile.create"><a class="viewcode-back" href="../../jawa.cf.html#jawa.cf.ClassFile.create">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">this</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">super_</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="sa">u</span><span class="s1">&#39;java/lang/Object&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ClassFile&#39;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A utility which sets up reasonable defaults for a new public class.</span>
 
@@ -256,11 +269,13 @@
 
         <span class="k">return</span> <span class="n">cf</span></div>
 
-<div class="viewcode-block" id="ClassFile.save"><a class="viewcode-back" href="../../jawa.html#jawa.cf.ClassFile.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fout</span><span class="p">):</span>
+<div class="viewcode-block" id="ClassFile.save"><a class="viewcode-back" href="../../jawa.cf.html#jawa.cf.ClassFile.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">IO</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Saves the class to the file-like object `fout`.</span>
+<span class="sd">        Saves the class to the file-like object `source`.</span>
+
+<span class="sd">        :param source: Any file-like object providing write().</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">write</span> <span class="o">=</span> <span class="n">fout</span><span class="o">.</span><span class="n">write</span>
+        <span class="n">write</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">write</span>
 
         <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span>
             <span class="s1">&#39;&gt;IHH&#39;</span><span class="p">,</span>
@@ -269,34 +284,34 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="o">.</span><span class="n">major</span>
         <span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_constants</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_constants</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
 
         <span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">pack</span><span class="p">())</span>
         <span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span>
-            <span class="s1">&#39;&gt;HHH</span><span class="si">{0}</span><span class="s1">H&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_interfaces</span><span class="p">)),</span>
+            <span class="n">f</span><span class="s1">&#39;&gt;HHH{len(self._interfaces)}H&#39;</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_this</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_super</span><span class="p">,</span>
             <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_interfaces</span><span class="p">),</span>
             <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_interfaces</span>
         <span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_methods</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">source</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_from_io</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fio</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_from_io</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">IO</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Loads an existing JVM ClassFile from any file-like object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">read</span> <span class="o">=</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span>
+        <span class="n">read</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">read</span>
 
-        <span class="k">if</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;I&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">ClassFile</span><span class="o">.</span><span class="n">MAGIC</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;I&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">ClassFile</span><span class="o">.</span><span class="n">MAGIC</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;invalid magic number&#39;</span><span class="p">)</span>
 
         <span class="c1"># The version is swapped on disk to (minor, major), so swap it back.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;HH&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;HH&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_constants</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_constants</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
 
         <span class="c1"># ClassFile access_flags, see section #4.1 of the JVM specs.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
@@ -305,16 +320,16 @@
         <span class="c1"># Interfaces are a simple list of CONSTANT_Class indexes.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_this</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_super</span><span class="p">,</span> <span class="n">interfaces_count</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;HHH&#39;</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_interfaces</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span>
-            <span class="s1">&#39;&gt;</span><span class="si">{0}</span><span class="s1">H&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">interfaces_count</span><span class="p">),</span>
+            <span class="n">f</span><span class="s1">&#39;&gt;</span><span class="si">{interfaces_count}</span><span class="s1">H&#39;</span><span class="p">,</span>
             <span class="n">read</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">interfaces_count</span><span class="p">)</span>
         <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_methods</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ClassVersion</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The :class:`~jawa.cf.ClassVersion` for this class.</span>
 
@@ -330,22 +345,18 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_version</span>
 
     <span class="nd">@version</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">major</span><span class="p">,</span> <span class="n">minor</span><span class="p">)):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">=</span> <span class="n">ClassVersion</span><span class="p">(</span><span class="n">major</span><span class="p">,</span> <span class="n">minor</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">major_minor</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ClassVersion</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">=</span> <span class="n">ClassVersion</span><span class="p">(</span><span class="o">*</span><span class="n">major_minor</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">constants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">constants</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConstantPool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The :class:`~jawa.cp.ConstantPool` for this class.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_constants</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">access_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_access_flags</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">this</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">this</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConstantClass</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The :class:`~jawa.constants.ConstantClass` which represents this class.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -356,7 +367,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_this</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">index</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">super_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">super_</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConstantClass</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The :class:`~jawa.constants.ConstantClass` which represents this</span>
 <span class="sd">        class&#39;s superclass.</span>
@@ -364,40 +375,40 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_super</span><span class="p">)</span>
 
     <span class="nd">@super_</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">super_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">super_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">ConstantClass</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_super</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">index</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">interfaces</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">interfaces</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">ConstantClass</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A list of direct superinterfaces of this class as indexes into</span>
 <span class="sd">        the constant pool, in left-to-right order.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interfaces</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_constants</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interfaces</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">bootstrap_methods</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BootstrapMethod</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The :class:`~jawa.fields.FieldTable` for this class.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span>
+<span class="sd">        Returns the bootstrap methods table from the BootstrapMethods attribute,</span>
+<span class="sd">        if one exists. If it does not, one will be created.</span>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">methods</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The :class:`~jawa.methods.MethodTable` for this class.</span>
+<span class="sd">        :returns: Table of `BootstrapMethod` objects.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_methods</span>
+        <span class="n">bootstrap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">find_one</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;BootstrapMethods&#39;</span><span class="p">)</span>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The :class:`~jawa.attribute.AttributeTable` for this class.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attributes</span></div>
+        <span class="k">if</span> <span class="n">bootstrap</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">bootstrap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                <span class="n">ATTRIBUTE_CLASSES</span><span class="p">[</span><span class="s1">&#39;BootstrapMethods&#39;</span><span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">bootstrap</span><span class="o">.</span><span class="n">table</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s1">&#39;&lt;ClassFile(this=</span><span class="si">{self.this.name.value!r}</span><span class="s1">)&gt;&#39;</span></div>
 </pre></div>
 
            </div>
+           
           </div>
           <footer>
   
@@ -410,7 +421,7 @@
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -429,9 +440,11 @@
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
             VERSION:'',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>
@@ -445,14 +458,11 @@
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
   
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

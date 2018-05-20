@@ -1,0 +1,919 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-11145163-14']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>jawa.constants module &mdash; jawa  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="jawa.fields module" href="jawa.fields.html" />
+    <link rel="prev" title="jawa.classloader module" href="jawa.classloader.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> jawa
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/hello_world.html">Generating Classes From Scratch - Hello World!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/dism.html">Disassembly - A Simple javap Clone</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="jawa.html">jawa package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="jawa.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="jawa.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="jawa.assemble.html">jawa.assemble module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.attribute.html">jawa.attribute module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.cf.html">jawa.cf module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.classloader.html">jawa.classloader module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">jawa.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.fields.html">jawa.fields module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.methods.html">jawa.methods module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.transforms.html">jawa.transforms module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">jawa</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="jawa.html">jawa package</a> &raquo;</li>
+        
+      <li>jawa.constants module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/jawa.constants.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-jawa.constants">
+<span id="jawa-constants-module"></span><h1>jawa.constants module<a class="headerlink" href="#module-jawa.constants" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="jawa.constants.Constant">
+<em class="property">class </em><code class="descclassname">jawa.constants.</code><code class="descname">Constant</code><span class="sig-paren">(</span><em>pool</em>, <em>index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#Constant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.Constant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The base class for all <code class="docutils literal notranslate"><span class="pre">Constant*</span></code> types.</p>
+<dl class="attribute">
+<dt id="jawa.constants.Constant.index">
+<code class="descname">index</code><a class="headerlink" href="#jawa.constants.Constant.index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.Constant.pool">
+<code class="descname">pool</code><a class="headerlink" href="#jawa.constants.Constant.pool" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.constants.ConstantClass">
+<em class="property">class </em><code class="descclassname">jawa.constants.</code><code class="descname">ConstantClass</code><span class="sig-paren">(</span><em>pool</em>, <em>index</em>, <em>name_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#ConstantClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.ConstantClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.constants.Constant" title="jawa.constants.Constant"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.constants.Constant</span></code></a></p>
+<dl class="attribute">
+<dt id="jawa.constants.ConstantClass.TAG">
+<code class="descname">TAG</code><em class="property"> = 7</em><a class="headerlink" href="#jawa.constants.ConstantClass.TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.ConstantClass.name">
+<code class="descname">name</code><a class="headerlink" href="#jawa.constants.ConstantClass.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.ConstantClass.name_index">
+<code class="descname">name_index</code><a class="headerlink" href="#jawa.constants.ConstantClass.name_index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.ConstantClass.pack">
+<code class="descname">pack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#ConstantClass.pack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.ConstantClass.pack" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.constants.ConstantPool">
+<em class="property">class </em><code class="descclassname">jawa.constants.</code><code class="descname">ConstantPool</code><a class="reference internal" href="_modules/jawa/constants.html#ConstantPool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.ConstantPool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="jawa.constants.ConstantPool.append">
+<code class="descname">append</code><span class="sig-paren">(</span><em>constant</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#ConstantPool.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.ConstantPool.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Appends a new constant to the end of the pool.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.ConstantPool.create_class">
+<code class="descname">create_class</code><span class="sig-paren">(</span><em>name: str</em><span class="sig-paren">)</span> &#x2192; jawa.constants.ConstantClass<a class="reference internal" href="_modules/jawa/constants.html#ConstantPool.create_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.ConstantPool.create_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new <a class="reference internal" href="#jawa.constants.ConstantClass" title="jawa.constants.ConstantClass"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConstantClass</span></code></a>, adding it to the pool and
+returning it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> – The name of the new class.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.ConstantPool.create_double">
+<code class="descname">create_double</code><span class="sig-paren">(</span><em>value: float</em><span class="sig-paren">)</span> &#x2192; jawa.constants.Double<a class="reference internal" href="_modules/jawa/constants.html#ConstantPool.create_double"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.ConstantPool.create_double" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new <code class="xref py py-class docutils literal notranslate"><span class="pre">ConstantDouble</span></code>, adding it to the pool and
+returning it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> – The value of the new Double.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.ConstantPool.create_field_ref">
+<code class="descname">create_field_ref</code><span class="sig-paren">(</span><em>class_: str</em>, <em>field: str</em>, <em>descriptor: str</em><span class="sig-paren">)</span> &#x2192; jawa.constants.FieldReference<a class="reference internal" href="_modules/jawa/constants.html#ConstantPool.create_field_ref"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.ConstantPool.create_field_ref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new <code class="xref py py-class docutils literal notranslate"><span class="pre">ConstantFieldRef</span></code>, adding it to the pool and
+returning it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>class</strong> – The name of the class to which <cite>field</cite> belongs.</li>
+<li><strong>field</strong> – The name of the field.</li>
+<li><strong>descriptor</strong> – The descriptor for <cite>field</cite>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.ConstantPool.create_float">
+<code class="descname">create_float</code><span class="sig-paren">(</span><em>value: float</em><span class="sig-paren">)</span> &#x2192; jawa.constants.Float<a class="reference internal" href="_modules/jawa/constants.html#ConstantPool.create_float"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.ConstantPool.create_float" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new <code class="xref py py-class docutils literal notranslate"><span class="pre">ConstantFloat</span></code>, adding it to the pool and
+returning it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> – The value of the new float.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.ConstantPool.create_integer">
+<code class="descname">create_integer</code><span class="sig-paren">(</span><em>value: int</em><span class="sig-paren">)</span> &#x2192; jawa.constants.Integer<a class="reference internal" href="_modules/jawa/constants.html#ConstantPool.create_integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.ConstantPool.create_integer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new <code class="xref py py-class docutils literal notranslate"><span class="pre">ConstantInteger</span></code>, adding it to the pool and
+returning it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> – The value of the new integer.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.ConstantPool.create_interface_method_ref">
+<code class="descname">create_interface_method_ref</code><span class="sig-paren">(</span><em>class_: str</em>, <em>if_method: str</em>, <em>descriptor: str</em><span class="sig-paren">)</span> &#x2192; jawa.constants.InterfaceMethodRef<a class="reference internal" href="_modules/jawa/constants.html#ConstantPool.create_interface_method_ref"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.ConstantPool.create_interface_method_ref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new <code class="xref py py-class docutils literal notranslate"><span class="pre">ConstantInterfaceMethodRef</span></code>, adding it to the
+pool and returning it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>class</strong> – The name of the class to which <cite>if_method</cite> belongs.</li>
+<li><strong>if_method</strong> – The name of the interface method.</li>
+<li><strong>descriptor</strong> – The descriptor for <cite>if_method</cite>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.ConstantPool.create_long">
+<code class="descname">create_long</code><span class="sig-paren">(</span><em>value: int</em><span class="sig-paren">)</span> &#x2192; jawa.constants.Long<a class="reference internal" href="_modules/jawa/constants.html#ConstantPool.create_long"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.ConstantPool.create_long" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new <code class="xref py py-class docutils literal notranslate"><span class="pre">ConstantLong</span></code>, adding it to the pool and
+returning it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> – The value of the new long.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.ConstantPool.create_method_ref">
+<code class="descname">create_method_ref</code><span class="sig-paren">(</span><em>class_: str</em>, <em>method: str</em>, <em>descriptor: str</em><span class="sig-paren">)</span> &#x2192; jawa.constants.MethodReference<a class="reference internal" href="_modules/jawa/constants.html#ConstantPool.create_method_ref"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.ConstantPool.create_method_ref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new <code class="xref py py-class docutils literal notranslate"><span class="pre">ConstantMethodRef</span></code>, adding it to the pool and
+returning it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>class</strong> – The name of the class to which <cite>method</cite> belongs.</li>
+<li><strong>method</strong> – The name of the method.</li>
+<li><strong>descriptor</strong> – The descriptor for <cite>method</cite>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.ConstantPool.create_name_and_type">
+<code class="descname">create_name_and_type</code><span class="sig-paren">(</span><em>name: str</em>, <em>descriptor: str</em><span class="sig-paren">)</span> &#x2192; jawa.constants.NameAndType<a class="reference internal" href="_modules/jawa/constants.html#ConstantPool.create_name_and_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.ConstantPool.create_name_and_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new <code class="xref py py-class docutils literal notranslate"><span class="pre">ConstantNameAndType</span></code>, adding it to the pool and
+returning it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> – The name of the class.</li>
+<li><strong>descriptor</strong> – The descriptor for <cite>name</cite>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.ConstantPool.create_string">
+<code class="descname">create_string</code><span class="sig-paren">(</span><em>value: str</em><span class="sig-paren">)</span> &#x2192; jawa.constants.String<a class="reference internal" href="_modules/jawa/constants.html#ConstantPool.create_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.ConstantPool.create_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new <code class="xref py py-class docutils literal notranslate"><span class="pre">ConstantString</span></code>, adding it to the pool and
+returning it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> – The value of the new string as a UTF8 string.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.ConstantPool.create_utf8">
+<code class="descname">create_utf8</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#ConstantPool.create_utf8"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.ConstantPool.create_utf8" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new <code class="xref py py-class docutils literal notranslate"><span class="pre">ConstantUTF8</span></code>, adding it to the pool and
+returning it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> – The value of the new UTF8 string.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.ConstantPool.find">
+<code class="descname">find</code><span class="sig-paren">(</span><em>type_=None</em>, <em>f=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#ConstantPool.find"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.ConstantPool.find" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterates over the pool, yielding each matching <code class="docutils literal notranslate"><span class="pre">Constant</span></code>. Calling
+without any arguments is equivalent to iterating over the pool.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>type</strong> – Any subclass of <a class="reference internal" href="#jawa.constants.Constant" title="jawa.constants.Constant"><code class="xref py py-class docutils literal notranslate"><span class="pre">Constant</span></code></a> or <code class="docutils literal notranslate"><span class="pre">None</span></code>.</li>
+<li><strong>f</strong> – Any callable which takes one argument (the constant).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.ConstantPool.find_one">
+<code class="descname">find_one</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#ConstantPool.find_one"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.ConstantPool.find_one" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <code class="docutils literal notranslate"><span class="pre">find()</span></code> but returns only the first result, or <cite>None</cite> if
+nothing was found.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.ConstantPool.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#ConstantPool.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.ConstantPool.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the <cite>Constant</cite> at <cite>index</cite>, raising a KeyError if it
+does not exist.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.ConstantPool.pack">
+<code class="descname">pack</code><span class="sig-paren">(</span><em>fout</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#ConstantPool.pack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.ConstantPool.pack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the ConstantPool to the file-like object <cite>fout</cite>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Advanced usage only. You will typically never need to call this
+method as it will be calle=d for you when saving a ClassFile.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fout</strong> – Any file-like object providing <cite>write()</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.ConstantPool.raw_count">
+<code class="descname">raw_count</code><a class="headerlink" href="#jawa.constants.ConstantPool.raw_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of <cite>Constants</cite> in the <cite>ConstantPool</cite>, including padding.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.ConstantPool.unpack">
+<code class="descname">unpack</code><span class="sig-paren">(</span><em>fio</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#ConstantPool.unpack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.ConstantPool.unpack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the ConstantPool from the file-like object <cite>fio</cite>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Advanced usage only. You will typically never need to call this
+method as it will be called for you when loading a ClassFile.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fio</strong> – Any file-like object providing <cite>read()</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.constants.Double">
+<em class="property">class </em><code class="descclassname">jawa.constants.</code><code class="descname">Double</code><span class="sig-paren">(</span><em>pool</em>, <em>index</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#Double"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.Double" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.constants.Number" title="jawa.constants.Number"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.constants.Number</span></code></a></p>
+<dl class="attribute">
+<dt id="jawa.constants.Double.TAG">
+<code class="descname">TAG</code><em class="property"> = 6</em><a class="headerlink" href="#jawa.constants.Double.TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.Double.pack">
+<code class="descname">pack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#Double.pack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.Double.pack" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.constants.FieldReference">
+<em class="property">class </em><code class="descclassname">jawa.constants.</code><code class="descname">FieldReference</code><span class="sig-paren">(</span><em>pool</em>, <em>index</em>, <em>class_index</em>, <em>name_and_type_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#FieldReference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.FieldReference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.constants.Reference" title="jawa.constants.Reference"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.constants.Reference</span></code></a></p>
+<dl class="attribute">
+<dt id="jawa.constants.FieldReference.TAG">
+<code class="descname">TAG</code><em class="property"> = 9</em><a class="headerlink" href="#jawa.constants.FieldReference.TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.constants.Float">
+<em class="property">class </em><code class="descclassname">jawa.constants.</code><code class="descname">Float</code><span class="sig-paren">(</span><em>pool</em>, <em>index</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#Float"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.Float" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.constants.Number" title="jawa.constants.Number"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.constants.Number</span></code></a></p>
+<dl class="attribute">
+<dt id="jawa.constants.Float.TAG">
+<code class="descname">TAG</code><em class="property"> = 4</em><a class="headerlink" href="#jawa.constants.Float.TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.Float.pack">
+<code class="descname">pack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#Float.pack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.Float.pack" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.constants.Integer">
+<em class="property">class </em><code class="descclassname">jawa.constants.</code><code class="descname">Integer</code><span class="sig-paren">(</span><em>pool</em>, <em>index</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#Integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.Integer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.constants.Number" title="jawa.constants.Number"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.constants.Number</span></code></a></p>
+<dl class="attribute">
+<dt id="jawa.constants.Integer.TAG">
+<code class="descname">TAG</code><em class="property"> = 3</em><a class="headerlink" href="#jawa.constants.Integer.TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.Integer.pack">
+<code class="descname">pack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#Integer.pack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.Integer.pack" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.constants.InterfaceMethodRef">
+<em class="property">class </em><code class="descclassname">jawa.constants.</code><code class="descname">InterfaceMethodRef</code><span class="sig-paren">(</span><em>pool</em>, <em>index</em>, <em>class_index</em>, <em>name_and_type_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#InterfaceMethodRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.InterfaceMethodRef" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.constants.Reference" title="jawa.constants.Reference"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.constants.Reference</span></code></a></p>
+<dl class="attribute">
+<dt id="jawa.constants.InterfaceMethodRef.TAG">
+<code class="descname">TAG</code><em class="property"> = 11</em><a class="headerlink" href="#jawa.constants.InterfaceMethodRef.TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.constants.InvokeDynamic">
+<em class="property">class </em><code class="descclassname">jawa.constants.</code><code class="descname">InvokeDynamic</code><span class="sig-paren">(</span><em>pool</em>, <em>index</em>, <em>bootstrap_method_attr_index</em>, <em>name_and_type_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#InvokeDynamic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.InvokeDynamic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.constants.Constant" title="jawa.constants.Constant"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.constants.Constant</span></code></a></p>
+<dl class="attribute">
+<dt id="jawa.constants.InvokeDynamic.TAG">
+<code class="descname">TAG</code><em class="property"> = 18</em><a class="headerlink" href="#jawa.constants.InvokeDynamic.TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.InvokeDynamic.bootstrap_method_attr_index">
+<code class="descname">bootstrap_method_attr_index</code><a class="headerlink" href="#jawa.constants.InvokeDynamic.bootstrap_method_attr_index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.InvokeDynamic.method_attr_index">
+<code class="descname">method_attr_index</code><a class="headerlink" href="#jawa.constants.InvokeDynamic.method_attr_index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.InvokeDynamic.name_and_type">
+<code class="descname">name_and_type</code><a class="headerlink" href="#jawa.constants.InvokeDynamic.name_and_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.InvokeDynamic.name_and_type_index">
+<code class="descname">name_and_type_index</code><a class="headerlink" href="#jawa.constants.InvokeDynamic.name_and_type_index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.InvokeDynamic.pack">
+<code class="descname">pack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#InvokeDynamic.pack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.InvokeDynamic.pack" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.constants.Long">
+<em class="property">class </em><code class="descclassname">jawa.constants.</code><code class="descname">Long</code><span class="sig-paren">(</span><em>pool</em>, <em>index</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#Long"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.Long" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.constants.Number" title="jawa.constants.Number"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.constants.Number</span></code></a></p>
+<dl class="attribute">
+<dt id="jawa.constants.Long.TAG">
+<code class="descname">TAG</code><em class="property"> = 5</em><a class="headerlink" href="#jawa.constants.Long.TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.Long.pack">
+<code class="descname">pack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#Long.pack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.Long.pack" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.constants.MethodHandle">
+<em class="property">class </em><code class="descclassname">jawa.constants.</code><code class="descname">MethodHandle</code><span class="sig-paren">(</span><em>pool</em>, <em>index</em>, <em>reference_kind</em>, <em>reference_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#MethodHandle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.MethodHandle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.constants.Constant" title="jawa.constants.Constant"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.constants.Constant</span></code></a></p>
+<dl class="attribute">
+<dt id="jawa.constants.MethodHandle.TAG">
+<code class="descname">TAG</code><em class="property"> = 15</em><a class="headerlink" href="#jawa.constants.MethodHandle.TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.MethodHandle.pack">
+<code class="descname">pack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#MethodHandle.pack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.MethodHandle.pack" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.MethodHandle.reference">
+<code class="descname">reference</code><a class="headerlink" href="#jawa.constants.MethodHandle.reference" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.MethodHandle.reference_index">
+<code class="descname">reference_index</code><a class="headerlink" href="#jawa.constants.MethodHandle.reference_index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.MethodHandle.reference_kind">
+<code class="descname">reference_kind</code><a class="headerlink" href="#jawa.constants.MethodHandle.reference_kind" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.constants.MethodReference">
+<em class="property">class </em><code class="descclassname">jawa.constants.</code><code class="descname">MethodReference</code><span class="sig-paren">(</span><em>pool</em>, <em>index</em>, <em>class_index</em>, <em>name_and_type_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#MethodReference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.MethodReference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.constants.Reference" title="jawa.constants.Reference"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.constants.Reference</span></code></a></p>
+<dl class="attribute">
+<dt id="jawa.constants.MethodReference.TAG">
+<code class="descname">TAG</code><em class="property"> = 10</em><a class="headerlink" href="#jawa.constants.MethodReference.TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.constants.MethodType">
+<em class="property">class </em><code class="descclassname">jawa.constants.</code><code class="descname">MethodType</code><span class="sig-paren">(</span><em>pool</em>, <em>index</em>, <em>descriptor_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#MethodType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.MethodType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.constants.Constant" title="jawa.constants.Constant"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.constants.Constant</span></code></a></p>
+<dl class="attribute">
+<dt id="jawa.constants.MethodType.TAG">
+<code class="descname">TAG</code><em class="property"> = 16</em><a class="headerlink" href="#jawa.constants.MethodType.TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.MethodType.descriptor">
+<code class="descname">descriptor</code><a class="headerlink" href="#jawa.constants.MethodType.descriptor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.MethodType.descriptor_index">
+<code class="descname">descriptor_index</code><a class="headerlink" href="#jawa.constants.MethodType.descriptor_index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.MethodType.pack">
+<code class="descname">pack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#MethodType.pack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.MethodType.pack" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.constants.Module">
+<em class="property">class </em><code class="descclassname">jawa.constants.</code><code class="descname">Module</code><span class="sig-paren">(</span><em>pool</em>, <em>index</em>, <em>name_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#Module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.Module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.constants.ConstantClass" title="jawa.constants.ConstantClass"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.constants.ConstantClass</span></code></a></p>
+<dl class="attribute">
+<dt id="jawa.constants.Module.TAG">
+<code class="descname">TAG</code><em class="property"> = 19</em><a class="headerlink" href="#jawa.constants.Module.TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.Module.name_index">
+<code class="descname">name_index</code><a class="headerlink" href="#jawa.constants.Module.name_index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.constants.NameAndType">
+<em class="property">class </em><code class="descclassname">jawa.constants.</code><code class="descname">NameAndType</code><span class="sig-paren">(</span><em>pool</em>, <em>index</em>, <em>name_index</em>, <em>descriptor_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#NameAndType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.NameAndType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.constants.Constant" title="jawa.constants.Constant"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.constants.Constant</span></code></a></p>
+<dl class="attribute">
+<dt id="jawa.constants.NameAndType.TAG">
+<code class="descname">TAG</code><em class="property"> = 12</em><a class="headerlink" href="#jawa.constants.NameAndType.TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.NameAndType.descriptor">
+<code class="descname">descriptor</code><a class="headerlink" href="#jawa.constants.NameAndType.descriptor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.NameAndType.descriptor_index">
+<code class="descname">descriptor_index</code><a class="headerlink" href="#jawa.constants.NameAndType.descriptor_index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.NameAndType.name">
+<code class="descname">name</code><a class="headerlink" href="#jawa.constants.NameAndType.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.NameAndType.name_index">
+<code class="descname">name_index</code><a class="headerlink" href="#jawa.constants.NameAndType.name_index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.NameAndType.pack">
+<code class="descname">pack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#NameAndType.pack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.NameAndType.pack" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.constants.Number">
+<em class="property">class </em><code class="descclassname">jawa.constants.</code><code class="descname">Number</code><span class="sig-paren">(</span><em>pool</em>, <em>index</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#Number"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.Number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.constants.Constant" title="jawa.constants.Constant"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.constants.Constant</span></code></a></p>
+<dl class="attribute">
+<dt id="jawa.constants.Number.value">
+<code class="descname">value</code><a class="headerlink" href="#jawa.constants.Number.value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.constants.PackageInfo">
+<em class="property">class </em><code class="descclassname">jawa.constants.</code><code class="descname">PackageInfo</code><span class="sig-paren">(</span><em>pool</em>, <em>index</em>, <em>name_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#PackageInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.PackageInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.constants.ConstantClass" title="jawa.constants.ConstantClass"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.constants.ConstantClass</span></code></a></p>
+<dl class="attribute">
+<dt id="jawa.constants.PackageInfo.TAG">
+<code class="descname">TAG</code><em class="property"> = 20</em><a class="headerlink" href="#jawa.constants.PackageInfo.TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.PackageInfo.name_index">
+<code class="descname">name_index</code><a class="headerlink" href="#jawa.constants.PackageInfo.name_index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.constants.Reference">
+<em class="property">class </em><code class="descclassname">jawa.constants.</code><code class="descname">Reference</code><span class="sig-paren">(</span><em>pool</em>, <em>index</em>, <em>class_index</em>, <em>name_and_type_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#Reference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.Reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.constants.Constant" title="jawa.constants.Constant"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.constants.Constant</span></code></a></p>
+<dl class="attribute">
+<dt id="jawa.constants.Reference.TAG">
+<code class="descname">TAG</code><em class="property"> = None</em><a class="headerlink" href="#jawa.constants.Reference.TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.Reference.class_">
+<code class="descname">class_</code><a class="headerlink" href="#jawa.constants.Reference.class_" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.Reference.class_index">
+<code class="descname">class_index</code><a class="headerlink" href="#jawa.constants.Reference.class_index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.Reference.name_and_type">
+<code class="descname">name_and_type</code><a class="headerlink" href="#jawa.constants.Reference.name_and_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.Reference.name_and_type_index">
+<code class="descname">name_and_type_index</code><a class="headerlink" href="#jawa.constants.Reference.name_and_type_index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.Reference.pack">
+<code class="descname">pack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#Reference.pack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.Reference.pack" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.constants.String">
+<em class="property">class </em><code class="descclassname">jawa.constants.</code><code class="descname">String</code><span class="sig-paren">(</span><em>pool</em>, <em>index</em>, <em>string_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#String"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.String" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.constants.Constant" title="jawa.constants.Constant"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.constants.Constant</span></code></a></p>
+<dl class="attribute">
+<dt id="jawa.constants.String.TAG">
+<code class="descname">TAG</code><em class="property"> = 8</em><a class="headerlink" href="#jawa.constants.String.TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.String.pack">
+<code class="descname">pack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#String.pack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.String.pack" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.String.string">
+<code class="descname">string</code><a class="headerlink" href="#jawa.constants.String.string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.String.string_index">
+<code class="descname">string_index</code><a class="headerlink" href="#jawa.constants.String.string_index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.constants.UTF8">
+<em class="property">class </em><code class="descclassname">jawa.constants.</code><code class="descname">UTF8</code><span class="sig-paren">(</span><em>pool</em>, <em>index</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#UTF8"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.UTF8" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.constants.Constant" title="jawa.constants.Constant"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.constants.Constant</span></code></a></p>
+<dl class="attribute">
+<dt id="jawa.constants.UTF8.TAG">
+<code class="descname">TAG</code><em class="property"> = 1</em><a class="headerlink" href="#jawa.constants.UTF8.TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jawa.constants.UTF8.pack">
+<code class="descname">pack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/constants.html#UTF8.pack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.constants.UTF8.pack" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.constants.UTF8.value">
+<code class="descname">value</code><a class="headerlink" href="#jawa.constants.UTF8.value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="jawa.fields.html" class="btn btn-neutral float-right" title="jawa.fields module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="jawa.classloader.html" class="btn btn-neutral" title="jawa.classloader module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2012, Author.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

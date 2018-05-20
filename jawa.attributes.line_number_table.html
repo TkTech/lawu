@@ -1,0 +1,298 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-11145163-14']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>jawa.attributes.line_number_table module &mdash; jawa  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="jawa.attributes.local_variable module" href="jawa.attributes.local_variable.html" />
+    <link rel="prev" title="jawa.attributes.exceptions module" href="jawa.attributes.exceptions.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> jawa
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/hello_world.html">Generating Classes From Scratch - Hello World!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/dism.html">Disassembly - A Simple javap Clone</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="jawa.html">jawa package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="jawa.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="jawa.attributes.html">jawa.attributes package</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="jawa.attributes.html#implemented-attributes">Implemented Attributes</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="jawa.attributes.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.cli.html">jawa.cli package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.util.html">jawa.util package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="jawa.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">jawa</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="jawa.html">jawa package</a> &raquo;</li>
+        
+          <li><a href="jawa.attributes.html">jawa.attributes package</a> &raquo;</li>
+        
+      <li>jawa.attributes.line_number_table module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/jawa.attributes.line_number_table.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-jawa.attributes.line_number_table">
+<span id="jawa-attributes-line-number-table-module"></span><h1>jawa.attributes.line_number_table module<a class="headerlink" href="#module-jawa.attributes.line_number_table" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="jawa.attributes.line_number_table.LineNumberTableAttribute">
+<em class="property">class </em><code class="descclassname">jawa.attributes.line_number_table.</code><code class="descname">LineNumberTableAttribute</code><span class="sig-paren">(</span><em>table</em>, <em>name_index=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/attributes/line_number_table.html#LineNumberTableAttribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attributes.line_number_table.LineNumberTableAttribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="jawa.attribute.html#jawa.attribute.Attribute" title="jawa.attribute.Attribute"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.attribute.Attribute</span></code></a></p>
+<dl class="attribute">
+<dt id="jawa.attributes.line_number_table.LineNumberTableAttribute.ADDED_IN">
+<code class="descname">ADDED_IN</code><em class="property"> = '1.0.2'</em><a class="headerlink" href="#jawa.attributes.line_number_table.LineNumberTableAttribute.ADDED_IN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.attributes.line_number_table.LineNumberTableAttribute.MINIMUM_CLASS_VERSION">
+<code class="descname">MINIMUM_CLASS_VERSION</code><em class="property"> = (45, 3)</em><a class="headerlink" href="#jawa.attributes.line_number_table.LineNumberTableAttribute.MINIMUM_CLASS_VERSION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jawa.attributes.line_number_table.LineNumberTableAttribute.pack">
+<code class="descname">pack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/attributes/line_number_table.html#LineNumberTableAttribute.pack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attributes.line_number_table.LineNumberTableAttribute.pack" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute packed into its on-disk representation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.attributes.line_number_table.LineNumberTableAttribute.unpack">
+<code class="descname">unpack</code><span class="sig-paren">(</span><em>info</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/attributes/line_number_table.html#LineNumberTableAttribute.unpack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.attributes.line_number_table.LineNumberTableAttribute.unpack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses an instance of this attribute from the blob <cite>info</cite>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.attributes.line_number_table.line_number_entry">
+<em class="property">class </em><code class="descclassname">jawa.attributes.line_number_table.</code><code class="descname">line_number_entry</code><span class="sig-paren">(</span><em>start_pc</em>, <em>line_number</em><span class="sig-paren">)</span><a class="headerlink" href="#jawa.attributes.line_number_table.line_number_entry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="jawa.attributes.line_number_table.line_number_entry.line_number">
+<code class="descname">line_number</code><a class="headerlink" href="#jawa.attributes.line_number_table.line_number_entry.line_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.attributes.line_number_table.line_number_entry.start_pc">
+<code class="descname">start_pc</code><a class="headerlink" href="#jawa.attributes.line_number_table.line_number_entry.start_pc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="jawa.attributes.local_variable.html" class="btn btn-neutral float-right" title="jawa.attributes.local_variable module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="jawa.attributes.exceptions.html" class="btn btn-neutral" title="jawa.attributes.exceptions module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2012, Author.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

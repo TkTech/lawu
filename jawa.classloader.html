@@ -1,0 +1,395 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-11145163-14']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>jawa.classloader module &mdash; jawa  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="jawa.constants module" href="jawa.constants.html" />
+    <link rel="prev" title="jawa.cf module" href="jawa.cf.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> jawa
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/hello_world.html">Generating Classes From Scratch - Hello World!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/dism.html">Disassembly - A Simple javap Clone</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="jawa.html">jawa package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="jawa.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="jawa.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="jawa.assemble.html">jawa.assemble module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.attribute.html">jawa.attribute module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.cf.html">jawa.cf module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">jawa.classloader module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.constants.html">jawa.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.fields.html">jawa.fields module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.methods.html">jawa.methods module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.transforms.html">jawa.transforms module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">jawa</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="jawa.html">jawa package</a> &raquo;</li>
+        
+      <li>jawa.classloader module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/jawa.classloader.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-jawa.classloader">
+<span id="jawa-classloader-module"></span><h1>jawa.classloader module<a class="headerlink" href="#module-jawa.classloader" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="jawa.classloader.ClassLoader">
+<em class="property">class </em><code class="descclassname">jawa.classloader.</code><code class="descname">ClassLoader</code><span class="sig-paren">(</span><em>*sources</em>, <em>max_cache: int = 50</em>, <em>klass=&lt;class 'jawa.cf.ClassFile'&gt;</em>, <em>bytecode_transforms: Iterable[Callable] = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/classloader.html#ClassLoader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.classloader.ClassLoader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Emulate the Java ClassPath.</p>
+<p>Provides utilities for managing a java classpath as well as loading
+classes from those paths.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sources</strong> – Optional sources to pass into update().</li>
+<li><strong>max_cache</strong> (<a class="reference internal" href="jawa.constants.html#jawa.constants.Long" title="jawa.constants.Long"><em>Long</em></a>) – The maximum number of ClassFile’s to store in the cache.
+If set to 0, the cache will be unlimited. [default: 50]</li>
+<li><strong>klass</strong> (<a class="reference internal" href="jawa.cf.html#jawa.cf.ClassFile" title="jawa.cf.ClassFile"><em>ClassFile</em></a><em> or </em><em>subclass.</em>) – The class to use when constructing ClassFiles.</li>
+<li><strong>bytecode_transforms</strong> – Default transforms to apply when disassembling
+a method.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="jawa.classloader.ClassLoader.classes">
+<code class="descname">classes</code><a class="headerlink" href="#jawa.classloader.ClassLoader.classes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Yield the name of all classes discovered in the path map.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.classloader.ClassLoader.clear">
+<code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/classloader.html#ClassLoader.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.classloader.ClassLoader.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Erase all stored paths and all cached classes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.classloader.ClassLoader.dependencies">
+<code class="descname">dependencies</code><span class="sig-paren">(</span><em>path: str</em><span class="sig-paren">)</span> &#x2192; Set[str]<a class="reference internal" href="_modules/jawa/classloader.html#ClassLoader.dependencies"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.classloader.ClassLoader.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a set of all classes referenced by the ClassFile at
+<cite>path</cite> without reading the entire ClassFile.</p>
+<p>This is an optimization method that does not load a complete ClassFile,
+nor does it add the results to the ClassLoader cache.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – Fully-qualified path to a ClassFile.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.classloader.ClassLoader.load">
+<code class="descname">load</code><span class="sig-paren">(</span><em>path: str</em><span class="sig-paren">)</span> &#x2192; jawa.cf.ClassFile<a class="reference internal" href="_modules/jawa/classloader.html#ClassLoader.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.classloader.ClassLoader.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the class at <cite>path</cite> and return it.</p>
+<p>Load will attempt to load the file at <cite>path</cite> and <cite>path</cite> + .class
+before failing.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – Fully-qualified path to a ClassFile.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.classloader.ClassLoader.open">
+<code class="descname">open</code><span class="sig-paren">(</span><em>path: str</em>, <em>mode: str = 'r'</em><span class="sig-paren">)</span> &#x2192; IO<a class="reference internal" href="_modules/jawa/classloader.html#ClassLoader.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.classloader.ClassLoader.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open an IO-like object for <cite>path</cite>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Mode <em>must</em> be either ‘r’ or ‘w’, as the underlying objects
+do not understand the full range of modes.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path</strong> – The path to open.</li>
+<li><strong>mode</strong> – The mode of the file being opened, either ‘r’ or ‘w’.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.classloader.ClassLoader.search_constant_pool">
+<code class="descname">search_constant_pool</code><span class="sig-paren">(</span><em>*</em>, <em>path: str</em>, <em>**options</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/classloader.html#ClassLoader.search_constant_pool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.classloader.ClassLoader.search_constant_pool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Partially load the class at <cite>path</cite>, yield all matching constants
+from the ConstantPool.</p>
+<p>This is an optimization method that does not load a complete ClassFile,
+nor does it add the results to the ClassLoader cache.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path</strong> – Fully-qualified path to a ClassFile.</li>
+<li><strong>options</strong> – A list of options to pass into <cite>ConstantPool.find()</cite></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.classloader.ClassLoader.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>*sources</em>, <em>follow_symlinks: bool = False</em>, <em>maximum_depth: int = 20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/classloader.html#ClassLoader.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.classloader.ClassLoader.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add one or more ClassFile sources to the class loader.</p>
+<p>If a given source is a directory path, it is traversed up to the
+maximum set depth and all files under it are added to the class loader
+lookup table.</p>
+<p>If a given source is a .jar or .zip file it will be opened and the
+file index added to the class loader lookup table.</p>
+<p>If a given source is a ClassFile or a subclass, it’s immediately
+added to the class loader lookup table and the class cache.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sources</strong> – One or more ClassFile sources to be added.</li>
+<li><strong>follow_symlinks</strong> – True if symlinks should be followed when
+traversing filesystem directories.
+[default: False]</li>
+<li><strong>maximum_depth</strong> – The maximum sub-directory depth when traversing
+filesystem directories. If set to <cite>None</cite> no limit
+will be enforced. [default: 20]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="jawa.constants.html" class="btn btn-neutral float-right" title="jawa.constants module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="jawa.cf.html" class="btn btn-neutral" title="jawa.cf module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2012, Author.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

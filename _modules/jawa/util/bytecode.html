@@ -24,6 +24,8 @@
 
   
   
+  
+  
 
   
 
@@ -34,23 +36,19 @@
   
 
   
-  
     <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="jawa  documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -87,13 +85,15 @@
           
             
             
-                <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/index.html">Examples</a></li>
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/hello_world.html">Generating Classes From Scratch - Hello World!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/dism.html">Disassembly - A Simple javap Clone</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../jawa.html">Core APIs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../attributes/index.html">Implemented Attributes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../util/index.html">Utility APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../jawa.html">jawa package</a></li>
 </ul>
 
             
@@ -105,54 +105,65 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../../index.html">jawa</a>
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">jawa</a>
+        
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../../index.html">Module code</a> &raquo;</li>
-      
-    <li>jawa.util.bytecode</li>
+        
+      <li>jawa.util.bytecode</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
   <h1>Source code for jawa.util.bytecode</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf8 -*-</span>
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s1">&#39;Instruction&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;Operand&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;OperandTypes&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;read_instruction&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;write_instruction&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;opcode_table&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;definition_from_mnemonic&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;definition_from_opcode&#39;</span>
-<span class="p">)</span>
-
-<span class="kn">import</span> <span class="nn">struct</span>
-
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Utilities for reading &amp; writing JVM method bytecode.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">enum</span>
+<span class="kn">import</span> <span class="nn">pkgutil</span>
+<span class="kn">from</span> <span class="nn">struct</span> <span class="k">import</span> <span class="n">unpack</span><span class="p">,</span> <span class="n">pack</span><span class="p">,</span> <span class="n">Struct</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">repeat</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
 
@@ -164,46 +175,24 @@
     <span class="s1">&#39;pos&#39;</span>
 <span class="p">])</span>
 
-<span class="c1"># Opcodes that can be prefixed by the `wide` opcode.</span>
-<span class="n">_wide</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="mh">0x15</span><span class="p">,</span> <span class="mh">0x17</span><span class="p">,</span> <span class="mh">0x19</span><span class="p">,</span> <span class="mh">0x16</span><span class="p">,</span>
-    <span class="mh">0x18</span><span class="p">,</span> <span class="mh">0x36</span><span class="p">,</span> <span class="mh">0x38</span><span class="p">,</span> <span class="mh">0x3A</span><span class="p">,</span>
-    <span class="mh">0x37</span><span class="p">,</span> <span class="mh">0x39</span><span class="p">,</span> <span class="mh">0xA9</span><span class="p">,</span> <span class="mh">0x84</span>
-<span class="p">)</span>
 
-
-<div class="viewcode-block" id="Instruction"><a class="viewcode-back" href="../../../util/index.html#jawa.util.bytecode.Instruction">[docs]</a><span class="k">class</span> <span class="nc">Instruction</span><span class="p">(</span><span class="n">_Instruction</span><span class="p">):</span>
+<div class="viewcode-block" id="Instruction"><a class="viewcode-back" href="../../../jawa.util.bytecode.html#jawa.util.bytecode.Instruction">[docs]</a><span class="k">class</span> <span class="nc">Instruction</span><span class="p">(</span><span class="n">_Instruction</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents a single JVM instruction, consisting</span>
 <span class="sd">    of an opcode and its potential operands.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="Instruction.from_mnemonic"><a class="viewcode-back" href="../../../util/index.html#jawa.util.bytecode.Instruction.from_mnemonic">[docs]</a>    <span class="k">def</span> <span class="nf">from_mnemonic</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">mnemonic</span><span class="p">,</span> <span class="n">operands</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">cls</span><span class="p">(</span>
-            <span class="n">mnemonic</span><span class="p">,</span>
-            <span class="n">_opcode_by_opname</span><span class="p">[</span><span class="n">mnemonic</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-            <span class="n">operands</span> <span class="ow">or</span> <span class="p">[],</span>
-            <span class="mi">0</span>
-        <span class="p">)</span></div>
-
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="Instruction.from_opcode"><a class="viewcode-back" href="../../../util/index.html#jawa.util.bytecode.Instruction.from_opcode">[docs]</a>    <span class="k">def</span> <span class="nf">from_opcode</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">opcode</span><span class="p">,</span> <span class="n">operands</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">cls</span><span class="p">(</span>
-            <span class="n">opcode_table</span><span class="p">[</span><span class="n">opcode</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-            <span class="n">opcode</span><span class="p">,</span>
-            <span class="n">operands</span> <span class="ow">or</span> <span class="p">[],</span>
-            <span class="mi">0</span>
-        <span class="p">)</span></div>
-
-<div class="viewcode-block" id="Instruction.size_on_disk"><a class="viewcode-back" href="../../../util/index.html#jawa.util.bytecode.Instruction.size_on_disk">[docs]</a>    <span class="k">def</span> <span class="nf">size_on_disk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_pos</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="Instruction.size_on_disk"><a class="viewcode-back" href="../../../jawa.util.bytecode.html#jawa.util.bytecode.Instruction.size_on_disk">[docs]</a>    <span class="k">def</span> <span class="nf">size_on_disk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_pos</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the size of this instruction and its operands when</span>
 <span class="sd">        packed. `start_pos` is required for the `tableswitch` and</span>
 <span class="sd">        `lookupswitch` instruction as the padding depends on alignment.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">size</span><span class="p">,</span> <span class="n">fmts</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">definition_from_opcode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opcode</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># All instructions are at least 1 byte (the opcode itself)</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">fmts</span> <span class="o">=</span> <span class="n">opcode_table</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">opcode</span><span class="p">][</span><span class="s1">&#39;operands&#39;</span><span class="p">]</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">wide</span><span class="p">:</span>
             <span class="n">size</span> <span class="o">+=</span> <span class="mi">2</span>
             <span class="c1"># Special case for iinc which has a 2nd extended operand.</span>
@@ -233,7 +222,7 @@
 <span class="sd">        ``True`` if this instruction needs to be prefixed by the WIDE</span>
 <span class="sd">        opcode.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">opcode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_wide</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">opcode_table</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">opcode</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;can_be_wide&#39;</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">False</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">operands</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;=</span> <span class="mi">255</span><span class="p">:</span>
@@ -243,10 +232,34 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">operands</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;=</span> <span class="mi">255</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">True</span>
 
-        <span class="k">return</span> <span class="kc">False</span></div>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Alias for mnemonic.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mnemonic</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">details</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Extended opcode information.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">opcode_table</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">opcode</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Instruction.create"><a class="viewcode-back" href="../../../jawa.util.bytecode.html#jawa.util.bytecode.Instruction.create">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">mnemonic_or_op</span><span class="p">,</span> <span class="n">operands</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">op</span> <span class="o">=</span> <span class="n">opcode_table</span><span class="p">[</span><span class="n">mnemonic_or_op</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">op</span><span class="p">[</span><span class="s1">&#39;mnemonic&#39;</span><span class="p">],</span>
+            <span class="n">op</span><span class="p">[</span><span class="s1">&#39;op&#39;</span><span class="p">],</span>
+            <span class="n">operands</span> <span class="ow">or</span> <span class="p">[],</span>
+            <span class="mi">0</span>
+        <span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">other</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">mnemonic</span> <span class="ow">or</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="OperandTypes"><a class="viewcode-back" href="../../../util/index.html#jawa.util.bytecode.OperandTypes">[docs]</a><span class="k">class</span> <span class="nc">OperandTypes</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="OperandTypes"><a class="viewcode-back" href="../../../jawa.util.bytecode.html#jawa.util.bytecode.OperandTypes">[docs]</a><span class="k">class</span> <span class="nc">OperandTypes</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">IntEnum</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants used to determine the &quot;type&quot; of operand on an opcode,</span>
 <span class="sd">    such as a BRANCH [offset] or a LITERAL [value].</span>
@@ -258,226 +271,15 @@
     <span class="n">PADDING</span> <span class="o">=</span> <span class="mi">50</span></div>
 
 
-<span class="n">ubyte</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s1">&#39;&gt;B&#39;</span><span class="p">)</span>
-<span class="n">ushort</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">)</span>
-<span class="n">byte</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s1">&#39;&gt;b&#39;</span><span class="p">)</span>
-<span class="n">short</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s1">&#39;&gt;h&#39;</span><span class="p">)</span>
-<span class="n">integer</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s1">&#39;&gt;i&#39;</span><span class="p">)</span>
-
-<span class="c1">#: An opcode to mnemonic &amp; operand format mapping for every opcode</span>
-<span class="c1">#: supported by the JVM.</span>
-<span class="n">opcode_table</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="mh">0x32</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;aaload&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x53</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;aastore&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x01</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;aconst_null&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x19</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;aload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
-    <span class="mh">0x2A</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;aload_0&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x2B</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;aload_1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x2C</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;aload_2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x2D</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;aload_3&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0xBD</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;anewarray&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]),</span>
-    <span class="mh">0xB0</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;areturn&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0xBE</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;arraylength&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x3A</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;astore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
-    <span class="mh">0x4B</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;astore_0&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x4C</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;astore_1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x4D</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;astore_2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x4E</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;astore_3&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0xBF</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;athrow&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x33</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;baload&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x54</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;bastore&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x10</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;bipush&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]),</span>
-    <span class="mh">0x34</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;caload&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x55</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;castore&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0xC0</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;checkcast&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0x90</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;d2f&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x8E</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;d2i&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x8F</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;d2l&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x63</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dadd&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x31</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;daload&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x52</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dastore&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x98</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dcmpg&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x97</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dcmpl&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x0E</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dconst_0&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x0F</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dconst_1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x6F</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ddiv&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x18</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
-    <span class="mh">0x26</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dload_0&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x27</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dload_1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x28</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dload_2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x29</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dload_3&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x6B</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dmul&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x77</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dneg&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x73</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;drem&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0xAF</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dreturn&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x39</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dstore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
-    <span class="mh">0x47</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dstore_0&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x48</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dstore_1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x49</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dstore_2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x4a</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dstore_3&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x67</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dsub&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x59</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dup&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x5A</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dup_x1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x5B</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dup_x2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x5C</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dup2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x5D</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dup2_x1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x5E</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;dup2_x2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x8D</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;f2d&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x8B</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;f2i&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x8C</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;f2l&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x62</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fadd&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x30</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;faload&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x51</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fastore&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x96</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fcmpg&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x95</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fcmpl&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x0B</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fconst_0&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x0C</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fconst_1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x0D</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fconst_2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x6E</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fdiv&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x17</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
-    <span class="mh">0x22</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fload_0&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x23</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fload_1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x24</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fload_2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x25</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fload_3&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x6A</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fmul&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x76</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fneg&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x72</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;frem&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0xAE</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;freturn&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x38</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fstore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
-    <span class="mh">0x43</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fstore_0&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x44</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fstore_1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x45</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fstore_2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x46</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fstore_3&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x66</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fsub&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0xB4</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;getfield&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0xB2</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;getstatic&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0xA7</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;goto&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0xC8</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;goto_w&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">integer</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0x91</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ib2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x92</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;i2c&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x87</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;i2d&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x86</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;i2f&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x85</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;i2l&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x93</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;i2s&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x60</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iadd&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x2E</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iaload&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x7E</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iand&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x4F</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iastore&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x02</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iconst_m1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x03</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iconst_0&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x04</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iconst_1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x05</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iconst_2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x06</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iconst_3&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x07</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iconst_4&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x08</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iconst_5&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x6C</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;idiv&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0xA5</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;if_acmpeq&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0xA6</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;if_acmpne&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0x9F</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;if_icmpeq&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0xA0</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;if_icmpne&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0xA1</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;if_icmplt&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0xA2</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;if_icmpge&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0xA3</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;if_icmpgt&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0xA4</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;if_icmple&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0x99</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ifeq&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0x9A</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ifne&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0x9B</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iflt&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0x9C</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ifge&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0x9D</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ifgt&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0x9E</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ifle&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0xC7</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ifnonnull&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0xC6</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ifnull&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0x84</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iinc&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="p">(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]),</span>
-    <span class="mh">0x15</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
-    <span class="mh">0x1A</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iload_0&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x1B</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iload_1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x1C</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iload_2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x1D</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iload_3&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x68</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;imul&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x74</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ineg&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0xC1</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;instanceof&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0xB9</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;invokeinterface&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="p">(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">50</span><span class="p">)]),</span>
-    <span class="mh">0xB7</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;invokespecial&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0xB8</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;invokestatic&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0xB6</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;invokevirtual&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0x80</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ior&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x70</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;irem&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0xAC</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ireturn&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x78</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ishl&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x7A</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ishr&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x36</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;istore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
-    <span class="mh">0x3B</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;istore_0&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x3C</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;istore_1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x3D</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;istore_2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x3E</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;istore_3&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x64</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;isub&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x7C</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;iushr&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x82</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ixor&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0xA8</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;jsr&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">short</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0xC9</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;jsr_w&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">integer</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]),</span>
-    <span class="mh">0x8A</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;l2d&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x89</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;l2f&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x88</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;l2i&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x61</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ladd&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x2F</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;laload&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x7F</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;land&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x50</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lastore&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x94</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lcmp&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x09</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lconst_0&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x0A</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lconst_1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x12</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ldc&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0x13</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ldc_w&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0x14</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ldc2_w&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0x6D</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ldiv&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x16</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lload&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
-    <span class="mh">0x1E</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lload_0&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x1F</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lload_1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x20</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lload_2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x21</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lload_3&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x69</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lmul&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x75</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lneg&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0xAB</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lookupswitch&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x81</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lor&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x71</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lrem&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0xAD</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lreturn&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x79</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lshl&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x7B</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lshr&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x37</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lstore&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
-    <span class="mh">0x3F</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lstore_0&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x40</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lstore_1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x41</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lstore_2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x42</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lstore_3&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x65</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lsub&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x7D</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lushr&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x83</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lxor&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0xC2</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;monitorenter&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0xC3</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;monitorexit&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0xC5</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;multianewarray&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="p">(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]),</span>
-    <span class="mh">0xBB</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;new&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0xBC</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;newarray&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]),</span>
-    <span class="mh">0x00</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;nop&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x57</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;pop&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x58</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;pop2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0xB5</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;putfield&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0xB3</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;putstatic&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]),</span>
-    <span class="mh">0xA9</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ret&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ubyte</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]),</span>
-    <span class="mh">0xB1</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;return&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x35</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;saload&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x56</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;sastore&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0x11</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;sipush&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">ushort</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]),</span>
-    <span class="mh">0x5F</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;swap&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0xAA</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;tableswitch&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0xC4</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;wide&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0xCA</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;breakpoint&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0xFE</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;impdep1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="mh">0xFF</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;impdep2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="c1"># Creates a new dict with operand and mnemonic swapped for assembling.</span>
-<span class="n">_opcode_by_opname</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">o</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="n">k</span><span class="p">,)</span> <span class="o">+</span> <span class="n">o</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">opcode_table</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+<div class="viewcode-block" id="OperandFmts"><a class="viewcode-back" href="../../../jawa.util.bytecode.html#jawa.util.bytecode.OperandFmts">[docs]</a><span class="k">class</span> <span class="nc">OperandFmts</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">UBYTE</span> <span class="o">=</span> <span class="n">Struct</span><span class="p">(</span><span class="s1">&#39;&gt;B&#39;</span><span class="p">)</span>
+    <span class="n">BYTE</span> <span class="o">=</span> <span class="n">Struct</span><span class="p">(</span><span class="s1">&#39;&gt;b&#39;</span><span class="p">)</span>
+    <span class="n">USHORT</span> <span class="o">=</span> <span class="n">Struct</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">)</span>
+    <span class="n">SHORT</span> <span class="o">=</span> <span class="n">Struct</span><span class="p">(</span><span class="s1">&#39;&gt;h&#39;</span><span class="p">)</span>
+    <span class="n">INTEGER</span> <span class="o">=</span> <span class="n">Struct</span><span class="p">(</span><span class="s1">&#39;&gt;i&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="write_instruction"><a class="viewcode-back" href="../../../util/index.html#jawa.util.bytecode.write_instruction">[docs]</a><span class="k">def</span> <span class="nf">write_instruction</span><span class="p">(</span><span class="n">fout</span><span class="p">,</span> <span class="n">start_pos</span><span class="p">,</span> <span class="n">ins</span><span class="p">):</span>
+<div class="viewcode-block" id="write_instruction"><a class="viewcode-back" href="../../../jawa.util.bytecode.html#jawa.util.bytecode.write_instruction">[docs]</a><span class="k">def</span> <span class="nf">write_instruction</span><span class="p">(</span><span class="n">fout</span><span class="p">,</span> <span class="n">start_pos</span><span class="p">,</span> <span class="n">ins</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Writes a single instruction of `opcode` with `operands` to `fout`.</span>
 
@@ -486,24 +288,24 @@
 <span class="sd">    :param ins: The `Instruction` to write.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">opcode</span><span class="p">,</span> <span class="n">operands</span> <span class="o">=</span> <span class="n">ins</span><span class="o">.</span><span class="n">opcode</span><span class="p">,</span> <span class="n">ins</span><span class="o">.</span><span class="n">operands</span>
-    <span class="n">fmt_operands</span> <span class="o">=</span> <span class="n">definition_from_opcode</span><span class="p">(</span><span class="n">opcode</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">fmt_operands</span> <span class="o">=</span> <span class="n">opcode_table</span><span class="p">[</span><span class="n">opcode</span><span class="p">][</span><span class="s1">&#39;operands&#39;</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">ins</span><span class="o">.</span><span class="n">wide</span><span class="p">:</span>
         <span class="c1"># The &quot;WIDE&quot; prefix</span>
-        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ubyte</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="mh">0xC4</span><span class="p">))</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="mh">0xC4</span><span class="p">))</span>
         <span class="c1"># The real opcode.</span>
-        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ubyte</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">opcode</span><span class="p">))</span>
-        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ushort</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">operands</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">opcode</span><span class="p">))</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">operands</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">opcode</span> <span class="o">==</span> <span class="mh">0x84</span><span class="p">:</span>
-            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">short</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">operands</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
-    <span class="c1"># A normal simple opcode with simple operands.</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;h&#39;</span><span class="p">,</span> <span class="n">operands</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
     <span class="k">elif</span> <span class="n">fmt_operands</span><span class="p">:</span>
-        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ubyte</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">opcode</span><span class="p">))</span>
+        <span class="c1"># A normal simple opcode with simple operands.</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">opcode</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fmt_operands</span><span class="p">):</span>
             <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fmt</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">operands</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
-    <span class="c1"># Special case for lookupswitch, which also has a unique.</span>
     <span class="k">elif</span> <span class="n">opcode</span> <span class="o">==</span> <span class="mh">0xAB</span><span class="p">:</span>
-        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ubyte</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">opcode</span><span class="p">))</span>
+        <span class="c1"># Special case for lookupswitch.</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">opcode</span><span class="p">))</span>
         <span class="c1"># assemble([</span>
         <span class="c1">#     (&#39;lookupswitch&#39;, {</span>
         <span class="c1">#         2: -3,</span>
@@ -512,25 +314,30 @@
         <span class="c1"># ])</span>
         <span class="n">padding</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">-</span> <span class="p">(</span><span class="n">start_pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span>
         <span class="n">padding</span> <span class="o">=</span> <span class="n">padding</span> <span class="k">if</span> <span class="n">padding</span> <span class="o">!=</span> <span class="mi">4</span> <span class="k">else</span> <span class="mi">0</span>
-        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">x&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">padding</span><span class="p">)))</span>
-        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;ii&#39;</span><span class="p">,</span>
-            <span class="n">operands</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
-            <span class="nb">len</span><span class="p">(</span><span class="n">operands</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="p">))</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{padding}</span><span class="s1">x&#39;</span><span class="p">))</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;ii&#39;</span><span class="p">,</span> <span class="n">operands</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">operands</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">operands</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;ii&#39;</span><span class="p">,</span>
-                <span class="n">key</span><span class="p">,</span>
-                <span class="n">operands</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
-            <span class="p">))</span>
-    <span class="c1"># Special case for tableswitch.</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;ii&#39;</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">operands</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">key</span><span class="p">]))</span>
     <span class="k">elif</span> <span class="n">opcode</span> <span class="o">==</span> <span class="mh">0xAA</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1"># Special case for table switch.</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">opcode</span><span class="p">))</span>
+        <span class="n">padding</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">-</span> <span class="p">(</span><span class="n">start_pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span>
+        <span class="n">padding</span> <span class="o">=</span> <span class="n">padding</span> <span class="k">if</span> <span class="n">padding</span> <span class="o">!=</span> <span class="mi">4</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{padding}</span><span class="s1">x&#39;</span><span class="p">))</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span>
+            <span class="n">f</span><span class="s1">&#39;&gt;iii{len(operands) - 3}i&#39;</span><span class="p">,</span>
+            <span class="c1"># Default branch offset</span>
+            <span class="n">operands</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">operands</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">operands</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="o">*</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">operands</span><span class="p">[</span><span class="mi">3</span><span class="p">:])</span>
+        <span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># opcode with no operands.</span>
-        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ubyte</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">opcode</span><span class="p">))</span></div>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">opcode</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="read_instruction"><a class="viewcode-back" href="../../../util/index.html#jawa.util.bytecode.read_instruction">[docs]</a><span class="k">def</span> <span class="nf">read_instruction</span><span class="p">(</span><span class="n">fio</span><span class="p">,</span> <span class="n">start_pos</span><span class="p">):</span>
+<div class="viewcode-block" id="read_instruction"><a class="viewcode-back" href="../../../jawa.util.bytecode.html#jawa.util.bytecode.read_instruction">[docs]</a><span class="k">def</span> <span class="nf">read_instruction</span><span class="p">(</span><span class="n">fio</span><span class="p">,</span> <span class="n">start_pos</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reads a single instruction from `fio` and returns it, or ``None`` if</span>
 <span class="sd">    the stream is empty.</span>
@@ -538,19 +345,27 @@
 <span class="sd">    :param fio: Any file-like object providing ``read()``.</span>
 <span class="sd">    :param start_pos: The current position in the stream.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">op</span> <span class="o">=</span> <span class="n">ubyte</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">except</span> <span class="n">struct</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">op</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
 
-    <span class="n">name</span><span class="p">,</span> <span class="n">operands</span> <span class="o">=</span> <span class="n">opcode_table</span><span class="p">[</span><span class="n">op</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
+
+    <span class="n">ins</span> <span class="o">=</span> <span class="n">opcode_table</span><span class="p">[</span><span class="n">op</span><span class="p">]</span>
+    <span class="n">operands</span> <span class="o">=</span> <span class="n">ins</span><span class="p">[</span><span class="s1">&#39;operands&#39;</span><span class="p">]</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">ins</span><span class="p">[</span><span class="s1">&#39;mnemonic&#39;</span><span class="p">]</span>
 
     <span class="n">final_operands</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="c1"># Most opcodes have simple operands.</span>
     <span class="k">if</span> <span class="n">operands</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">type_</span> <span class="ow">in</span> <span class="n">operands</span><span class="p">:</span>
             <span class="n">final_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="n">Operand</span><span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fmt</span><span class="o">.</span><span class="n">size</span><span class="p">))[</span><span class="mi">0</span><span class="p">]))</span>
+                <span class="n">Operand</span><span class="p">(</span>
+                    <span class="n">type_</span><span class="p">,</span>
+                    <span class="n">fmt</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fmt</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">size</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
     <span class="c1"># Special case for lookupswitch.</span>
     <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="mh">0xAB</span><span class="p">:</span>
         <span class="c1"># Get rid of the alignment padding.</span>
@@ -559,11 +374,11 @@
         <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">padding</span><span class="p">)</span>
 
         <span class="c1"># Default branch address and branch count.</span>
-        <span class="n">default</span><span class="p">,</span> <span class="n">npairs</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;ii&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+        <span class="n">default</span><span class="p">,</span> <span class="n">npairs</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;ii&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
 
         <span class="n">pairs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">repeat</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">npairs</span><span class="p">):</span>
-            <span class="n">match</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;ii&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+            <span class="n">match</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;ii&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
             <span class="n">pairs</span><span class="p">[</span><span class="n">match</span><span class="p">]</span> <span class="o">=</span> <span class="n">offset</span>
 
         <span class="n">final_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pairs</span><span class="p">)</span>
@@ -575,49 +390,73 @@
         <span class="n">padding</span> <span class="o">=</span> <span class="n">padding</span> <span class="k">if</span> <span class="n">padding</span> <span class="o">!=</span> <span class="mi">4</span> <span class="k">else</span> <span class="mi">0</span>
         <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">padding</span><span class="p">)</span>
 
-        <span class="n">default</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;iii&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">12</span><span class="p">))</span>
+        <span class="n">default</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;iii&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">12</span><span class="p">))</span>
         <span class="n">final_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Operand</span><span class="p">(</span><span class="n">OperandTypes</span><span class="o">.</span><span class="n">BRANCH</span><span class="p">,</span> <span class="n">default</span><span class="p">))</span>
         <span class="n">final_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Operand</span><span class="p">(</span><span class="n">OperandTypes</span><span class="o">.</span><span class="n">LITERAL</span><span class="p">,</span> <span class="n">low</span><span class="p">))</span>
         <span class="n">final_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Operand</span><span class="p">(</span><span class="n">OperandTypes</span><span class="o">.</span><span class="n">LITERAL</span><span class="p">,</span> <span class="n">high</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">repeat</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">high</span> <span class="o">-</span> <span class="n">low</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="n">offset</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;i&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;i&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">final_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Operand</span><span class="p">(</span><span class="n">OperandTypes</span><span class="o">.</span><span class="n">BRANCH</span><span class="p">,</span> <span class="n">offset</span><span class="p">))</span>
     <span class="c1"># Special case for the wide prefix</span>
     <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="mh">0xC4</span><span class="p">:</span>
-        <span class="n">real_op</span> <span class="o">=</span> <span class="n">ubyte</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">name</span><span class="p">,</span> <span class="n">operands</span> <span class="o">=</span> <span class="n">opcode_table</span><span class="p">[</span><span class="n">real_op</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">real_op</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">ins</span> <span class="o">=</span> <span class="n">opcode_table</span><span class="p">[</span><span class="n">real_op</span><span class="p">]</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">ins</span><span class="p">[</span><span class="s1">&#39;mnemonic&#39;</span><span class="p">]</span>
+
         <span class="n">final_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Operand</span><span class="p">(</span>
             <span class="n">OperandTypes</span><span class="o">.</span><span class="n">LOCAL_INDEX</span><span class="p">,</span>
-            <span class="n">ushort</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
         <span class="p">))</span>
         <span class="c1"># Further special case for iinc.</span>
         <span class="k">if</span> <span class="n">real_op</span> <span class="o">==</span> <span class="mh">0x84</span><span class="p">:</span>
             <span class="n">final_operands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Operand</span><span class="p">(</span>
                 <span class="n">OperandTypes</span><span class="o">.</span><span class="n">LITERAL</span><span class="p">,</span>
-                <span class="n">short</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;H&#39;</span><span class="p">,</span> <span class="n">fio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
             <span class="p">))</span>
 
     <span class="k">return</span> <span class="n">Instruction</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">final_operands</span><span class="p">,</span> <span class="n">start_pos</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="definition_from_mnemonic"><a class="viewcode-back" href="../../../util/index.html#jawa.util.bytecode.definition_from_mnemonic">[docs]</a><span class="k">def</span> <span class="nf">definition_from_mnemonic</span><span class="p">(</span><span class="n">mnemonic</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns the definition of an instruction by its mnemonic in the</span>
-<span class="sd">    form: ``(opcode, operand_fmt)``</span>
+<div class="viewcode-block" id="load_bytecode_definitions"><a class="viewcode-back" href="../../../jawa.util.bytecode.html#jawa.util.bytecode.load_bytecode_definitions">[docs]</a><span class="k">def</span> <span class="nf">load_bytecode_definitions</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Load bytecode definitions from JSON file.</span>
+
+<span class="sd">    If no path is provided the default bytecode.json will be loaded.</span>
+
+<span class="sd">    :param path: Either None or a path to a JSON file to load containing</span>
+<span class="sd">                 bytecode definitions.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_opcode_by_opname</span><span class="p">[</span><span class="n">mnemonic</span><span class="p">]</span></div>
+    <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_in</span><span class="p">:</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_in</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">pkgutil</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="s1">&#39;jawa.util&#39;</span><span class="p">,</span> <span class="s1">&#39;bytecode.json&#39;</span><span class="p">))</span>
+        <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+            <span class="c1"># Unfortunately our best way to handle missing/malformed/empty</span>
+            <span class="c1"># bytecode.json files since it may not actually be backed by a</span>
+            <span class="c1"># &quot;real&quot; file.</span>
+            <span class="k">return</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">definition</span> <span class="ow">in</span> <span class="n">j</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="c1"># If the entry has any operands take the text labels and convert</span>
+        <span class="c1"># them into pre-cached struct objects and operand types.</span>
+        <span class="n">operands</span> <span class="o">=</span> <span class="n">definition</span><span class="p">[</span><span class="s1">&#39;operands&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">operands</span><span class="p">:</span>
+            <span class="n">definition</span><span class="p">[</span><span class="s1">&#39;operands&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="n">OperandFmts</span><span class="p">,</span> <span class="n">oo</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">OperandTypes</span><span class="p">[</span><span class="n">oo</span><span class="p">[</span><span class="mi">1</span><span class="p">]]]</span>
+                <span class="k">for</span> <span class="n">oo</span> <span class="ow">in</span> <span class="n">operands</span>
+            <span class="p">]</span>
+
+    <span class="c1"># Return one dict that contains both mnemonic keys and opcode keys.</span>
+    <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">j</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="n">v</span><span class="p">[</span><span class="s1">&#39;op&#39;</span><span class="p">]:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">j</span><span class="o">.</span><span class="n">values</span><span class="p">()}}</span></div>
 
 
-<div class="viewcode-block" id="definition_from_opcode"><a class="viewcode-back" href="../../../util/index.html#jawa.util.bytecode.definition_from_opcode">[docs]</a><span class="k">def</span> <span class="nf">definition_from_opcode</span><span class="p">(</span><span class="n">opcode</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns the definition of an instruction by its opcode in the</span>
-<span class="sd">    form: ``(mnemonic, operand_fmt)``</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">opcode_table</span><span class="p">[</span><span class="n">opcode</span><span class="p">]</span></div>
+<span class="n">opcode_table</span> <span class="o">=</span> <span class="n">load_bytecode_definitions</span><span class="p">()</span>
 </pre></div>
 
            </div>
+           
           </div>
           <footer>
   
@@ -630,7 +469,7 @@
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -649,9 +488,11 @@
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
             VERSION:'',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>
@@ -665,14 +506,11 @@
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
   
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

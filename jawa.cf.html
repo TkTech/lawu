@@ -1,0 +1,399 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-11145163-14']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>jawa.cf module &mdash; jawa  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="jawa.classloader module" href="jawa.classloader.html" />
+    <link rel="prev" title="jawa.attribute module" href="jawa.attribute.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> jawa
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/hello_world.html">Generating Classes From Scratch - Hello World!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/dism.html">Disassembly - A Simple javap Clone</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="jawa.html">jawa package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="jawa.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="jawa.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="jawa.assemble.html">jawa.assemble module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.attribute.html">jawa.attribute module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">jawa.cf module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.classloader.html">jawa.classloader module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.constants.html">jawa.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.fields.html">jawa.fields module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.methods.html">jawa.methods module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.transforms.html">jawa.transforms module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">jawa</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="jawa.html">jawa package</a> &raquo;</li>
+        
+      <li>jawa.cf module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/jawa.cf.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-jawa.cf">
+<span id="jawa-cf-module"></span><h1>jawa.cf module<a class="headerlink" href="#module-jawa.cf" title="Permalink to this headline">¶</a></h1>
+<p>ClassFile reader &amp; writer.</p>
+<p>The <a class="reference internal" href="#module-jawa.cf" title="jawa.cf"><code class="xref py py-mod docutils literal notranslate"><span class="pre">jawa.cf</span></code></a> module provides tools for working with JVM <code class="docutils literal notranslate"><span class="pre">.class</span></code>
+ClassFiles.</p>
+<dl class="class">
+<dt id="jawa.cf.ClassFile">
+<em class="property">class </em><code class="descclassname">jawa.cf.</code><code class="descname">ClassFile</code><span class="sig-paren">(</span><em>source: IO = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/cf.html#ClassFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.cf.ClassFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Implements the JVM ClassFile (files typically ending in <code class="docutils literal notranslate"><span class="pre">.class</span></code>).</p>
+<p>To open an existing ClassFile:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;HelloWorld.class&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
+<span class="gp">... </span>   <span class="n">cf</span> <span class="o">=</span> <span class="n">ClassFile</span><span class="p">(</span><span class="n">fin</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To save a newly created or modified ClassFile:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cf</span> <span class="o">=</span> <span class="n">ClassFile</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;HelloWorld&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;HelloWorld.class&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out</span><span class="p">:</span>
+<span class="gp">... </span>   <span class="n">cf</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="#jawa.cf.ClassFile.create" title="jawa.cf.ClassFile.create"><code class="xref py py-meth docutils literal notranslate"><span class="pre">create()</span></code></a> sets up some reasonable defaults equivalent to:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWorld</span> <span class="kd">extends</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Object</span><span class="o">{</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>source</strong> – any file-like object providing <code class="docutils literal notranslate"><span class="pre">.read()</span></code>.</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="jawa.cf.ClassFile.MAGIC">
+<code class="descname">MAGIC</code><em class="property"> = 3405691582</em><a class="headerlink" href="#jawa.cf.ClassFile.MAGIC" title="Permalink to this definition">¶</a></dt>
+<dd><p>The JVM ClassFile magic number.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.cf.ClassFile.bootstrap_methods">
+<code class="descname">bootstrap_methods</code><a class="headerlink" href="#jawa.cf.ClassFile.bootstrap_methods" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the bootstrap methods table from the BootstrapMethods attribute,
+if one exists. If it does not, one will be created.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Table of <cite>BootstrapMethod</cite> objects.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.cf.ClassFile.classloader">
+<code class="descname">classloader</code><em class="property"> = None</em><a class="headerlink" href="#jawa.cf.ClassFile.classloader" title="Permalink to this definition">¶</a></dt>
+<dd><p>The ClassLoader bound to this ClassFile, if any.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.cf.ClassFile.constants">
+<code class="descname">constants</code><a class="headerlink" href="#jawa.cf.ClassFile.constants" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">ConstantPool</span></code> for this class.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="jawa.cf.ClassFile.create">
+<em class="property">classmethod </em><code class="descname">create</code><span class="sig-paren">(</span><em>this: str</em>, <em>super_: str = 'java/lang/Object'</em><span class="sig-paren">)</span> &#x2192; jawa.cf.ClassFile<a class="reference internal" href="_modules/jawa/cf.html#ClassFile.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.cf.ClassFile.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>A utility which sets up reasonable defaults for a new public class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>this</strong> – The name of this class.</li>
+<li><strong>super</strong> – The name of this class’s superclass.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.cf.ClassFile.interfaces">
+<code class="descname">interfaces</code><a class="headerlink" href="#jawa.cf.ClassFile.interfaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of direct superinterfaces of this class as indexes into
+the constant pool, in left-to-right order.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.cf.ClassFile.save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>source: IO</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/cf.html#ClassFile.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.cf.ClassFile.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the class to the file-like object <cite>source</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>source</strong> – Any file-like object providing write().</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.cf.ClassFile.super_">
+<code class="descname">super_</code><a class="headerlink" href="#jawa.cf.ClassFile.super_" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference internal" href="jawa.constants.html#jawa.constants.ConstantClass" title="jawa.constants.ConstantClass"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConstantClass</span></code></a> which represents this
+class’s superclass.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.cf.ClassFile.this">
+<code class="descname">this</code><a class="headerlink" href="#jawa.cf.ClassFile.this" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference internal" href="jawa.constants.html#jawa.constants.ConstantClass" title="jawa.constants.ConstantClass"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConstantClass</span></code></a> which represents this class.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.cf.ClassFile.version">
+<code class="descname">version</code><a class="headerlink" href="#jawa.cf.ClassFile.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference internal" href="#jawa.cf.ClassVersion" title="jawa.cf.ClassVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClassVersion</span></code></a> for this class.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cf</span> <span class="o">=</span> <span class="n">ClassFile</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;HelloWorld&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cf</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">cf</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+<span class="go">ClassVersion(major=51, minor=0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">cf</span><span class="o">.</span><span class="n">version</span><span class="o">.</span><span class="n">major</span><span class="p">)</span>
+<span class="go">51</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.cf.ClassVersion">
+<em class="property">class </em><code class="descclassname">jawa.cf.</code><code class="descname">ClassVersion</code><a class="reference internal" href="_modules/jawa/cf.html#ClassVersion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.cf.ClassVersion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.cf.ClassVersion" title="jawa.cf.ClassVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.cf.ClassVersion</span></code></a></p>
+<p>ClassFile file format version.</p>
+<dl class="attribute">
+<dt id="jawa.cf.ClassVersion.human">
+<code class="descname">human</code><a class="headerlink" href="#jawa.cf.ClassVersion.human" title="Permalink to this definition">¶</a></dt>
+<dd><p>A human-readable string identifying this version.</p>
+<p>If the version is unknown, <cite>None</cite> is returned instead.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="jawa.classloader.html" class="btn btn-neutral float-right" title="jawa.classloader module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="jawa.attribute.html" class="btn btn-neutral" title="jawa.attribute module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2012, Author.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

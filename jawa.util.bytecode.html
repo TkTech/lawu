@@ -1,0 +1,429 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-11145163-14']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>jawa.util.bytecode module &mdash; jawa  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="jawa.util.descriptor module" href="jawa.util.descriptor.html" />
+    <link rel="prev" title="jawa.util package" href="jawa.util.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> jawa
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/hello_world.html">Generating Classes From Scratch - Hello World!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/dism.html">Disassembly - A Simple javap Clone</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="jawa.html">jawa package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="jawa.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="jawa.attributes.html">jawa.attributes package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.cli.html">jawa.cli package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="jawa.util.html">jawa.util package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="jawa.util.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="jawa.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">jawa</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="jawa.html">jawa package</a> &raquo;</li>
+        
+          <li><a href="jawa.util.html">jawa.util package</a> &raquo;</li>
+        
+      <li>jawa.util.bytecode module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/jawa.util.bytecode.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-jawa.util.bytecode">
+<span id="jawa-util-bytecode-module"></span><h1>jawa.util.bytecode module<a class="headerlink" href="#module-jawa.util.bytecode" title="Permalink to this headline">¶</a></h1>
+<p>Utilities for reading &amp; writing JVM method bytecode.</p>
+<dl class="class">
+<dt id="jawa.util.bytecode.Instruction">
+<em class="property">class </em><code class="descclassname">jawa.util.bytecode.</code><code class="descname">Instruction</code><a class="reference internal" href="_modules/jawa/util/bytecode.html#Instruction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.Instruction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jawa.util.bytecode.Instruction" title="jawa.util.bytecode.Instruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">jawa.util.bytecode.Instruction</span></code></a></p>
+<p>Represents a single JVM instruction, consisting
+of an opcode and its potential operands.</p>
+<dl class="classmethod">
+<dt id="jawa.util.bytecode.Instruction.create">
+<em class="property">classmethod </em><code class="descname">create</code><span class="sig-paren">(</span><em>mnemonic_or_op</em>, <em>operands=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/util/bytecode.html#Instruction.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.Instruction.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.util.bytecode.Instruction.details">
+<code class="descname">details</code><a class="headerlink" href="#jawa.util.bytecode.Instruction.details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extended opcode information.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.util.bytecode.Instruction.name">
+<code class="descname">name</code><a class="headerlink" href="#jawa.util.bytecode.Instruction.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for mnemonic.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jawa.util.bytecode.Instruction.size_on_disk">
+<code class="descname">size_on_disk</code><span class="sig-paren">(</span><em>start_pos=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/util/bytecode.html#Instruction.size_on_disk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.Instruction.size_on_disk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the size of this instruction and its operands when
+packed. <cite>start_pos</cite> is required for the <cite>tableswitch</cite> and
+<cite>lookupswitch</cite> instruction as the padding depends on alignment.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.util.bytecode.Instruction.wide">
+<code class="descname">wide</code><a class="headerlink" href="#jawa.util.bytecode.Instruction.wide" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if this instruction needs to be prefixed by the WIDE
+opcode.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.util.bytecode.Operand">
+<em class="property">class </em><code class="descclassname">jawa.util.bytecode.</code><code class="descname">Operand</code><span class="sig-paren">(</span><em>op_type</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#jawa.util.bytecode.Operand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="jawa.util.bytecode.Operand.op_type">
+<code class="descname">op_type</code><a class="headerlink" href="#jawa.util.bytecode.Operand.op_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.util.bytecode.Operand.value">
+<code class="descname">value</code><a class="headerlink" href="#jawa.util.bytecode.Operand.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.util.bytecode.OperandFmts">
+<em class="property">class </em><code class="descclassname">jawa.util.bytecode.</code><code class="descname">OperandFmts</code><a class="reference internal" href="_modules/jawa/util/bytecode.html#OperandFmts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.OperandFmts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>An enumeration.</p>
+<dl class="attribute">
+<dt id="jawa.util.bytecode.OperandFmts.BYTE">
+<code class="descname">BYTE</code><em class="property"> = &lt;Struct object&gt;</em><a class="headerlink" href="#jawa.util.bytecode.OperandFmts.BYTE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.util.bytecode.OperandFmts.INTEGER">
+<code class="descname">INTEGER</code><em class="property"> = &lt;Struct object&gt;</em><a class="headerlink" href="#jawa.util.bytecode.OperandFmts.INTEGER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.util.bytecode.OperandFmts.SHORT">
+<code class="descname">SHORT</code><em class="property"> = &lt;Struct object&gt;</em><a class="headerlink" href="#jawa.util.bytecode.OperandFmts.SHORT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.util.bytecode.OperandFmts.UBYTE">
+<code class="descname">UBYTE</code><em class="property"> = &lt;Struct object&gt;</em><a class="headerlink" href="#jawa.util.bytecode.OperandFmts.UBYTE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.util.bytecode.OperandFmts.USHORT">
+<code class="descname">USHORT</code><em class="property"> = &lt;Struct object&gt;</em><a class="headerlink" href="#jawa.util.bytecode.OperandFmts.USHORT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jawa.util.bytecode.OperandTypes">
+<em class="property">class </em><code class="descclassname">jawa.util.bytecode.</code><code class="descname">OperandTypes</code><a class="reference internal" href="_modules/jawa/util/bytecode.html#OperandTypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.OperandTypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.IntEnum</span></code></p>
+<p>Constants used to determine the “type” of operand on an opcode,
+such as a BRANCH [offset] or a LITERAL [value].</p>
+<dl class="attribute">
+<dt id="jawa.util.bytecode.OperandTypes.BRANCH">
+<code class="descname">BRANCH</code><em class="property"> = 40</em><a class="headerlink" href="#jawa.util.bytecode.OperandTypes.BRANCH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.util.bytecode.OperandTypes.CONSTANT_INDEX">
+<code class="descname">CONSTANT_INDEX</code><em class="property"> = 30</em><a class="headerlink" href="#jawa.util.bytecode.OperandTypes.CONSTANT_INDEX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.util.bytecode.OperandTypes.LITERAL">
+<code class="descname">LITERAL</code><em class="property"> = 10</em><a class="headerlink" href="#jawa.util.bytecode.OperandTypes.LITERAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.util.bytecode.OperandTypes.LOCAL_INDEX">
+<code class="descname">LOCAL_INDEX</code><em class="property"> = 20</em><a class="headerlink" href="#jawa.util.bytecode.OperandTypes.LOCAL_INDEX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jawa.util.bytecode.OperandTypes.PADDING">
+<code class="descname">PADDING</code><em class="property"> = 50</em><a class="headerlink" href="#jawa.util.bytecode.OperandTypes.PADDING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="jawa.util.bytecode.load_bytecode_definitions">
+<code class="descclassname">jawa.util.bytecode.</code><code class="descname">load_bytecode_definitions</code><span class="sig-paren">(</span><em>*</em>, <em>path=None</em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/jawa/util/bytecode.html#load_bytecode_definitions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.load_bytecode_definitions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load bytecode definitions from JSON file.</p>
+<p>If no path is provided the default bytecode.json will be loaded.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – Either None or a path to a JSON file to load containing
+bytecode definitions.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="jawa.util.bytecode.read_instruction">
+<code class="descclassname">jawa.util.bytecode.</code><code class="descname">read_instruction</code><span class="sig-paren">(</span><em>fio</em>, <em>start_pos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/util/bytecode.html#read_instruction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.read_instruction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a single instruction from <cite>fio</cite> and returns it, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if
+the stream is empty.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fio</strong> – Any file-like object providing <code class="docutils literal notranslate"><span class="pre">read()</span></code>.</li>
+<li><strong>start_pos</strong> – The current position in the stream.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="jawa.util.bytecode.write_instruction">
+<code class="descclassname">jawa.util.bytecode.</code><code class="descname">write_instruction</code><span class="sig-paren">(</span><em>fout</em>, <em>start_pos</em>, <em>ins</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/util/bytecode.html#write_instruction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.bytecode.write_instruction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes a single instruction of <cite>opcode</cite> with <cite>operands</cite> to <cite>fout</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fout</strong> – Any file-like object providing <code class="docutils literal notranslate"><span class="pre">write()</span></code>.</li>
+<li><strong>start_pos</strong> – The current position in the stream.</li>
+<li><strong>ins</strong> – The <cite>Instruction</cite> to write.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="jawa.util.descriptor.html" class="btn btn-neutral float-right" title="jawa.util.descriptor module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="jawa.util.html" class="btn btn-neutral" title="jawa.util package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2012, Author.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
