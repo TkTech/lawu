@@ -42,7 +42,7 @@ class Instruction(_Instruction):
         elif fmts:
             # A simple opcode with simple operands.
             for fmt, _ in fmts:
-                size += fmt.size
+                size += fmt.value.size
         elif self.opcode == 0xAB:
             # lookupswitch
             padding = 4 - (start_pos + 1) % 4
@@ -143,7 +143,7 @@ def write_instruction(fout, start_pos, ins):
         # A normal simple opcode with simple operands.
         fout.write(pack('>B', opcode))
         for i, (fmt, _) in enumerate(fmt_operands):
-            fout.write(fmt.pack(operands[i].value))
+            fout.write(fmt.value.pack(operands[i].value))
     elif opcode == 0xAB:
         # Special case for lookupswitch.
         fout.write(pack('>B', opcode))

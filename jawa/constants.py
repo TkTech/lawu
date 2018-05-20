@@ -129,7 +129,7 @@ class Reference(Constant):
 
     def pack(self):
         return pack(
-            '>BHHH',
+            '>BHH',
             self.TAG,
             self.class_index,
             self.name_and_type_index

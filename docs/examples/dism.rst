@@ -10,7 +10,7 @@ If we try this out on a HelloWorld class, our output will look like:
 
 .. code-block:: text
 
-    python disassemble.py --class-path ../tests/data HelloWorld                                                                                                                                                                                          develop
+    $ python disassemble.py --class-path ../tests/data HelloWorld                                                                                                                                                                                          develop
     ; ---------------------------------------------- constant pool
     ; -------------------------------------------------- total: 21
     ; 0001: <UTF8(index=1, value='HelloWorld'>)
