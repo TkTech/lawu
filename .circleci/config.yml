@@ -9,20 +9,16 @@ jobs:
     steps:
       - checkout
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "setup.py" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-
       - run:
           name: install dependencies
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install -e "."
-            pip install -e ".[dev]"
+            pip3 install --upgrade pip
+            pip3 uninstall -y setuptools
+            pip3 install setuptools
+            pip3 install -e "."
+            pip3 install -e ".[dev]"
 
       - run:
           name: run tests
