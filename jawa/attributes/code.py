@@ -1,4 +1,3 @@
-# -*- coding: utf8 -*-
 import io
 import inspect
 import functools

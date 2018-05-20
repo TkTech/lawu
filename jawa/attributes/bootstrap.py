@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import io
 from collections import namedtuple
 from itertools import repeat

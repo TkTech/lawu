@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from struct import pack
 from collections import namedtuple
 

@@ -1,4 +1,3 @@
-# -*- coding: utf8 -*-
 """
 Methods for parsing standard JVM type descriptors for fields and methods.
 """

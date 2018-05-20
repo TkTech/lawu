@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # jawa documentation build configuration file, created by
 # sphinx-quickstart on Wed Oct 31 23:00:27 2012.

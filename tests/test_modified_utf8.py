@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 from jawa.util.utf import encode_modified_utf8, decode_modified_utf8
 
 

@@ -1,4 +1,3 @@
-# -*- coding: utf8 -*-
 __all__ = ('Flags',)
 import struct
 

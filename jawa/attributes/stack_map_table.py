@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from itertools import repeat
 
 from jawa.attribute import Attribute

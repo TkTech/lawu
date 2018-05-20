@@ -1,4 +1,3 @@
-# -*- coding: utf8 -*-
 from collections import namedtuple
 
 from jawa.constants import Constant
