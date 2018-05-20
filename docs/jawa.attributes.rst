@@ -21,4 +21,7 @@ Submodules
    jawa.attributes.signature
    jawa.attributes.source_file
    jawa.attributes.stack_map_table
-
+   jawa.attributes.enclosing_method
+   jawa.attributes.inner_classes
+   jawa.attributes.local_variable_type
+   jawa.attributes.synthetic

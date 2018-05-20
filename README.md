@@ -1,7 +1,7 @@
 # Jawa
 
-![CircleCI](https://img.shields.io/circleci/project/github/TkTech/Jawa.svg?style=for-the-badge)
-![license](https://img.shields.io/github/license/tktech/jawa.svg?style=for-the-badge)
+[![CircleCI](https://img.shields.io/circleci/project/github/TkTech/Jawa/master.svg?style=for-the-badge)](https://circleci.com/gh/TkTech/Jawa)
+[![license](https://img.shields.io/github/license/tktech/jawa.svg?style=for-the-badge)](LICENCE)
 
 Jawa is a human-friendly library for assembling, disassembling, and exploring
 JVM class files. It's highly suitable for automation tasks.
