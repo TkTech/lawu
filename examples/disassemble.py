@@ -1,13 +1,16 @@
-"""
-A simple example disassembler.
-"""
-import sys
-from jawa import ClassFile
+import click
+
+from jawa.classloader import ClassLoader
 from jawa.util.bytecode import OperandTypes
 
-if __name__ == '__main__':
-    with open(sys.argv[1], 'rb') as fin:
-        cf = ClassFile(fin)
+
+@click.command()
+@click.option('--class-path', multiple=True, type=click.Path(exists=True))
+@click.argument('classes', nargs=-1)
+def main(class_path, classes):
+    loader = ClassLoader(*class_path)
+    for class_ in classes:
+        cf = loader[class_]
 
         # The constant pool.
         print('; {0:->60}'.format(' constant pool'))
@@ -47,22 +50,26 @@ if __name__ == '__main__':
             if method.code:
                 for ins in method.code.disassemble():
                     line = [
-                        '{ins.pos:04}'.format(ins=ins),
-                        '[0x{ins.opcode:02X}]'.format(ins=ins),
-                        '{ins.mnemonic:>15} <-'.format(ins=ins)
+                        f'{ins.pos:04}',
+                        f'[0x{ins.opcode:02X}]',
+                        f'{ins.mnemonic:>15} <-'
                     ]
 
                     for operand in ins.operands:
                         if isinstance(operand, dict):
-                            line.append('JT[{0!r}]'.format(operand))
-                        elif operand.op_type == OperandTypes.CONSTANT_INDEX:
-                            line.append('C[{0}]'.format(operand.value))
-                        elif operand.op_type == OperandTypes.BRANCH:
-                            line.append('J[{0}]'.format(operand.value))
-                        elif operand.op_type == OperandTypes.LITERAL:
-                            line.append('#[{0}]'.format(operand.value))
-                        elif operand.op_type == OperandTypes.LOCAL_INDEX:
-                            line.append('L[{0}]'.format(operand.value))
+                            line.append(f'JT[{operand!r}]')
+                            continue
+
+                        line.append({
+                            OperandTypes.CONSTANT_INDEX: f'C[{operand.value}]',
+                            OperandTypes.BRANCH: f'J[{operand.value}]',
+                            OperandTypes.LITERAL: f'#[{operand.value}]',
+                            OperandTypes.LOCAL_INDEX: f'L[{operand.value}]',
+                        }[operand.op_type])
 
                     print('  ' + ' '.join(line))
             print('}')
+
+
+if __name__ == '__main__':
+    main()
