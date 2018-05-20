@@ -4,16 +4,16 @@ from collections import namedtuple
 from jawa.attribute import Attribute
 
 
-local_variable_entry = namedtuple('local_variable_entry', [
+local_variable_type_entry = namedtuple('local_variable_type_entry', [
     'start_pc',
     'length',
     'name_index',
-    'descriptor_index',
+    'signature_index',
     'index'
 ])
 
 
-class LocalVariableTableAttribute(Attribute):
+class LocalVariableTypeTableAttribute(Attribute):
     ADDED_IN = '1.0.2'
     MINIMUM_CLASS_VERSION = (45, 3)
 
@@ -21,7 +21,7 @@ class LocalVariableTableAttribute(Attribute):
         super().__init__(
             table,
             name_index or table.cf.constants.create_utf8(
-                'LocalVariableTable'
+                'LocalVariableTypeTable'
             ).index
         )
         self.local_variables = []
@@ -31,7 +31,7 @@ class LocalVariableTableAttribute(Attribute):
         table = info.unpack('>{0}H'.format(length * 5))
 
         self.local_variables = [
-            local_variable_entry(*x)
+            local_variable_type_entry(*x)
             for x in zip(*[iter(table)] * 5)
         ]
 
@@ -43,4 +43,4 @@ class LocalVariableTableAttribute(Attribute):
         )
 
     def __repr__(self):
-        return f'<LocalVariableTableAttribute({self.local_variables!r})>'
+        return f'<LocalVariableTypeTableAttribute({self.local_variables!r})>'
