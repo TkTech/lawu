@@ -1,5 +1,5 @@
 from jawa.constants import FieldReference
-from jawa.transforms.expand_constants import expand_constants
+from jawa.transforms import expand_constants
 
 
 def test_expand_constants(loader):

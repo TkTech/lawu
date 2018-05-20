@@ -13,7 +13,6 @@ Subpackages
 
     jawa.attributes
     jawa.cli
-    jawa.transforms
     jawa.util
 
 Submodules
@@ -28,4 +27,4 @@ Submodules
    jawa.constants
    jawa.fields
    jawa.methods
-
+   jawa.transforms
