@@ -2,6 +2,7 @@
 import io
 import inspect
 import functools
+from typing import Iterator
 from struct import pack
 from itertools import repeat
 from collections import namedtuple
@@ -9,7 +10,8 @@ from collections import namedtuple
 from jawa.attribute import Attribute, AttributeTable
 from jawa.util.bytecode import (
     read_instruction,
-    write_instruction
+    write_instruction,
+    Instruction
 )
 
 CodeException = namedtuple('CodeException', [
@@ -49,12 +51,6 @@ class CodeAttribute(Attribute):
         # Save it to disk so we can run it with the JVM.
         with open('HelloWorld.class', 'wb') as fout:
             cf.save(fout)
-
-    .. note::
-
-        Not all :class:`~jawa.methods.Method` objects will have an associated
-        `CodeAttribute` - methods that are flagged as `acc_native` or
-        `acc_abstract` will never have one.
     """
     ADDED_IN = '1.0.2'
     MINIMUM_CLASS_VERSION = (45, 3)
@@ -160,26 +156,18 @@ class CodeAttribute(Attribute):
                 write_instruction(code_out, code_out.tell(), ins)
             self._code = code_out.getvalue()
 
-    def disassemble(self, *, transforms=None):
+    def disassemble(self, *, transforms=None) -> Iterator[Instruction]:
         """
         Disassembles this method, yielding an iterable of
         :class:`~jawa.util.bytecode.Instruction` objects.
         """
-        if transforms is None and self.cf.classloader:
-            transforms = self.cf.classloader.bytecode_transforms
-        elif transforms is None:
-            transforms = []
+        if transforms is None:
+            if self.cf.classloader:
+                transforms = self.cf.classloader.bytecode_transforms
+            else:
+                transforms = []
 
-        for i, transform in enumerate(transforms):
-            sig = inspect.signature(transform, follow_wrapped=True)
-            kws = {}
-            if 'cf' in sig.parameters:
-                kws['cf'] = self.cf
-
-            if 'attribute' in sig.parameters:
-                kws['attribute'] = self
-
-            transforms[i] = functools.partial(transform, **kws)
+        transforms = [self._bind_transform(t) for t in transforms]
 
         with io.BytesIO(self._code) as code:
             ins_iter = iter(lambda: read_instruction(code, code.tell()), None)
@@ -187,3 +175,13 @@ class CodeAttribute(Attribute):
                 for transform in transforms:
                     ins = transform(ins)
                 yield ins
+
+    def _bind_transform(self, transform):
+        sig = inspect.signature(transform, follow_wrapped=True)
+        return functools.partial(
+            transform,
+            **{k: v for k, v in {
+                'cf': self.cf,
+                'attribute': self
+            }.items() if k in sig.parameters}
+        )
