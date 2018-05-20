@@ -1,5 +1,6 @@
 import re
 import json
+import importlib
 
 import click
 
@@ -85,16 +86,12 @@ def ins(mnemonic):
 @cli.command(name='shell')
 @click.option('--class-path', '-cp', multiple=True)
 def shell_command(class_path):
-    """Drop into a debugging shell.
-
-    Once the shell is loaded you can use `load(<class name>)` to load
-    any class on the set classpath.
-    """
+    """Drop into a debugging shell."""
     loader = ClassLoader(*class_path)
     shell.start_shell(local_ns={
         'ClassFile': ClassFile,
-        'load': loader.load,
-        'loader': loader
+        'loader': loader,
+        'constants': importlib.import_module('jawa.constants'),
     })
 
 
