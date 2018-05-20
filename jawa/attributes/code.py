@@ -62,10 +62,10 @@ class CodeAttribute(Attribute):
                 'Code'
             ).index
         )
-        self._max_stack = 0
-        self._max_locals = 0
-        self._ex_table = []
-        self._attributes = AttributeTable(table.cf, parent=self)
+        self.max_stack = 0
+        self.max_locals = 0
+        self.exception_table = []
+        self.attributes = AttributeTable(table.cf, parent=self)
         self._code = ''
 
     def unpack(self, info):
@@ -79,18 +79,17 @@ class CodeAttribute(Attribute):
 
         :param info: A byte string containing an unparsed CodeAttribute.
         """
-        self._max_stack, self._max_locals, c_len = info.unpack('>HHI')
+        self.max_stack, self.max_locals, c_len = info.unpack('>HHI')
         self._code = info.read(c_len)
 
         # The exception table
         ex_table_len = info.u2()
-        self._ex_table = []
         for _ in repeat(None, ex_table_len):
-            self._ex_table.append(CodeException(
+            self.exception_table.append(CodeException(
                 *info.unpack('>HHHH')
             ))
-        self._attributes = AttributeTable(self.cf, parent=self)
-        self._attributes.unpack(info)
+        self.attributes = AttributeTable(self.cf, parent=self)
+        self.attributes.unpack(info)
 
     def pack(self):
         """
@@ -99,52 +98,18 @@ class CodeAttribute(Attribute):
         with io.BytesIO() as file_out:
             file_out.write(pack(
                 '>HHI',
-                self._max_stack,
-                self._max_locals,
+                self.max_stack,
+                self.max_locals,
                 len(self._code)
             ))
             file_out.write(self._code)
 
-            file_out.write(pack('>H', len(self._ex_table)))
-            for exception in self._ex_table:
+            file_out.write(pack('>H', len(self.exception_table)))
+            for exception in self.exception_table:
                 file_out.write(pack('>HHHH', *exception))
 
-            self._attributes.pack(file_out)
+            self.attributes.pack(file_out)
             return file_out.getvalue()
-
-    @property
-    def max_stack(self):
-        """The maximum size of the stack."""
-        return self._max_stack
-
-    @max_stack.setter
-    def max_stack(self, value):
-        self._max_stack = value
-
-    @property
-    def max_locals(self):
-        """The maximum number of locals."""
-        return self._max_locals
-
-    @max_locals.setter
-    def max_locals(self, value):
-        self._max_locals = value
-
-    @property
-    def exception_table(self):
-        return self._ex_table
-
-    @property
-    def code(self):
-        return self._code
-
-    @property
-    def attributes(self):
-        """
-        An :class:`~jawa.attribute.AttributeTable` containing all of the
-        attributes associated with this `CodeAttribute`.
-        """
-        return self._attributes
 
     def assemble(self, code):
         """
