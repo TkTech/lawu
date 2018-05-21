@@ -1,3 +1,4 @@
+import io
 import os
 import os.path
 from typing import IO, Callable, Iterable, Set, Iterator
@@ -123,8 +124,7 @@ class ClassLoader(object):
             with open(entry, 'rb' if mode == 'r' else mode) as source:
                 yield source
         elif isinstance(entry, ZipFile):
-            with entry.open(path, mode) as source:
-                yield source
+            yield io.BytesIO(entry.read(path))
         else:
             raise NotImplementedError()
 
