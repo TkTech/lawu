@@ -1,8 +1,8 @@
 Generating Classes From Scratch - Hello World!
 ==============================================
 
-A simple example of the classic "Hello World!" program. The example will
-generate a ClassFile equivelent to this Java:
+A simple example of the classic "Hello World!" program. This example will
+generate a ClassFile equivalent to this Java:
 
 .. code-block:: java
 
@@ -13,3 +13,11 @@ generate a ClassFile equivelent to this Java:
     }
 
 .. literalinclude:: ../../examples/hello_world.py
+
+Our example can then be run in the standard JVM:
+
+.. code-block:: text
+
+    $ python hello_world.py
+    $ java HelloWorld                                                                                                                                                                                                                                   develop
+    Hello World!

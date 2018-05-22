@@ -164,16 +164,19 @@
 <h1>Disassembly - A Simple javap Clone<a class="headerlink" href="#disassembly-a-simple-javap-clone" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javap.html">Javap</a> is the defacto Java disassembler and is included when you installed
 the Oracle JDK. We can make a simple clone very easily using Jawa:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">A simple example disassembler.</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">jawa</span> <span class="k">import</span> <span class="n">ClassFile</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">click</span>
+
+<span class="kn">from</span> <span class="nn">jawa.classloader</span> <span class="k">import</span> <span class="n">ClassLoader</span>
 <span class="kn">from</span> <span class="nn">jawa.util.bytecode</span> <span class="k">import</span> <span class="n">OperandTypes</span>
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
-        <span class="n">cf</span> <span class="o">=</span> <span class="n">ClassFile</span><span class="p">(</span><span class="n">fin</span><span class="p">)</span>
+
+<span class="nd">@click</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--class-path&#39;</span><span class="p">,</span> <span class="n">multiple</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">argument</span><span class="p">(</span><span class="s1">&#39;classes&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">class_path</span><span class="p">,</span> <span class="n">classes</span><span class="p">):</span>
+    <span class="n">loader</span> <span class="o">=</span> <span class="n">ClassLoader</span><span class="p">(</span><span class="o">*</span><span class="n">class_path</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">class_</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
+        <span class="n">cf</span> <span class="o">=</span> <span class="n">loader</span><span class="p">[</span><span class="n">class_</span><span class="p">]</span>
 
         <span class="c1"># The constant pool.</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;; </span><span class="si">{0:-&gt;60}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39; constant pool&#39;</span><span class="p">))</span>
@@ -213,25 +216,49 @@ the Oracle JDK. We can make a simple clone very easily using Jawa:</p>
             <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">code</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">ins</span> <span class="ow">in</span> <span class="n">method</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">disassemble</span><span class="p">():</span>
                     <span class="n">line</span> <span class="o">=</span> <span class="p">[</span>
-                        <span class="s1">&#39;</span><span class="si">{ins.pos:04}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ins</span><span class="o">=</span><span class="n">ins</span><span class="p">),</span>
-                        <span class="s1">&#39;[0x</span><span class="si">{ins.opcode:02X}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ins</span><span class="o">=</span><span class="n">ins</span><span class="p">),</span>
-                        <span class="s1">&#39;</span><span class="si">{ins.mnemonic:&gt;15}</span><span class="s1"> &lt;-&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ins</span><span class="o">=</span><span class="n">ins</span><span class="p">)</span>
+                        <span class="n">f</span><span class="s1">&#39;</span><span class="si">{ins.pos:04}</span><span class="s1">&#39;</span><span class="p">,</span>
+                        <span class="n">f</span><span class="s1">&#39;[0x</span><span class="si">{ins.opcode:02X}</span><span class="s1">]&#39;</span><span class="p">,</span>
+                        <span class="n">f</span><span class="s1">&#39;</span><span class="si">{ins.mnemonic:&gt;15}</span><span class="s1"> &lt;-&#39;</span>
                     <span class="p">]</span>
 
                     <span class="k">for</span> <span class="n">operand</span> <span class="ow">in</span> <span class="n">ins</span><span class="o">.</span><span class="n">operands</span><span class="p">:</span>
                         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-                            <span class="n">line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;JT[</span><span class="si">{0!r}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">operand</span><span class="p">))</span>
-                        <span class="k">elif</span> <span class="n">operand</span><span class="o">.</span><span class="n">op_type</span> <span class="o">==</span> <span class="n">OperandTypes</span><span class="o">.</span><span class="n">CONSTANT_INDEX</span><span class="p">:</span>
-                            <span class="n">line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;C[</span><span class="si">{0}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">operand</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
-                        <span class="k">elif</span> <span class="n">operand</span><span class="o">.</span><span class="n">op_type</span> <span class="o">==</span> <span class="n">OperandTypes</span><span class="o">.</span><span class="n">BRANCH</span><span class="p">:</span>
-                            <span class="n">line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;J[</span><span class="si">{0}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">operand</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
-                        <span class="k">elif</span> <span class="n">operand</span><span class="o">.</span><span class="n">op_type</span> <span class="o">==</span> <span class="n">OperandTypes</span><span class="o">.</span><span class="n">LITERAL</span><span class="p">:</span>
-                            <span class="n">line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;#[</span><span class="si">{0}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">operand</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
-                        <span class="k">elif</span> <span class="n">operand</span><span class="o">.</span><span class="n">op_type</span> <span class="o">==</span> <span class="n">OperandTypes</span><span class="o">.</span><span class="n">LOCAL_INDEX</span><span class="p">:</span>
-                            <span class="n">line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;L[</span><span class="si">{0}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">operand</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+                            <span class="n">line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;JT[</span><span class="si">{operand!r}</span><span class="s1">]&#39;</span><span class="p">)</span>
+                            <span class="k">continue</span>
+
+                        <span class="n">line</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                            <span class="n">OperandTypes</span><span class="o">.</span><span class="n">CONSTANT_INDEX</span><span class="p">:</span> <span class="n">f</span><span class="s1">&#39;C[</span><span class="si">{operand.value}</span><span class="s1">]&#39;</span><span class="p">,</span>
+                            <span class="n">OperandTypes</span><span class="o">.</span><span class="n">BRANCH</span><span class="p">:</span> <span class="n">f</span><span class="s1">&#39;J[</span><span class="si">{operand.value}</span><span class="s1">]&#39;</span><span class="p">,</span>
+                            <span class="n">OperandTypes</span><span class="o">.</span><span class="n">LITERAL</span><span class="p">:</span> <span class="n">f</span><span class="s1">&#39;#[</span><span class="si">{operand.value}</span><span class="s1">]&#39;</span><span class="p">,</span>
+                            <span class="n">OperandTypes</span><span class="o">.</span><span class="n">LOCAL_INDEX</span><span class="p">:</span> <span class="n">f</span><span class="s1">&#39;L[</span><span class="si">{operand.value}</span><span class="s1">]&#39;</span><span class="p">,</span>
+                            <span class="n">OperandTypes</span><span class="o">.</span><span class="n">PADDING</span><span class="p">:</span> <span class="s1">&#39;P&#39;</span>
+                        <span class="p">}[</span><span class="n">operand</span><span class="o">.</span><span class="n">op_type</span><span class="p">])</span>
 
                     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  &#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;}&#39;</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>If we try this out on a HelloWorld class, our output will look like:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>$ python disassemble.py --class-path ../tests/data HelloWorld                                                                                                                                                                                          develop
+; ---------------------------------------------- constant pool
+; -------------------------------------------------- total: 21
+; 0001: &lt;UTF8(index=1, value=&#39;HelloWorld&#39;&gt;)
+; 0002: &lt;ConstantClass(index=2, name=&lt;UTF8(index=1, value=&#39;HelloWorld&#39;&gt;))&gt;
+...
+; ----------------------------------------------------- fields
+; --------------------------------------------------- total: 0
+; ---------------------------------------------------- methods
+; --------------------------------------------------- total: 1
+acc_public acc_static void main(java/lang/String[]) {
+  0000 [0xB2]       getstatic &lt;- C[13]
+  0003 [0x12]             ldc &lt;- C[15]
+  0005 [0xB6]   invokevirtual &lt;- C[21]
+  0008 [0xB1]          return &lt;-
+}
 </pre></div>
 </div>
 </div>

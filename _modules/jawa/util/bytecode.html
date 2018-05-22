@@ -201,7 +201,7 @@
         <span class="k">elif</span> <span class="n">fmts</span><span class="p">:</span>
             <span class="c1"># A simple opcode with simple operands.</span>
             <span class="k">for</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">fmts</span><span class="p">:</span>
-                <span class="n">size</span> <span class="o">+=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">size</span>
+                <span class="n">size</span> <span class="o">+=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">size</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">opcode</span> <span class="o">==</span> <span class="mh">0xAB</span><span class="p">:</span>
             <span class="c1"># lookupswitch</span>
             <span class="n">padding</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">-</span> <span class="p">(</span><span class="n">start_pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span>
@@ -302,7 +302,7 @@
         <span class="c1"># A normal simple opcode with simple operands.</span>
         <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">opcode</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fmt_operands</span><span class="p">):</span>
-            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fmt</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">operands</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fmt</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">operands</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
     <span class="k">elif</span> <span class="n">opcode</span> <span class="o">==</span> <span class="mh">0xAB</span><span class="p">:</span>
         <span class="c1"># Special case for lookupswitch.</span>
         <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;B&#39;</span><span class="p">,</span> <span class="n">opcode</span><span class="p">))</span>

@@ -180,7 +180,7 @@
 <span id="jawa-util-shell-module"></span><h1>jawa.util.shell module<a class="headerlink" href="#module-jawa.util.shell" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="jawa.util.shell.start_shell">
-<code class="descclassname">jawa.util.shell.</code><code class="descname">start_shell</code><span class="sig-paren">(</span><em>local_ns=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/util/shell.html#start_shell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.shell.start_shell" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">jawa.util.shell.</code><code class="descname">start_shell</code><span class="sig-paren">(</span><em>local_ns: Dict = None</em>, <em>banner: str = ''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jawa/util/shell.html#start_shell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jawa.util.shell.start_shell" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create and immediately drop into a Python shell.</p>
 <p>If IPython version 5 or greater is available it will be used instead
 of the built-in python shell.</p>
@@ -188,9 +188,12 @@ of the built-in python shell.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">Params local_ns:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">An optional dict containing the global namespace of
-the newly created shell.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>local_ns</strong> – An optional dict containing the global namespace of
+the newly created shell.</li>
+<li><strong>banner</strong> – An optional banner to render when terminal starts.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>

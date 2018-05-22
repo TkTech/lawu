@@ -158,6 +158,7 @@
             
   <h1>Source code for jawa.util.shell</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">code</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Dict</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">IPython.terminal</span> <span class="k">import</span> <span class="n">embed</span>
@@ -168,23 +169,23 @@
     <span class="n">IPYTHON_SHELL_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
 
 
-<div class="viewcode-block" id="start_shell"><a class="viewcode-back" href="../../../jawa.util.shell.html#jawa.util.shell.start_shell">[docs]</a><span class="k">def</span> <span class="nf">start_shell</span><span class="p">(</span><span class="n">local_ns</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="start_shell"><a class="viewcode-back" href="../../../jawa.util.shell.html#jawa.util.shell.start_shell">[docs]</a><span class="k">def</span> <span class="nf">start_shell</span><span class="p">(</span><span class="n">local_ns</span><span class="p">:</span> <span class="n">Dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">banner</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Create and immediately drop into a Python shell.</span>
 
 <span class="sd">    If IPython version 5 or greater is available it will be used instead</span>
 <span class="sd">    of the built-in python shell.</span>
 
-<span class="sd">    :params local_ns: An optional dict containing the global namespace of</span>
+<span class="sd">    :param local_ns: An optional dict containing the global namespace of</span>
 <span class="sd">                       the newly created shell.</span>
-<span class="sd">    :type local_ns: dict</span>
+<span class="sd">    :param banner: An optional banner to render when terminal starts.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">IPYTHON_SHELL_AVAILABLE</span><span class="p">:</span>
         <span class="c1"># Don&#39;t try to stop IPython from displaying its banner, since</span>
         <span class="c1"># it&#39;s different in every major version</span>
         <span class="n">terminal</span> <span class="o">=</span> <span class="n">embed</span><span class="o">.</span><span class="n">InteractiveShellEmbed</span><span class="p">(</span><span class="n">user_ns</span><span class="o">=</span><span class="p">{})</span>
-        <span class="n">terminal</span><span class="o">.</span><span class="n">mainloop</span><span class="p">(</span><span class="n">local_ns</span><span class="o">=</span><span class="n">local_ns</span><span class="p">,</span> <span class="n">global_ns</span><span class="o">=</span><span class="p">{})</span>
+        <span class="n">terminal</span><span class="o">.</span><span class="n">mainloop</span><span class="p">(</span><span class="n">local_ns</span><span class="o">=</span><span class="n">local_ns</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">code</span><span class="o">.</span><span class="n">interact</span><span class="p">(</span><span class="n">banner</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">local</span><span class="o">=</span><span class="n">local_ns</span><span class="p">)</span></div>
+        <span class="n">code</span><span class="o">.</span><span class="n">interact</span><span class="p">(</span><span class="n">banner</span><span class="o">=</span><span class="n">banner</span><span class="p">,</span> <span class="n">local</span><span class="o">=</span><span class="n">local_ns</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

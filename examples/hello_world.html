@@ -162,8 +162,8 @@
             
   <div class="section" id="generating-classes-from-scratch-hello-world">
 <h1>Generating Classes From Scratch - Hello World!<a class="headerlink" href="#generating-classes-from-scratch-hello-world" title="Permalink to this headline">¶</a></h1>
-<p>A simple example of the classic “Hello World!” program. The example will
-generate a ClassFile equivelent to this Java:</p>
+<p>A simple example of the classic “Hello World!” program. This example will
+generate a ClassFile equivalent to this Java:</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">HelloWorld</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Hello World!&quot;</span><span class="o">);</span>
@@ -174,34 +174,39 @@ generate a ClassFile equivelent to this Java:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">An example showing how to create a &quot;Hello World&quot; class from scratch.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">jawa</span> <span class="k">import</span> <span class="n">ClassFile</span>
+<span class="kn">from</span> <span class="nn">jawa.cf</span> <span class="k">import</span> <span class="n">ClassFile</span>
 <span class="kn">from</span> <span class="nn">jawa.assemble</span> <span class="k">import</span> <span class="n">assemble</span>
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">cf</span> <span class="o">=</span> <span class="n">ClassFile</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;HelloWorld&#39;</span><span class="p">)</span>
+<span class="n">cf</span> <span class="o">=</span> <span class="n">ClassFile</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;HelloWorld&#39;</span><span class="p">)</span>
 
-    <span class="n">main</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;main&#39;</span><span class="p">,</span> <span class="s1">&#39;([Ljava/lang/String;)V&#39;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">main</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">acc_static</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">main</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">max_locals</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">main</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">max_stack</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">main</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;main&#39;</span><span class="p">,</span> <span class="s1">&#39;([Ljava/lang/String;)V&#39;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">main</span><span class="o">.</span><span class="n">access_flags</span><span class="o">.</span><span class="n">acc_static</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">main</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">max_locals</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">main</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">max_stack</span> <span class="o">=</span> <span class="mi">2</span>
 
-    <span class="n">main</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">assemble</span><span class="p">(</span><span class="n">assemble</span><span class="p">([</span>
-        <span class="p">(</span><span class="s1">&#39;getstatic&#39;</span><span class="p">,</span> <span class="n">cf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">create_field_ref</span><span class="p">(</span>
-            <span class="s1">&#39;java/lang/System&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;out&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;Ljava/io/PrintStream;&#39;</span>
-        <span class="p">)),</span>
-        <span class="p">(</span><span class="s1">&#39;ldc&#39;</span><span class="p">,</span> <span class="n">cf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">create_string</span><span class="p">(</span><span class="s1">&#39;Hello World!&#39;</span><span class="p">)),</span>
-        <span class="p">(</span><span class="s1">&#39;invokevirtual&#39;</span><span class="p">,</span> <span class="n">cf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">create_method_ref</span><span class="p">(</span>
-            <span class="s1">&#39;java/io/PrintStream&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;println&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;(Ljava/lang/String;)V&#39;</span>
-        <span class="p">)),</span>
-        <span class="p">(</span><span class="s1">&#39;return&#39;</span><span class="p">,)</span>
-    <span class="p">]))</span>
+<span class="n">main</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">assemble</span><span class="p">(</span><span class="n">assemble</span><span class="p">([</span>
+    <span class="p">(</span><span class="s1">&#39;getstatic&#39;</span><span class="p">,</span> <span class="n">cf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">create_field_ref</span><span class="p">(</span>
+        <span class="s1">&#39;java/lang/System&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;out&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Ljava/io/PrintStream;&#39;</span>
+    <span class="p">)),</span>
+    <span class="p">(</span><span class="s1">&#39;ldc&#39;</span><span class="p">,</span> <span class="n">cf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">create_string</span><span class="p">(</span><span class="s1">&#39;Hello World!&#39;</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s1">&#39;invokevirtual&#39;</span><span class="p">,</span> <span class="n">cf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">create_method_ref</span><span class="p">(</span>
+        <span class="s1">&#39;java/io/PrintStream&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;println&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;(Ljava/lang/String;)V&#39;</span>
+    <span class="p">)),</span>
+    <span class="p">(</span><span class="s1">&#39;return&#39;</span><span class="p">,)</span>
+<span class="p">]))</span>
 
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;HelloWorld.class&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
-        <span class="n">cf</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;HelloWorld.class&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+    <span class="n">cf</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">fout</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Our example can then be run in the standard JVM:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>$ python hello_world.py
+$ java HelloWorld                                                                                                                                                                                                                                   develop
+Hello World!
 </pre></div>
 </div>
 </div>
