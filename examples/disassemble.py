@@ -65,6 +65,7 @@ def main(class_path, classes):
                             OperandTypes.BRANCH: f'J[{operand.value}]',
                             OperandTypes.LITERAL: f'#[{operand.value}]',
                             OperandTypes.LOCAL_INDEX: f'L[{operand.value}]',
+                            OperandTypes.PADDING: 'P'
                         }[operand.op_type])
 
                     print('  ' + ' '.join(line))
