@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 setup(
     name="jawa",
     packages=find_packages(),
-    version="2.0",
+    version="2.0.1",
     description="Doing fun stuff with JVM ClassFiles.",
     author="Tyler Kennedy",
     author_email="tk@tkte.ch",
