@@ -1,8 +1,6 @@
 jawa.cli package
 ================
 
-.. automodule:: jawa.cli
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+.. click:: jawa.cli:cli
+   :prog: jawa
+   :show-nested:

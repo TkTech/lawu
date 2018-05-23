@@ -40,8 +40,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="jawa.util package" href="jawa.util.html" />
-    <link rel="prev" title="jawa.attributes.synthetic module" href="jawa.attributes.synthetic.html" /> 
+    <link rel="prev" title="jawa.transforms module" href="jawa.transforms.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -96,13 +95,22 @@
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="jawa.html">jawa package</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="jawa.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="jawa.attributes.html">jawa.attributes package</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">jawa.cli package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="jawa.util.html">jawa.util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jawa.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="jawa.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="jawa.assemble.html">jawa.assemble module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.attribute.html">jawa.attribute module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.cf.html">jawa.cf module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.classloader.html">jawa.classloader module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.constants.html">jawa.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.fields.html">jawa.fields module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.methods.html">jawa.methods module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.transforms.html">jawa.transforms module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">jawa.cli package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#jawa">jawa</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="jawa.html#submodules">Submodules</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -171,8 +179,110 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-jawa.cli">
-<span id="jawa-cli-package"></span><h1>jawa.cli package<a class="headerlink" href="#module-jawa.cli" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="jawa-cli-package">
+<h1>jawa.cli package<a class="headerlink" href="#jawa-cli-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="jawa">
+<h2>jawa<a class="headerlink" href="#jawa" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>jawa <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
+</pre></div>
+</div>
+<div class="section" id="jawa-attributes">
+<h3>attributes<a class="headerlink" href="#jawa-attributes" title="Permalink to this headline">¶</a></h3>
+<p>List enabled Attributes.</p>
+<p>Prints a list of all enabled ClassFile Attributes.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>jawa attributes <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="jawa-def2json">
+<h3>def2json<a class="headerlink" href="#jawa-def2json" title="Permalink to this headline">¶</a></h3>
+<p>Convert a bytecode.yaml file into a prepared bytecode.json.</p>
+<p>Jawa internally uses a YAML file to define all bytecode opcodes, operands,
+runtime exceptions, default transforms, etc…</p>
+<p>However since JSON is available in the python stdlib and YAML is not, we
+process this YAML file before distribution to prevent adding an unnecessary
+dependency.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>jawa def2json <span class="o">[</span>OPTIONS<span class="o">]</span> SOURCE
+</pre></div>
+</div>
+<p class="rubric">Arguments</p>
+<dl class="option">
+<dt id="cmdoption-jawa-def2json-arg-source">
+<code class="descname">SOURCE</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-jawa-def2json-arg-source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Required argument</p>
+</dd></dl>
+
+</div>
+<div class="section" id="jawa-dependencies">
+<h3>dependencies<a class="headerlink" href="#jawa-dependencies" title="Permalink to this headline">¶</a></h3>
+<p>Output a list of all classes referenced by the given source.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>jawa dependencies <span class="o">[</span>OPTIONS<span class="o">]</span> SOURCE
+</pre></div>
+</div>
+<p class="rubric">Arguments</p>
+<dl class="option">
+<dt id="cmdoption-jawa-dependencies-arg-source">
+<code class="descname">SOURCE</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-jawa-dependencies-arg-source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Required argument</p>
+</dd></dl>
+
+</div>
+<div class="section" id="jawa-grep">
+<h3>grep<a class="headerlink" href="#jawa-grep" title="Permalink to this headline">¶</a></h3>
+<p>Grep the constant pool of all classes in source.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>jawa grep <span class="o">[</span>OPTIONS<span class="o">]</span> SOURCE REGEX
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-jawa-grep-stop-on-first">
+<code class="descname">--stop-on-first</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-jawa-grep-stop-on-first" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop iteration on first matching class.</p>
+</dd></dl>
+
+<p class="rubric">Arguments</p>
+<dl class="option">
+<dt id="cmdoption-jawa-grep-arg-source">
+<code class="descname">SOURCE</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-jawa-grep-arg-source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Required argument</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-jawa-grep-arg-regex">
+<code class="descname">REGEX</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-jawa-grep-arg-regex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Required argument</p>
+</dd></dl>
+
+</div>
+<div class="section" id="jawa-ins">
+<h3>ins<a class="headerlink" href="#jawa-ins" title="Permalink to this headline">¶</a></h3>
+<p>Lookup instruction information.</p>
+<p>Lookup an instruction by its mnemonic.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>jawa ins <span class="o">[</span>OPTIONS<span class="o">]</span> MNEMONIC
+</pre></div>
+</div>
+<p class="rubric">Arguments</p>
+<dl class="option">
+<dt id="cmdoption-jawa-ins-arg-mnemonic">
+<code class="descname">MNEMONIC</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-jawa-ins-arg-mnemonic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Required argument</p>
+</dd></dl>
+
+</div>
+<div class="section" id="jawa-shell">
+<h3>shell<a class="headerlink" href="#jawa-shell" title="Permalink to this headline">¶</a></h3>
+<p>Drop into a debugging shell.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>jawa shell <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-jawa-shell-cp">
+<code class="descname">-cp</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--class-path</code><code class="descclassname"> &lt;class_path&gt;</code><a class="headerlink" href="#cmdoption-jawa-shell-cp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
 </div>
 
 
@@ -183,10 +293,8 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="jawa.util.html" class="btn btn-neutral float-right" title="jawa.util package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-      
-        <a href="jawa.attributes.synthetic.html" class="btn btn-neutral" title="jawa.attributes.synthetic module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="jawa.transforms.html" class="btn btn-neutral" title="jawa.transforms module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

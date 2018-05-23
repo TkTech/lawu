@@ -157,13 +157,13 @@
            <div itemprop="articleBody">
             
   <h1>Source code for jawa.methods</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">IO</span><span class="p">,</span> <span class="n">Sequence</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">IO</span><span class="p">,</span> <span class="n">List</span>
 <span class="kn">from</span> <span class="nn">struct</span> <span class="k">import</span> <span class="n">unpack</span><span class="p">,</span> <span class="n">pack</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">repeat</span>
 
 <span class="kn">from</span> <span class="nn">jawa.constants</span> <span class="k">import</span> <span class="n">UTF8</span>
 <span class="kn">from</span> <span class="nn">jawa.util.flags</span> <span class="k">import</span> <span class="n">Flags</span>
-<span class="kn">from</span> <span class="nn">jawa.util.descriptor</span> <span class="k">import</span> <span class="n">method_descriptor</span>
+<span class="kn">from</span> <span class="nn">jawa.util.descriptor</span> <span class="k">import</span> <span class="n">method_descriptor</span><span class="p">,</span> <span class="n">JVMType</span>
 <span class="kn">from</span> <span class="nn">jawa.attribute</span> <span class="k">import</span> <span class="n">AttributeTable</span>
 <span class="kn">from</span> <span class="nn">jawa.attributes.code</span> <span class="k">import</span> <span class="n">CodeAttribute</span>
 
@@ -191,26 +191,38 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UTF8</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The UTF8 Constant containing the method&#39;s descriptor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_descriptor_index</span><span class="p">]</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UTF8</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The UTF8 Constant containing the method&#39;s name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cf</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_name_index</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">returns</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">returns</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JVMType</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A :class:`~jawa.util.descriptor.JVMType` representing the method&#39;s</span>
+<span class="sd">        return type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">method_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">returns</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">args</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">args</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">JVMType</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A list of :class:`~jawa.util.descriptor.JVMType` representing the</span>
+<span class="sd">        method&#39;s argument list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">method_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">args</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">code</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CodeAttribute</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A shortcut for::</span>
-
-<span class="sd">            &gt;&gt; method.attributes.find_one(name=&#39;Code&#39;)</span>
+<span class="sd">        A shortcut for :code:`method.attributes.find_one(name=&#39;Code&#39;)`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">find_one</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Code&#39;</span><span class="p">)</span>
 

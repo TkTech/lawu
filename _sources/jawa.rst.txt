@@ -12,7 +12,6 @@ Subpackages
 .. toctree::
 
     jawa.attributes
-    jawa.cli
     jawa.util
 
 Submodules
@@ -28,3 +27,4 @@ Submodules
    jawa.fields
    jawa.methods
    jawa.transforms
+   jawa.cli

@@ -106,6 +106,7 @@
 <li class="toctree-l3"><a class="reference internal" href="jawa.fields.html">jawa.fields module</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">jawa.methods module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="jawa.transforms.html">jawa.transforms module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jawa.cli.html">jawa.cli package</a></li>
 </ul>
 </li>
 </ul>
@@ -185,26 +186,27 @@
 <dl class="attribute">
 <dt id="jawa.methods.Method.args">
 <code class="descname">args</code><a class="headerlink" href="#jawa.methods.Method.args" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>A list of <a class="reference internal" href="jawa.util.descriptor.html#jawa.util.descriptor.JVMType" title="jawa.util.descriptor.JVMType"><code class="xref py py-class docutils literal notranslate"><span class="pre">JVMType</span></code></a> representing the
+method’s argument list.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="jawa.methods.Method.code">
 <code class="descname">code</code><a class="headerlink" href="#jawa.methods.Method.code" title="Permalink to this definition">¶</a></dt>
-<dd><p>A shortcut for:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">method</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">find_one</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Code&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
+<dd><p>A shortcut for <code class="code docutils literal notranslate"><span class="pre">method.attributes.find_one(name='Code')</span></code>.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="jawa.methods.Method.descriptor">
 <code class="descname">descriptor</code><a class="headerlink" href="#jawa.methods.Method.descriptor" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The UTF8 Constant containing the method’s descriptor.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="jawa.methods.Method.name">
 <code class="descname">name</code><a class="headerlink" href="#jawa.methods.Method.name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The UTF8 Constant containing the method’s name.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="jawa.methods.Method.pack">
@@ -228,7 +230,9 @@ method as it will be called for you when saving a ClassFile.</p>
 <dl class="attribute">
 <dt id="jawa.methods.Method.returns">
 <code class="descname">returns</code><a class="headerlink" href="#jawa.methods.Method.returns" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>A <a class="reference internal" href="jawa.util.descriptor.html#jawa.util.descriptor.JVMType" title="jawa.util.descriptor.JVMType"><code class="xref py py-class docutils literal notranslate"><span class="pre">JVMType</span></code></a> representing the method’s
+return type.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="jawa.methods.Method.unpack">
