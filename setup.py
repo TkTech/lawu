@@ -38,9 +38,12 @@ setup(
             'sphinx',
             'sphinxcontrib-googleanalytics',
             'sphinx_rtd_theme',
+            'sphinx-click',
             'ghp-import',
             'pyyaml',
-            'ipython'
+            'ipython',
+            'twine',
+            'wheel'
         ]
     },
     entry_points='''
