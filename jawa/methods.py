@@ -1,10 +1,10 @@
-from typing import Optional, Callable, Iterator, IO, Sequence
+from typing import Optional, Callable, Iterator, IO, List
 from struct import unpack, pack
 from itertools import repeat
 
 from jawa.constants import UTF8
 from jawa.util.flags import Flags
-from jawa.util.descriptor import method_descriptor
+from jawa.util.descriptor import method_descriptor, JVMType
 from jawa.attribute import AttributeTable
 from jawa.attributes.code import CodeAttribute
 
@@ -32,26 +32,38 @@ class Method(object):
 
     @property
     def descriptor(self) -> UTF8:
+        """
+        The UTF8 Constant containing the method's descriptor.
+        """
         return self._cf.constants[self._descriptor_index]
 
     @property
     def name(self) -> UTF8:
+        """
+        The UTF8 Constant containing the method's name.
+        """
         return self._cf.constants[self._name_index]
 
     @property
-    def returns(self) -> str:
+    def returns(self) -> JVMType:
+        """
+        A :class:`~jawa.util.descriptor.JVMType` representing the method's
+        return type.
+        """
         return method_descriptor(self.descriptor.value).returns
 
     @property
-    def args(self) -> Sequence:
+    def args(self) -> List[JVMType]:
+        """
+        A list of :class:`~jawa.util.descriptor.JVMType` representing the
+        method's argument list.
+        """
         return method_descriptor(self.descriptor.value).args
 
     @property
     def code(self) -> CodeAttribute:
         """
-        A shortcut for::
-
-            >> method.attributes.find_one(name='Code')
+        A shortcut for :code:`method.attributes.find_one(name='Code')`.
         """
         return self.attributes.find_one(name='Code')
 
