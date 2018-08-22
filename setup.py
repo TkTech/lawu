@@ -4,7 +4,8 @@ from setuptools import setup, find_packages
 setup(
     name='jawa',
     packages=find_packages(),
-    version='2.1.0',
+    version='2.1.1',
+    python_requires='>=3.6',
     description='Doing fun stuff with JVM ClassFiles.',
     long_description=open('README.md', 'r').read(),
     long_description_content_type='text/markdown',
@@ -24,7 +25,8 @@ setup(
         'Operating System :: OS Independent',
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
-        'Topic :: Software Development :: Disassemblers'
+        'Topic :: Software Development :: Disassemblers',
+        'Topic :: Software Development :: Assemblers'
     ],
     install_requires=[
         'click>=5.0'
