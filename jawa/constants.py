@@ -27,6 +27,9 @@ class Number(Constant):
             f'index={self.index}, value={self.value!r})'
         )
 
+    def __eq__(self, other):
+        return other == self.value
+
 
 class UTF8(Constant):
     __slots__ = ('value',)
@@ -42,6 +45,9 @@ class UTF8(Constant):
 
     def __repr__(self):
         return f'<UTF8(index={self.index}, value={self.value!r}>)'
+
+    def __eq__(self, other):
+        return other == self.value
 
 
 class Integer(Number):
@@ -108,6 +114,9 @@ class String(Constant):
 
     def __repr__(self):
         return f'<String(index={self.index}, string={self.string!r})>'
+
+    def __eq__(self, other):
+        return other == self.string.value
 
 
 class Reference(Constant):
