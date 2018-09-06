@@ -1,4 +1,5 @@
 from jawa.attribute import Attribute
+from jawa.constants import UTF8
 
 
 class DeprecatedAttribute(Attribute):
@@ -8,16 +9,17 @@ class DeprecatedAttribute(Attribute):
     def __init__(self, table, name_index=None):
         super(DeprecatedAttribute, self).__init__(
             table,
-            name_index or table.cf.constants.create_utf8(
-                'Deprecated'
-            ).index
+            name_index or UTF8(
+                pool=table.cf.constants,
+                value='Deprecated'
+            )
         )
 
     def __repr__(self):
         return '<DeprecatedAttribute()>'
 
     def pack(self):
-        pass
+        return b''
 
     def unpack(self, info):
         pass
