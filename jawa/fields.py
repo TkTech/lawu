@@ -92,7 +92,8 @@ class FieldTable(object):
         """
         self._table = [fld for fld in self._table if fld is not field]
 
-    def create(self, name: str, descriptor: str, value: Constant=None) -> Field:
+    def create(self, name: str, descriptor: str, *,
+               value: Constant=None) -> Field:
         """
         Creates a new field from `name` and `descriptor`. For example::
 
@@ -103,11 +104,12 @@ class FieldTable(object):
         To automatically create a static field, pass a value::
 
             >>> from jawa.cf import ClassFile
+            >>> from jawa.constants import Integer
             >>> cf = ClassFile.create('BeerCounter')
             >>> field = cf.fields.create(
             ...     'MaxBeer',
             ...     'I',
-            ...     cf.constants.create_integer(99)
+            ...     value=Integer(pool=cf.constants, value=99)
             ... )
 
         :param name: Name of the new field.
@@ -115,14 +117,21 @@ class FieldTable(object):
         :param value: Optional static value for the field.
         """
         field = Field(self._cf)
-        name = self._cf.constants.create_utf8(name)
-        descriptor = self._cf.constants.create_utf8(descriptor)
-        field._name_index = name.index
-        field._descriptor_index = descriptor.index
+
+        field._name_index = UTF8(
+            pool=self._cf.constants,
+            value=name
+        ).index
+        field._descriptor_index = UTF8(
+            pool=self._cf.constants,
+            value=descriptor
+        ).index
+
         field.access_flags.acc_public = True
 
         if value is not None:
-            field.attributes.create(ConstantValueAttribute, value)
+            const = field.attributes.create(ConstantValueAttribute)
+            const.value = value
             field.access_flags.acc_static = True
 
         self.append(field)
