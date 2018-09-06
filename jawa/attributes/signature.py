@@ -1,16 +1,18 @@
 from struct import pack
 from jawa.attribute import Attribute
+from jawa.constants import UTF8
 
 
 class SignatureAttribute(Attribute):
     ADDED_IN = '5.0.0'
     MINIMUM_CLASS_VERSION = (49, 0)
 
-    def __init__(self, table, name_index):
+    def __init__(self, table, name_index=None):
         super(SignatureAttribute, self).__init__(
             table,
-            name_index or table.cf.constants.create_utf8(
-                'Signature'
+            name_index or UTF8(
+                pool=table.cf.constants,
+                value='Signature'
             ).index
         )
         self._signature_index = None
