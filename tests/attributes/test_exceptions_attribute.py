@@ -1,3 +1,6 @@
+from jawa.constants import ConstantClass
+
+
 def test_exceptions_read(loader):
     cf = loader['ExceptionsTest']
 
@@ -18,10 +21,9 @@ def test_exceptions_write(loader):
 
     assert a.pack() == b'\x00\x01\x00\x0A'
 
-    a.exceptions.append(
-        cf.constants.create_class(
-            name=u'java/lang/TestException'
-        ).index
-    )
+    k = ConstantClass(pool=cf.constants)
+    k.name = 'java/lang/TestException'
 
-    assert a.pack() == b'\x00\x02\x00\x0A\x00\x12'
+    a.exceptions.append(k.index)
+
+    assert a.pack() == b'\x00\x02\x00\x0A\x00\x11'

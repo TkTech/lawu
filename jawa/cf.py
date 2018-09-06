@@ -105,8 +105,8 @@ class ClassFile(object):
         cf.access_flags.acc_public = True
         cf.access_flags.acc_super = True
 
-        cf.this = cf.constants.create_class(this)
-        cf.super_ = cf.constants.create_class(super_)
+        cf.this = ConstantClass(pool=cf.constants, name=this)
+        cf.super_ = ConstantClass(pool=cf.constants, name=super_)
 
         return cf
 
@@ -201,7 +201,7 @@ class ClassFile(object):
         """
         The :class:`~jawa.constants.ConstantClass` which represents this class.
         """
-        return self.constants.get(self._this)
+        return self.constants[self._this]
 
     @this.setter
     def this(self, value):
@@ -213,7 +213,7 @@ class ClassFile(object):
         The :class:`~jawa.constants.ConstantClass` which represents this
         class's superclass.
         """
-        return self.constants.get(self._super)
+        return self.constants[self._super]
 
     @super_.setter
     def super_(self, value: ConstantClass):

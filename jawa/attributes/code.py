@@ -7,6 +7,7 @@ from itertools import repeat
 from collections import namedtuple
 
 from jawa.attribute import Attribute, AttributeTable
+from jawa.constants import UTF8
 from jawa.util.bytecode import (
     read_instruction,
     write_instruction,
@@ -57,9 +58,7 @@ class CodeAttribute(Attribute):
     def __init__(self, table, name_index=None):
         super(CodeAttribute, self).__init__(
             table,
-            name_index or table.cf.constants.create_utf8(
-                'Code'
-            ).index
+            name_index or UTF8(pool=table.cf.constants, value='Code').index
         )
         self.max_stack = 0
         self.max_locals = 0

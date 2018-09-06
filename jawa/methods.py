@@ -120,8 +120,8 @@ class MethodTable(object):
         ``None``, add a `Code` attribute to this method.
         """
         method = Method(self._cf)
-        name = self._cf.constants.create_utf8(name)
-        descriptor = self._cf.constants.create_utf8(descriptor)
+        name = UTF8(pool=self._cf.constants, value=name)
+        descriptor = UTF8(pool=self._cf.constants, value=descriptor)
         method._name_index = name.index
         method._descriptor_index = descriptor.index
         method.access_flags.acc_public = True

@@ -1,43 +1,25 @@
-from struct import unpack_from, calcsize
+import io
+from struct import unpack, calcsize
 
 
-class BufferStreamReader(object):
-    """Stream-like reader over a buffer mimicing the JVM spec types.
-    """
-    def __init__(self, buff, starting_offset=0):
-        self.pos = starting_offset
-        self.buff = buff
-
+class JVMReader(io.BytesIO):
     def u1(self):
-        r = unpack_from('B', self.buff, offset=self.pos)
-        self.pos += 1
-        return r[0]
+        return unpack('B', self.read(1))[0]
 
     def u2(self):
-        r = unpack_from('>H', self.buff, offset=self.pos)
-        self.pos += 2
-        return r[0]
+        return unpack('>H', self.read(2))[0]
 
     def u4(self):
-        r = unpack_from('>I', self.buff, offset=self.pos)
-        self.pos += 4
-        return r[0]
+        return unpack('>I', self.read(4))[0]
+
+    def s4(self):
+        return unpack('>i', self.read(4))[0]
+
+    def float(self):
+        return unpack('>f', self.read(4))[0]
+
+    def long(self):
+        return unpack('>q', self.read(8))[0]
 
     def unpack(self, fmt):
-        size = calcsize(fmt)
-        r = unpack_from(fmt, self.buff, offset=self.pos)
-        self.pos += size
-        return r
-
-    def seek(self, pos):
-        self.pos = pos
-
-    def read(self, length=None):
-        if length is None:
-            r = self.buff[self.pos:]
-            self.pos = len(self.buff)
-            return r
-
-        r = self.buff[self.pos:self.pos+length]
-        self.pos += length
-        return r
+        return unpack(fmt, self.read(calcsize(fmt)))

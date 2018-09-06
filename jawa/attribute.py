@@ -6,7 +6,7 @@ from struct import unpack, pack
 from itertools import repeat
 
 from jawa.constants import UTF8
-from jawa.util.stream import BufferStreamReader
+from jawa.util.stream import JVMReader
 
 
 class Attribute(object):
@@ -31,7 +31,7 @@ class Attribute(object):
         """
         return self.parent.cf
 
-    def unpack(self, info: Union[bytes, BufferStreamReader]):
+    def unpack(self, info: Union[bytes, JVMReader]):
         """
         Parses an instance of this attribute from the blob `info`.
         """
@@ -49,7 +49,7 @@ class UnknownAttribute(Attribute):
         super().__init__(parent, name_index)
         self.info = None
 
-    def unpack(self, info: Union[bytes, BufferStreamReader]):
+    def unpack(self, info: Union[bytes, JVMReader]):
         self.info = info
 
     def pack(self) -> bytes:
@@ -93,7 +93,7 @@ class AttributeTable(object):
             if attribute_type is UnknownAttribute:
                 attr.unpack(info)
             else:
-                attr.unpack(BufferStreamReader(info))
+                attr.unpack(JVMReader(info))
 
         return attr
 
