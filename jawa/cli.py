@@ -169,3 +169,13 @@ def grep(source, regex, stop_on_first=False):
             print(klass)
             if stop_on_first:
                 break
+
+
+@cli.command()
+@click.argument('source', type=click.Path(exists=True))
+def tokenize(source):
+    from jawa.jasmin.tokenizer import tokenize
+
+    with open(source, 'rU') as s:
+        for token in tokenize(s):
+            print(token)
