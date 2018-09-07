@@ -171,11 +171,18 @@ def grep(source, regex, stop_on_first=False):
                 break
 
 
-@cli.command()
+@cli.group()
+def debug():
+    """Debugging utilities."""
+
+
+@debug.command()
 @click.argument('source', type=click.Path(exists=True))
 def tokenize(source):
+    """Show tokenizer output for the given Jasmin assembly file, useful
+    for debugging parser errors."""
     from jawa.jasmin.tokenizer import tokenize
 
     with open(source, 'rU') as s:
         for token in tokenize(s):
-            print(token)
+            click.echo(token)
