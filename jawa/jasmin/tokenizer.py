@@ -36,60 +36,58 @@ def tokenize(source: TextIO) -> Iterator[Token]:
     """
     s = States.GENERIC
     c = source.read(1)
-    v = []
+    prev_c = ''
+    buff = []
     line_no = 1
-    while c is not None and c != '':
-        if s == States.GENERIC:
+    while c != '':
+        if s in (States.GENERIC, States.DIRECTIVE):
             # Start of a directive.
             if c == '.':
                 s = States.DIRECTIVE
-            elif c == ';':
+            elif c == ';' and prev_c in (' ', '\t', '\n', ''):
                 s = States.COMMENT
             elif c in (' ', '\t', '\n'):
-                value = ''.join(v)
+                value = ''.join(buff)
                 if value:
                     yield Token(token_type=s, value=value, line_no=line_no)
                 s = States.GENERIC
-                del v[:]
+                del buff[:]
             elif c in '"':
                 s = States.QUOTED_STRING
             else:
-                v.append(c)
+                buff.append(c)
         elif s == States.COMMENT:
             if c == '\n':
-                value = ''.join(v)
+                value = ''.join(buff)
                 if value:
                     yield Token(token_type=s, value=value, line_no=line_no)
                 s = States.GENERIC
-                del v[:]
-            elif not v and c in (' ', '\t'):
+                del buff[:]
+            elif not buff and c in (' ', '\t'):
                 # Skip starting whitespace on comments.
                 pass
             else:
-                v.append(c)
-        elif s == States.DIRECTIVE:
-            if c in (' ', '\t', '\n'):
-                yield Token(token_type=s, value=''.join(v), line_no=line_no)
-                s = States.GENERIC
-                del v[:]
-            else:
-                v.append(c)
+                buff.append(c)
         elif s == States.QUOTED_STRING:
             if c == '\\':
                 s = States.QUOTED_ESCAPE
             elif c == '"':
-                yield Token(token_type=s, value=''.join(v), line_no=line_no)
+                yield Token(token_type=s, value=''.join(buff), line_no=line_no)
                 s = States.GENERIC
-                del v[:]
+                del buff[:]
             else:
-                v.append(c)
+                buff.append(c)
         elif s == States.QUOTED_ESCAPE:
             s = States.QUOTED_STRING
-            v.append(c)
+            buff.append(c)
             if c == '\\':
                 s = States.QUOTED_ESCAPE
 
         if c == '\n':
             line_no += 1
 
+        prev_c = c
         c = source.read(1)
+
+    if buff:
+        yield Token(token_type=s, value=''.join(buff), line_no=line_no)
