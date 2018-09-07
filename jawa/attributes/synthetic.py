@@ -1,4 +1,5 @@
 from jawa.attribute import Attribute
+from jawa.constants import UTF8
 
 
 class SyntheticAttribute(Attribute):
@@ -8,13 +9,14 @@ class SyntheticAttribute(Attribute):
     def __init__(self, table, name_index=None):
         super().__init__(
             table,
-            name_index or table.cf.constants.create_utf8(
-                'Synthetic'
+            name_index or UTF8(
+                pool=table.cf.constants,
+                value='Synthetic'
             ).index
         )
 
     def pack(self):
-        pass
+        return b''
 
     def unpack(self, info):
         pass
