@@ -6,6 +6,7 @@ from jawa.util.flags import Flags
 from jawa.attribute import AttributeTable
 from jawa.constants import Constant, UTF8
 from jawa.attributes.constant_value import ConstantValueAttribute
+from jawa.util.descriptor import field_descriptor
 
 
 class Field(object):
@@ -28,10 +29,24 @@ class Field(object):
 
     @property
     def descriptor(self) -> UTF8:
+        """
+        The UTF8 Constant containing the field's descriptor.
+        """
         return self._cf.constants[self._descriptor_index]
 
     @property
+    def type(self):
+        """
+        A :class:`~jawa.util.descriptor.JVMType` representing the field's
+        type.
+        """
+        return field_descriptor(self.descriptor.value)
+
+    @property
     def name(self) -> UTF8:
+        """
+        The UTF8 Constant containing the field's name.
+        """
         return self._cf.constants[self._name_index]
 
     @property

@@ -125,6 +125,9 @@ def definition_to_json(source):
         v.setdefault('operands', None)
         v.setdefault('can_be_wide', False)
         v.setdefault('transform', {})
+        v.setdefault('stack', {})
+        v['stack'].setdefault('before', [])
+        v['stack'].setdefault('after', [])
         v['mnemonic'] = k
 
     click.echo(json.dumps(y, indent=4, sort_keys=True))

@@ -32,6 +32,7 @@
             "ArrayStoreException"
         ],
         "stack": {
+            "after": [],
             "before": [
                 "ArrayRef",
                 "Index",
@@ -48,7 +49,8 @@
         "stack": {
             "after": [
                 "NullReference"
-            ]
+            ],
+            "before": []
         },
         "transform": {}
     },
@@ -65,7 +67,8 @@
         "stack": {
             "after": [
                 "ObjectRef"
-            ]
+            ],
+            "before": []
         },
         "transform": {}
     },
@@ -77,7 +80,8 @@
         "stack": {
             "after": [
                 "ObjectRef"
-            ]
+            ],
+            "before": []
         },
         "transform": {
             "simple_swap": {
@@ -96,7 +100,8 @@
         "stack": {
             "after": [
                 "ObjectRef"
-            ]
+            ],
+            "before": []
         },
         "transform": {
             "simple_swap": {
@@ -115,7 +120,8 @@
         "stack": {
             "after": [
                 "ObjectRef"
-            ]
+            ],
+            "before": []
         },
         "transform": {
             "simple_swap": {
@@ -134,7 +140,8 @@
         "stack": {
             "after": [
                 "ObjectRef"
-            ]
+            ],
+            "before": []
         },
         "transform": {
             "simple_swap": {
@@ -155,6 +162,14 @@
                 "LITERAL"
             ]
         ],
+        "stack": {
+            "after": [
+                "ArrayRef"
+            ],
+            "before": [
+                "Value"
+            ]
+        },
         "transform": {}
     },
     "areturn": {
@@ -162,6 +177,12 @@
         "mnemonic": "areturn",
         "op": 176,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "ObjectRef"
+            ]
+        },
         "transform": {}
     },
     "arraylength": {
@@ -169,6 +190,14 @@
         "mnemonic": "arraylength",
         "op": 190,
         "operands": null,
+        "stack": {
+            "after": [
+                "Value"
+            ],
+            "before": [
+                "ArrayRef"
+            ]
+        },
         "transform": {}
     },
     "astore": {
@@ -181,6 +210,12 @@
                 "LOCAL_INDEX"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": [
+                "ObjectRef"
+            ]
+        },
         "transform": {}
     },
     "astore_0": {
@@ -188,6 +223,12 @@
         "mnemonic": "astore_0",
         "op": 75,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "ObjectRef"
+            ]
+        },
         "transform": {
             "simple_swap": {
                 "op": "astore",
@@ -202,6 +243,12 @@
         "mnemonic": "astore_1",
         "op": 76,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "ObjectRef"
+            ]
+        },
         "transform": {
             "simple_swap": {
                 "op": "astore",
@@ -216,6 +263,12 @@
         "mnemonic": "astore_2",
         "op": 77,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "ObjectRef"
+            ]
+        },
         "transform": {
             "simple_swap": {
                 "op": "astore",
@@ -230,6 +283,12 @@
         "mnemonic": "astore_3",
         "op": 78,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "ObjectRef"
+            ]
+        },
         "transform": {
             "simple_swap": {
                 "op": "astore",
@@ -244,6 +303,12 @@
         "mnemonic": "athrow",
         "op": 191,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "ObjectRef"
+            ]
+        },
         "transform": {}
     },
     "baload": {
@@ -251,6 +316,15 @@
         "mnemonic": "baload",
         "op": 51,
         "operands": null,
+        "stack": {
+            "after": [
+                "Value"
+            ],
+            "before": [
+                "ArrayRef",
+                "Index"
+            ]
+        },
         "transform": {}
     },
     "bastore": {
@@ -258,6 +332,14 @@
         "mnemonic": "bastore",
         "op": 84,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "ArrayRef",
+                "Index",
+                "Value"
+            ]
+        },
         "transform": {}
     },
     "bipush": {
@@ -270,6 +352,12 @@
                 "LITERAL"
             ]
         ],
+        "stack": {
+            "after": [
+                "Value"
+            ],
+            "before": []
+        },
         "transform": {}
     },
     "breakpoint": {
@@ -277,6 +365,10 @@
         "mnemonic": "breakpoint",
         "op": 202,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": []
+        },
         "transform": {}
     },
     "caload": {
@@ -284,6 +376,15 @@
         "mnemonic": "caload",
         "op": 52,
         "operands": null,
+        "stack": {
+            "after": [
+                "Value"
+            ],
+            "before": [
+                "ArrayRef",
+                "Index"
+            ]
+        },
         "transform": {}
     },
     "castore": {
@@ -291,6 +392,14 @@
         "mnemonic": "castore",
         "op": 85,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "ArrayRef",
+                "Index",
+                "Value"
+            ]
+        },
         "transform": {}
     },
     "checkcast": {
@@ -303,6 +412,14 @@
                 "CONSTANT_INDEX"
             ]
         ],
+        "stack": {
+            "after": [
+                "ObjectRef"
+            ],
+            "before": [
+                "ObjectRef"
+            ]
+        },
         "transform": {}
     },
     "d2f": {
@@ -310,6 +427,15 @@
         "mnemonic": "d2f",
         "op": 144,
         "operands": null,
+        "stack": {
+            "after": [
+                "Float"
+            ],
+            "before": [
+                "Double",
+                "Double"
+            ]
+        },
         "transform": {}
     },
     "d2i": {
@@ -317,6 +443,15 @@
         "mnemonic": "d2i",
         "op": 142,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "Double",
+                "Double"
+            ]
+        },
         "transform": {}
     },
     "d2l": {
@@ -324,6 +459,16 @@
         "mnemonic": "d2l",
         "op": 143,
         "operands": null,
+        "stack": {
+            "after": [
+                "Long",
+                "Long"
+            ],
+            "before": [
+                "Double",
+                "Double"
+            ]
+        },
         "transform": {}
     },
     "dadd": {
@@ -331,6 +476,18 @@
         "mnemonic": "dadd",
         "op": 99,
         "operands": null,
+        "stack": {
+            "after": [
+                "Double",
+                "Double"
+            ],
+            "before": [
+                "Double",
+                "Double",
+                "Double",
+                "Double"
+            ]
+        },
         "transform": {}
     },
     "daload": {
@@ -338,6 +495,16 @@
         "mnemonic": "daload",
         "op": 49,
         "operands": null,
+        "stack": {
+            "after": [
+                "Double",
+                "Double"
+            ],
+            "before": [
+                "ArrayRef",
+                "Index"
+            ]
+        },
         "transform": {}
     },
     "dastore": {
@@ -345,6 +512,15 @@
         "mnemonic": "dastore",
         "op": 82,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "ArrayRef",
+                "Index",
+                "Double",
+                "Double"
+            ]
+        },
         "transform": {}
     },
     "dcmpg": {
@@ -352,6 +528,17 @@
         "mnemonic": "dcmpg",
         "op": 152,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "Double",
+                "Double",
+                "Double",
+                "Double"
+            ]
+        },
         "transform": {}
     },
     "dcmpl": {
@@ -359,6 +546,17 @@
         "mnemonic": "dcmpl",
         "op": 151,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "Double",
+                "Double",
+                "Double",
+                "Double"
+            ]
+        },
         "transform": {}
     },
     "dconst_0": {
@@ -366,6 +564,13 @@
         "mnemonic": "dconst_0",
         "op": 14,
         "operands": null,
+        "stack": {
+            "after": [
+                "Double",
+                "Double"
+            ],
+            "before": []
+        },
         "transform": {}
     },
     "dconst_1": {
@@ -373,6 +578,13 @@
         "mnemonic": "dconst_1",
         "op": 15,
         "operands": null,
+        "stack": {
+            "after": [
+                "Double",
+                "Double"
+            ],
+            "before": []
+        },
         "transform": {}
     },
     "ddiv": {
@@ -380,6 +592,18 @@
         "mnemonic": "ddiv",
         "op": 111,
         "operands": null,
+        "stack": {
+            "after": [
+                "Double",
+                "Double"
+            ],
+            "before": [
+                "Double",
+                "Double",
+                "Double",
+                "Double"
+            ]
+        },
         "transform": {}
     },
     "dload": {
@@ -392,6 +616,13 @@
                 "LOCAL_INDEX"
             ]
         ],
+        "stack": {
+            "after": [
+                "Double",
+                "Double"
+            ],
+            "before": []
+        },
         "transform": {}
     },
     "dload_0": {
@@ -399,6 +630,13 @@
         "mnemonic": "dload_0",
         "op": 38,
         "operands": null,
+        "stack": {
+            "after": [
+                "Double",
+                "Double"
+            ],
+            "before": []
+        },
         "transform": {
             "simple_swap": {
                 "op": 24,
@@ -413,6 +651,13 @@
         "mnemonic": "dload_1",
         "op": 39,
         "operands": null,
+        "stack": {
+            "after": [
+                "Double",
+                "Double"
+            ],
+            "before": []
+        },
         "transform": {
             "simple_swap": {
                 "op": 24,
@@ -427,6 +672,13 @@
         "mnemonic": "dload_2",
         "op": 40,
         "operands": null,
+        "stack": {
+            "after": [
+                "Double",
+                "Double"
+            ],
+            "before": []
+        },
         "transform": {
             "simple_swap": {
                 "op": 24,
@@ -441,6 +693,13 @@
         "mnemonic": "dload_3",
         "op": 41,
         "operands": null,
+        "stack": {
+            "after": [
+                "Double",
+                "Double"
+            ],
+            "before": []
+        },
         "transform": {
             "simple_swap": {
                 "op": 24,
@@ -455,6 +714,18 @@
         "mnemonic": "dmul",
         "op": 107,
         "operands": null,
+        "stack": {
+            "after": [
+                "Double",
+                "Double"
+            ],
+            "before": [
+                "Double",
+                "Double",
+                "Double",
+                "Double"
+            ]
+        },
         "transform": {}
     },
     "dneg": {
@@ -462,6 +733,16 @@
         "mnemonic": "dneg",
         "op": 119,
         "operands": null,
+        "stack": {
+            "after": [
+                "Double",
+                "Double"
+            ],
+            "before": [
+                "Double",
+                "Double"
+            ]
+        },
         "transform": {}
     },
     "drem": {
@@ -469,6 +750,18 @@
         "mnemonic": "drem",
         "op": 115,
         "operands": null,
+        "stack": {
+            "after": [
+                "Double",
+                "Double"
+            ],
+            "before": [
+                "Double",
+                "Double",
+                "Double",
+                "Double"
+            ]
+        },
         "transform": {}
     },
     "dreturn": {
@@ -476,6 +769,13 @@
         "mnemonic": "dreturn",
         "op": 175,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "Double",
+                "Double"
+            ]
+        },
         "transform": {}
     },
     "dstore": {
@@ -488,6 +788,13 @@
                 "LOCAL_INDEX"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": [
+                "Double",
+                "Double"
+            ]
+        },
         "transform": {}
     },
     "dstore_0": {
@@ -495,6 +802,13 @@
         "mnemonic": "dstore_0",
         "op": 71,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "Double",
+                "Double"
+            ]
+        },
         "transform": {
             "simple_swap": {
                 "op": "dstore",
@@ -509,6 +823,13 @@
         "mnemonic": "dstore_1",
         "op": 72,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "Double",
+                "Double"
+            ]
+        },
         "transform": {
             "simple_swap": {
                 "op": "dstore",
@@ -523,6 +844,13 @@
         "mnemonic": "dstore_2",
         "op": 73,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "Double",
+                "Double"
+            ]
+        },
         "transform": {
             "simple_swap": {
                 "op": "dstore",
@@ -537,6 +865,13 @@
         "mnemonic": "dstore_3",
         "op": 74,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "Double",
+                "Double"
+            ]
+        },
         "transform": {
             "simple_swap": {
                 "op": "dstore",
@@ -551,6 +886,18 @@
         "mnemonic": "dsub",
         "op": 103,
         "operands": null,
+        "stack": {
+            "after": [
+                "Double",
+                "Double"
+            ],
+            "before": [
+                "Double",
+                "Double",
+                "Double",
+                "Double"
+            ]
+        },
         "transform": {}
     },
     "dup": {
@@ -558,6 +905,15 @@
         "mnemonic": "dup",
         "op": 89,
         "operands": null,
+        "stack": {
+            "after": [
+                "Any",
+                "Any"
+            ],
+            "before": [
+                "Any"
+            ]
+        },
         "transform": {}
     },
     "dup2": {
@@ -565,6 +921,18 @@
         "mnemonic": "dup2",
         "op": 92,
         "operands": null,
+        "stack": {
+            "after": [
+                "Any",
+                "Any",
+                "Any",
+                "Any"
+            ],
+            "before": [
+                "Any",
+                "Any"
+            ]
+        },
         "transform": {}
     },
     "dup2_x1": {
@@ -572,6 +940,20 @@
         "mnemonic": "dup2_x1",
         "op": 93,
         "operands": null,
+        "stack": {
+            "after": [
+                "Any",
+                "Any",
+                "Any",
+                "Any",
+                "Any"
+            ],
+            "before": [
+                "Any",
+                "Any",
+                "Any"
+            ]
+        },
         "transform": {}
     },
     "dup2_x2": {
@@ -579,6 +961,22 @@
         "mnemonic": "dup2_x2",
         "op": 94,
         "operands": null,
+        "stack": {
+            "after": [
+                "Any",
+                "Any",
+                "Any",
+                "Any",
+                "Any",
+                "Any"
+            ],
+            "before": [
+                "Any",
+                "Any",
+                "Any",
+                "Any"
+            ]
+        },
         "transform": {}
     },
     "dup_x1": {
@@ -586,6 +984,17 @@
         "mnemonic": "dup_x1",
         "op": 90,
         "operands": null,
+        "stack": {
+            "after": [
+                "Any",
+                "Any",
+                "Any"
+            ],
+            "before": [
+                "Any",
+                "Any"
+            ]
+        },
         "transform": {}
     },
     "dup_x2": {
@@ -593,6 +1002,19 @@
         "mnemonic": "dup_x2",
         "op": 91,
         "operands": null,
+        "stack": {
+            "after": [
+                "Any",
+                "Any",
+                "Any",
+                "Any"
+            ],
+            "before": [
+                "Any",
+                "Any",
+                "Any"
+            ]
+        },
         "transform": {}
     },
     "f2d": {
@@ -600,6 +1022,15 @@
         "mnemonic": "f2d",
         "op": 141,
         "operands": null,
+        "stack": {
+            "after": [
+                "Double",
+                "Double"
+            ],
+            "before": [
+                "Float"
+            ]
+        },
         "transform": {}
     },
     "f2i": {
@@ -607,6 +1038,14 @@
         "mnemonic": "f2i",
         "op": 139,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "Float"
+            ]
+        },
         "transform": {}
     },
     "f2l": {
@@ -614,6 +1053,15 @@
         "mnemonic": "f2l",
         "op": 140,
         "operands": null,
+        "stack": {
+            "after": [
+                "Long",
+                "Long"
+            ],
+            "before": [
+                "Float"
+            ]
+        },
         "transform": {}
     },
     "fadd": {
@@ -621,6 +1069,15 @@
         "mnemonic": "fadd",
         "op": 98,
         "operands": null,
+        "stack": {
+            "after": [
+                "Float"
+            ],
+            "before": [
+                "Float",
+                "Float"
+            ]
+        },
         "transform": {}
     },
     "faload": {
@@ -628,6 +1085,15 @@
         "mnemonic": "faload",
         "op": 48,
         "operands": null,
+        "stack": {
+            "after": [
+                "Float"
+            ],
+            "before": [
+                "ArrayRef",
+                "Index"
+            ]
+        },
         "transform": {}
     },
     "fastore": {
@@ -635,6 +1101,14 @@
         "mnemonic": "fastore",
         "op": 81,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "ArrayRef",
+                "Index",
+                "Float"
+            ]
+        },
         "transform": {}
     },
     "fcmpg": {
@@ -642,6 +1116,15 @@
         "mnemonic": "fcmpg",
         "op": 150,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "Float",
+                "Float"
+            ]
+        },
         "transform": {}
     },
     "fcmpl": {
@@ -649,6 +1132,15 @@
         "mnemonic": "fcmpl",
         "op": 149,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "Float",
+                "Float"
+            ]
+        },
         "transform": {}
     },
     "fconst_0": {
@@ -656,6 +1148,12 @@
         "mnemonic": "fconst_0",
         "op": 11,
         "operands": null,
+        "stack": {
+            "after": [
+                "Float"
+            ],
+            "before": []
+        },
         "transform": {}
     },
     "fconst_1": {
@@ -663,6 +1161,12 @@
         "mnemonic": "fconst_1",
         "op": 12,
         "operands": null,
+        "stack": {
+            "after": [
+                "Float"
+            ],
+            "before": []
+        },
         "transform": {}
     },
     "fconst_2": {
@@ -670,6 +1174,12 @@
         "mnemonic": "fconst_2",
         "op": 13,
         "operands": null,
+        "stack": {
+            "after": [
+                "Float"
+            ],
+            "before": []
+        },
         "transform": {}
     },
     "fdiv": {
@@ -677,6 +1187,15 @@
         "mnemonic": "fdiv",
         "op": 110,
         "operands": null,
+        "stack": {
+            "after": [
+                "Float"
+            ],
+            "before": [
+                "Float",
+                "Float"
+            ]
+        },
         "transform": {}
     },
     "fload": {
@@ -689,6 +1208,12 @@
                 "LOCAL_INDEX"
             ]
         ],
+        "stack": {
+            "after": [
+                "Float"
+            ],
+            "before": []
+        },
         "transform": {}
     },
     "fload_0": {
@@ -696,6 +1221,12 @@
         "mnemonic": "fload_0",
         "op": 34,
         "operands": null,
+        "stack": {
+            "after": [
+                "Float"
+            ],
+            "before": []
+        },
         "transform": {
             "simple_swap": {
                 "op": "fload",
@@ -710,6 +1241,12 @@
         "mnemonic": "fload_1",
         "op": 35,
         "operands": null,
+        "stack": {
+            "after": [
+                "Float"
+            ],
+            "before": []
+        },
         "transform": {
             "simple_swap": {
                 "op": "fload",
@@ -724,6 +1261,12 @@
         "mnemonic": "fload_2",
         "op": 36,
         "operands": null,
+        "stack": {
+            "after": [
+                "Float"
+            ],
+            "before": []
+        },
         "transform": {
             "simple_swap": {
                 "op": "fload",
@@ -738,6 +1281,12 @@
         "mnemonic": "fload_3",
         "op": 37,
         "operands": null,
+        "stack": {
+            "after": [
+                "Float"
+            ],
+            "before": []
+        },
         "transform": {
             "simple_swap": {
                 "op": "fload",
@@ -752,6 +1301,15 @@
         "mnemonic": "fmul",
         "op": 106,
         "operands": null,
+        "stack": {
+            "after": [
+                "Float"
+            ],
+            "before": [
+                "Float",
+                "Float"
+            ]
+        },
         "transform": {}
     },
     "fneg": {
@@ -759,6 +1317,14 @@
         "mnemonic": "fneg",
         "op": 118,
         "operands": null,
+        "stack": {
+            "after": [
+                "Float"
+            ],
+            "before": [
+                "Float"
+            ]
+        },
         "transform": {}
     },
     "frem": {
@@ -766,6 +1332,15 @@
         "mnemonic": "frem",
         "op": 114,
         "operands": null,
+        "stack": {
+            "after": [
+                "Float"
+            ],
+            "before": [
+                "Float",
+                "Float"
+            ]
+        },
         "transform": {}
     },
     "freturn": {
@@ -773,6 +1348,12 @@
         "mnemonic": "freturn",
         "op": 174,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "Float"
+            ]
+        },
         "transform": {}
     },
     "fstore": {
@@ -785,6 +1366,12 @@
                 "LOCAL_INDEX"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": [
+                "Float"
+            ]
+        },
         "transform": {}
     },
     "fstore_0": {
@@ -792,6 +1379,12 @@
         "mnemonic": "fstore_0",
         "op": 67,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "Float"
+            ]
+        },
         "transform": {
             "simple_swap": {
                 "op": "fstore",
@@ -806,11 +1399,17 @@
         "mnemonic": "fstore_1",
         "op": 68,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "Float"
+            ]
+        },
         "transform": {
             "simple_swap": {
                 "op": "fstore",
                 "operands": [
-                    0
+                    1
                 ]
             }
         }
@@ -820,11 +1419,17 @@
         "mnemonic": "fstore_2",
         "op": 69,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "Float"
+            ]
+        },
         "transform": {
             "simple_swap": {
                 "op": "fstore",
                 "operands": [
-                    0
+                    2
                 ]
             }
         }
@@ -834,11 +1439,17 @@
         "mnemonic": "fstore_3",
         "op": 70,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "Float"
+            ]
+        },
         "transform": {
             "simple_swap": {
                 "op": "fstore",
                 "operands": [
-                    0
+                    3
                 ]
             }
         }
@@ -848,6 +1459,15 @@
         "mnemonic": "fsub",
         "op": 102,
         "operands": null,
+        "stack": {
+            "after": [
+                "Float"
+            ],
+            "before": [
+                "Float",
+                "Float"
+            ]
+        },
         "transform": {}
     },
     "getfield": {
@@ -860,6 +1480,10 @@
                 "CONSTANT_INDEX"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": []
+        },
         "transform": {}
     },
     "getstatic": {
@@ -872,6 +1496,10 @@
                 "CONSTANT_INDEX"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": []
+        },
         "transform": {}
     },
     "goto": {
@@ -884,6 +1512,10 @@
                 "BRANCH"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": []
+        },
         "transform": {}
     },
     "goto_w": {
@@ -896,6 +1528,10 @@
                 "BRANCH"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": []
+        },
         "transform": {}
     },
     "i2b": {
@@ -903,6 +1539,14 @@
         "mnemonic": "i2b",
         "op": 145,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "i2c": {
@@ -910,6 +1554,14 @@
         "mnemonic": "i2c",
         "op": 146,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "i2d": {
@@ -917,6 +1569,15 @@
         "mnemonic": "i2d",
         "op": 135,
         "operands": null,
+        "stack": {
+            "after": [
+                "Double",
+                "Double"
+            ],
+            "before": [
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "i2f": {
@@ -924,6 +1585,14 @@
         "mnemonic": "i2f",
         "op": 134,
         "operands": null,
+        "stack": {
+            "after": [
+                "Float"
+            ],
+            "before": [
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "i2l": {
@@ -931,6 +1600,15 @@
         "mnemonic": "i2l",
         "op": 133,
         "operands": null,
+        "stack": {
+            "after": [
+                "Long",
+                "Long"
+            ],
+            "before": [
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "i2s": {
@@ -938,6 +1616,14 @@
         "mnemonic": "i2s",
         "op": 147,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "iadd": {
@@ -945,6 +1631,15 @@
         "mnemonic": "iadd",
         "op": 96,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "Integer",
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "iaload": {
@@ -952,6 +1647,15 @@
         "mnemonic": "iaload",
         "op": 46,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "ArrayRef",
+                "Index"
+            ]
+        },
         "transform": {}
     },
     "iand": {
@@ -959,6 +1663,15 @@
         "mnemonic": "iand",
         "op": 126,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "Integer",
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "iastore": {
@@ -966,6 +1679,14 @@
         "mnemonic": "iastore",
         "op": 79,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "ArrayRef",
+                "Index",
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "iconst_0": {
@@ -973,6 +1694,12 @@
         "mnemonic": "iconst_0",
         "op": 3,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": []
+        },
         "transform": {
             "simple_swap": {
                 "op": "bipush",
@@ -987,6 +1714,12 @@
         "mnemonic": "iconst_1",
         "op": 4,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": []
+        },
         "transform": {
             "simple_swap": {
                 "op": "bipush",
@@ -1001,6 +1734,12 @@
         "mnemonic": "iconst_2",
         "op": 5,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": []
+        },
         "transform": {
             "simple_swap": {
                 "op": "bipush",
@@ -1015,6 +1754,12 @@
         "mnemonic": "iconst_3",
         "op": 6,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": []
+        },
         "transform": {
             "simple_swap": {
                 "op": "bipush",
@@ -1029,6 +1774,12 @@
         "mnemonic": "iconst_4",
         "op": 7,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": []
+        },
         "transform": {
             "simple_swap": {
                 "op": "bipush",
@@ -1043,6 +1794,12 @@
         "mnemonic": "iconst_5",
         "op": 8,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": []
+        },
         "transform": {
             "simple_swap": {
                 "op": "bipush",
@@ -1057,6 +1814,12 @@
         "mnemonic": "iconst_m1",
         "op": 2,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": []
+        },
         "transform": {
             "simple_swap": {
                 "op": "bipush",
@@ -1071,6 +1834,15 @@
         "mnemonic": "idiv",
         "op": 108,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "Integer",
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "if_acmpeq": {
@@ -1083,6 +1855,13 @@
                 "BRANCH"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": [
+                "ObjectRef",
+                "ObjectRef"
+            ]
+        },
         "transform": {}
     },
     "if_acmpne": {
@@ -1095,6 +1874,13 @@
                 "BRANCH"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": [
+                "ObjectRef",
+                "ObjectRef"
+            ]
+        },
         "transform": {}
     },
     "if_icmpeq": {
@@ -1107,6 +1893,13 @@
                 "BRANCH"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": [
+                "Integer",
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "if_icmpge": {
@@ -1119,6 +1912,13 @@
                 "BRANCH"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": [
+                "Integer",
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "if_icmpgt": {
@@ -1131,6 +1931,13 @@
                 "BRANCH"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": [
+                "Integer",
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "if_icmple": {
@@ -1143,6 +1950,13 @@
                 "BRANCH"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": [
+                "Integer",
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "if_icmplt": {
@@ -1155,6 +1969,13 @@
                 "BRANCH"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": [
+                "Integer",
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "if_icmpne": {
@@ -1167,6 +1988,13 @@
                 "BRANCH"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": [
+                "Integer",
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "ifeq": {
@@ -1179,6 +2007,12 @@
                 "BRANCH"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": [
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "ifge": {
@@ -1191,6 +2025,12 @@
                 "BRANCH"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": [
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "ifgt": {
@@ -1203,6 +2043,12 @@
                 "BRANCH"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": [
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "ifle": {
@@ -1215,6 +2061,12 @@
                 "BRANCH"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": [
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "iflt": {
@@ -1227,6 +2079,12 @@
                 "BRANCH"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": [
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "ifne": {
@@ -1239,6 +2097,12 @@
                 "BRANCH"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": [
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "ifnonnull": {
@@ -1251,6 +2115,12 @@
                 "BRANCH"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": [
+                "ObjectRef"
+            ]
+        },
         "transform": {}
     },
     "ifnull": {
@@ -1263,6 +2133,12 @@
                 "BRANCH"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": [
+                "ObjectRef"
+            ]
+        },
         "transform": {}
     },
     "iinc": {
@@ -1279,6 +2155,10 @@
                 "LITERAL"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": []
+        },
         "transform": {}
     },
     "iload": {
@@ -1291,6 +2171,12 @@
                 "LOCAL_INDEX"
             ]
         ],
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": []
+        },
         "transform": {}
     },
     "iload_0": {
@@ -1298,6 +2184,12 @@
         "mnemonic": "iload_0",
         "op": 26,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": []
+        },
         "transform": {
             "simple_swap": {
                 "op": "iload",
@@ -1312,6 +2204,12 @@
         "mnemonic": "iload_1",
         "op": 27,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": []
+        },
         "transform": {
             "simple_swap": {
                 "op": "iload",
@@ -1326,6 +2224,12 @@
         "mnemonic": "iload_2",
         "op": 28,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": []
+        },
         "transform": {
             "simple_swap": {
                 "op": "iload",
@@ -1340,6 +2244,12 @@
         "mnemonic": "iload_3",
         "op": 29,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": []
+        },
         "transform": {
             "simple_swap": {
                 "op": "iload",
@@ -1354,6 +2264,10 @@
         "mnemonic": "impdep1",
         "op": 254,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": []
+        },
         "transform": {}
     },
     "impdep2": {
@@ -1361,6 +2275,10 @@
         "mnemonic": "impdep2",
         "op": 255,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": []
+        },
         "transform": {}
     },
     "imul": {
@@ -1368,6 +2286,15 @@
         "mnemonic": "imul",
         "op": 104,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "Integer",
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "ineg": {
@@ -1375,6 +2302,14 @@
         "mnemonic": "ineg",
         "op": 116,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "instanceof": {
@@ -1387,6 +2322,14 @@
                 "CONSTANT_INDEX"
             ]
         ],
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "ObjectRef"
+            ]
+        },
         "transform": {}
     },
     "invokedynamic": {
@@ -1407,6 +2350,10 @@
                 "PADDING"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": []
+        },
         "transform": {}
     },
     "invokeinterface": {
@@ -1427,6 +2374,10 @@
                 "PADDING"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": []
+        },
         "transform": {}
     },
     "invokespecial": {
@@ -1439,6 +2390,10 @@
                 "CONSTANT_INDEX"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": []
+        },
         "transform": {}
     },
     "invokestatic": {
@@ -1451,6 +2406,10 @@
                 "CONSTANT_INDEX"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": []
+        },
         "transform": {}
     },
     "invokevirtual": {
@@ -1463,6 +2422,10 @@
                 "CONSTANT_INDEX"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": []
+        },
         "transform": {}
     },
     "ior": {
@@ -1470,6 +2433,15 @@
         "mnemonic": "ior",
         "op": 128,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "Integer",
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "irem": {
@@ -1477,6 +2449,15 @@
         "mnemonic": "irem",
         "op": 112,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "Integer",
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "ireturn": {
@@ -1484,6 +2465,12 @@
         "mnemonic": "ireturn",
         "op": 172,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "ishl": {
@@ -1491,6 +2478,15 @@
         "mnemonic": "ishl",
         "op": 120,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "Integer",
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "ishr": {
@@ -1498,6 +2494,15 @@
         "mnemonic": "ishr",
         "op": 122,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "Integer",
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "istore": {
@@ -1510,6 +2515,12 @@
                 "LOCAL_INDEX"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": [
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "istore_0": {
@@ -1517,6 +2528,12 @@
         "mnemonic": "istore_0",
         "op": 59,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "Integer"
+            ]
+        },
         "transform": {
             "simple_swap": {
                 "op": "istore",
@@ -1531,6 +2548,12 @@
         "mnemonic": "istore_1",
         "op": 60,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "Integer"
+            ]
+        },
         "transform": {
             "simple_swap": {
                 "op": "istore",
@@ -1545,6 +2568,12 @@
         "mnemonic": "istore_2",
         "op": 61,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "Integer"
+            ]
+        },
         "transform": {
             "simple_swap": {
                 "op": "istore",
@@ -1559,6 +2588,12 @@
         "mnemonic": "istore_3",
         "op": 62,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "Integer"
+            ]
+        },
         "transform": {
             "simple_swap": {
                 "op": "istore",
@@ -1573,6 +2608,15 @@
         "mnemonic": "isub",
         "op": 100,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "Integer",
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "iushr": {
@@ -1580,6 +2624,15 @@
         "mnemonic": "iushr",
         "op": 124,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "Integer",
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "ixor": {
@@ -1587,6 +2640,15 @@
         "mnemonic": "ixor",
         "op": 130,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "Integer",
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "jsr": {
@@ -1599,6 +2661,12 @@
                 "BRANCH"
             ]
         ],
+        "stack": {
+            "after": [
+                "PC"
+            ],
+            "before": []
+        },
         "transform": {}
     },
     "jsr_w": {
@@ -1611,6 +2679,12 @@
                 "BRANCH"
             ]
         ],
+        "stack": {
+            "after": [
+                "PC"
+            ],
+            "before": []
+        },
         "transform": {}
     },
     "l2d": {
@@ -1618,6 +2692,16 @@
         "mnemonic": "l2d",
         "op": 138,
         "operands": null,
+        "stack": {
+            "after": [
+                "Double",
+                "Double"
+            ],
+            "before": [
+                "Long",
+                "Long"
+            ]
+        },
         "transform": {}
     },
     "l2f": {
@@ -1625,6 +2709,15 @@
         "mnemonic": "l2f",
         "op": 137,
         "operands": null,
+        "stack": {
+            "after": [
+                "Float"
+            ],
+            "before": [
+                "Long",
+                "Long"
+            ]
+        },
         "transform": {}
     },
     "l2i": {
@@ -1632,6 +2725,15 @@
         "mnemonic": "l2i",
         "op": 136,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "Long",
+                "Long"
+            ]
+        },
         "transform": {}
     },
     "ladd": {
@@ -1639,6 +2741,18 @@
         "mnemonic": "ladd",
         "op": 97,
         "operands": null,
+        "stack": {
+            "after": [
+                "Long",
+                "Long"
+            ],
+            "before": [
+                "Long",
+                "Long",
+                "Long",
+                "Long"
+            ]
+        },
         "transform": {}
     },
     "laload": {
@@ -1646,6 +2760,16 @@
         "mnemonic": "laload",
         "op": 47,
         "operands": null,
+        "stack": {
+            "after": [
+                "Long",
+                "Long"
+            ],
+            "before": [
+                "ArrayRef",
+                "Index"
+            ]
+        },
         "transform": {}
     },
     "land": {
@@ -1653,6 +2777,18 @@
         "mnemonic": "land",
         "op": 127,
         "operands": null,
+        "stack": {
+            "after": [
+                "Long",
+                "Long"
+            ],
+            "before": [
+                "Long",
+                "Long",
+                "Long",
+                "Long"
+            ]
+        },
         "transform": {}
     },
     "lastore": {
@@ -1660,6 +2796,15 @@
         "mnemonic": "lastore",
         "op": 80,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "ArrayRef",
+                "Index",
+                "Long",
+                "Long"
+            ]
+        },
         "transform": {}
     },
     "lcmp": {
@@ -1667,6 +2812,17 @@
         "mnemonic": "lcmp",
         "op": 148,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "Long",
+                "Long",
+                "Long",
+                "Long"
+            ]
+        },
         "transform": {}
     },
     "lconst_0": {
@@ -1674,6 +2830,13 @@
         "mnemonic": "lconst_0",
         "op": 9,
         "operands": null,
+        "stack": {
+            "after": [
+                "Long",
+                "Long"
+            ],
+            "before": []
+        },
         "transform": {}
     },
     "lconst_1": {
@@ -1681,6 +2844,13 @@
         "mnemonic": "lconst_1",
         "op": 10,
         "operands": null,
+        "stack": {
+            "after": [
+                "Long",
+                "Long"
+            ],
+            "before": []
+        },
         "transform": {}
     },
     "ldc": {
@@ -1693,6 +2863,12 @@
                 "CONSTANT_INDEX"
             ]
         ],
+        "stack": {
+            "after": [
+                "Value"
+            ],
+            "before": []
+        },
         "transform": {}
     },
     "ldc2_w": {
@@ -1705,6 +2881,13 @@
                 "CONSTANT_INDEX"
             ]
         ],
+        "stack": {
+            "after": [
+                "Value",
+                "Value"
+            ],
+            "before": []
+        },
         "transform": {}
     },
     "ldc_w": {
@@ -1717,6 +2900,12 @@
                 "CONSTANT_INDEX"
             ]
         ],
+        "stack": {
+            "after": [
+                "Value"
+            ],
+            "before": []
+        },
         "transform": {}
     },
     "ldiv": {
@@ -1724,6 +2913,18 @@
         "mnemonic": "ldiv",
         "op": 109,
         "operands": null,
+        "stack": {
+            "after": [
+                "Long",
+                "Long"
+            ],
+            "before": [
+                "Long",
+                "Long",
+                "Long",
+                "Long"
+            ]
+        },
         "transform": {}
     },
     "lload": {
@@ -1736,6 +2937,13 @@
                 "LOCAL_INDEX"
             ]
         ],
+        "stack": {
+            "after": [
+                "Long",
+                "Long"
+            ],
+            "before": []
+        },
         "transform": {}
     },
     "lload_0": {
@@ -1743,6 +2951,13 @@
         "mnemonic": "lload_0",
         "op": 30,
         "operands": null,
+        "stack": {
+            "after": [
+                "Long",
+                "Long"
+            ],
+            "before": []
+        },
         "transform": {
             "simple_swap": {
                 "op": "lload",
@@ -1757,6 +2972,13 @@
         "mnemonic": "lload_1",
         "op": 31,
         "operands": null,
+        "stack": {
+            "after": [
+                "Long",
+                "Long"
+            ],
+            "before": []
+        },
         "transform": {
             "simple_swap": {
                 "op": "lload",
@@ -1771,6 +2993,13 @@
         "mnemonic": "lload_2",
         "op": 32,
         "operands": null,
+        "stack": {
+            "after": [
+                "Long",
+                "Long"
+            ],
+            "before": []
+        },
         "transform": {
             "simple_swap": {
                 "op": "lload",
@@ -1785,6 +3014,13 @@
         "mnemonic": "lload_3",
         "op": 33,
         "operands": null,
+        "stack": {
+            "after": [
+                "Long",
+                "Long"
+            ],
+            "before": []
+        },
         "transform": {
             "simple_swap": {
                 "op": "lload",
@@ -1799,6 +3035,18 @@
         "mnemonic": "lmul",
         "op": 105,
         "operands": null,
+        "stack": {
+            "after": [
+                "Long",
+                "Long"
+            ],
+            "before": [
+                "Long",
+                "Long",
+                "Long",
+                "Long"
+            ]
+        },
         "transform": {}
     },
     "lneg": {
@@ -1806,6 +3054,16 @@
         "mnemonic": "lneg",
         "op": 117,
         "operands": null,
+        "stack": {
+            "after": [
+                "Long",
+                "Long"
+            ],
+            "before": [
+                "Long",
+                "Long"
+            ]
+        },
         "transform": {}
     },
     "lookupswitch": {
@@ -1813,6 +3071,12 @@
         "mnemonic": "lookupswitch",
         "op": 171,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "Value"
+            ]
+        },
         "transform": {}
     },
     "lor": {
@@ -1820,6 +3084,18 @@
         "mnemonic": "lor",
         "op": 129,
         "operands": null,
+        "stack": {
+            "after": [
+                "Long",
+                "Long"
+            ],
+            "before": [
+                "Long",
+                "Long",
+                "Long",
+                "Long"
+            ]
+        },
         "transform": {}
     },
     "lrem": {
@@ -1827,6 +3103,18 @@
         "mnemonic": "lrem",
         "op": 113,
         "operands": null,
+        "stack": {
+            "after": [
+                "Long",
+                "Long"
+            ],
+            "before": [
+                "Long",
+                "Long",
+                "Long",
+                "Long"
+            ]
+        },
         "transform": {}
     },
     "lreturn": {
@@ -1834,6 +3122,13 @@
         "mnemonic": "lreturn",
         "op": 173,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "Long",
+                "Long"
+            ]
+        },
         "transform": {}
     },
     "lshl": {
@@ -1841,6 +3136,17 @@
         "mnemonic": "lshl",
         "op": 121,
         "operands": null,
+        "stack": {
+            "after": [
+                "Long",
+                "Long"
+            ],
+            "before": [
+                "Long",
+                "Long",
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "lshr": {
@@ -1848,6 +3154,17 @@
         "mnemonic": "lshr",
         "op": 123,
         "operands": null,
+        "stack": {
+            "after": [
+                "Long",
+                "Long"
+            ],
+            "before": [
+                "Long",
+                "Long",
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "lstore": {
@@ -1860,6 +3177,13 @@
                 "LOCAL_INDEX"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": [
+                "Long",
+                "Long"
+            ]
+        },
         "transform": {}
     },
     "lstore_0": {
@@ -1867,6 +3191,13 @@
         "mnemonic": "lstore_0",
         "op": 63,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "Long",
+                "Long"
+            ]
+        },
         "transform": {
             "simple_swap": {
                 "op": "lstore",
@@ -1881,6 +3212,13 @@
         "mnemonic": "lstore_1",
         "op": 64,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "Long",
+                "Long"
+            ]
+        },
         "transform": {
             "simple_swap": {
                 "op": "lstore",
@@ -1895,6 +3233,13 @@
         "mnemonic": "lstore_2",
         "op": 65,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "Long",
+                "Long"
+            ]
+        },
         "transform": {
             "simple_swap": {
                 "op": "lstore",
@@ -1909,6 +3254,13 @@
         "mnemonic": "lstore_3",
         "op": 66,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "Long",
+                "Long"
+            ]
+        },
         "transform": {
             "simple_swap": {
                 "op": "lstore",
@@ -1923,6 +3275,18 @@
         "mnemonic": "lsub",
         "op": 101,
         "operands": null,
+        "stack": {
+            "after": [
+                "Long",
+                "Long"
+            ],
+            "before": [
+                "Long",
+                "Long",
+                "Long",
+                "Long"
+            ]
+        },
         "transform": {}
     },
     "lushr": {
@@ -1930,6 +3294,17 @@
         "mnemonic": "lushr",
         "op": 125,
         "operands": null,
+        "stack": {
+            "after": [
+                "Long",
+                "Long"
+            ],
+            "before": [
+                "Long",
+                "Long",
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "lxor": {
@@ -1937,6 +3312,18 @@
         "mnemonic": "lxor",
         "op": 131,
         "operands": null,
+        "stack": {
+            "after": [
+                "Long",
+                "Long"
+            ],
+            "before": [
+                "Long",
+                "Long",
+                "Long",
+                "Long"
+            ]
+        },
         "transform": {}
     },
     "monitorenter": {
@@ -1944,6 +3331,12 @@
         "mnemonic": "monitorenter",
         "op": 194,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "ObjectRef"
+            ]
+        },
         "transform": {}
     },
     "monitorexit": {
@@ -1951,6 +3344,12 @@
         "mnemonic": "monitorexit",
         "op": 195,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "ObjectRef"
+            ]
+        },
         "transform": {}
     },
     "multianewarray": {
@@ -1967,6 +3366,10 @@
                 "LITERAL"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": []
+        },
         "transform": {}
     },
     "new": {
@@ -1979,6 +3382,12 @@
                 "CONSTANT_INDEX"
             ]
         ],
+        "stack": {
+            "after": [
+                "ObjectRef"
+            ],
+            "before": []
+        },
         "transform": {}
     },
     "newarray": {
@@ -1991,6 +3400,14 @@
                 "LITERAL"
             ]
         ],
+        "stack": {
+            "after": [
+                "ArrayRef"
+            ],
+            "before": [
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "nop": {
@@ -1998,6 +3415,10 @@
         "mnemonic": "nop",
         "op": 0,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": []
+        },
         "transform": {}
     },
     "pop": {
@@ -2005,6 +3426,12 @@
         "mnemonic": "pop",
         "op": 87,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "Any"
+            ]
+        },
         "transform": {}
     },
     "pop2": {
@@ -2012,6 +3439,13 @@
         "mnemonic": "pop2",
         "op": 88,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "Any",
+                "Any"
+            ]
+        },
         "transform": {}
     },
     "putfield": {
@@ -2024,6 +3458,10 @@
                 "CONSTANT_INDEX"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": []
+        },
         "transform": {}
     },
     "putstatic": {
@@ -2036,6 +3474,10 @@
                 "CONSTANT_INDEX"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": []
+        },
         "transform": {}
     },
     "ret": {
@@ -2048,6 +3490,10 @@
                 "LOCAL_INDEX"
             ]
         ],
+        "stack": {
+            "after": [],
+            "before": []
+        },
         "transform": {}
     },
     "return": {
@@ -2055,6 +3501,10 @@
         "mnemonic": "return",
         "op": 177,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": []
+        },
         "transform": {}
     },
     "saload": {
@@ -2062,6 +3512,15 @@
         "mnemonic": "saload",
         "op": 53,
         "operands": null,
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": [
+                "ArrayRef",
+                "Index"
+            ]
+        },
         "transform": {}
     },
     "sastore": {
@@ -2069,6 +3528,14 @@
         "mnemonic": "sastore",
         "op": 86,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "ArrayRef",
+                "Index",
+                "Integer"
+            ]
+        },
         "transform": {}
     },
     "sipush": {
@@ -2081,6 +3548,12 @@
                 "LITERAL"
             ]
         ],
+        "stack": {
+            "after": [
+                "Integer"
+            ],
+            "before": []
+        },
         "transform": {}
     },
     "swap": {
@@ -2088,6 +3561,16 @@
         "mnemonic": "swap",
         "op": 95,
         "operands": null,
+        "stack": {
+            "after": [
+                "Any",
+                "Any"
+            ],
+            "before": [
+                "Any",
+                "Any"
+            ]
+        },
         "transform": {}
     },
     "tableswitch": {
@@ -2095,6 +3578,12 @@
         "mnemonic": "tableswitch",
         "op": 170,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": [
+                "Any"
+            ]
+        },
         "transform": {}
     },
     "wide": {
@@ -2102,6 +3591,10 @@
         "mnemonic": "wide",
         "op": 196,
         "operands": null,
+        "stack": {
+            "after": [],
+            "before": []
+        },
         "transform": {}
     }
 }
