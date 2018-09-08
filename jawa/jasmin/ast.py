@@ -5,20 +5,7 @@ from typing import List, Any, Iterator
 from ast import literal_eval
 
 from jawa.jasmin.tokenizer import Token, TokenType
-
-
-class ParserError(Exception):
-    def __init__(self, message, *, token=None):
-        super().__init__(message)
-        self.token = token
-
-
-class InvalidTokenError(ParserError):
-    pass
-
-
-class UnknownDirectiveError(ParserError):
-    pass
+from jawa.jasmin.errors import InvalidTokenError, UnknownDirectiveError
 
 
 class NodeTypes(Enum):

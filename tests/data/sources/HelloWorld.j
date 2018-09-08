@@ -1,3 +1,4 @@
+.bytecode 49.0
 .class public HelloWorld
 .super java/lang/Object
 

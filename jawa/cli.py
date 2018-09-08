@@ -1,6 +1,7 @@
 import re
 import json
 import importlib
+import traceback
 
 import click
 
@@ -11,6 +12,7 @@ from jawa.util import bytecode, shell
 from jawa.constants import UTF8
 from jawa.jasmin.ast import parse
 from jawa.jasmin.tokenizer import tokenize
+from jawa.jasmin.errors import ParserError
 
 
 @click.group()
@@ -194,5 +196,10 @@ def parse_command(source):
     """Show parser output for the given Jasmin assembly file, useful
     for debugging parser errors."""
     with open(source, 'rU') as s:
-        root = parse(tokenize(s))
-        root.pprint()
+        try:
+            root = parse(tokenize(s))
+        except ParserError as err:
+            click.echo(f'[{err.__class__.__name__}] {err.message}')
+            click.echo(f'[{err.__class__.__name__}] {err.token}')
+        else:
+            root.pprint()

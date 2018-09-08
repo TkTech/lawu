@@ -22,7 +22,7 @@ class Token(object):
 
     def __repr__(self):
         return (
-            f'TokenType(token_type={self.token_type!r}, '
+            f'Token(token_type={self.token_type!r}, '
             f'value={self.value!r}, '
             f'line_no={self.line_no!r})'
         )
@@ -39,10 +39,12 @@ def tokenize(source: TextIO) -> Iterator[Token]:
     c = source.read(1)
     prev_c = ''
     buff = []
-    line_no = 1
+    line_no = 0
+    first_character_on_line = True
+
     while c != '':
-        if s in (TokenType.GENERIC, TokenType.DIRECTIVE):
-            if c == '.':
+        if s == TokenType.GENERIC:
+            if first_character_on_line and c == '.':
                 # We've found the start of a directive.
                 s = TokenType.DIRECTIVE
             elif c == ';' and prev_c in (' ', '\t', '\n', ''):
@@ -61,6 +63,15 @@ def tokenize(source: TextIO) -> Iterator[Token]:
                 # We've found the start of a quoted string and need to handle
                 # escapes.
                 s = TokenType.QUOTED_STRING
+            else:
+                buff.append(c)
+        elif s == TokenType.DIRECTIVE:
+            if c in (' ', '\t', '\n'):
+                value = ''.join(buff)
+                if value:
+                    yield Token(token_type=s, value=value, line_no=line_no)
+                s = TokenType.GENERIC
+                del buff[:]
             else:
                 buff.append(c)
         elif s == TokenType.COMMENT:
@@ -97,6 +108,9 @@ def tokenize(source: TextIO) -> Iterator[Token]:
             # We keep track of what line we're currently tokenizing to use
             # later for useful error messages.
             line_no += 1
+            first_character_on_line = True
+        elif c not in (' ', '\t'):
+            first_character_on_line = False
 
         prev_c = c
         c = source.read(1)
