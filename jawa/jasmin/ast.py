@@ -30,11 +30,12 @@ class NodeTypes(Enum):
     SUPER = 5
     LIMIT = 6
     INSTRUCTION = 7
+    BYTECODE = 8
 
 
 class Node(object):
     def __init__(self, *, node_type: NodeTypes, value=None, parent=None,
-                 line_no=None, comment=None):
+                 line_no: int=0):
         #: Type of Node.
         self.node_type: NodeTypes = node_type
         #: List of children for this Node.
@@ -44,9 +45,7 @@ class Node(object):
         #: List of parents for this node.
         self._parent: Node = None
         #: The source line number, if known.
-        self.line_no = line_no
-        #: Any trailing comment, if one existed.
-        self.comment = comment
+        self.line_no: int = line_no
 
         if parent:
             self.parent = parent
@@ -68,7 +67,7 @@ class Node(object):
         )
 
     def pprint(self, indent=2, file=sys.stdout, level=0):
-        pre = ((indent * level) * ' ') + '|'
+        pre = f'[{self.line_no:04}] {(indent * level) * " "} |'
         print(f'{pre} {self.node_type.name} {self.value}', file=file)
         for child in self.children:
             child.pprint(indent=indent, file=file, level=level + 1)
@@ -125,6 +124,13 @@ def parse(tokens: Iterator[Token]):
             elif t.value == 'super':
                 Node(
                     node_type=NodeTypes.SUPER,
+                    value=args[0].value,
+                    parent=parent,
+                    line_no=t.line_no
+                )
+            elif t.value == 'bytecode':
+                Node(
+                    node_type=NodeTypes.BYTECODE,
                     value=args[0].value,
                     parent=parent,
                     line_no=t.line_no
