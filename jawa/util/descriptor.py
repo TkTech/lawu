@@ -67,7 +67,7 @@ def parse_descriptor(descriptor: str) -> list:
     around the results, use :py:func:`jawa.core.descriptor.method_descriptor`
     or :py:func:`jawa.core.descriptor.field_descriptor`.
     """
-    # States:
+    # TokenType:
     #   10 == NORMAL,
     #   20 == OBJECT REFERENCE
     state = 10

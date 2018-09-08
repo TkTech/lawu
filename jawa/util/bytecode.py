@@ -282,12 +282,11 @@ def load_bytecode_definitions(*, path=None) -> dict:
     for definition in j.values():
         # If the entry has any operands take the text labels and convert
         # them into pre-cached struct objects and operand types.
-        operands = definition['operands']
-        if operands:
-            definition['operands'] = [
-                [getattr(OperandFmts, oo[0]), OperandTypes[oo[1]]]
-                for oo in operands
-            ]
+        operands = definition.get('operands') or []
+        definition['operands'] = [
+            [getattr(OperandFmts, oo[0]), OperandTypes[oo[1]]]
+            for oo in operands
+        ]
 
     # Return one dict that contains both mnemonic keys and opcode keys.
     return {**j, **{v['op']: v for v in j.values()}}

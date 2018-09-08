@@ -9,6 +9,8 @@ from jawa.cf import ClassVersion, ClassFile
 from jawa.attribute import get_attribute_classes
 from jawa.util import bytecode, shell
 from jawa.constants import UTF8
+from jawa.jasmin.ast import parse
+from jawa.jasmin.tokenizer import tokenize
 
 
 @click.group()
@@ -176,13 +178,21 @@ def debug():
     """Debugging utilities."""
 
 
-@debug.command()
+@debug.command(name='tokenize')
 @click.argument('source', type=click.Path(exists=True))
-def tokenize(source):
+def tokenize_command(source):
     """Show tokenizer output for the given Jasmin assembly file, useful
     for debugging parser errors."""
-    from jawa.jasmin.tokenizer import tokenize
-
     with open(source, 'rU') as s:
         for token in tokenize(s):
             click.echo(token)
+
+
+@debug.command(name='parse')
+@click.argument('source', type=click.Path(exists=True))
+def parse_command(source):
+    """Show parser output for the given Jasmin assembly file, useful
+    for debugging parser errors."""
+    with open(source, 'rU') as s:
+        root = parse(tokenize(s))
+        root.pprint()
