@@ -3,9 +3,8 @@ from typing import Any, TextIO, Iterator, Union
 
 
 class TokenType(Enum):
-    GENERIC = 1
+    TEXT = 1
     QUOTED_STRING = 2
-    DIRECTIVE = 3
     COMMENT = 4
     LITERAL = 5
     QUOTED_ESCAPE = 6
@@ -16,7 +15,7 @@ class Token(object):
     __slots__ = ('token_type', 'value', 'line_no')
 
     def __init__(self, *, token_type=None, value=None, line_no=None):
-        self.token_type: int = token_type or TokenType.GENERIC
+        self.token_type: int = token_type or TokenType.TEXT
         self.value: Any = value
         self.line_no: Union[int, None] = line_no
 
@@ -35,19 +34,15 @@ def tokenize(source: TextIO) -> Iterator[Token]:
     :param source: Source to read from.
     :return: Iterator of Token objects.
     """
-    s = TokenType.GENERIC
+    s = TokenType.TEXT
     c = source.read(1)
     prev_c = ''
     buff = []
     line_no = 0
-    first_character_on_line = True
 
     while c != '':
-        if s == TokenType.GENERIC:
-            if first_character_on_line and c == '.':
-                # We've found the start of a directive.
-                s = TokenType.DIRECTIVE
-            elif c == ';' and prev_c in (' ', '\t', '\n', ''):
+        if s == TokenType.TEXT:
+            if c == ';' and prev_c in (' ', '\t', '\n', ''):
                 # We've found the start of a comment.
                 s = TokenType.COMMENT
             elif c in (' ', '\t', '\n'):
@@ -57,7 +52,7 @@ def tokenize(source: TextIO) -> Iterator[Token]:
                 value = ''.join(buff)
                 if value:
                     yield Token(token_type=s, value=value, line_no=line_no)
-                s = TokenType.GENERIC
+                s = TokenType.TEXT
                 del buff[:]
             elif c in '"':
                 # We've found the start of a quoted string and need to handle
@@ -65,21 +60,12 @@ def tokenize(source: TextIO) -> Iterator[Token]:
                 s = TokenType.QUOTED_STRING
             else:
                 buff.append(c)
-        elif s == TokenType.DIRECTIVE:
-            if c in (' ', '\t', '\n'):
-                value = ''.join(buff)
-                if value:
-                    yield Token(token_type=s, value=value, line_no=line_no)
-                s = TokenType.GENERIC
-                del buff[:]
-            else:
-                buff.append(c)
         elif s == TokenType.COMMENT:
             if c == '\n':
                 value = ''.join(buff)
                 if value:
                     yield Token(token_type=s, value=value, line_no=line_no)
-                s = TokenType.GENERIC
+                s = TokenType.TEXT
                 del buff[:]
             elif not buff and c in (' ', '\t'):
                 # Skip starting whitespace on comments.
@@ -93,7 +79,7 @@ def tokenize(source: TextIO) -> Iterator[Token]:
             elif c == '"':
                 # We've found the end of the quoted string.
                 yield Token(token_type=s, value=''.join(buff), line_no=line_no)
-                s = TokenType.GENERIC
+                s = TokenType.TEXT
                 del buff[:]
             else:
                 buff.append(c)
@@ -108,9 +94,6 @@ def tokenize(source: TextIO) -> Iterator[Token]:
             # We keep track of what line we're currently tokenizing to use
             # later for useful error messages.
             line_no += 1
-            first_character_on_line = True
-        elif c not in (' ', '\t'):
-            first_character_on_line = False
 
         prev_c = c
         c = source.read(1)
