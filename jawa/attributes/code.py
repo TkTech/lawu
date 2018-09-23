@@ -64,7 +64,7 @@ class CodeAttribute(Attribute):
         self.max_locals = 0
         self.exception_table = []
         self.attributes = AttributeTable(table.cf, parent=self)
-        self._code = ''
+        self._code = b''
 
     def unpack(self, info):
         """
