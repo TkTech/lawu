@@ -3,7 +3,7 @@ from io import StringIO
 
 from jawa.jasmin.errors import InvalidTokenError, UnknownDirectiveError
 from jawa.jasmin.tokenizer import tokenize
-from jawa.jasmin.ast import parse
+from jawa.jasmin.parser import parse, Method, TokenReader, Class, Root
 
 
 def test_top_level():
@@ -15,25 +15,45 @@ def test_top_level():
         '; Top Level\n'
         'literal_value'
     ))
-    with pytest.raises(InvalidTokenError) as ex:
+    with pytest.raises(InvalidTokenError) as exc:
         parse(tokens)
-    assert ex.value.token.line_no == 1
+
+    assert exc.value.token.value == 'literal_value'
+    assert exc.value.token.line_no == 1
 
 
 def test_unknown_directives():
     """
     Ensure we error out when unknown directives are encountered.
     """
+    # Root-level directive.
     tokens = tokenize(StringIO(
         '.unknown_directive'
     ))
     with pytest.raises(UnknownDirectiveError):
-        parse(tokens)
+        node = Root()
+        node.parse_from_tokens(TokenReader(tokens))
 
+    # Class-level directive.
     tokens = tokenize(StringIO(
-        '.method public <init>()V\n'
-        '\t.unknown_directive\n'
-        '.end method'
+        '.super java/lang/Object\n'
+        '.unknown_directive'
     ))
-    with pytest.raises(UnknownDirectiveError):
-        parse(tokens)
+    with pytest.raises(UnknownDirectiveError) as exc:
+        node = Class()
+        node.parse_from_tokens(TokenReader(tokens))
+
+    assert exc.value.token.value == '.unknown_directive'
+    assert exc.value.token.line_no == 1
+
+    # Method-level directive.
+    tokens = tokenize(StringIO(
+        '.limit stack 2\n'
+        '.unknown_directive\n'
+    ))
+    with pytest.raises(UnknownDirectiveError) as exc:
+        node = Method()
+        node.parse_from_tokens(TokenReader(tokens))
+
+    assert exc.value.token.value == '.unknown_directive'
+    assert exc.value.token.line_no == 1

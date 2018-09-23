@@ -1,7 +1,6 @@
 import re
 import json
 import importlib
-import traceback
 
 import click
 
@@ -10,7 +9,7 @@ from jawa.cf import ClassVersion, ClassFile
 from jawa.attribute import get_attribute_classes
 from jawa.util import bytecode, shell
 from jawa.constants import UTF8
-from jawa.jasmin.ast import parse
+from jawa.jasmin.parser import parse
 from jawa.jasmin.tokenizer import tokenize
 from jawa.jasmin.errors import ParserError
 
