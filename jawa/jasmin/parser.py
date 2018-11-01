@@ -1,258 +1,12 @@
-import sys
 from ast import literal_eval
 from typing import List, Iterator
 
+from jawa import ast
 from jawa.jasmin.tokenizer import Token, TokenType
 from jawa.jasmin.errors import (
-    ParserError,
     InvalidTokenError,
     UnknownDirectiveError
 )
-
-
-DIRECTIVES = {}
-
-
-def directive(*, name=None, allowed_in=None):
-    # TODO: This is dirty, and makes both the parser and extending
-    #       supported directives global. Find a better way.
-    def _f(cls):
-        DIRECTIVES[name or cls.__name__.lower()] = (
-            cls,
-            allowed_in
-        )
-        return cls
-    return _f
-
-
-class Node(object):
-    __slots__ = ('children', '_parent', 'line_no')
-
-    def __init__(self, parent: 'Node'=None, *, line_no: int=0):
-        #: List of children for this Node.
-        self.children: List[Node] = []
-        #: Parent of this Node.
-        self._parent = None
-        #: The source line number, if known.
-        self.line_no = line_no
-
-        if parent:
-            self.parent = parent
-
-    @property
-    def parent(self):
-        return self._parent
-
-    @parent.setter
-    def parent(self, value):
-        self._parent = value
-        value.children.append(self)
-
-    def __repr__(self):
-        return (
-            f'<{self.__class__.__name__}(children={len(self.children)!r})>'
-        )
-
-    def pprint(self, indent=2, file=sys.stdout, level=0):
-        print('{pre} {self!r}'.format(
-            pre=f'[{self.line_no:04}] {(indent * level) * " "} |',
-            self=self
-        ), file=file)
-        for child in self.children:
-            child.pprint(indent=indent, file=file, level=level + 1)
-
-    def parse_from_tokens(self, tokens):
-        raise NotImplementedError()
-
-
-class Root(Node):
-    def parse_from_tokens(self, tokens):
-        for t in tokens:
-            if t.token_type == TokenType.END_OF_LINE:
-                continue
-
-            if t.value[0] != '.':
-                raise InvalidTokenError(
-                    'Only directives & comments are allowed at the top-level.',
-                    token=t
-                )
-
-            try:
-                parser_class, allowed_in = DIRECTIVES[t.value[1:]]
-            except KeyError:
-                raise UnknownDirectiveError(
-                    f'Don\'t know how to handle {t.value[1:]!r}.',
-                    token=t
-                )
-
-            if self.__class__.__name__ not in allowed_in:
-                raise ParserError(
-                    f'Directive {t.value[1:]!r} not allowed here.',
-                    token=t
-                )
-
-            node = parser_class(self, line_no=t.line_no)
-            node.parse_from_tokens(tokens)
-
-
-@directive(allowed_in={'Root'})
-class Bytecode(Node):
-    __slots__ = ('major', 'minor')
-
-    def __init__(self, parent: 'Node'=None, *, line_no: int = 0):
-        super().__init__(parent=parent, line_no=line_no)
-        self.major = None
-        self.minor = None
-
-    def parse_from_tokens(self, tokens):
-        value = next(tokens).value.split('.')
-        self.major = literal_eval(value[0])
-        self.minor = literal_eval(value[1])
-
-    def __repr__(self):
-        return f'<Bytecode(major={self.major!r}, minor={self.minor!r})>'
-
-
-@directive(allowed_in={'Root'})
-class Class(Node):
-    __slots__ = ('access_flags', 'descriptor')
-
-    def __init__(self, parent: 'Node'=None, *, line_no: int=0):
-        super().__init__(parent=parent, line_no=line_no)
-        self.access_flags = None
-        self.descriptor = None
-
-    def parse_from_tokens(self, tokens):
-        line = tokens.get_line()
-        self.access_flags = [t.value for t in line[:-1]]
-        self.descriptor = line[-1].value
-
-        for t in tokens:
-            if t.token_type == TokenType.END_OF_LINE:
-                continue
-
-            if t.value[0] != '.':
-                raise InvalidTokenError(
-                    'Only directives are allowed at the top level of a class.',
-                    token=t
-                )
-
-            if t.value[1:] == 'end':
-                tokens.get_line()
-                return
-
-            try:
-                parser_class, allowed_in = DIRECTIVES[t.value[1:]]
-            except KeyError:
-                raise UnknownDirectiveError(
-                    f'Don\'t know how to handle {t.value[1:]!r}.',
-                    token=t
-                )
-
-            if self.__class__.__name__ not in allowed_in:
-                raise ParserError(
-                    f'Directive {t.value[1:]!r} not allowed here.',
-                    token=t
-                )
-
-            node = parser_class(self, line_no=t.line_no)
-            node.parse_from_tokens(tokens)
-
-
-@directive(allowed_in={'Class'})
-class Super(Node):
-    __slots__ = ('descriptor',)
-
-    def __init__(self, parent: 'Node'=None, *, line_no: int=0):
-        super().__init__(parent=parent, line_no=line_no)
-        self.descriptor = None
-
-    def parse_from_tokens(self, tokens):
-        self.descriptor = tokens.get_line()[0].value
-
-    def __repr__(self):
-        return f'<Super({self.descriptor})>'
-
-
-@directive(allowed_in={'Class'})
-class Method(Node):
-    __slots__ = ('access_flags', 'descriptor')
-
-    def __init__(self, parent: 'Node'=None, *, line_no: int=0):
-        super().__init__(parent=parent, line_no=line_no)
-        self.access_flags = None
-        self.descriptor = None
-
-    def parse_from_tokens(self, tokens):
-        line = tokens.get_line()
-        self.access_flags = [t.value for t in line[:-1]]
-        self.descriptor = line[-1].value
-
-        for t in tokens:
-            if t.token_type == TokenType.END_OF_LINE:
-                continue
-
-            if t.value[0] == '.':
-                if t.value[1:] == 'end':
-                    tokens.get_line()
-                    return
-
-                try:
-                    parser_class, allowed_in = DIRECTIVES[t.value[1:]]
-                except KeyError:
-                    raise UnknownDirectiveError(
-                        f'Don\'t know how to handle {t.value[1:]!r}.',
-                        token=t
-                    )
-
-                if self.__class__.__name__ not in allowed_in:
-                    raise ParserError(
-                        f'Directive {t.value[1:]!r} not allowed here.',
-                        token=t
-                    )
-
-                node = parser_class(self, line_no=t.line_no)
-                node.parse_from_tokens(tokens)
-            else:
-                # Return the opcode token before we start parsing it.
-                tokens.put(t)
-                Instruction(self, line_no=t.line_no).parse_from_tokens(tokens)
-
-
-@directive(allowed_in={'Method'})
-class Limit(Node):
-    __slots__ = ('of_type', 'count')
-
-    def __init__(self, parent: 'Node', *, line_no: int = 0):
-        super().__init__(parent=parent, line_no=line_no)
-        self.of_type = None
-        self.count = None
-
-    def parse_from_tokens(self, tokens):
-        line = tokens.get_line()
-        self.of_type = line[0].value
-        self.count = literal_eval(line[1].value)
-
-    def __repr__(self):
-        return f'<Limit({self.of_type!r}, {self.count})>'
-
-
-class Instruction(Node):
-    __slots__ = ('opcode', 'operands')
-
-    def __init__(self, parent: 'Node', *, line_no: int = 0):
-        super().__init__(parent=parent, line_no=line_no)
-        self.opcode = None
-        self.operands = None
-
-    def parse_from_tokens(self, tokens):
-        line = tokens.get_line()
-        self.opcode = line[0].value
-        if len(line) > 1:
-            self.operands = [t.value for t in line[1:]]
-
-    def __repr__(self):
-        return f'<Instruction({self.opcode!r}, {self.operands!r})>'
 
 
 class TokenReader(object):
@@ -315,14 +69,170 @@ class TokenReader(object):
         ))
 
 
-def parse(tokens: Iterator[Token]) -> Node:
+class DirectiveProcessor(object):
+    def parse_root(self, tokens):
+        root = ast.Root()
+
+        for t in tokens:
+            if t.token_type == TokenType.END_OF_LINE:
+                continue
+
+            if t.value[0] != '.':
+                raise InvalidTokenError(
+                    'Only directives & comments are allowed at the top-level.',
+                    token=t
+                )
+
+            try:
+                parser = getattr(self, f'parse_{t.value[1:]}')
+            except AttributeError:
+                raise UnknownDirectiveError(
+                    f'Don\'t know how to handle directives of type'
+                    f' {t.value[1:]}.',
+                    token=t
+                )
+
+            node = parser(tokens)
+            node.parent = root
+
+        return root
+
+    @staticmethod
+    def parse_bytecode(tokens):
+        token = next(tokens)
+        value = token.value.split('.')
+        return ast.Bytecode(
+            major=literal_eval(value[0]),
+            minor=literal_eval(value[1]),
+            line_no=token.line_no
+        )
+
+    def parse_class(self, tokens):
+        line = tokens.get_line()
+
+        class_ = ast.Class(
+            descriptor=line[-1].value,
+            access_flags=[t.value for t in line[:-1]],
+            line_no=line[0].line_no
+        )
+
+        # We want to keep consuming tokens until we either reach the end of the
+        # file or an explicit ".end class".
+        for t in tokens:
+            if t.token_type == TokenType.END_OF_LINE:
+                continue
+
+            if t.value[0] != '.':
+                raise InvalidTokenError(
+                    'Only directives are allowed at the top level of a class.',
+                    token=t
+                )
+
+            # We've reached an explicit end-of-class, which is optional in a
+            # file with just a single class.
+            if t.value[1:] == 'end':
+                end_what = next(tokens).value
+                if end_what != 'class':
+                    raise InvalidTokenError(
+                        f'Expected ".end class", saw ".end {end_what}"'
+                        f' instead.',
+                        token=t
+                    )
+
+                return class_
+
+            try:
+                parser = getattr(self, f'parse_{t.value[1:]}')
+            except AttributeError:
+                raise UnknownDirectiveError(
+                    f'Don\'t know how to handle directives of type'
+                    f' {t.value[1:]}.',
+                    token=t
+                )
+
+            node = parser(tokens)
+            node.parent = class_
+
+        # We reached the end of the token stream without finding an explicit
+        # .end class.
+        return class_
+
+    @staticmethod
+    def parse_super(tokens):
+        token = next(tokens)
+        return ast.Super(descriptor=token.value, line_no=token.line_no)
+
+    @staticmethod
+    def parse_limit(tokens):
+        what = next(tokens)
+        count = next(tokens)
+        return ast.Limit(
+            what=what.value,
+            count=literal_eval(count.value),
+            line_no=what.line_no
+        )
+
+    def parse_method(self, tokens):
+        line = tokens.get_line()
+        descriptor = line.pop().value
+
+        method = ast.Method(
+            descriptor=descriptor,
+            access_flags=[t.value for t in line],
+            line_no=line[0].line_no
+        )
+
+        for t in tokens:
+            if t.token_type == TokenType.END_OF_LINE:
+                continue
+
+            v = t.value
+            if v.startswith('.'):
+                if v[1:] == 'end':
+                    end_what = next(tokens).value
+                    if end_what != 'method':
+                        raise InvalidTokenError(
+                            f'Expected ".end method", saw ".end {end_what}"'
+                            f' instead.',
+                            token=t
+                        )
+
+                    return method
+                try:
+                    parser = getattr(self, f'parse_{v[1:]}')
+                except AttributeError:
+                    raise UnknownDirectiveError(
+                        f'Don\'t know how to handle directives of type'
+                        f' {v[1:]!r}.',
+                        token=t
+                    )
+                node = parser(tokens)
+                node.parent = method
+            elif v.endswith(':'):
+                # This *should*(?) be okay, since a literal : should always
+                # be illegal in a symbol unless it's a label.
+                ast.Label(
+                    name=v[:-1],
+                    parent=method
+                )
+            else:
+                line = tokens.get_line()
+                ast.Instruction(
+                    opcode=v,
+                    operands=[t.value for t in line],
+                    parent=method,
+                    line_no=t.line_no
+                )
+
+        return method
+
+
+def parse(tokens: Iterator[Token], processor=DirectiveProcessor) -> ast.Root:
     """
-    Parse an iterable of Tokens to produce a tree with structured information
-    and additional typing.
+    Parse a stream of Tokens representing a Jasmin source file into the
+    internal Jawa representation.
 
     :param tokens: An iterable of tokenizer tokens.
     :return: The root node.
     """
-    root = Root()
-    root.parse_from_tokens(TokenReader(tokens))
-    return root
+    return DirectiveProcessor().parse_root(TokenReader(tokens))
