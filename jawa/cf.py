@@ -29,6 +29,10 @@ class ClassVersion(namedtuple('ClassVersion', ['major', 'minor'])):
         If the version is unknown, `None` is returned instead.
         """
         return {
+            0x37: 'J2SE_11',
+            0x36: 'J2SE_10',
+            0x35: 'J2SE_9',
+            0x34: 'J2SE_8',
             0x33: 'J2SE_7',
             0x32: 'J2SE_6',
             0x31: 'J2SE_5',
@@ -79,7 +83,8 @@ class ClassFile(object):
             'acc_abstract': 0x0400,
             'acc_synthetic': 0x1000,
             'acc_annotation': 0x2000,
-            'acc_enum': 0x4000
+            'acc_enum': 0x4000,
+            'acc_module': 0x8000
         })
         self._this = 0
         self._super = 0
