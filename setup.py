@@ -45,7 +45,8 @@ setup(
             'pyyaml',
             'ipython',
             'twine',
-            'wheel'
+            'wheel',
+            'bumpversion'
         ]
     },
     entry_points='''
