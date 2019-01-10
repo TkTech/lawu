@@ -56,7 +56,7 @@ copyright = u'2019, Tyler Kennedy'
 # built documents.
 #
 # The full version, including alpha/beta/rc tags.
-release = '2.1.1'
+release = '2.2.0'
 # The short X.Y version.
 version = '.'.join(release.split('.')[:-1])
 

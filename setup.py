@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 setup(
     name='jawa',
     packages=find_packages(),
-    version='2.1.1',
+    version='2.2.0',
     python_requires='>=3.6',
     description='Doing fun stuff with JVM ClassFiles.',
     long_description=open('README.md', 'r').read(),
