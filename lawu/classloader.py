@@ -38,8 +38,8 @@ class ClassLoader:
     :param bytecode_transforms: Default transforms to apply when disassembling
                                 a method.
     """
-    def __init__(self, *sources, max_cache: int=50, klass=lawu.cf.ClassFile,
-                 bytecode_transforms: Iterable[Callable]=None):
+    def __init__(self, *sources, max_cache: int = 50, klass=lawu.cf.ClassFile,
+                 bytecode_transforms: Iterable[Callable] = None):
         self.path_map = {}
         self.max_cache = max_cache
         self.class_cache = OrderedDict()
@@ -59,8 +59,8 @@ class ClassLoader:
             return True
         return False
 
-    def update(self, *sources, follow_symlinks: bool=False,
-               maximum_depth: int=20):
+    def update(self, *sources, follow_symlinks: bool = False,
+               maximum_depth: int = 20):
         """Add one or more ClassFile sources to the class loader.
 
         If a given source is a directory path, it is traversed up to the
@@ -83,8 +83,8 @@ class ClassLoader:
         """
         for source in sources:
             if isinstance(source, lawu.cf.ClassFile):
-                self.path_map[source.this.name.value] = source
-                self.class_cache[source.this.name.value] = source
+                self.path_map[source.this] = source
+                self.class_cache[source.this] = source
                 continue
 
             # Explicit cast to str to support Path objects.
@@ -105,7 +105,7 @@ class ClassLoader:
                         self.path_map[path_suffix] = path_full
 
     @contextmanager
-    def open(self, path: str, mode: str='r') -> IO:
+    def open(self, path: str, mode: str = 'r') -> IO:
         """Open an IO-like object for `path`.
 
         .. note::

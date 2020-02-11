@@ -92,8 +92,8 @@ class Instruction(metaclass=InstructionMeta):
 
             pairs = {}
             for _ in repeat(None, npairs):
-                match, offset = unpack('>ii', source.read(8))
-                pairs[match] = offset
+                match, p_offset = unpack('>ii', source.read(8))
+                pairs[match] = p_offset
 
             ins_operands.append(pairs)
             ins_operands.append(Operand(OperandTypes.BRANCH, default))
@@ -111,8 +111,8 @@ class Instruction(metaclass=InstructionMeta):
             ins_operands.append(Operand(OperandTypes.LITERAL, high))
 
             for _ in repeat(None, high - low + 1):
-                offset = unpack('>i', source.read(4))[0]
-                ins_operands.append(Operand(OperandTypes.BRANCH, offset))
+                p_offset = unpack('>i', source.read(4))[0]
+                ins_operands.append(Operand(OperandTypes.BRANCH, p_offset))
         # Special case for the wide prefix
         elif ins.op == 0xC4:
             real_op = unpack('>B', source.read(1))[0]

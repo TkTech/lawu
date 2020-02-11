@@ -1,5 +1,4 @@
 from lawu import constants
-from lawu.cf import ClassFile
 
 
 def test_printable_constants():
@@ -10,9 +9,3 @@ def test_printable_constants():
     repr(constants.Double(pool=pool, value=1))
     repr(constants.Integer(pool=pool, value=1))
     repr(constants.Long(pool=pool, value=1))
-
-
-def test_printable_classes():
-    cf = ClassFile.create('HelloWorld')
-    assert repr(cf) == '<ClassFile(this=\'HelloWorld\')>'
-    assert repr(cf.version) == 'ClassVersion(major=50, minor=0)'

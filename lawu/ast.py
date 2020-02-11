@@ -115,12 +115,32 @@ class Node:
         for child in self.children:
             child.descend(f)
 
+    def same(self, other):
+        """Compare the entire AST of `other` to this one.
+
+        Unlike simple equality (left == right) this checks all children
+        as well.
+        """
+        if len(other.children) != len(self.children):
+            return False
+
+        for i, own_child in enumerate(self.children):
+            if other.children[i] != own_child:
+                return False
+
+            if not other.children[i].same(own_child):
+                return False
+
+        return True
+
 
 class Root(Node):
     """
     Every node in a typical project is an [indirect] child of the Root Node,
     which can contain some top-level directives as well as multiple Classes.
     """
+    def __eq__(self, other):
+        return isinstance(other, self.__class__)
 
 
 class Bytecode(Node):
@@ -165,6 +185,9 @@ class Bytecode(Node):
     def __repr__(self):
         return f'<Bytecode(major={self.major!r}, minor={self.minor!r})>'
 
+    def __eq__(self, other):
+        return self.major == other.major and self.minor == other.minor
+
 
 class Class(Node):
     __slots__ = ('access_flags', 'descriptor')
@@ -178,6 +201,12 @@ class Class(Node):
     def __repr__(self):
         return f'<Class({self.descriptor!r}, {self.access_flags!r})>'
 
+    def __eq__(self, other):
+        return (
+            self.descriptor == other.descriptor
+            and self.access_flags == other.access_flags
+        )
+
 
 class Super(Node):
     __slots__ = ('descriptor',)
@@ -188,6 +217,9 @@ class Super(Node):
 
     def __repr__(self):
         return f'<Super({self.descriptor!r})>'
+
+    def __eq__(self, other):
+        return self.descriptor == other.descriptor
 
 
 class Method(Node):
@@ -215,13 +247,17 @@ class Method(Node):
     def returns(self):
         return self.parsed_descriptor.returns
 
+    @property
+    def code(self):
+        return self.find_one(name='code')
+
 
 class Code(Node):
-    def __init__(self, *, line_no=0, children=None):
+    def __init__(self, *, max_locals=0, max_stack=0, line_no=0, children=None):
         super().__init__(line_no=line_no, children=children)
 
-        self.max_locals = 0
-        self.max_stack = 0
+        self.max_locals = max_locals
+        self.max_stack = max_stack
 
     def __repr__(self):
         return (
@@ -233,18 +269,21 @@ class Code(Node):
 class Label(Node):
     __slots__ = ('name',)
 
-    def __init__(self, *, name, line_no=0, children=None):
+    def __init__(self, name, *, line_no=0, children=None):
         super().__init__(line_no=line_no, children=children)
         self.name = name
 
     def __repr__(self):
         return f'<Label({self.name!r})>'
 
+    def __eq__(self, other):
+        return self.name == other.name
+
 
 class Instruction(Node):
     __slots__ = ('opcode',)
 
-    def __init__(self, *, opcode, line_no=0, children=None):
+    def __init__(self, opcode, *, line_no=0, children=None):
         super().__init__(line_no=line_no, children=children)
         self.opcode = opcode
 
@@ -255,6 +294,9 @@ class Instruction(Node):
     def operands(self):
         yield from self.find(f=lambda n: isinstance(n, Operand))
 
+    def __eq__(self, other):
+        return self.opcode == other.opcode
+
 
 class Operand(Node):
     pass
@@ -263,12 +305,15 @@ class Operand(Node):
 class Jump(Operand):
     __slots__ = ('target',)
 
-    def __init__(self, *, target, line_no=0, children=None):
+    def __init__(self, target, *, line_no=0, children=None):
         super().__init__(line_no=line_no, children=children)
         self.target = target
 
     def __repr__(self):
         return f'<Jump({self.target!r})>'
+
+    def __eq__(self, other):
+        return self.target == other.target
 
 
 class ConditionalJump(Operand):
@@ -283,6 +328,9 @@ class ConditionalJump(Operand):
         return (
             f'<ConditionalJump(match={self.match!r}, target={self.target!r})>'
         )
+
+    def __eq__(self, other):
+        return self.target == other.target and self.match == other.match
 
 
 class Local(Operand):

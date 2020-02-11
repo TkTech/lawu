@@ -5,7 +5,7 @@ The :mod:`lawu.cf` module provides tools for working with JVM ``.class``
 ClassFiles.
 """
 from itertools import repeat
-from typing import BinaryIO
+from typing import BinaryIO, Callable, Iterator, Optional
 from struct import unpack
 
 from lawu import ast
@@ -18,6 +18,60 @@ def _parse_attribute_table(pool, source):
     for _ in repeat(None, size):
         name_idx, length = unpack('>HI', source.read(6))
         yield pool[name_idx].value, source.read(length)
+
+
+class MethodTable:
+    def __init__(self, root):
+        """Proxy over the ClassFile's methods to add some convience methods.
+        """
+        self._root = root
+
+    def find(self, *, name: str = None, args: str = None, returns: str = None,
+             f: Callable = None) -> Iterator[ast.Method]:
+        """
+        Iterates over the methods table, yielding each matching method. Calling
+        without any arguments is equivalent to iterating over the table. For
+        example, to get all methods that take three integers and return void::
+
+            for method in cf.methods.find(args='III', returns='V'):
+                print(method.name.value)
+
+        Or to get all private methods::
+
+            is_private = lambda m: m.access_flags.acc_private
+            for method in cf.methods.find(f=is_private):
+                print(method.name.value)
+
+        :param name: The name of the method(s) to find.
+        :param args: The arguments descriptor (ex: ``III``)
+        :param returns: The returns descriptor (Ex: ``V``)
+        :param f: Any callable which takes one argument (the method).
+        """
+        for method in self._root.find(name='method'):
+            if name is not None and method.name != name:
+                continue
+
+            descriptor = method.descriptor
+            end_para = descriptor.find(')')
+
+            m_args = descriptor[1:end_para]
+            if args is not None and args != m_args:
+                continue
+
+            m_returns = descriptor[end_para + 1:]
+            if returns is not None and returns != m_returns:
+                continue
+
+            if f is not None and not f(method):
+                continue
+
+            yield method
+
+    def find_one(self, **kwargs) -> Optional[ast.Method]:
+        """
+        Same as ``find()`` but returns only the first result.
+        """
+        return next(self.find(**kwargs), None)
 
 
 class ClassFile:
@@ -36,6 +90,8 @@ class ClassFile:
 
         if source:
             self._load_from_io(source)
+
+        self.methods = MethodTable(self.node)
 
     def _load_from_io(self, source: BinaryIO):
         """Given a file-like object parse a binary JVM ClassFile into the Lawu
@@ -116,11 +172,3 @@ class ClassFile:
     @super_.setter
     def super_(self, value):
         self.node.find_one(name='super').descriptor = value
-
-    @property
-    def methods(self):
-        return self.node.find(name='method')
-
-    @property
-    def fields(self):
-        return self.node.find(name='field')
