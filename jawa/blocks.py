@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Iterable
 
 from jawa.util.bytecode import Instruction, OperandTypes
 
@@ -39,14 +39,25 @@ BRANCH_INS = (
 )
 
 
-def basic_blocks(instructions: List[Instruction]):
+def blocks(instructions: List[Instruction]):
     """
-    Given an iterable of instructions, produce a list of basic blocks.
+    Given a list of instructions, produce a list of blocks.
 
-    :param instructions: Any iterable of Instructions.
+    A block is defined as:
+
+    - The target of a branch instruction.
+    - The instruction following a branch instruction.
+    - Any instruction that returns from the method.
+
+    .. note::
+
+        If all you need is the target of jumps, use the more efficient
+        :func:`~jump_targets`.
+
+    :param instructions: A list of of Instructions.
     :return: An iterator over (block_start, block_end) pairs.
     """
-    instructions = list(instructions)
+    # TODO: Blocks should include exceptions.
     ins_count = len(instructions)
 
     block_starts = set()
@@ -78,6 +89,8 @@ def basic_blocks(instructions: List[Instruction]):
                     if i + 1 <= ins_count:
                         block_starts.add(instructions[i + 1].pos)
 
+    # Our second pass over the instructions is to find all the block endings
+    # now that we know where every block begins.
     start = 0
     for i, ins in enumerate(instructions):
         if ins.pos in block_starts:
@@ -87,3 +100,32 @@ def basic_blocks(instructions: List[Instruction]):
             # [x]return but wasn't the target of a branch.
             if i == ins_count - 1:
                 yield (start, ins.pos)
+
+
+def jump_targets(instructions: Iterable[Instruction]):
+    """
+    Given an iterable of instructions, yield the absolute instruction positions
+    that are the target of branches.
+
+    :param instructions: An iterable of Instructions.
+    :return: An iterator of absolute jump positions.
+    """
+    for ins in instructions:
+        if ins.name == 'tableswitch':
+            # The default branch
+            yield ins.pos + ins.operands[0].value
+            # The table branches
+            for operand in ins.operands[3:]:
+                yield ins.pos + operand.value
+        elif ins.name == 'lookupswitch':
+            # The default branch
+            yield ins.pos + ins.operands[1].value
+            # The lookup branches
+            for v in ins.operands[0].values():
+                yield ins.pos + v
+        elif ins.name in BRANCH_INS:
+            # The target of all branches, as well as the instruction following
+            # the branch, are block starts.
+            for operand in ins.operands:
+                if operand.op_type == OperandTypes.BRANCH:
+                    yield ins.pos + operand.value

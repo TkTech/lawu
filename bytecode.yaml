@@ -78,7 +78,7 @@ aload_3:
 anewarray:
     op: 0xBD
     operands:
-        - ['USHORT', 'LITERAL']
+        - ['USHORT', 'CONSTANT_INDEX']
     stack:
       before:
         - Value
@@ -89,6 +89,7 @@ areturn:
     stack:
       before:
         - ObjectRef
+    causes_return: true
 arraylength:
     op: 0xBE
     stack:
@@ -381,6 +382,7 @@ dreturn:
       before:
         - Double
         - Double
+    causes_return: true
 dstore:
     op: 0x39
     operands:
@@ -675,6 +677,7 @@ freturn:
     stack:
       before:
         - Float
+    causes_return: true
 fstore:
     op: 0x38
     operands:
@@ -1143,6 +1146,7 @@ ireturn:
     stack:
       before:
         - Integer
+    causes_return: true
 ishl:
     op: 0x78
     stack:
@@ -1470,6 +1474,7 @@ lreturn:
       before:
         - Long
         - Long
+    causes_return: true
 lshl:
     op: 0x79
     stack:
@@ -1634,6 +1639,7 @@ ret:
     can_be_wide: True
 return:
     op: 0xB1
+    causes_return: true
 saload:
     op: 0x35
     stack:

@@ -7,7 +7,7 @@ from zipfile import ZipFile
 from collections import OrderedDict
 from contextlib import contextmanager
 
-from jawa.cf import ClassFile
+import jawa.cf
 from jawa.constants import ConstantPool, ConstantClass
 
 
@@ -23,7 +23,7 @@ def _walk(path, follow_links=False, maximum_depth=None):
             del dirs[:]
 
 
-class ClassLoader(object):
+class ClassLoader:
     """Emulate the Java ClassPath.
 
     Provides utilities for managing a java classpath as well as loading
@@ -38,7 +38,7 @@ class ClassLoader(object):
     :param bytecode_transforms: Default transforms to apply when disassembling
                                 a method.
     """
-    def __init__(self, *sources, max_cache: int=50, klass=ClassFile,
+    def __init__(self, *sources, max_cache: int=50, klass=jawa.cf.ClassFile,
                  bytecode_transforms: Iterable[Callable]=None):
         self.path_map = {}
         self.max_cache = max_cache
@@ -49,7 +49,7 @@ class ClassLoader(object):
         if sources:
             self.update(*sources)
 
-    def __getitem__(self, path: str) -> ClassFile:
+    def __getitem__(self, path: str) -> jawa.cf.ClassFile:
         return self.load(path)
 
     def __contains__(self, path: str) -> bool:
@@ -82,7 +82,7 @@ class ClassLoader(object):
                               will be enforced. [default: 20]
         """
         for source in sources:
-            if isinstance(source, self.klass):
+            if isinstance(source, jawa.cf.ClassFile):
                 self.path_map[source.this.name.value] = source
                 self.class_cache[source.this.name.value] = source
                 continue
@@ -128,7 +128,7 @@ class ClassLoader(object):
         else:
             raise NotImplementedError()
 
-    def load(self, path: str) -> ClassFile:
+    def load(self, path: str) -> jawa.cf.ClassFile:
         """Load the class at `path` and return it.
 
         Load will attempt to load the file at `path` and `path` + .class
@@ -142,9 +142,8 @@ class ClassLoader(object):
             r = self.class_cache.pop(path)
         except KeyError:
             with self.open(f'{path}.class') as source:
-                r = self.klass(source)
+                r = self.klass(source, loader=self)
 
-        r.classloader = self
         # Even if it was found re-set the key to update the OrderedDict
         # ordering.
         self.class_cache[path] = r

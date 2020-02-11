@@ -1,7 +1,11 @@
+"""
+Utilities for working with the ConstantPool found in JVM ClassFiles.
+"""
 from typing import Dict, Any, Deque, BinaryIO, Union
 from collections import deque
 from struct import unpack, pack
 
+from jawa import ast
 from jawa.util.utf import decode_modified_utf8, encode_modified_utf8
 
 
@@ -31,19 +35,36 @@ class Constant(object):
     The base class for all ``Constant*`` types.
     """
     __slots__ = ('pool', 'index')
-    TAG = None
+
+    #: The "tag" or leading byte of a constant that identifies its type.
+    TAG: int = None
 
     def __init__(self, *, pool=None, index=None):
+        #: The ConstantPool that owns this constant.
         self.pool = None
+        #: The constants index in the pool that owns it.
         self.index = None
 
         if pool is not None:
             pool.add(self, index=index)
 
-    def pack(self):
+    def pack(self) -> bytes:
+        """
+        Pack the constant into a binary string, minus the tag.
+        """
         raise NotImplementedError()
 
     def unpack(self, source: BinaryIO):
+        """
+        Unpack the constant from `source`, minus the tag.
+        """
+        raise NotImplementedError()
+
+    @property
+    def as_ast(self):
+        """
+        Return an AST node for the constant.
+        """
         raise NotImplementedError()
 
 
@@ -74,6 +95,10 @@ class Number(Constant):
     def unpack(self, source: BinaryIO):
         raise NotImplementedError()
 
+    @property
+    def as_ast(self):
+        return ast.Number(value=self.value)
+
 
 class UTF8(Constant):
     __slots__ = ('value',)
@@ -99,6 +124,10 @@ class UTF8(Constant):
         if isinstance(other, UTF8):
             return other.value == self.value
         return other == self.value
+
+    @property
+    def as_ast(self):
+        return ast.String(value=self.value)
 
 
 class Integer(Number):
@@ -174,6 +203,10 @@ class ConstantClass(Constant):
     def __repr__(self):
         return f'<ConstantClass(index={self.index}, name={self.name!r})>'
 
+    @property
+    def as_ast(self):
+        return ast.ClassReference(descriptor=self.name)
+
 
 class String(Constant):
     __slots__ = ('string_index',)
@@ -181,7 +214,7 @@ class String(Constant):
 
     def __init__(self, *, pool=None, index=None):
         super().__init__(pool=pool, index=index)
-        self.string_index = 0
+        self.string_index = None
 
     @property
     def string(self):
@@ -191,7 +224,7 @@ class String(Constant):
         return pack('>H', self.string_index)
 
     def unpack(self, source: BinaryIO):
-        return unpack('>H', source.read(2))[0]
+        self.string_index = unpack('>H', source.read(2))[0]
 
     def __repr__(self):
         return f'<String(index={self.index}, string={self.string!r})>'
@@ -200,6 +233,10 @@ class String(Constant):
         if isinstance(other, String):
             return other.string.value == self.string.value
         return other == self.string.value
+
+    @property
+    def as_ast(self):
+        return ast.String(value=self.string.value)
 
 
 class Reference(Constant):
@@ -240,13 +277,37 @@ class Reference(Constant):
 class FieldReference(Reference):
     TAG = 9
 
+    @property
+    def as_ast(self):
+        return ast.FieldReference(
+            class_=self.class_.name.value,
+            target=self.name_and_type.name.value,
+            is_type=self.name_and_type.descriptor.value
+        )
+
 
 class MethodReference(Reference):
     TAG = 10
 
+    @property
+    def as_ast(self):
+        return ast.MethodReference(
+            class_=self.class_.name.value,
+            target=self.name_and_type.name.value,
+            is_type=self.name_and_type.descriptor.value
+        )
+
 
 class InterfaceMethodRef(Reference):
     TAG = 11
+
+    @property
+    def as_ast(self):
+        return ast.InterfaceMethodRef(
+            class_=self.class_.name.value,
+            target=self.name_and_type.name.value,
+            is_type=self.name_and_type.descriptor.value
+        )
 
 
 class NameAndType(Constant):
@@ -334,9 +395,9 @@ class MethodType(Constant):
         return f'<MethodType(index={self.index},descriptor={self.descriptor})>'
 
 
-class InvokeDynamic(Constant):
+class Dynamic(Constant):
     __slots__ = ('bootstrap_method_attr_index', 'name_and_type_index')
-    TAG = 18
+    TAG = 17
 
     def __init__(self, *, pool=None, index=None):
         super().__init__(pool=pool, index=index)
@@ -366,10 +427,31 @@ class InvokeDynamic(Constant):
 
     def __repr__(self):
         return (
+            f'<Dynamic('
+            f'index={self.index},'
+            f'method_attr_index={self.method_attr_index},'
+            f'name_and_type={self.name_and_type!r})>'
+        )
+
+
+class InvokeDynamic(Dynamic):
+    __slots__ = ('bootstrap_method_attr_index', 'name_and_type_index')
+    TAG = 18
+
+    def __repr__(self):
+        return (
             f'<InvokeDynamic('
             f'index={self.index},'
             f'method_attr_index={self.method_attr_index},'
             f'name_and_type={self.name_and_type!r})>'
+        )
+
+    @property
+    def as_ast(self):
+        return ast.InvokeDynamic(
+            bootstrap_index=self.bootstrap_method_attr_index,
+            name=self.name_and_type.name.value,
+            is_type=self.name_and_type.descriptor.value
         )
 
 
@@ -403,6 +485,7 @@ CONSTANTS = {
     12: NameAndType,
     15: MethodHandle,
     16: MethodType,
+    17: Dynamic,
     18: InvokeDynamic,
     19: Module,
     20: PackageInfo
@@ -410,9 +493,11 @@ CONSTANTS = {
 
 
 class ConstantPool(object):
-    """A representation of a JVM class's constant pool.
     """
-    def __init__(self, *, source=None):
+    This class can be used to read, modify, and write the JVM ClassFile
+    constant pool with a high-level interface.
+    """
+    def __init__(self, *, source: BinaryIO = None):
         # We use a dict as our basic pool container because the pool can be
         # built out-of-order. For example when loading a Jasmin file, it's
         # possible to explicitly set the position of constants in the pool,
@@ -483,7 +568,7 @@ class ConstantPool(object):
     def highest_unused_index(self) -> int:
         return max(self.pool.keys(), default=0) + 1
 
-    def add(self, constant, index: int=None) -> int:
+    def add(self, constant, index: int = None) -> int:
         """Add a new entry to the constant pool.
 
         If no index is provided, this method will first attempt to fill in any

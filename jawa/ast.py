@@ -3,57 +3,117 @@ Regardless of the origin of a Class (Jasmin, .class, .java, API, etc...) it is
 interally structured as a hierarchy of Node objects.
 """
 import sys
-
 from typing import List
 
+from jawa.util.descriptor import method_descriptor, field_descriptor
 
-class Node(object):
-    __slots__ = ('children', '_parent', 'line_no')
 
-    def __init__(self, *, parent: 'Node'=None, line_no: int=0, children=None):
+class Node:
+    __slots__ = ('parent', 'children', 'line_no', 'uuid')
+
+    def __init__(self, *, line_no=0, children=None):
         #: List of children for this Node.
         self.children: List[Node] = []
-        #: Parent of this Node.
-        self._parent = None
+        #: The parent node.
+        self.parent: 'Node' = None
         #: The source line number, if known.
         self.line_no = line_no
 
-        if parent:
-            self.parent = parent
-
         if children:
-            # If we've been given a list of children we should attach them
-            # to us automatically.
-            for child in children:
-                if child.parent is not None:
-                    raise ValueError(
-                        'Attempted to attach a node already owned by another '
-                        'parent.'
-                    )
+            self.extend(children)
 
-                child.parent = self
+    def pprint(self, indent='', file=sys.stdout, is_last=False):
+        """Pretty-print this node and all of its children.
+
+        :param file: IO object for output, defaults to STDOUT.
+        """
+        fork = '\u251C'
+        dash = '\u2500'
+        end = '\u2514'
+        pipe = '\u2502'
+
+        file.write(f'[{self.line_no:04}]')
+        file.write(f'{indent}{end if is_last else fork}{dash}')
+
+        file.write(repr(self))
+        file.write('\n')
+        file.flush()
+
+        child_count = len(self.children) - 1
+        for i, child in enumerate(self.children):
+            child.pprint(
+                indent=f'{indent}{" " if is_last else pipe} ',
+                file=file,
+                is_last=child_count == i
+            )
 
     @property
-    def parent(self):
-        return self._parent
+    def node_name(self):
+        return self.__class__.__name__.lower()
 
-    @parent.setter
-    def parent(self, value):
-        self._parent = value
-        value.children.append(self)
+    def find(self, *, name=None, f=None, depth=None):
+        """Find and yield child nodes that match all given filters.
+
+        :param name: The lowercase name of a node to match.
+        :param f: Any callable object which will be given the node.
+        :param depth: The maximum depth to search for matching children.
+                      By default only immediate children are checked. Passing
+                      a negative value will search with no limit.
+        """
+        for child in self.children:
+            if depth is not None and depth != 0:
+                yield from child.find(
+                    name=name,
+                    f=f,
+                    depth=depth - 1
+                )
+
+            if name is not None:
+                if child.node_name != name:
+                    continue
+
+            if f is not None:
+                if not f(child):
+                    continue
+
+            yield child
+
+    def find_one(self, **kwargs):
+        try:
+            return next(self.find(**kwargs))
+        except StopIteration:
+            return None
+
+    def append(self, value):
+        self.extend([value])
+
+    def extend(self, value):
+        self.children.extend(value)
+        for child in value:
+            child.parent = self
+
+    def __iter__(self):
+        yield from self.children
 
     def __repr__(self):
-        return (
-            f'<{self.__class__.__name__}(children={len(self.children)!r})>'
-        )
+        return f'<{self.__class__.__name__}()>'
 
-    def pprint(self, indent=2, file=sys.stdout, level=0):
-        print('{pre} {self!r}'.format(
-            pre=f'[{self.line_no:04}] {(indent * level) * " "} |',
-            self=self
-        ), file=file)
+    def __iadd__(self, value: 'Node'):
+        self.extend([value])
+        return self
+
+    def fix_missing_locations(self):
+        """Recursively populates line_no values on child nodes using the parent
+        value."""
         for child in self.children:
-            child.pprint(indent=indent, file=file, level=level + 1)
+            if child.line_no == 0:
+                child.line_no = self.line_no
+            child.fix_missing_locations()
+
+    def descend(self, f):
+        f(self)
+        for child in self.children:
+            child.descend(f)
 
 
 class Root(Node):
@@ -66,15 +126,14 @@ class Root(Node):
 class Bytecode(Node):
     __slots__ = ('major', 'minor')
 
-    def __init__(self, *, major=None, minor=None, parent: 'Node'=None,
-                 line_no: int=0, children=None):
+    def __init__(self, *, major=None, minor=None, line_no=0, children=None):
         """A Bytecode node changes the bytecode generation version for all
         following Classes.
 
         :param major: The major version.
         :param minor: The minor version.
         """
-        super().__init__(parent=parent, line_no=line_no, children=children)
+        super().__init__(line_no=line_no, children=children)
         self.major = major
         self.minor = minor
 
@@ -110,9 +169,9 @@ class Bytecode(Node):
 class Class(Node):
     __slots__ = ('access_flags', 'descriptor')
 
-    def __init__(self, *, descriptor, access_flags=None, parent: 'Node'=None,
-                 line_no: int=0, children=None):
-        super().__init__(parent=parent, line_no=line_no, children=children)
+    def __init__(self, *, descriptor, access_flags=None, line_no=0,
+                 children=None):
+        super().__init__(line_no=line_no, children=children)
         self.descriptor = descriptor
         self.access_flags = access_flags
 
@@ -123,34 +182,59 @@ class Class(Node):
 class Super(Node):
     __slots__ = ('descriptor',)
 
-    def __init__(self, *, descriptor, parent: 'Node'=None, line_no: int=0,
-                 children=None):
-        super().__init__(parent=parent, line_no=line_no, children=children)
+    def __init__(self, *, descriptor, line_no=0, children=None):
+        super().__init__(line_no=line_no, children=children)
         self.descriptor = descriptor
 
     def __repr__(self):
-        return f'<Super({self.descriptor})>'
+        return f'<Super({self.descriptor!r})>'
 
 
 class Method(Node):
-    __slots__ = ('access_flags', 'descriptor')
+    __slots__ = ('access_flags', 'name', 'descriptor')
 
-    def __init__(self, *, descriptor, access_flags=None, parent: 'Node'=None,
-                 line_no: int=0, children=None):
-        super().__init__(parent=parent, line_no=line_no, children=children)
+    def __init__(self, *, name, descriptor, access_flags=None, line_no=0,
+                 children=None):
+        super().__init__(line_no=line_no, children=children)
+        self.name = name
         self.descriptor = descriptor
         self.access_flags = access_flags
 
     def __repr__(self):
-        return f'<Method({self.descriptor!r}, {self.access_flags!r})>'
+        return f'<Method({self.name!r}, {self.descriptor!r})>'
+
+    @property
+    def parsed_descriptor(self):
+        return method_descriptor(self.descriptor)
+
+    @property
+    def args(self):
+        return self.parsed_descriptor.args
+
+    @property
+    def returns(self):
+        return self.parsed_descriptor.returns
+
+
+class Code(Node):
+    def __init__(self, *, line_no=0, children=None):
+        super().__init__(line_no=line_no, children=children)
+
+        self.max_locals = 0
+        self.max_stack = 0
+
+    def __repr__(self):
+        return (
+            f'<Code(max_locals={self.max_locals!r},'
+            f' max_stack={self.max_stack!r})>'
+        )
 
 
 class Label(Node):
     __slots__ = ('name',)
 
-    def __init__(self, *, name, parent: 'Node'=None, line_no: int=0,
-                 children=None):
-        super().__init__(parent=parent, line_no=line_no, children=children)
+    def __init__(self, *, name, line_no=0, children=None):
+        super().__init__(line_no=line_no, children=children)
         self.name = name
 
     def __repr__(self):
@@ -158,39 +242,174 @@ class Label(Node):
 
 
 class Instruction(Node):
-    __slots__ = ('opcode', 'operands')
+    __slots__ = ('opcode',)
 
-    def __init__(self, *, opcode, operands, parent: 'Node'=None,
-                 line_no: int=0, children=None):
-        super().__init__(parent=parent, line_no=line_no, children=children)
+    def __init__(self, *, opcode, line_no=0, children=None):
+        super().__init__(line_no=line_no, children=children)
         self.opcode = opcode
-        self.operands = operands
 
     def __repr__(self):
-        return f'<Instruction({self.opcode!r}, {self.operands!r})>'
+        return f'<Instruction({self.opcode!r})>'
+
+    @property
+    def operands(self):
+        yield from self.find(f=lambda n: isinstance(n, Operand))
 
 
-class Limit(Node):
-    __slots__ = ('what', 'count')
+class Operand(Node):
+    pass
 
-    def __init__(self, *, what, count, parent: 'Node'=None, line_no: int=0,
+
+class Jump(Operand):
+    __slots__ = ('target',)
+
+    def __init__(self, *, target, line_no=0, children=None):
+        super().__init__(line_no=line_no, children=children)
+        self.target = target
+
+    def __repr__(self):
+        return f'<Jump({self.target!r})>'
+
+
+class ConditionalJump(Operand):
+    __slots__ = ('target', 'match')
+
+    def __init__(self, *, match, target, line_no=0, children=None):
+        super().__init__(line_no=line_no, children=children)
+        self.target = target
+        self.match = match
+
+    def __repr__(self):
+        return (
+            f'<ConditionalJump(match={self.match!r}, target={self.target!r})>'
+        )
+
+
+class Local(Operand):
+    __slots__ = ('slot',)
+
+    def __init__(self, *, slot, line_no=0, children=None):
+        super().__init__(line_no=line_no, children=children)
+        self.slot = slot
+
+    def __repr__(self):
+        return f'<Local({self.slot!r})>'
+
+
+class String(Operand):
+    __slots__ = ('value',)
+
+    def __init__(self, *, value, line_no=0, children=None):
+        super().__init__(line_no=line_no, children=children)
+        self.value = value
+
+    def __repr__(self):
+        return f'<String({self.value!r})>'
+
+
+class Number(Operand):
+    __slots__ = ('value',)
+
+    def __init__(self, *, value, line_no=0, children=None):
+        super().__init__(line_no=line_no, children=children)
+        self.value = value
+
+    def __repr__(self):
+        return f'<Number({self.value!r})>'
+
+
+class Reference(Operand):
+    __slots__ = ('class_', 'target', 'is_type')
+
+    def __init__(self, *, class_, target, is_type, line_no=0,
                  children=None):
-        super().__init__(parent=parent, line_no=line_no, children=children)
-        self.what = what
-        self.count = count
+        super().__init__(line_no=line_no, children=children)
+        self.class_ = class_
+        self.target = target
+        self.is_type = is_type
 
     def __repr__(self):
-        return f'<Limit({self.what!r}, {self.count!r})>'
+        return (
+            f'<{self.__class__.__name__}({self.class_!r},'
+            f' {self.target!r}, {self.is_type!r})>'
+        )
 
 
-class Constant(Node):
-    __slots__ = ('constant', 'index')
+class MethodReference(Reference):
+    pass
 
-    def __init__(self, *, constant, index=None, parent: 'Node'=None,
-                 line_no: int=0, children=None):
-        super().__init__(parent=parent, line_no=line_no, children=children)
-        self.constant = constant
-        self.index = index
+
+class InterfaceMethodRef(Reference):
+    pass
+
+
+class FieldReference(Reference):
+    pass
+
+
+class ClassReference(Operand):
+    __slots__ = ('descriptor',)
+
+    def __init__(self, *, descriptor, line_no=0, children=None):
+        super().__init__(line_no=line_no, children=children)
+        self.descriptor = descriptor
 
     def __repr__(self):
-        return f'<Constant({self.constant}, index={self.index!r})>'
+        return f'<ClassReference({self.descriptor!r})>'
+
+
+class InvokeDynamic(Operand):
+    __slots__ = ('bootstrap_index', 'name', 'is_type')
+
+    def __init__(self, *, bootstrap_index, name, is_type, line_no=0,
+                 children=None):
+        super().__init__(line_no=line_no, children=children)
+        self.bootstrap_index = bootstrap_index
+        self.name = name
+        self.is_type = is_type
+
+    def __repr__(self):
+        return (
+            f'<InvokeDynamic({self.bootstrap_index!r}, {self.name!r},'
+            f' {self.is_type!r})>'
+        )
+
+
+class Implements(Node):
+    __slots__ = ('descriptor',)
+
+    def __init__(self, *, descriptor, line_no=0, children=None):
+        super().__init__(line_no=line_no, children=children)
+        self.descriptor = descriptor
+
+    def __repr__(self):
+        return f'<Implements({self.descriptor!r})>'
+
+
+class Field(Node):
+    __slots__ = ('name', 'descriptor', 'access_flags')
+
+    def __init__(self, *, name, descriptor, access_flags, line_no=0,
+                 children=None):
+        super().__init__(line_no=line_no, children=children)
+        self.name = name
+        self.descriptor = descriptor
+        self.access_flags = access_flags
+
+    def __repr__(self):
+        return f'<Field({self.name!r}, {self.descriptor!r})>'
+
+    @property
+    def parsed_descriptor(self):
+        return field_descriptor(self.descriptor)
+
+
+class Signature(Node):
+    __slots__ = ('signature',)
+
+    def __init__(self, *, signature, line_no=0, children=None):
+        super().__init__(line_no=line_no, children=children)
+        self.signature = signature
+
+    def __repr__(self):
+        return f'<Signature({self.signature!r})>'
