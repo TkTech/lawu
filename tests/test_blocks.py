@@ -1,4 +1,4 @@
-from jawa.blocks import blocks
+from lawu.blocks import blocks
 
 
 def test_basic_blocks(loader):

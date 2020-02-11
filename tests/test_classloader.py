@@ -3,10 +3,10 @@ import shutil
 import tempfile
 import zipfile
 
-from jawa.cf import ClassFile
-from jawa.classloader import ClassLoader
-from jawa.transforms import simple_swap
-from jawa.assemble import assemble
+from lawu.cf import ClassFile
+from lawu.classloader import ClassLoader
+from lawu.transforms import simple_swap
+from lawu.assemble import assemble
 
 
 def test_load_from_class():

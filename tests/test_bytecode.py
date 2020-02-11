@@ -1,4 +1,4 @@
-from jawa.util.bytecode import Instruction, Operand, OperandTypes
+from lawu.util.bytecode import Instruction, Operand, OperandTypes
 
 
 GOOD_TABLE_SWITCH = [

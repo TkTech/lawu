@@ -1,4 +1,4 @@
-from jawa.constants import ConstantPool, Double, Long, UTF8
+from lawu.constants import ConstantPool, Double, Long, UTF8
 
 
 def test_basics():

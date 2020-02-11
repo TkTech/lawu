@@ -5,7 +5,7 @@ interally structured as a hierarchy of Node objects.
 import sys
 from typing import List
 
-from jawa.util.descriptor import method_descriptor, field_descriptor
+from lawu.util.descriptor import method_descriptor, field_descriptor
 
 
 class Node:

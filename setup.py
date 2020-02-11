@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='jawa',
+    name='lawu',
     packages=find_packages(),
     version='3.0.0',
     description='Doing fun stuff with JVM ClassFiles.',
@@ -10,7 +10,7 @@ setup(
     long_description_content_type='text/markdown',
     author='Tyler Kennedy',
     author_email='tk@tkte.ch',
-    url='http://github.com/TkTech/Jawa',
+    url='http://github.com/TkTech/lawu',
     keywords=[
         'java',
         'disassembly',
@@ -48,6 +48,6 @@ setup(
     },
     entry_points='''
     [console_scripts]
-    jawa=jawa.cli:cli
+    lawu=lawu.cli:cli
     '''
 )

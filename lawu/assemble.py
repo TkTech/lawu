@@ -1,7 +1,7 @@
 from collections import namedtuple
 
-from jawa.constants import Constant
-from jawa.util.bytecode import (
+from lawu.constants import Constant
+from lawu.util.bytecode import (
     Operand,
     OperandTypes,
     Instruction,
@@ -18,12 +18,12 @@ def assemble(code):
 
     A convienience over constructing individual Instruction and Operand
     objects, the output of this function can be directly piped to
-    :class:`~jawa.attributes.code.CodeAttribute.assemble()` to produce
+    :class:`~lawu.attributes.code.CodeAttribute.assemble()` to produce
     executable bytecode.
 
     As a simple example, lets produce an infinite loop:
 
-        >>> from jawa.assemble import assemble, Label
+        >>> from lawu.assemble import assemble, Label
         >>> print(list(assemble((
         ...     Label('start'),
         ...     ('goto', Label('start'))

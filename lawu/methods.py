@@ -2,11 +2,11 @@ from typing import Optional, Callable, Iterator, IO, List
 from struct import unpack, pack
 from itertools import repeat
 
-from jawa.constants import UTF8
-from jawa.util.flags import Flags
-from jawa.util.descriptor import method_descriptor, JVMType
-from jawa.attribute import AttributeTable
-from jawa.attributes.code import CodeAttribute
+from lawu.constants import UTF8
+from lawu.util.flags import Flags
+from lawu.util.descriptor import method_descriptor, JVMType
+from lawu.attribute import AttributeTable
+from lawu.attributes.code import CodeAttribute
 
 
 class Method(object):
@@ -47,7 +47,7 @@ class Method(object):
     @property
     def returns(self) -> JVMType:
         """
-        A :class:`~jawa.util.descriptor.JVMType` representing the method's
+        A :class:`~lawu.util.descriptor.JVMType` representing the method's
         return type.
         """
         return method_descriptor(self.descriptor.value).returns
@@ -55,7 +55,7 @@ class Method(object):
     @property
     def args(self) -> List[JVMType]:
         """
-        A list of :class:`~jawa.util.descriptor.JVMType` representing the
+        A list of :class:`~lawu.util.descriptor.JVMType` representing the
         method's argument list.
         """
         return method_descriptor(self.descriptor.value).args

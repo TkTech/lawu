@@ -1,9 +1,9 @@
 """
 Transforms are simple Instruction modifiers that can be called on each
-Instruction by the :func:`~jawa.attributes.code.CodeAttribute.disassemble`
+Instruction by the :func:`~lawu.attributes.code.CodeAttribute.disassemble`
 function.
 """
-from jawa.util.bytecode import Instruction, Operand, OperandTypes, opcode_table
+from lawu.util.bytecode import Instruction, Operand, OperandTypes, opcode_table
 
 
 def expand_constants(ins: Instruction, *, cf) -> Instruction:

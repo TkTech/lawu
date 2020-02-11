@@ -3,10 +3,10 @@ import importlib
 
 import click
 
-from jawa import constants
-from jawa.classloader import ClassLoader
-from jawa.cf import ClassFile
-from jawa.util import shell
+from lawu import constants
+from lawu.classloader import ClassLoader
+from lawu.cf import ClassFile
+from lawu.util import shell
 
 
 @click.group()
@@ -32,7 +32,7 @@ def shell_command(ctx):
     shell.start_shell(local_ns={
         'ClassFile': ClassFile,
         'loader': ctx.obj['loader'],
-        'constants': importlib.import_module('jawa.constants'),
+        'constants': importlib.import_module('lawu.constants'),
     })
 
 

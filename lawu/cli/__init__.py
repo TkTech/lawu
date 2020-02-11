@@ -1,7 +1,7 @@
 import click
 
-from jawa.cli.debug import debug
-from jawa.cli.bytecode import bytecode
+from lawu.cli.debug import debug
+from lawu.cli.bytecode import bytecode
 
 
 @click.group()

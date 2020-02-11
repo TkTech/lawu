@@ -5,7 +5,7 @@ import enum
 from struct import unpack, pack, Struct
 from itertools import repeat
 from collections import namedtuple
-from jawa.instructions import Instruction, BY_OP
+from lawu.instructions import Instruction, BY_OP
 
 Operand = namedtuple('Operand', ['op_type', 'value'])
 

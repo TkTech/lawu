@@ -2,7 +2,7 @@
 Machine-generated from bytecode.yaml. This file aids with typing and
 autocompletion in IDEs by providing types for every instruction.
 """
-from jawa._instruction import Instruction, OperandTypes
+from lawu._instruction import Instruction, OperandTypes
 
 
 class aaload(Instruction):

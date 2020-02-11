@@ -7,8 +7,8 @@ from zipfile import ZipFile
 from collections import OrderedDict
 from contextlib import contextmanager
 
-import jawa.cf
-from jawa.constants import ConstantPool, ConstantClass
+import lawu.cf
+from lawu.constants import ConstantPool, ConstantClass
 
 
 def _walk(path, follow_links=False, maximum_depth=None):
@@ -38,7 +38,7 @@ class ClassLoader:
     :param bytecode_transforms: Default transforms to apply when disassembling
                                 a method.
     """
-    def __init__(self, *sources, max_cache: int=50, klass=jawa.cf.ClassFile,
+    def __init__(self, *sources, max_cache: int=50, klass=lawu.cf.ClassFile,
                  bytecode_transforms: Iterable[Callable]=None):
         self.path_map = {}
         self.max_cache = max_cache
@@ -49,7 +49,7 @@ class ClassLoader:
         if sources:
             self.update(*sources)
 
-    def __getitem__(self, path: str) -> jawa.cf.ClassFile:
+    def __getitem__(self, path: str) -> lawu.cf.ClassFile:
         return self.load(path)
 
     def __contains__(self, path: str) -> bool:
@@ -82,7 +82,7 @@ class ClassLoader:
                               will be enforced. [default: 20]
         """
         for source in sources:
-            if isinstance(source, jawa.cf.ClassFile):
+            if isinstance(source, lawu.cf.ClassFile):
                 self.path_map[source.this.name.value] = source
                 self.class_cache[source.this.name.value] = source
                 continue
@@ -128,7 +128,7 @@ class ClassLoader:
         else:
             raise NotImplementedError()
 
-    def load(self, path: str) -> jawa.cf.ClassFile:
+    def load(self, path: str) -> lawu.cf.ClassFile:
         """Load the class at `path` and return it.
 
         Load will attempt to load the file at `path` and `path` + .class

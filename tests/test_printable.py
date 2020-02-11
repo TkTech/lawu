@@ -1,5 +1,5 @@
-from jawa import constants
-from jawa.cf import ClassFile
+from lawu import constants
+from lawu.cf import ClassFile
 
 
 def test_printable_constants():

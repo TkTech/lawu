@@ -19,8 +19,8 @@ def get_attribute_classes() -> Dict[str, Attribute]:
     Lookup all builtin Attribute subclasses, load them, and return a dict
     """
     attribute_children = pkgutil.iter_modules(
-        importlib.import_module('jawa.attributes').__path__,
-        prefix='jawa.attributes.'
+        importlib.import_module('lawu.attributes').__path__,
+        prefix='lawu.attributes.'
     )
 
     result = {}

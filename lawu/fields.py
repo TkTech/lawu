@@ -2,11 +2,11 @@ from typing import IO, Callable, Iterator, Optional
 from struct import unpack, pack
 from itertools import repeat
 
-from jawa.util.flags import Flags
-from jawa.attribute import AttributeTable
-from jawa.constants import Constant, UTF8
-from jawa.attributes.constant_value import ConstantValueAttribute
-from jawa.util.descriptor import field_descriptor
+from lawu.util.flags import Flags
+from lawu.attribute import AttributeTable
+from lawu.constants import Constant, UTF8
+from lawu.attributes.constant_value import ConstantValueAttribute
+from lawu.util.descriptor import field_descriptor
 
 
 class Field(object):
@@ -37,7 +37,7 @@ class Field(object):
     @property
     def type(self):
         """
-        A :class:`~jawa.util.descriptor.JVMType` representing the field's
+        A :class:`~lawu.util.descriptor.JVMType` representing the field's
         type.
         """
         return field_descriptor(self.descriptor.value)
@@ -112,14 +112,14 @@ class FieldTable(object):
         """
         Creates a new field from `name` and `descriptor`. For example::
 
-            >>> from jawa.cf import ClassFile
+            >>> from lawu.cf import ClassFile
             >>> cf = ClassFile.create('BeerCounter')
             >>> field = cf.fields.create('BeerCount', 'I')
 
         To automatically create a static field, pass a value::
 
-            >>> from jawa.cf import ClassFile
-            >>> from jawa.constants import Integer
+            >>> from lawu.cf import ClassFile
+            >>> from lawu.constants import Integer
             >>> cf = ClassFile.create('BeerCounter')
             >>> field = cf.fields.create(
             ...     'MaxBeer',

@@ -3,10 +3,10 @@ import io
 from struct import unpack, unpack_from
 from itertools import repeat
 
-from jawa import ast
-from jawa.blocks import jump_targets
-from jawa.attribute import Attribute
-from jawa.instructions import Instruction, OperandTypes
+from lawu import ast
+from lawu.blocks import jump_targets
+from lawu.attribute import Attribute
+from lawu.instructions import Instruction, OperandTypes
 
 
 class CodeAttribute(Attribute):

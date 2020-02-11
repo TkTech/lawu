@@ -1,16 +1,16 @@
 """
 ClassFile reader & writer.
 
-The :mod:`jawa.cf` module provides tools for working with JVM ``.class``
+The :mod:`lawu.cf` module provides tools for working with JVM ``.class``
 ClassFiles.
 """
 from itertools import repeat
 from typing import BinaryIO
 from struct import unpack
 
-from jawa import ast
-from jawa import constants as consts
-from jawa.attribute import get_attribute_classes
+from lawu import ast
+from lawu import constants as consts
+from lawu.attribute import get_attribute_classes
 
 
 def _parse_attribute_table(pool, source):
@@ -38,7 +38,7 @@ class ClassFile:
             self._load_from_io(source)
 
     def _load_from_io(self, source: BinaryIO):
-        """Given a file-like object parse a binary JVM ClassFile into the Jawa
+        """Given a file-like object parse a binary JVM ClassFile into the Lawu
         internal AST model.
 
         :param source: Any file-like object implementing `read()`.

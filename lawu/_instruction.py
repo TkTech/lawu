@@ -62,12 +62,12 @@ class Instruction(metaclass=InstructionMeta):
 
         If `offset` is provided, it is the offset from the start of the Code
         block. It is required to properly parse the alignment padding on the
-        :class:`~jawa.instruction.tableswitch` and
-        :class:`jawa.instruction.lookupswitch` instructions.
+        :class:`~lawu.instruction.tableswitch` and
+        :class:`lawu.instruction.lookupswitch` instructions.
         """
         # TODO: This is temporary, until _instruction is merged with the
         #       auto-generated instructions.py.
-        from jawa.instructions import BY_OP
+        from lawu.instructions import BY_OP
 
         op = source.read(1)
         if not op:
@@ -142,6 +142,9 @@ class Instruction(metaclass=InstructionMeta):
     def __getitem__(self, idx: int):
         return self.operands[idx]
 
+    def __iteritems__(self):
+        yield from self.operands
+
     @property
     def wide(self) -> bool:
         """True if this instructions needs to be prefixed by the WIDE
@@ -167,8 +170,8 @@ class Instruction(metaclass=InstructionMeta):
 
         If `offset` is provided, it is the offset from the start of the Code
         block. It is required to properly parse the alignment padding on the
-        :class:`~jawa.instruction.tableswitch` and
-        :class:`jawa.instruction.lookupswitch` instructions.
+        :class:`~lawu.instruction.tableswitch` and
+        :class:`lawu.instruction.lookupswitch` instructions.
         """
         # All instructions are at least 1 byte (the opcode itself)
         size = 1

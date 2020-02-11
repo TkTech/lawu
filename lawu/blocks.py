@@ -1,6 +1,6 @@
 from typing import List, Iterable
 
-from jawa.util.bytecode import Instruction, OperandTypes
+from lawu.instructions import Instruction, OperandTypes
 
 
 RETURN_INS = (
