@@ -22,7 +22,7 @@ def test_load_from_class():
 def test_default_bytecode_transforms():
     cl = ClassLoader(bytecode_transforms=[simple_swap])
 
-    cf = ClassFile.create('TestClass')
+    cf = ClassFile.create('TestClass', loader=cl)
     cl.update(cf)
 
     test_method = cf.methods.create('test', '(V)V;', code=True)
@@ -34,9 +34,6 @@ def test_default_bytecode_transforms():
         ('pop',),
         ('return',)
     ]))
-
-    # Load from the ClassLoader to bind to it.
-    cf = cl.load('TestClass')
 
     # Ensure the defaults apply.
     ins_iter = test_method.code.disassemble()
