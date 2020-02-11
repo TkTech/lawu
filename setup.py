@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 setup(
     name='jawa',
     packages=find_packages(),
-    version='2.1.0',
+    version='3.0.0',
     description='Doing fun stuff with JVM ClassFiles.',
     long_description=open('README.md', 'r').read(),
     long_description_content_type='text/markdown',
@@ -27,10 +27,11 @@ setup(
         'Topic :: Software Development :: Disassemblers'
     ],
     install_requires=[
-        'click>=5.0'
+        'click>=7.0'
     ],
     tests_require=[
         'pytest>=2.10',
+        'pytest-cov'
     ],
     extras_require={
         'dev': [
@@ -41,7 +42,6 @@ setup(
             'sphinx-click',
             'ghp-import',
             'pyyaml',
-            'ipython',
             'twine',
             'wheel'
         ]
