@@ -2,6 +2,8 @@
 Utility methods for handling oddities in character encoding encountered
 when parsing and writing JVM ClassFiles or object serialization archives.
 
+MUTF-8 is the same as CESU-8, but with different encoding for 0x00 bytes.
+
 .. note::
 
     http://bugs.python.org/issue2857 was an attempt in 2008 to get support
@@ -26,17 +28,16 @@ def decode_modified_utf8(s: bytes) -> str:
         ix += 1
 
         if x >> 7 == 0:
-            # Just an ASCII character, nothing else to do.
-            pass
-        elif x >> 6 == 6:
+            # ASCII
+            x = x & 0x7F
+        elif x >> 5 == 6:
+            # Two-byte codepoint.
             y = s[ix]
             ix += 1
             x = ((x & 0x1F) << 6) + (y & 0x3F)
-        elif x >> 4 == 14:
-            y, z = s[ix:ix+2]
-            ix += 2
-            x = ((x & 0xF) << 12) + ((y & 0x3F) << 6) + (z & 0x3F)
         elif x == 0xED:
+            # "two-times-three" byte codepoint. mutf8 alternative to
+            # 4-byte codepoints.
             v, w, x, y, z = s[ix:ix+6]
             ix += 5
             x = 0x10000 + (
@@ -45,9 +46,11 @@ def decode_modified_utf8(s: bytes) -> str:
                 ((y & 0x0F) << 6) +
                 (z & 0x3F)
             )
-        elif x == 0xC0 and s[ix] == 0x80:
-            ix += 1
-            x = 0
+        elif x >> 4 == 14:
+            # Three-byte codepoint.
+            y, z = s[ix:ix+2]
+            ix += 2
+            x = ((x & 0xF) << 12) + ((y & 0x3F) << 6) + (z & 0x3F)
         buffer_append(x)
     return u''.join(chr(b) for b in buff)
 
@@ -62,19 +65,36 @@ def encode_modified_utf8(u: str) -> bytearray:
     """
     final_string = bytearray()
 
-    for c in [ord(char) for char in u]:
-        if c == 0x00 or (0x80 < c < 0x7FF):
+    for c in (ord(char) for char in u):
+        if c == 0x00:
+            # NULL byte encoding shortcircuit.
+            final_string.extend([0xC0, 0x80])
+        elif c < 0x7F:
+            # ASCII
+            final_string.append(c)
+        elif c < 0x7FF:
+            # Two-byte codepoint.
             final_string.extend([
                 (0xC0 | (0x1F & (c >> 6))),
                 (0x80 | (0x3F & c))]
             )
-        elif c < 0x7F:
-            final_string.append(c)
-        elif 0x800 < c < 0xFFFF:
+        elif c < 0xFFFF:
+            # Three-byte codepoint.
             final_string.extend([
                 (0xE0 | (0x0F & (c >> 12))),
                 (0x80 | (0x3F & (c >> 6))),
                 (0x80 | (0x3F & c))]
             )
+        else:
+            # "Two-times-three" byte codepoint.
+            c -= 0x10000
+            final_string.extend([
+                0xED,
+                0xA0 | ((c >> 16) & 0x0F),
+                0x80 | ((c >> 10) & 0x3f),
+                0xED,
+                0xb0 | ((c >> 6) & 0x0f),
+                0x80 | (c & 0x3f)
+            ])
 
-    return final_string
+    return bytes(final_string)

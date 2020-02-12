@@ -1,3 +1,7 @@
+# This file provides a description of JVM instructions in a reasonably-portable
+# manner. A few instructions (mainly lookupswitch and tableswitch) cannot
+# be resonably described and require special casing in parsers.
+# It's intent is to enable collaboration and reuse with other JVM tooling.
 aaload:
     op: 0x32
     desc: load onto the stack a reference from an array
