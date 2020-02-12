@@ -10,14 +10,7 @@ from struct import unpack
 
 from lawu import ast
 from lawu import constants as consts
-from lawu.attribute import get_attribute_classes
-
-
-def _parse_attribute_table(pool, source):
-    size = unpack('>H', source.read(2))[0]
-    for _ in repeat(None, size):
-        name_idx, length = unpack('>HI', source.read(6))
-        yield pool[name_idx].value, source.read(length)
+from lawu.attribute import read_attribute_table
 
 
 class MethodTable:
@@ -125,37 +118,25 @@ class ClassFile:
             for if_idx in unpack(f'>{if_count}H', read(2 * if_count))
         )
 
-        attributes = get_attribute_classes()
-
         for _ in repeat(None, unpack('>H', read(2))[0]):
             flags, name, descriptor = unpack('>HHH', read(6))
-            field = ast.Field(
+            self.node += ast.Field(
                 name=pool[name].value,
                 descriptor=pool[descriptor].value,
                 # FIXME: Access flags
                 access_flags=['temp'],
+                children=list(read_attribute_table(pool, source))
             )
-
-            for name, blob in _parse_attribute_table(pool, source):
-                field += attributes[name.lower()](pool, source, blob)
-
-            self.node += field
 
         for _ in repeat(None, unpack('>H', read(2))[0]):
             flags, name, descriptor = unpack('>HHH', read(6))
-            method = ast.Method(
+            self.node += ast.Method(
                 name=pool[name].value,
                 descriptor=pool[descriptor].value,
                 # FIXME: Access flags
-                access_flags=['temp']
+                access_flags=['temp'],
+                children=list(read_attribute_table(pool, source))
             )
-
-            for name, blob in _parse_attribute_table(pool, source):
-                attr_parser = attributes.get(name.lower())
-                if attr_parser:
-                    method += attr_parser.from_binary(pool, source, blob)
-
-            self.node += method
 
     @property
     def this(self):

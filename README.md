@@ -1,4 +1,4 @@
-![lawu](lawu.png)
+![lawu](lawu_small.png)
 
 # lawu
 
@@ -9,7 +9,7 @@ JVM class files. It's highly suitable for automation tasks.
 
 ## Documentation
 
-API documentation & examples are available at http://lawu.tkte.ch
+API documentation & examples are available at https://lawu.dev
 
 ## Licence
 

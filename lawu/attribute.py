@@ -1,7 +1,10 @@
+import io
 import inspect
 import pkgutil
 import importlib
-from typing import Dict, Tuple
+from itertools import repeat
+from typing import Dict, Tuple, BinaryIO, Iterable
+from struct import unpack
 
 
 class Attribute(object):
@@ -9,14 +12,15 @@ class Attribute(object):
     MINIMUM_CLASS_VERSION: Tuple[int, int] = None
 
     @staticmethod
-    def from_binary(pool, source, blob):
+    def from_binary(pool, source):
         """Called when converting a ClassFile into an AST."""
         raise NotImplementedError()
 
 
 def get_attribute_classes() -> Dict[str, Attribute]:
     """
-    Lookup all builtin Attribute subclasses, load them, and return a dict
+    Lookup all builtin Attribute subclasses, load them, and return a dict of
+    attribute name -> class.
     """
     attribute_children = pkgutil.iter_modules(
         importlib.import_module('lawu.attributes').__path__,
@@ -38,3 +42,17 @@ def get_attribute_classes() -> Dict[str, Attribute]:
             result[attribute_name.lower()] = class_
 
     return result
+
+
+def read_attribute_table(pool, source: BinaryIO) -> Iterable[Attribute]:
+    attributes = get_attribute_classes()
+
+    size = unpack('>H', source.read(2))[0]
+    for _ in repeat(None, size):
+        name_idx, length = unpack('>HI', source.read(6))
+        name = pool[name_idx].value
+
+        attr_parser = attributes.get(name.lower())
+        with io.BytesIO(source.read(length)) as blob:
+            if attr_parser:
+                yield attr_parser.from_binary(pool, blob)

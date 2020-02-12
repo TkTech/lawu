@@ -461,3 +461,15 @@ class Signature(Node):
 
     def __repr__(self):
         return f'<Signature({self.signature!r})>'
+
+
+class TryCatch(Node):
+    __slots__ = ('target', 'handles')
+
+    def __init__(self, *, handles, target, line_no=0, children=None):
+        super().__init__(line_no=line_no, children=children)
+        self.handles = handles
+        self.target = target
+
+    def __repr__(self):
+        return f'<TryCatch({self.handles!r}, target={self.target!r})>'
