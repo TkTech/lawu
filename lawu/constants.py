@@ -518,7 +518,7 @@ class ConstantPool(object):
         read = source.read
         constant_pool_count = unpack('>H', read(2))[0]
 
-        index_iter = range(1, constant_pool_count)
+        index_iter = iter(range(1, constant_pool_count))
         for index in index_iter:
             tag = ord(read(1))
             c = CONSTANTS[tag]()
