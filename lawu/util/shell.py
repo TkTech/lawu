@@ -10,7 +10,7 @@ else:
     IPYTHON_SHELL_AVAILABLE = True
 
 
-def start_shell(local_ns: Dict=None, banner: str=''):
+def start_shell(local_ns: Dict = None, banner: str = ''):
     """Create and immediately drop into a Python shell.
 
     If IPython version 5 or greater is available it will be used instead

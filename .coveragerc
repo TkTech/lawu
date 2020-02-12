@@ -1,0 +1,3 @@
+[run]
+omit =
+    lawu/util/shell.py
