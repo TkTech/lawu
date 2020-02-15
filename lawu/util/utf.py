@@ -38,7 +38,7 @@ def decode_modified_utf8(s: bytes) -> str:
         elif x == 0xED:
             # "two-times-three" byte codepoint. mutf8 alternative to
             # 4-byte codepoints.
-            v, w, x, y, z = s[ix:ix+6]
+            v, w, x, y, z = s[ix:ix+5]
             ix += 5
             x = 0x10000 + (
                 ((v & 0x0F) << 16) +
@@ -55,7 +55,7 @@ def decode_modified_utf8(s: bytes) -> str:
     return u''.join(chr(b) for b in buff)
 
 
-def encode_modified_utf8(u: str) -> bytearray:
+def encode_modified_utf8(u: str) -> bytes:
     """
     Encodes a unicode string as modified UTF-8 as defined in section 4.4.7
     of the JVM specification.
@@ -76,15 +76,15 @@ def encode_modified_utf8(u: str) -> bytearray:
             # Two-byte codepoint.
             final_string.extend([
                 (0xC0 | (0x1F & (c >> 6))),
-                (0x80 | (0x3F & c))]
-            )
+                (0x80 | (0x3F & c))
+            ])
         elif c < 0xFFFF:
             # Three-byte codepoint.
             final_string.extend([
                 (0xE0 | (0x0F & (c >> 12))),
                 (0x80 | (0x3F & (c >> 6))),
-                (0x80 | (0x3F & c))]
-            )
+                (0x80 | (0x3F & c))
+            ])
         else:
             # "Two-times-three" byte codepoint.
             c -= 0x10000
