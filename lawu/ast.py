@@ -4,6 +4,7 @@ interally structured as a hierarchy of Node objects.
 """
 import sys
 from typing import List
+from enum import IntFlag
 
 from lawu.util.descriptor import method_descriptor, field_descriptor
 
@@ -225,15 +226,32 @@ class Super(Node):
 class Method(Node):
     __slots__ = ('access_flags', 'name', 'descriptor')
 
-    def __init__(self, *, name, descriptor, access_flags=None, line_no=0,
-                 children=None):
+    class AccessFlags(IntFlag):
+        PUBLIC = 0x001
+        PRIVATE = 0x0002
+        PROTECTED = 0x0004
+        STATIC = 0x0008
+        FINAL = 0x0010
+        SYNCHRONIZED = 0x0020
+        BRIDGE = 0x0040
+        VARARGS = 0x0080
+        NATIVE = 0x0100
+        ABSTRACT = 0x0400
+        STRICT = 0x0800
+        SYNTHETIC = 0x1000
+
+    def __init__(self, *, name, descriptor, access_flags: AccessFlags,
+                 line_no=0, children=None):
         super().__init__(line_no=line_no, children=children)
         self.name = name
         self.descriptor = descriptor
         self.access_flags = access_flags
 
     def __repr__(self):
-        return f'<Method({self.name!r}, {self.descriptor!r})>'
+        return (
+            f'<Method({self.name!r}, {self.descriptor!r}),'
+            f' {self.access_flags!r}>'
+        )
 
     @property
     def parsed_descriptor(self):
@@ -437,15 +455,29 @@ class Implements(Node):
 class Field(Node):
     __slots__ = ('name', 'descriptor', 'access_flags')
 
-    def __init__(self, *, name, descriptor, access_flags, line_no=0,
-                 children=None):
+    class AccessFlags(IntFlag):
+        PUBLIC = 0x0001
+        PRIVATE = 0x0002
+        PROTECTED = 0x0004
+        STATIC = 0x0008
+        FINAL = 0x0010
+        VOLATILE = 0x0040
+        TRANSIENT = 0x0080
+        SYNTHETIC = 0x1000
+        ENUM = 0x4000
+
+    def __init__(self, *, name, descriptor, access_flags: AccessFlags,
+                 line_no=0, children=None):
         super().__init__(line_no=line_no, children=children)
         self.name = name
         self.descriptor = descriptor
         self.access_flags = access_flags
 
     def __repr__(self):
-        return f'<Field({self.name!r}, {self.descriptor!r})>'
+        return (
+            f'<Field({self.name!r}, {self.descriptor!r},'
+            f' {self.access_flags!r})>'
+        )
 
     @property
     def parsed_descriptor(self):

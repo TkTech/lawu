@@ -123,8 +123,7 @@ class ClassFile:
             self.node += ast.Field(
                 name=pool[name].value,
                 descriptor=pool[descriptor].value,
-                # FIXME: Access flags
-                access_flags=['temp'],
+                access_flags=ast.Field.AccessFlags(flags),
                 children=list(read_attribute_table(pool, source))
             )
 
@@ -133,8 +132,7 @@ class ClassFile:
             self.node += ast.Method(
                 name=pool[name].value,
                 descriptor=pool[descriptor].value,
-                # FIXME: Access flags
-                access_flags=['temp'],
+                access_flags=ast.Method.AccessFlags(flags),
                 children=list(read_attribute_table(pool, source))
             )
 
