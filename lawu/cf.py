@@ -74,7 +74,7 @@ class ClassFile:
     def __init__(self, source: BinaryIO = None, *, loader=None):
         self.node = ast.Class(
             descriptor=None,
-            access_flags=['public'],
+            access_flags=ast.Class.AccessFlags.PUBLIC,
             children=[
                 ast.Bytecode(major=0x33, minor=0x00),
                 ast.Super(descriptor='java/lang/Object')
@@ -105,9 +105,8 @@ class ClassFile:
         pool = consts.ConstantPool()
         pool.unpack(source)
 
-        # FIXME: Access flags
-        read(2)
-        this, super_, if_count = unpack('>HHH', read(6))
+        flags, this, super_, if_count = unpack('>HHHH', read(8))
+        self.access_flags = ast.Class.AccessFlags(flags)
         self.this = pool[this].name.value
         self.super_ = pool[super_].name.value
 

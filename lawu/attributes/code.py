@@ -97,7 +97,7 @@ class CodeAttribute(Attribute):
                     )
                     block = block.children[-1]
 
-            ins_node = ast.Instruction(opcode=ins.mnemonic)
+            ins_node = ast.Instruction(name=ins.name)
             for operand in ins.operands:
                 if isinstance(operand, dict):
                     # Lookupswitch has one unique operand which is a

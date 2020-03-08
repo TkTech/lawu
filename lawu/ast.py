@@ -193,6 +193,17 @@ class Bytecode(Node):
 class Class(Node):
     __slots__ = ('access_flags', 'descriptor')
 
+    class AccessFlags(IntFlag):
+        PUBLIC = 0x0001
+        FINAL = 0x0010
+        SUPER = 0x0020
+        INTERFACE = 0x0200
+        ABSTRACT = 0x0400
+        SYNTHETIC = 0x1000
+        ANNOTATION = 0x2000
+        ENUM = 0x4000
+        MODULE = 0x8000
+
     def __init__(self, *, descriptor, access_flags=None, line_no=0,
                  children=None):
         super().__init__(line_no=line_no, children=children)
@@ -227,7 +238,7 @@ class Method(Node):
     __slots__ = ('access_flags', 'name', 'descriptor')
 
     class AccessFlags(IntFlag):
-        PUBLIC = 0x001
+        PUBLIC = 0x0001
         PRIVATE = 0x0002
         PROTECTED = 0x0004
         STATIC = 0x0008
@@ -299,21 +310,21 @@ class Label(Node):
 
 
 class Instruction(Node):
-    __slots__ = ('opcode',)
+    __slots__ = ('name',)
 
-    def __init__(self, opcode, *, line_no=0, children=None):
+    def __init__(self, name, *, line_no=0, children=None):
         super().__init__(line_no=line_no, children=children)
-        self.opcode = opcode
+        self.name = name
 
     def __repr__(self):
-        return f'<Instruction({self.opcode!r})>'
+        return f'<Instruction({self.name!r})>'
 
     @property
     def operands(self):
-        yield from self.find(f=lambda n: isinstance(n, Operand))
+        return list(self.find(f=lambda n: isinstance(n, Operand)))
 
     def __eq__(self, other):
-        return self.opcode == other.opcode
+        return self.name == other.name
 
 
 class Operand(Node):
