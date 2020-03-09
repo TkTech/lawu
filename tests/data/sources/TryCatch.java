@@ -6,6 +6,8 @@ public class TryCatch {
             return;
         } catch(Exception e) {
             return;
+        } finally {
+            return;
         }
     }
 }

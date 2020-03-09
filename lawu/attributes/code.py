@@ -91,10 +91,17 @@ class CodeAttribute(Attribute):
                 excs = exceptions[ins.pos]
                 for exc in excs:
                     exc_stack.append(exc)
-                    block += ast.TryCatch(
-                        target=labels[exc.target],
-                        handles=pool[exc.handles].name.value
-                    )
+                    # A handler of 0 means it is called for *all* types of
+                    # exceptions. Typically used to implement the `finally`
+                    # keyword.
+                    if exc.handles != 0:
+                        block += ast.TryCatch(
+                            target=labels[exc.target],
+                            handles=pool[exc.handles].name.value
+                        )
+                    else:
+                        block += ast.Finally(target=labels[exc.target])
+
                     block = block.children[-1]
 
             ins_node = ast.Instruction(name=ins.name)

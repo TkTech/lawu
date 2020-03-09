@@ -509,10 +509,15 @@ class Signature(Node):
 class TryCatch(Node):
     __slots__ = ('target', 'handles')
 
-    def __init__(self, *, handles, target, line_no=0, children=None):
+    def __init__(self, *, target, handles=None, line_no=0, children=None):
         super().__init__(line_no=line_no, children=children)
-        self.handles = handles
         self.target = target
+        self.handles = handles
 
     def __repr__(self):
         return f'<TryCatch({self.handles!r}, target={self.target!r})>'
+
+
+class Finally(TryCatch):
+    def __repr__(self):
+        return f'<Finally(target={self.target!r})>'
