@@ -1,4 +1,4 @@
-from lawu.attribute import Attribute, get_attribute_classes
+from lawu.attribute import get_attribute_classes
 
 
 def test_discovery():

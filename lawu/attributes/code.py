@@ -82,7 +82,7 @@ class CodeAttribute(Attribute):
                 block += ast.Label(name=labels[ins.pos])
 
             # We've found the end of a try-catch block.
-            if exc_stack and ins.pos == exc_stack[-1].end_pc:
+            while exc_stack and ins.pos == exc_stack[-1].end_pc:
                 exc = exc_stack.pop()
                 block = block.parent
 
