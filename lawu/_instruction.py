@@ -84,7 +84,8 @@ class Instruction(metaclass=InstructionMeta):
         if ins.op == 0xAB:
             # Get rid of the alignment padding.
             padding = (offset + 1) % 4
-            padding = (4 - padding) if padding != 4 else 0
+            if padding:
+                padding = 4 - padding
             source.read(padding)
 
             # Default branch address and branch count.
