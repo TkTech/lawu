@@ -27,9 +27,6 @@ setup(
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Disassemblers'
     ],
-    install_requires=[
-        'click>=7.0'
-    ],
     tests_require=[
         'pytest>=2.10',
         'pytest-cov'
@@ -45,6 +42,10 @@ setup(
             'pyyaml',
             'twine',
             'wheel'
+        ],
+        'cli': [
+            'click',
+            'rich'
         ]
     },
     entry_points='''
