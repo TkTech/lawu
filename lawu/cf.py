@@ -80,7 +80,7 @@ class FieldTable:
         without any arguments is equivalent to iterating over the table. For
         example, to get all string fields::
 
-            for field in cf.fields.find(_type='Ljava/lang/String;'):
+            for field in cf.fields.find(type_='Ljava/lang/String;'):
                 print(field.name)
 
         :param name: The name of the field to find.
@@ -106,6 +106,41 @@ class FieldTable:
         return next(self.find(**kwargs), None)
 
 
+class AttributeTable:
+    def __init__(self, table=None):
+        """Proxy over the ClassFile's attributes to add some convience methods.
+        """
+        self._table = table or []
+
+    def find(self, *, type_: str = None,
+             f: Callable = None) -> Iterator[ast.Field]:
+        """
+        Iterates over the attributes table, yielding each matching attribute.
+        Calling without any arguments is equivalent to iterating over the
+        table. For example, to get all signature attributes::
+
+            for attribute in cf.attributes.find(type_='signature'):
+                print(attribute.signature)
+
+        :param type_: The type of attribute to find.
+        :param f: Any callable which takes one argument (the attribute).
+        """
+
+        for attribute in self._table:
+            if type_ is not None and attribute.node_name != type_:
+                continue
+
+            if f is not None and not f(attribute):
+                continue
+
+            yield attribute
+
+    def find_one(self, **kwargs) -> Optional[ast.Method]:
+        """
+        Same as ``find()`` but returns only the first result.
+        """
+        return next(self.find(**kwargs), None)
+
 class ClassFile:
     #: The JVM ClassFile magic number.
     MAGIC = 0xCAFEBABE
@@ -120,11 +155,12 @@ class ClassFile:
             ]
         )
 
-        if source:
-            self._load_from_io(source)
-
         self.methods = MethodTable(self.node)
         self.fields = FieldTable(self.node)
+        self.attributes = AttributeTable()
+
+        if source:
+            self._load_from_io(source)
 
     def _load_from_io(self, source: BinaryIO):
         """Given a file-like object parse a binary JVM ClassFile into the Lawu
@@ -174,6 +210,9 @@ class ClassFile:
                 access_flags=ast.Method.AccessFlags(flags),
                 children=list(read_attribute_table(pool, source))
             )
+
+        self.attributes._table = list(read_attribute_table(pool, source))
+
 
     @property
     def this(self):
