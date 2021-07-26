@@ -1,8 +1,9 @@
 import io
 import importlib
-import traceback
 
 import click
+from rich import progress
+from rich.console import Console
 
 from lawu import constants
 from lawu.classloader import ClassLoader
@@ -82,13 +83,15 @@ def test_command(ctx):
     """
     loader = ctx.obj['loader']
 
+    console = Console()
+
     for klassname in loader.classes:
         cf = None
 
         try:
             cf = loader[klassname]
         except Exception as exc:
-            traceback.print_exc()
+            console.print_exception()
 
             click.echo(f'Failed to load {klassname}, dropping to shell.')
 
@@ -99,3 +102,46 @@ def test_command(ctx):
                 'cf': cf,
                 'exc': exc
             })
+
+            continue
+
+
+@debug.command(name='summary')
+@click.pass_context
+def summary_command(ctx):
+    """Generates a summary on successes, failures, and coverage for every
+    file found within the classpath.
+    """
+    loader = ctx.obj['loader']
+    klasses = list(loader.classes)
+
+    passed = set()
+    failed = set()
+    unknown_attributes = set()
+
+    console = Console()
+
+    with progress.Progress() as prog:
+        task = prog.add_task('Parsing...', total=len(klasses))
+        for klassname in klasses:
+            prog.advance(task)
+
+            try:
+                cf = loader[klassname]
+            except Exception:
+                failed.add(klassname)
+                continue
+
+            unknown_attributes.update(
+                attr.name for attr in cf.node.find(
+                    name='UnknownAttribute',
+                    depth=-1
+                )
+            )
+
+            passed.add(klassname)
+
+    console.print(f'[green]Passed:[/] {len(passed)}')
+    console.print(f'[red]Failed:[/] {len(failed)}')
+    console.print('[red]Unimplemented attributes:[/] ', end='')
+    console.print(', '.join(unknown_attributes), markup=False)

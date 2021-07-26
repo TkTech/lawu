@@ -70,7 +70,7 @@ class Node:
                 )
 
             if name is not None:
-                if child.node_name != name:
+                if child.node_name != name.lower():
                     continue
 
             if f is not None:
@@ -281,20 +281,6 @@ class Method(Node):
         return self.find_one(name='code')
 
 
-class Code(Node):
-    def __init__(self, *, max_locals=0, max_stack=0, line_no=0, children=None):
-        super().__init__(line_no=line_no, children=children)
-
-        self.max_locals = max_locals
-        self.max_stack = max_stack
-
-    def __repr__(self):
-        return (
-            f'<Code(max_locals={self.max_locals!r},'
-            f' max_stack={self.max_stack!r})>'
-        )
-
-
 class Label(Node):
     __slots__ = ('name',)
 
@@ -495,17 +481,6 @@ class Field(Node):
         return field_descriptor(self.descriptor)
 
 
-class Signature(Node):
-    __slots__ = ('signature',)
-
-    def __init__(self, *, signature, line_no=0, children=None):
-        super().__init__(line_no=line_no, children=children)
-        self.signature = signature
-
-    def __repr__(self):
-        return f'<Signature({self.signature!r})>'
-
-
 class TryCatch(Node):
     __slots__ = ('target', 'handles')
 
@@ -527,3 +502,45 @@ class Finally(TryCatch):
 
     def __repr__(self):
         return f'<Finally({self.target!r})>'
+
+
+class Attribute(Node):
+    pass
+
+
+class UnknownAttribute(Attribute):
+    def __init__(self, name, payload, *, line_no=0, children=None):
+        super().__init__(line_no=line_no, children=children)
+        self.name = name
+        self.payload = payload
+
+    def __repr__(self):
+        return (
+            f'<UnknownAttribute(name={self.name!r},'
+            f' payload={len(self.payload)} bytes)>'
+        )
+
+
+class Code(Attribute):
+    def __init__(self, *, max_locals=0, max_stack=0, line_no=0, children=None):
+        super().__init__(line_no=line_no, children=children)
+
+        self.max_locals = max_locals
+        self.max_stack = max_stack
+
+    def __repr__(self):
+        return (
+            f'<Code(max_locals={self.max_locals!r},'
+            f' max_stack={self.max_stack!r})>'
+        )
+
+
+class Signature(Attribute):
+    __slots__ = ('signature',)
+
+    def __init__(self, *, signature, line_no=0, children=None):
+        super().__init__(line_no=line_no, children=children)
+        self.signature = signature
+
+    def __repr__(self):
+        return f'<Signature({self.signature!r})>'

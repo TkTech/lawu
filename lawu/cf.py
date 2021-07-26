@@ -107,10 +107,10 @@ class FieldTable:
 
 
 class AttributeTable:
-    def __init__(self, table=None):
+    def __init__(self, root=None):
         """Proxy over the ClassFile's attributes to add some convience methods.
         """
-        self._table = table or []
+        self._root = root
 
     def find(self, *, type_: str = None,
              f: Callable = None) -> Iterator[ast.Field]:
@@ -126,7 +126,11 @@ class AttributeTable:
         :param f: Any callable which takes one argument (the attribute).
         """
 
-        for attribute in self._table:
+        attrs = self._root.find(
+            f=lambda attr: isinstance(attr, ast.Attribute)
+        )
+
+        for attribute in attrs:
             if type_ is not None and attribute.node_name != type_:
                 continue
 
@@ -140,6 +144,7 @@ class AttributeTable:
         Same as ``find()`` but returns only the first result.
         """
         return next(self.find(**kwargs), None)
+
 
 class ClassFile:
     #: The JVM ClassFile magic number.
@@ -158,7 +163,7 @@ class ClassFile:
         self.constants = consts.ConstantPool()
         self.methods = MethodTable(self.node)
         self.fields = FieldTable(self.node)
-        self.attributes = AttributeTable()
+        self.attributes = AttributeTable(self.node)
 
         if source:
             self._load_from_io(source)
@@ -211,9 +216,6 @@ class ClassFile:
                 access_flags=ast.Method.AccessFlags(flags),
                 children=list(read_attribute_table(pool, source))
             )
-
-        self.attributes._table = list(read_attribute_table(pool, source))
-
 
     @property
     def this(self):

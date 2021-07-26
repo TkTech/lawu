@@ -6,6 +6,8 @@ from itertools import repeat
 from typing import Dict, Tuple, BinaryIO, Iterable
 from struct import unpack
 
+from lawu import ast
+
 
 class Attribute(object):
     ADDED_IN: int = None
@@ -56,3 +58,5 @@ def read_attribute_table(pool, source: BinaryIO) -> Iterable[Attribute]:
         with io.BytesIO(source.read(length)) as blob:
             if attr_parser:
                 yield attr_parser.from_binary(pool, blob)
+            else:
+                yield ast.UnknownAttribute(name=name, payload=blob.getvalue())
