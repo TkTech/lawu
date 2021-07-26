@@ -15,7 +15,7 @@ from lawu.util import shell
     '-cp',
     type=click.Path(exists=True),
     multiple=True,
-    default='.',
+    default=['.'],
     help='One or more classpaths to use when looking up files.'
 )
 @click.pass_context
