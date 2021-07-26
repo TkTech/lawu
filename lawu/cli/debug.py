@@ -1,5 +1,6 @@
 import io
 import importlib
+import traceback
 
 import click
 
@@ -68,3 +69,33 @@ def strings_command(ctx, source):
 
         for string in pool.find(type_=constants.String):
             click.echo(string)
+
+
+@debug.command(name='test')
+@click.pass_context
+def test_command(ctx):
+    """Simply attempts to parse every class file found in the classpath.
+
+    When an error occurs, drops into a Lawu shell with the failed class already
+    loaded. When done, use exit() to quit or ctrl-d to continue to the next
+    failure.
+    """
+    loader = ctx.obj['loader']
+
+    for klassname in loader.classes:
+        cf = None
+
+        try:
+            cf = loader[klassname]
+        except Exception as exc:
+            traceback.print_exc()
+
+            click.echo(f'Failed to load {klassname}, dropping to shell.')
+
+            shell.start_shell(local_ns={
+                'ClassFile': ClassFile,
+                'loader': ctx.obj['loader'],
+                'constants': importlib.import_module('lawu.constants'),
+                'cf': cf,
+                'exc': exc
+            })
