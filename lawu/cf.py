@@ -27,13 +27,13 @@ class MethodTable:
         example, to get all methods that take three integers and return void::
 
             for method in cf.methods.find(args='III', returns='V'):
-                print(method.name.value)
+                print(method.name)
 
         Or to get all private methods::
 
             is_private = lambda m: m.access_flags.acc_private
             for method in cf.methods.find(f=is_private):
-                print(method.name.value)
+                print(method.name)
 
         :param name: The name of the method(s) to find.
         :param args: The arguments descriptor (ex: ``III``)
@@ -67,6 +67,45 @@ class MethodTable:
         return next(self.find(**kwargs), None)
 
 
+class FieldTable:
+    def __init__(self, root):
+        """Proxy over the ClassFile's fields to add some convience methods.
+        """
+        self._root = root
+
+    def find(self, *, name: str = None, type_: str = None,
+             f: Callable = None) -> Iterator[ast.Field]:
+        """
+        Iterates over the fields table, yielding each matching field. Calling
+        without any arguments is equivalent to iterating over the table. For
+        example, to get all string fields::
+
+            for field in cf.fields.find(_type='Ljava/lang/String;'):
+                print(field.name)
+
+        :param name: The name of the field to find.
+        :param type_: The type of the field to find.
+        :param f: Any callable which takes one argument (the field).
+        """
+        for field in self._root.find(name='field'):
+            if name is not None and field.name != name:
+                continue
+
+            if type_ is not None and type_ != field.descriptor:
+                continue
+
+            if f is not None and not f(field):
+                continue
+
+            yield field
+
+    def find_one(self, **kwargs) -> Optional[ast.Method]:
+        """
+        Same as ``find()`` but returns only the first result.
+        """
+        return next(self.find(**kwargs), None)
+
+
 class ClassFile:
     #: The JVM ClassFile magic number.
     MAGIC = 0xCAFEBABE
@@ -85,6 +124,7 @@ class ClassFile:
             self._load_from_io(source)
 
         self.methods = MethodTable(self.node)
+        self.fields = FieldTable(self.node)
 
     def _load_from_io(self, source: BinaryIO):
         """Given a file-like object parse a binary JVM ClassFile into the Lawu
