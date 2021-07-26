@@ -155,6 +155,7 @@ class ClassFile:
             ]
         )
 
+        self.constants = consts.ConstantPool()
         self.methods = MethodTable(self.node)
         self.fields = FieldTable(self.node)
         self.attributes = AttributeTable()
@@ -178,7 +179,7 @@ class ClassFile:
         v.major = version[1]
         v.minor = version[0]
 
-        pool = consts.ConstantPool()
+        pool = self.constants
         pool.unpack(source)
 
         flags, this, super_, if_count = unpack('>HHHH', read(8))
