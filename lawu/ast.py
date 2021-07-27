@@ -89,9 +89,9 @@ class Node:
         self.extend([value])
 
     def extend(self, value):
-        self.children.extend(value)
         for child in value:
             child.parent = self
+            self.children.append(child)
 
     def __iter__(self):
         yield from self.children

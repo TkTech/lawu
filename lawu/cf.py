@@ -217,6 +217,8 @@ class ClassFile:
                 children=list(read_attribute_table(pool, source))
             )
 
+        self.node.extend(list(read_attribute_table(pool, source)))
+
     @property
     def this(self):
         return self.node.descriptor

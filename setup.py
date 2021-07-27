@@ -34,6 +34,7 @@ setup(
     extras_require={
         'dev': [
             'pytest',
+            'pytest-cov',
             'sphinx',
             'sphinxcontrib-googleanalytics',
             'sphinx_rtd_theme',
