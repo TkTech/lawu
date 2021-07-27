@@ -18,10 +18,10 @@ class ASTTable:
         """Proxy over the ClassFile's AST to add some convience methods."""
         self._root = root
 
-    def find(self, *, f: Callable = None) -> Iterator[ast.Method]:
+    def find(self, *, f: Callable = None) -> Iterator:
         raise NotImplementedError
 
-    def find_one(self, **kwargs) -> Optional[ast.Method]:
+    def find_one(self, **kwargs):
         """Same as ``find()`` but returns only the first result."""
         return next(self.find(**kwargs), None)
 
@@ -125,10 +125,33 @@ class AttributeTable(ASTTable):
             )
 
         for attribute in attrs:
-            if f is not None and not f(attribute):
+            if f is None or f(attribute):
+                yield attribute
+
+
+class InterfaceTable(ASTTable):
+    def find(self, *, name: str = None,
+             f: Callable = None) -> Iterator[ast.Implements]:
+        """
+        Iterates over the interface table, yielding each matching interface.
+        Calling without any arguments is equivalent to iterating over the
+        table. For example, to get all Iterable interfaces::
+
+            for interface in cf.interfaces.find(name='java/lang/Iterable'):
+                print(interface.descriptor)
+
+        :param name: The descriptor of the interface to find.
+        :param f: Any callable which takes one argument (the interface).
+        """
+
+        for interface in self._root.find(name='implements'):
+            if name is not None and interface.descriptor != name:
                 continue
 
-            yield attribute
+            if f is not None and not f(interface):
+                continue
+
+            yield interface
 
 
 class ClassFile:
@@ -146,6 +169,7 @@ class ClassFile:
         )
 
         self.constants = consts.ConstantPool()
+        self.interfaces = InterfaceTable(self.node)
         self.methods = MethodTable(self.node)
         self.fields = FieldTable(self.node)
         self.attributes = AttributeTable(self.node)
