@@ -13,12 +13,22 @@ from lawu import constants as consts
 from lawu.attribute import read_attribute_table
 
 
-class MethodTable:
+class ASTTable:
     def __init__(self, root):
-        """Proxy over the ClassFile's methods to add some convience methods.
-        """
+        """Proxy over the ClassFile's AST to add some convience methods."""
         self._root = root
 
+    def find(self, *, f: Callable = None) -> Iterator[ast.Method]:
+        raise NotImplementedError
+
+    def find_one(self, **kwargs) -> Optional[ast.Method]:
+        """Same as ``find()`` but returns only the first result."""
+        return next(self.find(**kwargs), None)
+
+    def __iter__(self):
+        yield from self.find()
+
+class MethodTable(ASTTable):
     def find(self, *, name: str = None, args: str = None, returns: str = None,
              f: Callable = None) -> Iterator[ast.Method]:
         """
@@ -60,19 +70,8 @@ class MethodTable:
 
             yield method
 
-    def find_one(self, **kwargs) -> Optional[ast.Method]:
-        """
-        Same as ``find()`` but returns only the first result.
-        """
-        return next(self.find(**kwargs), None)
 
-
-class FieldTable:
-    def __init__(self, root):
-        """Proxy over the ClassFile's fields to add some convience methods.
-        """
-        self._root = root
-
+class FieldTable(ASTTable):
     def find(self, *, name: str = None, type_: str = None,
              f: Callable = None) -> Iterator[ast.Field]:
         """
@@ -99,19 +98,8 @@ class FieldTable:
 
             yield field
 
-    def find_one(self, **kwargs) -> Optional[ast.Method]:
-        """
-        Same as ``find()`` but returns only the first result.
-        """
-        return next(self.find(**kwargs), None)
 
-
-class AttributeTable:
-    def __init__(self, root=None):
-        """Proxy over the ClassFile's attributes to add some convience methods.
-        """
-        self._root = root
-
+class AttributeTable(ASTTable):
     def find(self, *, type_: str = None,
              f: Callable = None) -> Iterator[ast.Field]:
         """
@@ -139,12 +127,6 @@ class AttributeTable:
 
             yield attribute
 
-    def find_one(self, **kwargs) -> Optional[ast.Method]:
-        """
-        Same as ``find()`` but returns only the first result.
-        """
-        return next(self.find(**kwargs), None)
-
 
 class ClassFile:
     #: The JVM ClassFile magic number.
@@ -169,7 +151,8 @@ class ClassFile:
             self._load_from_io(source)
 
     def _load_from_io(self, source: BinaryIO):
-        """Given a file-like object parse a binary JVM ClassFile into the Lawu
+        """
+        Given a file-like object parse a binary JVM ClassFile into the Lawu
         internal AST model.
 
         :param source: Any file-like object implementing `read()`.
