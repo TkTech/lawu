@@ -28,6 +28,7 @@ class ASTTable:
     def __iter__(self):
         yield from self.find()
 
+
 class MethodTable(ASTTable):
     def find(self, *, name: str = None, args: str = None, returns: str = None,
              f: Callable = None) -> Iterator[ast.Method]:
@@ -100,28 +101,30 @@ class FieldTable(ASTTable):
 
 
 class AttributeTable(ASTTable):
-    def find(self, *, type_: str = None,
-             f: Callable = None) -> Iterator[ast.Field]:
+    def find(self, *, type_ = None,
+             f: Callable = None) -> Iterator[ast.Attribute]:
         """
         Iterates over the attributes table, yielding each matching attribute.
         Calling without any arguments is equivalent to iterating over the
         table. For example, to get all signature attributes::
 
-            for attribute in cf.attributes.find(type_='signature'):
+            for attribute in cf.attributes.find(type_=ast.Signature):
                 print(attribute.signature)
 
         :param type_: The type of attribute to find.
         :param f: Any callable which takes one argument (the attribute).
         """
 
-        attrs = self._root.find(
-            f=lambda attr: isinstance(attr, ast.Attribute)
-        )
+        if type_ is None:
+            attrs = self._root.find(
+                f=lambda attr: isinstance(attr, ast.Attribute)
+            )
+        else:
+            attrs = self._root.find(
+                f=lambda attr: isinstance(attr, type_)
+            )
 
         for attribute in attrs:
-            if type_ is not None and attribute.node_name != type_:
-                continue
-
             if f is not None and not f(attribute):
                 continue
 
