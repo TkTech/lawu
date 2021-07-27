@@ -6,3 +6,6 @@ docs/_build/
 .DS_Store
 *.un~
 venv
+.vscode
+*.egg-info
+dist
