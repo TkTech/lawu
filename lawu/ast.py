@@ -509,6 +509,8 @@ class Attribute(Node):
 
 
 class UnknownAttribute(Attribute):
+    __slots__ = ('name', 'payload')
+
     def __init__(self, name, payload, *, line_no=0, children=None):
         super().__init__(line_no=line_no, children=children)
         self.name = name
@@ -522,6 +524,8 @@ class UnknownAttribute(Attribute):
 
 
 class Code(Attribute):
+    __slots__ = ('max_locals', 'max_stacks')
+
     def __init__(self, *, max_locals=0, max_stack=0, line_no=0, children=None):
         super().__init__(line_no=line_no, children=children)
 

@@ -14,6 +14,8 @@ from lawu.attribute import read_attribute_table
 
 
 class ASTTable:
+    __slots__ = ('_root',)
+
     def __init__(self, root):
         """Proxy over the ClassFile's AST to add some convience methods."""
         self._root = root
@@ -155,6 +157,10 @@ class InterfaceTable(ASTTable):
 
 
 class ClassFile:
+    __slots__ = (
+        'node', 'constants', 'interfaces', 'methods', 'fields', 'attributes',
+        'access_flags'
+    )
     #: The JVM ClassFile magic number.
     MAGIC = 0xCAFEBABE
 
