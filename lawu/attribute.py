@@ -2,6 +2,7 @@ import io
 import inspect
 import pkgutil
 import importlib
+import functools
 from itertools import repeat
 from typing import Dict, Tuple, BinaryIO, Iterable
 from struct import unpack
@@ -19,6 +20,7 @@ class Attribute(object):
         raise NotImplementedError()
 
 
+@functools.cache
 def get_attribute_classes() -> Dict[str, Attribute]:
     """
     Lookup all builtin Attribute subclasses, load them, and return a dict of
