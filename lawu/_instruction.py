@@ -103,7 +103,8 @@ class Instruction(metaclass=InstructionMeta):
         elif ins.op == 0xAA:
             # Get rid of the alignment padding.
             padding = (offset + 1) % 4
-            padding = (4 - padding) if padding != 4 else 0
+            if padding:
+                padding = 4 - padding
             source.read(padding)
 
             default, low, high = unpack('>iii', source.read(12))

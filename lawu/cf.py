@@ -13,12 +13,23 @@ from lawu import constants as consts
 from lawu.attribute import read_attribute_table
 
 
-class MethodTable:
+class ASTTable:
     def __init__(self, root):
-        """Proxy over the ClassFile's methods to add some convience methods.
-        """
+        """Proxy over the ClassFile's AST to add some convience methods."""
         self._root = root
 
+    def find(self, *, f: Callable = None) -> Iterator:
+        raise NotImplementedError
+
+    def find_one(self, **kwargs):
+        """Same as ``find()`` but returns only the first result."""
+        return next(self.find(**kwargs), None)
+
+    def __iter__(self):
+        yield from self.find()
+
+
+class MethodTable(ASTTable):
     def find(self, *, name: str = None, args: str = None, returns: str = None,
              f: Callable = None) -> Iterator[ast.Method]:
         """
@@ -60,19 +71,8 @@ class MethodTable:
 
             yield method
 
-    def find_one(self, **kwargs) -> Optional[ast.Method]:
-        """
-        Same as ``find()`` but returns only the first result.
-        """
-        return next(self.find(**kwargs), None)
 
-
-class FieldTable:
-    def __init__(self, root):
-        """Proxy over the ClassFile's fields to add some convience methods.
-        """
-        self._root = root
-
+class FieldTable(ASTTable):
     def find(self, *, name: str = None, type_: str = None,
              f: Callable = None) -> Iterator[ast.Field]:
         """
@@ -99,51 +99,59 @@ class FieldTable:
 
             yield field
 
-    def find_one(self, **kwargs) -> Optional[ast.Method]:
-        """
-        Same as ``find()`` but returns only the first result.
-        """
-        return next(self.find(**kwargs), None)
 
-
-class AttributeTable:
-    def __init__(self, root=None):
-        """Proxy over the ClassFile's attributes to add some convience methods.
-        """
-        self._root = root
-
-    def find(self, *, type_: str = None,
-             f: Callable = None) -> Iterator[ast.Field]:
+class AttributeTable(ASTTable):
+    def find(self, *, type_ = None,
+             f: Callable = None) -> Iterator[ast.Attribute]:
         """
         Iterates over the attributes table, yielding each matching attribute.
         Calling without any arguments is equivalent to iterating over the
         table. For example, to get all signature attributes::
 
-            for attribute in cf.attributes.find(type_='signature'):
+            for attribute in cf.attributes.find(type_=ast.Signature):
                 print(attribute.signature)
 
         :param type_: The type of attribute to find.
         :param f: Any callable which takes one argument (the attribute).
         """
 
-        attrs = self._root.find(
-            f=lambda attr: isinstance(attr, ast.Attribute)
-        )
+        if type_ is None:
+            attrs = self._root.find(
+                f=lambda attr: isinstance(attr, ast.Attribute)
+            )
+        else:
+            attrs = self._root.find(
+                f=lambda attr: isinstance(attr, type_)
+            )
 
         for attribute in attrs:
-            if type_ is not None and attribute.node_name != type_:
+            if f is None or f(attribute):
+                yield attribute
+
+
+class InterfaceTable(ASTTable):
+    def find(self, *, name: str = None,
+             f: Callable = None) -> Iterator[ast.Implements]:
+        """
+        Iterates over the interface table, yielding each matching interface.
+        Calling without any arguments is equivalent to iterating over the
+        table. For example, to get all Iterable interfaces::
+
+            for interface in cf.interfaces.find(name='java/lang/Iterable'):
+                print(interface.descriptor)
+
+        :param name: The descriptor of the interface to find.
+        :param f: Any callable which takes one argument (the interface).
+        """
+
+        for interface in self._root.find(name='implements'):
+            if name is not None and interface.descriptor != name:
                 continue
 
-            if f is not None and not f(attribute):
+            if f is not None and not f(interface):
                 continue
 
-            yield attribute
-
-    def find_one(self, **kwargs) -> Optional[ast.Method]:
-        """
-        Same as ``find()`` but returns only the first result.
-        """
-        return next(self.find(**kwargs), None)
+            yield interface
 
 
 class ClassFile:
@@ -161,6 +169,7 @@ class ClassFile:
         )
 
         self.constants = consts.ConstantPool()
+        self.interfaces = InterfaceTable(self.node)
         self.methods = MethodTable(self.node)
         self.fields = FieldTable(self.node)
         self.attributes = AttributeTable(self.node)
@@ -169,7 +178,8 @@ class ClassFile:
             self._load_from_io(source)
 
     def _load_from_io(self, source: BinaryIO):
-        """Given a file-like object parse a binary JVM ClassFile into the Lawu
+        """
+        Given a file-like object parse a binary JVM ClassFile into the Lawu
         internal AST model.
 
         :param source: Any file-like object implementing `read()`.
