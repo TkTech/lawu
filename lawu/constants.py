@@ -5,8 +5,9 @@ from typing import Dict, Any, Deque, BinaryIO, Union
 from collections import deque
 from struct import unpack, pack
 
+from mutf8 import decode_modified_utf8, encode_modified_utf8
+
 from lawu import ast
-from lawu.util.utf import decode_modified_utf8, encode_modified_utf8
 
 
 def _missing_elements(L, start, end):

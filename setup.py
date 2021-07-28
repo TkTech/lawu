@@ -31,14 +31,17 @@ setup(
         'pytest>=2.10',
         'pytest-cov'
     ],
+    install_requires=[
+        'mutf8'
+    ],
     extras_require={
         'dev': [
             'pytest',
             'pytest-cov',
             'sphinx',
             'sphinxcontrib-googleanalytics',
-            'sphinx_rtd_theme',
             'sphinx-click',
+            'furo',
             'ghp-import',
             'pyyaml',
             'twine',
