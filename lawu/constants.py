@@ -1,7 +1,7 @@
 """
 Utilities for working with the ConstantPool found in JVM ClassFiles.
 """
-from typing import Dict, Any, Deque, BinaryIO, Union
+from typing import Dict, Any, Deque, BinaryIO, Iterator, Union
 from collections import deque
 from struct import unpack, pack
 
@@ -633,13 +633,13 @@ class ConstantPool(object):
             del self.pool[index + 1]
         self.update_trackers()
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[Constant]:
         yield from (
             (k, v) for k, v in sorted(self.pool.items())
             if v is not None
         )
 
-    def __getitem__(self, index):
+    def __getitem__(self, index) -> Constant:
         return self.pool[index]
 
     def __len__(self):
