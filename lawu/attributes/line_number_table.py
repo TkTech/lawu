@@ -14,7 +14,8 @@ class LineNumberTableAttribute(Attribute):
     @classmethod
     def from_binary(cls, pool: ConstantPool, source: BinaryIO) \
             -> LineNumberTable:
-        return LineNumberTable(entries=[
-            LineNumberTable.LineNumberEntry(*unpack('>HH', source.read(4)))
-            for _ in repeat(None, unpack('>H', source.read(2))[0])
-        ])
+
+        count = unpack('>H', source.read(2))[0]
+        entries = iter(unpack(f'>{count * 2}H', source.read(count * 4)))
+
+        return LineNumberTable(entries=dict(zip(entries, entries)))

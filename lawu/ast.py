@@ -4,7 +4,7 @@ interally structured as a hierarchy of Node objects.
 """
 import io
 import sys
-from typing import List, Optional
+from typing import List, Optional, Dict
 from enum import IntFlag
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
@@ -109,11 +109,8 @@ class Node(ABC):
 
             yield child
 
-    def find_one(self, **kwargs):
-        try:
-            return next(self.find(**kwargs))
-        except StopIteration:
-            return None
+    def find_one(self, **kwargs) -> Optional['Node']:
+        return next(self.find(**kwargs), None)
 
     def append(self, value):
         self.extend([value])
@@ -166,9 +163,21 @@ class Node(ABC):
     def __len__(self):
         return len(self.children)
 
+    def __bool__(self):
+        return True
+
     @abstractmethod
     def __eq__(self, other) -> bool:
         pass
+
+
+class Fragment(Node):
+    """A (typically) temporary container for a selection of AST nodes."""
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class__) and
+            self._re_eq(other)
+        )
 
 
 class Root(Node):
@@ -737,14 +746,9 @@ class InnerClasses(Attribute):
 class LineNumberTable(Attribute):
     __slots__ = ('entries',)
 
-    @dataclass
-    class LineNumberEntry:
-        start_pc: int
-        line_num: int
-
     def __init__(self, *, entries, line_no=0, children=None):
         super().__init__(line_no=line_no, children=children)
-        self.entries = entries
+        self.entries: Dict[int, int] = entries
 
     def __eq__(self, other):
         return (
