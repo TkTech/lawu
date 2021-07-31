@@ -20,7 +20,7 @@ class Attribute(object):
         raise NotImplementedError()
 
 
-@functools.cache
+@functools.lru_cache()
 def get_attribute_classes() -> Dict[str, Attribute]:
     """
     Lookup all builtin Attribute subclasses, load them, and return a dict of
