@@ -5,7 +5,8 @@ test.py
 docs/_build/
 .DS_Store
 *.un~
-venv
+venv/
+__pycache__
 .vscode
 *.egg-info
 dist

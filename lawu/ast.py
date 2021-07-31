@@ -156,7 +156,7 @@ class Node(ABC):
         yield from self.children
 
     def __repr__(self):
-        return f'<{self.__class__.__name__}()>'
+        return f'<{type(self).__name__}()>'
 
     def __iadd__(self, value: 'Node'):
         self.extend([value])
@@ -645,6 +645,8 @@ class Attribute(Node):
 
 
 class UnknownAttribute(Attribute):
+    __slots__ = ('name', 'payload')
+
     def __init__(self, name, payload, *, line_no=0, children=None):
         super().__init__(line_no=line_no, children=children)
         self.name = name
@@ -666,9 +668,10 @@ class UnknownAttribute(Attribute):
 
 
 class Code(Attribute):
+    __slots__ = ('max_locals', 'max_stacks')
+
     def __init__(self, *, max_locals=0, max_stack=0, line_no=0, children=None):
         super().__init__(line_no=line_no, children=children)
-
         self.max_locals = max_locals
         self.max_stack = max_stack
 
@@ -687,19 +690,68 @@ class Code(Attribute):
         )
 
 
-class Signature(Attribute):
-    __slots__ = ('signature',)
+class EnclosingMethod(Attribute):
+    __slots__ = ('enclosing_class', 'name_and_type')
 
-    def __init__(self, *, signature, line_no=0, children=None):
+    def __init__(self, *, enclosing_class, name_and_type, line_no, children):
         super().__init__(line_no=line_no, children=children)
-        self.signature = signature
+        self.enclosing_class = enclosing_class
+        self.name_and_type = name_and_type
 
     def __repr__(self):
-        return f'<Signature({self.signature!r})>'
-
-    def __eq__(self, other):
         return (
-            isinstance(self, other.__class) and
-            self.signature == other.signature and
-            self._re_eq(other)
+            f'<EnclosingMethod(class={self.enclosing_class!r},'
+            f' name_and_type={self.name_and_type!r})>'
         )
+
+class BootstrapMethods(Attribute):
+    pass
+
+class Exceptions(Attribute):
+    pass
+
+class Deprecated(Attribute):
+    pass
+
+class InnerClasses(Attribute):
+    pass
+
+class LineNumberTable(Attribute):
+    pass
+
+class LocalVariableTable(Attribute):
+    pass
+
+class LocalVariableTypeTable(Attribute):
+    pass
+
+class Synthetic(Attribute):
+    pass
+
+
+class ValueAttribute(Attribute):
+    __slots__ = ('value',)
+
+    def __init__(self, *, value, line_no=0, children=None):
+        super().__init__(line_no=line_no, children=children)
+        self.value = value
+
+    def __repr__(self):
+        return f'<{type(self).__name__}({self.value!r})>'
+
+
+class Signature(ValueAttribute):
+    @property
+    def signature(self):
+        return self.value
+
+    @signature.setter
+    def signature(self, new_signature):
+        self.value = new_signature
+
+
+class ConstantValue(ValueAttribute):
+    pass
+
+class SourceFile(ValueAttribute):
+    pass

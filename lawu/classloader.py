@@ -38,6 +38,11 @@ class ClassLoader:
     :param bytecode_transforms: Default transforms to apply when disassembling
                                 a method.
     """
+
+    __slots__ = (
+        'path_map', 'max_cache', 'class_cache', 'bytecode_transforms', 'klass'
+    )
+
     def __init__(self, *sources, max_cache: int = 50, klass=lawu.cf.ClassFile,
                  bytecode_transforms: Iterable[Callable] = None):
         self.path_map = {}
