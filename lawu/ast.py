@@ -4,9 +4,10 @@ interally structured as a hierarchy of Node objects.
 """
 import io
 import sys
-from typing import List
+from typing import List, Optional
 from enum import IntFlag
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 
 from lawu.util.descriptor import method_descriptor, field_descriptor
 
@@ -18,13 +19,13 @@ class Node(ABC):
         #: List of children for this Node.
         self.children: List[Node] = []
         #: The parent node.
-        self.parent: 'Node' = None
+        self.parent: Optional['Node'] = None
         #: The source line number, if known.
-        self.line_no = line_no
+        self.line_no: int = line_no
         #: The starting column number, if known.
-        self.col_no = col_no
+        self.col_no: int = col_no
         #: The ending column number, if known.
-        self.col_end_no = col_end_no
+        self.col_end_no: int = col_end_no
 
         if children:
             self.extend(children)
@@ -716,26 +717,50 @@ class EnclosingMethod(Attribute):
             self._re_eq(other)
         )
 
+
 class BootstrapMethods(Attribute):
     pass
+
 
 class Exceptions(Attribute):
     pass
 
+
 class Deprecated(Attribute):
     pass
+
 
 class InnerClasses(Attribute):
     pass
 
+
 class LineNumberTable(Attribute):
-    pass
+    __slots__ = ('entries',)
+
+    @dataclass
+    class LineNumberEntry:
+        start_pc: int
+        line_num: int
+
+    def __init__(self, *, entries, line_no=0, children=None):
+        super().__init__(line_no=line_no, children=children)
+        self.entries = entries
+
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class__) and
+            self.entries == other.entries and
+            self._re_eq(other)
+        )
+
 
 class LocalVariableTable(Attribute):
     pass
 
+
 class LocalVariableTypeTable(Attribute):
     pass
+
 
 class Synthetic(Attribute):
     pass
