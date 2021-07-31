@@ -641,7 +641,11 @@ class Finally(TryCatch):
 
 
 class Attribute(Node):
-    pass
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class__) and
+            self._re_eq(other)
+        )
 
 
 class UnknownAttribute(Attribute):
@@ -704,6 +708,14 @@ class EnclosingMethod(Attribute):
             f' name_and_type={self.name_and_type!r})>'
         )
 
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class__) and
+            self.enclosing_class == other.enclosing_class and
+            self.name_and_type == other.name_and_type and
+            self._re_eq(other)
+        )
+
 class BootstrapMethods(Attribute):
     pass
 
@@ -738,6 +750,13 @@ class ValueAttribute(Attribute):
 
     def __repr__(self):
         return f'<{type(self).__name__}({self.value!r})>'
+
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class__) and
+            self.value == other.value and
+            self._re_eq(other)
+        )
 
 
 class Signature(ValueAttribute):
