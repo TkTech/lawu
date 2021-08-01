@@ -3,7 +3,7 @@ import io
 from struct import unpack
 from itertools import repeat
 from dataclasses import dataclass
-from typing import Dict, BinaryIO, List
+from typing import Dict, BinaryIO, List, Optional
 
 from lawu import ast
 from lawu.blocks import jump_targets
@@ -65,6 +65,16 @@ class CodeAttribute(Attribute):
         # since it provides additional jump targets.
         exceptions = cls.exceptions_from_binary(source)
 
+        # Read the attribute table before disassembly to fill in optional
+        # details like line numbers.
+        attributes = list(read_attribute_table(pool, source))
+        attrs = ast.Fragment(children=attributes)
+
+        line_number_table = attrs.find_one(name='LineNumberTable')
+        line_nos = {}
+        if isinstance(line_number_table, ast.LineNumberTable):
+            line_nos = line_number_table.entries
+
         with io.BytesIO(blob) as code_io:
             instructions = list(iter(
                 lambda: Instruction.read(code_io, offset=code_io.tell()),
@@ -104,7 +114,11 @@ class CodeAttribute(Attribute):
 
                     block = block.children[-1]
 
-            ins_node = ast.Instruction(name=ins.name)
+            ins_node = ast.Instruction(
+                name=ins.name,
+                line_no=line_nos.get(ins.pos)
+            )
+
             for operand in ins.operands:
                 if isinstance(operand, dict):
                     # Lookupswitch has one unique operand which is a
@@ -136,5 +150,5 @@ class CodeAttribute(Attribute):
 
             block += ins_node
 
-        code.extend(read_attribute_table(pool, source))
+        code.extend(attributes)
         return code

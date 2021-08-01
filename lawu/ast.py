@@ -4,9 +4,10 @@ interally structured as a hierarchy of Node objects.
 """
 import io
 import sys
-from typing import List
+from typing import List, Optional, Dict
 from enum import IntFlag
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 
 from lawu.util.descriptor import method_descriptor, field_descriptor
 
@@ -18,13 +19,13 @@ class Node(ABC):
         #: List of children for this Node.
         self.children: List[Node] = []
         #: The parent node.
-        self.parent: 'Node' = None
+        self.parent: Optional['Node'] = None
         #: The source line number, if known.
-        self.line_no = line_no
+        self.line_no: int = line_no
         #: The starting column number, if known.
-        self.col_no = col_no
+        self.col_no: int = col_no
         #: The ending column number, if known.
-        self.col_end_no = col_end_no
+        self.col_end_no: int = col_end_no
 
         if children:
             self.extend(children)
@@ -108,11 +109,8 @@ class Node(ABC):
 
             yield child
 
-    def find_one(self, **kwargs):
-        try:
-            return next(self.find(**kwargs))
-        except StopIteration:
-            return None
+    def find_one(self, **kwargs) -> Optional['Node']:
+        return next(self.find(**kwargs), None)
 
     def append(self, value):
         self.extend([value])
@@ -156,7 +154,7 @@ class Node(ABC):
         yield from self.children
 
     def __repr__(self):
-        return f'<{self.__class__.__name__}()>'
+        return f'<{type(self).__name__}()>'
 
     def __iadd__(self, value: 'Node'):
         self.extend([value])
@@ -165,9 +163,21 @@ class Node(ABC):
     def __len__(self):
         return len(self.children)
 
+    def __bool__(self):
+        return True
+
     @abstractmethod
     def __eq__(self, other) -> bool:
         pass
+
+
+class Fragment(Node):
+    """A (typically) temporary container for a selection of AST nodes."""
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class__) and
+            self._re_eq(other)
+        )
 
 
 class Root(Node):
@@ -641,10 +651,16 @@ class Finally(TryCatch):
 
 
 class Attribute(Node):
-    pass
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class__) and
+            self._re_eq(other)
+        )
 
 
 class UnknownAttribute(Attribute):
+    __slots__ = ('name', 'payload')
+
     def __init__(self, name, payload, *, line_no=0, children=None):
         super().__init__(line_no=line_no, children=children)
         self.name = name
@@ -666,9 +682,10 @@ class UnknownAttribute(Attribute):
 
 
 class Code(Attribute):
+    __slots__ = ('max_locals', 'max_stacks')
+
     def __init__(self, *, max_locals=0, max_stack=0, line_no=0, children=None):
         super().__init__(line_no=line_no, children=children)
-
         self.max_locals = max_locals
         self.max_stack = max_stack
 
@@ -687,19 +704,102 @@ class Code(Attribute):
         )
 
 
-class Signature(Attribute):
-    __slots__ = ('signature',)
+class EnclosingMethod(Attribute):
+    __slots__ = ('enclosing_class', 'name_and_type')
 
-    def __init__(self, *, signature, line_no=0, children=None):
+    def __init__(self, *, enclosing_class, name_and_type, line_no, children):
         super().__init__(line_no=line_no, children=children)
-        self.signature = signature
+        self.enclosing_class = enclosing_class
+        self.name_and_type = name_and_type
 
     def __repr__(self):
-        return f'<Signature({self.signature!r})>'
+        return (
+            f'<EnclosingMethod(class={self.enclosing_class!r},'
+            f' name_and_type={self.name_and_type!r})>'
+        )
 
     def __eq__(self, other):
         return (
-            isinstance(self, other.__class) and
-            self.signature == other.signature and
+            isinstance(self, other.__class__) and
+            self.enclosing_class == other.enclosing_class and
+            self.name_and_type == other.name_and_type and
             self._re_eq(other)
         )
+
+
+class BootstrapMethods(Attribute):
+    pass
+
+
+class Exceptions(Attribute):
+    pass
+
+
+class Deprecated(Attribute):
+    pass
+
+
+class InnerClasses(Attribute):
+    pass
+
+
+class LineNumberTable(Attribute):
+    __slots__ = ('entries',)
+
+    def __init__(self, *, entries, line_no=0, children=None):
+        super().__init__(line_no=line_no, children=children)
+        self.entries: Dict[int, int] = entries
+
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class__) and
+            self.entries == other.entries and
+            self._re_eq(other)
+        )
+
+
+class LocalVariableTable(Attribute):
+    pass
+
+
+class LocalVariableTypeTable(Attribute):
+    pass
+
+
+class Synthetic(Attribute):
+    pass
+
+
+class ValueAttribute(Attribute):
+    __slots__ = ('value',)
+
+    def __init__(self, *, value, line_no=0, children=None):
+        super().__init__(line_no=line_no, children=children)
+        self.value = value
+
+    def __repr__(self):
+        return f'<{type(self).__name__}({self.value!r})>'
+
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class__) and
+            self.value == other.value and
+            self._re_eq(other)
+        )
+
+
+class Signature(ValueAttribute):
+    @property
+    def signature(self):
+        return self.value
+
+    @signature.setter
+    def signature(self, new_signature):
+        self.value = new_signature
+
+
+class ConstantValue(ValueAttribute):
+    pass
+
+class SourceFile(ValueAttribute):
+    pass
