@@ -10,9 +10,9 @@ from lawu.attribute import Attribute
 
 @dataclass
 class BootstrapMethod:
-    method_ref: MethodHandle
+    reference_kind: MethodHandle.ReferenceKind
+    reference_index: int
     args: Tuple[int]
-    parent: BootstrapMethods = None
 
 
 class BootstrapMethodsAttribute(Attribute):
@@ -21,11 +21,14 @@ class BootstrapMethodsAttribute(Attribute):
 
     @classmethod
     def from_binary(cls, pool: ConstantPool, source: BinaryIO) -> BootstrapMethods:
-        methods = []
+        entries = []
         for _ in repeat(None, unpack('>H', source.read(2))[0]):
             ref, arg_len = unpack('>HH', source.read(4))
-            methods.append(BootstrapMethod(
-                pool[ref], unpack(f'>{arg_len}H', source.read(arg_len * 2))
+            handle = pool[ref]
+            entries.append(BootstrapMethod(
+                handle.reference_kind,
+                handle.reference_index,
+                unpack(f'>{arg_len}H', source.read(arg_len * 2))
             ))
 
-        return BootstrapMethods(children=methods)
+        return BootstrapMethods(entries=entries)

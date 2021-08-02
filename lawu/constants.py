@@ -1,6 +1,7 @@
 """
 Utilities for working with the ConstantPool found in JVM ClassFiles.
 """
+from enum import IntEnum
 from typing import Dict, Any, Deque, BinaryIO, Iterator, Union
 from collections import deque
 from struct import unpack, pack
@@ -350,9 +351,20 @@ class MethodHandle(Constant):
     __slots__ = ('reference_kind', 'reference_index')
     TAG = 15
 
+    class ReferenceKind(IntEnum):
+        REF_getField         = 1
+        REF_getStatic        = 2
+        REF_putField         = 3
+        REF_putStatic        = 4
+        REF_invokeVirtual    = 5
+        REF_invokeStatic     = 6
+        REF_invokeSpecial    = 7
+        REF_newInvokeSpecial = 8
+        REF_invokeInterface  = 9
+
     def __init__(self, *, pool=None, index=None):
         super().__init__(pool=pool, index=index)
-        self.reference_kind = None
+        self.reference_kind = self.ReferenceKind(1)
         self.reference_index = 0
 
     @property
@@ -363,10 +375,8 @@ class MethodHandle(Constant):
         return pack('>BH', self.reference_kind, self.reference_index)
 
     def unpack(self, source: BinaryIO):
-        self.reference_kind, self.reference_index = unpack(
-            '>BH',
-            source.read(3)
-        )
+        kind, self.reference_index = unpack('>BH', source.read(3))
+        self.reference_kind = self.ReferenceKind(kind)
 
     def __repr__(self):
         return (

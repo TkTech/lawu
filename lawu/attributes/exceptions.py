@@ -13,5 +13,5 @@ class ExceptionsAttribute(Attribute):
     @classmethod
     def from_binary(cls, pool: ConstantPool, source: BinaryIO) -> Exceptions:
         l = unpack('>H', source.read(2))[0]
-        exceptions = [pool[i].as_ast for i in unpack(f'>{l}H', source.read(l * 2))]
-        return Exceptions(children=exceptions)
+        entries = [pool[i] for i in unpack(f'>{l}H', source.read(l * 2))]
+        return Exceptions(entries=entries)

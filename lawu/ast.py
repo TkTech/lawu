@@ -727,42 +727,7 @@ class EnclosingMethod(Attribute):
         )
 
 
-class BootstrapMethods(Attribute):
-    pass
-
-
-class Exceptions(Attribute):
-    pass
-
-
 class Deprecated(Attribute):
-    pass
-
-
-class InnerClasses(Attribute):
-    pass
-
-
-class LineNumberTable(Attribute):
-    __slots__ = ('entries',)
-
-    def __init__(self, *, entries, line_no=0, children=None):
-        super().__init__(line_no=line_no, children=children)
-        self.entries: Dict[int, int] = entries
-
-    def __eq__(self, other):
-        return (
-            isinstance(self, other.__class__) and
-            self.entries == other.entries and
-            self._re_eq(other)
-        )
-
-
-class LocalVariableTable(Attribute):
-    pass
-
-
-class LocalVariableTypeTable(Attribute):
     pass
 
 
@@ -802,4 +767,43 @@ class ConstantValue(ValueAttribute):
     pass
 
 class SourceFile(ValueAttribute):
+    pass
+
+
+class TableAttribute(Attribute):
+    __slots__ = ('entries',)
+
+    def __init__(self, *, entries, line_no=0, children=None):
+        super().__init__(line_no=line_no, children=children)
+        self.entries = entries
+
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class__) and
+            self.entries == other.entries and
+            self._re_eq(other)
+        )
+
+
+class BootstrapMethods(TableAttribute):
+    pass
+
+
+class Exceptions(TableAttribute):
+    pass
+
+
+class InnerClasses(TableAttribute):
+    pass
+
+
+class LineNumberTable(TableAttribute):
+    pass
+
+
+class LocalVariableTable(TableAttribute):
+    pass
+
+
+class LocalVariableTypeTable(TableAttribute):
     pass
