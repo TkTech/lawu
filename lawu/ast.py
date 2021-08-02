@@ -4,10 +4,9 @@ interally structured as a hierarchy of Node objects.
 """
 import io
 import sys
-from typing import List, Optional, Dict
+from typing import Iterator, List, Optional
 from enum import IntFlag
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
 
 from lawu.util.descriptor import method_descriptor, field_descriptor
 
@@ -187,6 +186,14 @@ class Root(Node):
     """
 
 
+class Attribute(Node):
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class__) and
+            self._re_eq(other)
+        )
+
+
 class Bytecode(Node):
     __slots__ = ('major', 'minor')
 
@@ -288,6 +295,57 @@ class Super(Node):
         )
 
 
+class Instruction(Node):
+    __slots__ = ('name',)
+
+    def __init__(self, name, *, line_no=0, children=None):
+        super().__init__(line_no=line_no, children=children)
+        self.name = name
+
+    def __repr__(self):
+        return f'<Instruction({self.name!r})>'
+
+    @property
+    def operands(self):
+        return list(self.find(f=lambda n: isinstance(n, Operand)))
+
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class__) and
+            self.name == other.name and
+            self._re_eq(other)
+        )
+
+
+class Code(Attribute):
+    __slots__ = ('max_locals', 'max_stacks')
+
+    def __init__(self, *, max_locals=0, max_stack=0, line_no=0, children=None):
+        super().__init__(line_no=line_no, children=children)
+        self.max_locals = max_locals
+        self.max_stack = max_stack
+
+    def find_ins(self, *names) -> Iterator[Instruction]:
+        if names:
+            yield from self.find(name='instruction', f=lambda i: i.name in names)
+        else:
+            yield from self.find(name='instruction')
+
+    def __repr__(self):
+        return (
+            f'<Code(max_locals={self.max_locals!r},'
+            f' max_stack={self.max_stack!r})>'
+        )
+
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class__) and
+            self.max_locals == other.max_locals and
+            self.max_stack == other.max_stack and
+            self._re_eq(other)
+        )
+
+
 class Method(Node):
     __slots__ = ('access_flags', 'name', 'descriptor')
 
@@ -331,7 +389,7 @@ class Method(Node):
         return self.parsed_descriptor.returns
 
     @property
-    def code(self):
+    def code(self) -> Code:
         return self.find_one(name='code')
 
     def __eq__(self, other):
@@ -352,28 +410,6 @@ class Label(Node):
 
     def __repr__(self):
         return f'<Label({self.name!r})>'
-
-    def __eq__(self, other):
-        return (
-            isinstance(self, other.__class__) and
-            self.name == other.name and
-            self._re_eq(other)
-        )
-
-
-class Instruction(Node):
-    __slots__ = ('name',)
-
-    def __init__(self, name, *, line_no=0, children=None):
-        super().__init__(line_no=line_no, children=children)
-        self.name = name
-
-    def __repr__(self):
-        return f'<Instruction({self.name!r})>'
-
-    @property
-    def operands(self):
-        return list(self.find(f=lambda n: isinstance(n, Operand)))
 
     def __eq__(self, other):
         return (
@@ -650,13 +686,6 @@ class Finally(TryCatch):
         return f'<Finally({self.target!r})>'
 
 
-class Attribute(Node):
-    def __eq__(self, other):
-        return (
-            isinstance(self, other.__class__) and
-            self._re_eq(other)
-        )
-
 
 class UnknownAttribute(Attribute):
     __slots__ = ('name', 'payload')
@@ -677,29 +706,6 @@ class UnknownAttribute(Attribute):
             isinstance(self, other.__class__) and
             self.name == other.name and
             self.payload == other.payload and
-            self._re_eq(other)
-        )
-
-
-class Code(Attribute):
-    __slots__ = ('max_locals', 'max_stacks')
-
-    def __init__(self, *, max_locals=0, max_stack=0, line_no=0, children=None):
-        super().__init__(line_no=line_no, children=children)
-        self.max_locals = max_locals
-        self.max_stack = max_stack
-
-    def __repr__(self):
-        return (
-            f'<Code(max_locals={self.max_locals!r},'
-            f' max_stack={self.max_stack!r})>'
-        )
-
-    def __eq__(self, other):
-        return (
-            isinstance(self, other.__class__) and
-            self.max_locals == other.max_locals and
-            self.max_stack == other.max_stack and
             self._re_eq(other)
         )
 
