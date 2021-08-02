@@ -27,7 +27,6 @@ class InnerClass:
     outer_class: Union[ConstantClass, None]
     inner_name: Union[UTF8, None]
     access_flags: AccessFlags
-    parent: InnerClasses = None
 
 
 class InnerClassesAttribute(Attribute):
@@ -36,15 +35,15 @@ class InnerClassesAttribute(Attribute):
 
     @classmethod
     def from_binary(cls, pool: ConstantPool, source: BinaryIO) -> InnerClasses:
-        inner_classes = []
+        entries = []
 
         for _ in repeat(None, unpack('>H', source.read(2))[0]):
             inner, outer, name, flags = unpack('>HHHH', source.read(8))
-            inner_classes.append(InnerClass(
+            entries.append(InnerClass(
                 pool[inner],
                 pool[outer] if outer else None,
                 pool[name] if name else None,
                 InnerClass.AccessFlags(flags)
             ))
 
-        return InnerClasses(children=inner_classes)
+        return InnerClasses(entries=entries)
