@@ -1,17 +1,16 @@
-
 from setuptools import setup, find_packages
 
 setup(
-    name='jawa',
+    name='lawu',
     packages=find_packages(),
-    version='2.2.0',
-    python_requires='>=3.6',
+    version='3.0.0',
+    python_requires='>=3.7',
     description='Doing fun stuff with JVM ClassFiles.',
     long_description=open('README.md', 'r').read(),
     long_description_content_type='text/markdown',
     author='Tyler Kennedy',
     author_email='tk@tkte.ch',
-    url='http://github.com/TkTech/Jawa',
+    url='https://lawu.dev',
     keywords=[
         'java',
         'disassembly',
@@ -25,32 +24,35 @@ setup(
         'Operating System :: OS Independent',
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
-        'Topic :: Software Development :: Disassemblers',
-        'Topic :: Software Development :: Assemblers'
-    ],
-    install_requires=[
-        'click>=5.0'
+        'Topic :: Software Development :: Disassemblers'
     ],
     tests_require=[
         'pytest>=2.10',
+        'pytest-cov'
+    ],
+    install_requires=[
+        'mutf8'
     ],
     extras_require={
         'dev': [
             'pytest',
+            'pytest-cov',
             'sphinx',
             'sphinxcontrib-googleanalytics',
-            'sphinx_rtd_theme',
             'sphinx-click',
+            'furo',
             'ghp-import',
             'pyyaml',
-            'ipython',
             'twine',
-            'wheel',
-            'bumpversion'
+            'wheel'
+        ],
+        'cli': [
+            'click',
+            'rich'
         ]
     },
     entry_points='''
     [console_scripts]
-    jawa=jawa.cli:cli
+    lawu=lawu.cli:cli
     '''
 )

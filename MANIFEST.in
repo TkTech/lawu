@@ -1,2 +1,2 @@
-include jawa/util/bytecode.json
-include jawa/util/bytecode.yaml
+include lawu/util/bytecode.json
+include lawu/util/bytecode.yaml

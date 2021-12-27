@@ -1,7 +1,7 @@
 import click
 
-from jawa.classloader import ClassLoader
-from jawa.util.bytecode import OperandTypes
+from lawu.classloader import ClassLoader
+from lawu.util.bytecode import OperandTypes
 
 
 @click.command()

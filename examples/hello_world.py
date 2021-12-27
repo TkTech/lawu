@@ -1,8 +1,8 @@
 """
 An example showing how to create a "Hello World" class from scratch.
 """
-from jawa.cf import ClassFile
-from jawa.assemble import assemble
+from lawu.cf import ClassFile
+from lawu.assemble import assemble
 
 cf = ClassFile.create('HelloWorld')
 

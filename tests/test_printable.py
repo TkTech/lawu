@@ -1,5 +1,5 @@
-from jawa.cf import ClassFile
-from jawa.constants import ConstantPool
+from lawu.cf import ClassFile
+from lawu.constants import ConstantPool
 
 
 def test_printable_constants():

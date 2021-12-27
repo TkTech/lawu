@@ -1,0 +1,1690 @@
+# This file provides a description of JVM instructions in a reasonably-portable
+# manner. A few instructions (mainly lookupswitch and tableswitch) cannot
+# be resonably described and require special casing in parsers.
+# It's intent is to enable collaboration and reuse with other JVM tooling.
+aaload:
+    op: 0x32
+    desc: load onto the stack a reference from an array
+    stack:
+        before:
+            - ArrayRef
+            - Index
+        after:
+            - Value
+    runtime:
+        - NullPointerException
+        - ArrayIndexOutOfBoundsException
+aastore:
+    op: 0x53
+    desc: store into a reference in an array
+    stack:
+        before:
+            - ArrayRef
+            - Index
+            - Value
+    runtime:
+        - NullPointerException
+        - ArrayIndexOutOfBoundsException
+        - ArrayStoreException
+aconst_null:
+    op: 0x01
+    stack:
+        after:
+            - NullReference
+aload:
+    op: 0x19
+    operands:
+        - ['UBYTE', 'LOCAL_INDEX']
+    stack:
+        after:
+            - ObjectRef
+    can_be_wide: True
+aload_0:
+    op: 0x2A
+    stack:
+        after:
+            - ObjectRef
+    transform:
+      simple_swap:
+        op: aload
+        operands:
+          - 0
+aload_1:
+    op: 0x2B
+    stack:
+        after:
+            - ObjectRef
+    transform:
+      simple_swap:
+        op: aload
+        operands:
+          - 1
+aload_2:
+    op: 0x2C
+    stack:
+        after:
+            - ObjectRef
+    transform:
+      simple_swap:
+        op: aload
+        operands:
+          - 2
+aload_3:
+    op: 0x2D
+    stack:
+        after:
+            - ObjectRef
+    transform:
+      simple_swap:
+        op: aload
+        operands:
+          - 3
+anewarray:
+    op: 0xBD
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+    stack:
+      before:
+        - Value
+      after:
+        - ArrayRef
+areturn:
+    op: 0xB0
+    stack:
+      before:
+        - ObjectRef
+    causes_return: true
+arraylength:
+    op: 0xBE
+    stack:
+      before:
+        - ArrayRef
+      after:
+        - Value
+astore:
+    op: 0x3A
+    operands:
+        - ['UBYTE', 'LOCAL_INDEX']
+    can_be_wide: True
+    stack:
+      before:
+        - ObjectRef
+astore_0:
+    op: 0x4B
+    transform:
+      simple_swap:
+        op: astore
+        operands:
+          - 0
+    stack:
+      before:
+        - ObjectRef
+astore_1:
+    op: 0x4C
+    transform:
+      simple_swap:
+        op: astore
+        operands:
+          - 1
+    stack:
+      before:
+        - ObjectRef
+astore_2:
+    op: 0x4D
+    transform:
+      simple_swap:
+        op: astore
+        operands:
+          - 2
+    stack:
+      before:
+        - ObjectRef
+astore_3:
+    op: 0x4E
+    transform:
+      simple_swap:
+        op: astore
+        operands:
+          - 3
+    stack:
+      before:
+        - ObjectRef
+athrow:
+    op: 0xBF
+    stack:
+      before:
+        - ObjectRef
+baload:
+    op: 0x33
+    stack:
+      before:
+        - ArrayRef
+        - Index
+      after:
+         - Value
+bastore:
+    op: 0x54
+    stack:
+      before:
+        - ArrayRef
+        - Index
+        - Value
+bipush:
+    op: 0x10
+    operands:
+        - ['BYTE', 'LITERAL']
+    stack:
+      after:
+        - Value
+caload:
+    op: 0x34
+    stack:
+      before:
+        - ArrayRef
+        - Index
+      after:
+        - Value
+castore:
+    op: 0x55
+    stack:
+      before:
+        - ArrayRef
+        - Index
+        - Value
+checkcast:
+    op: 0xC0
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+    stack:
+      before:
+        - ObjectRef
+      after:
+        - ObjectRef
+d2f:
+    op: 0x90
+    stack:
+      before:
+        - Double
+        - Double
+      after:
+        - Float
+d2i:
+    op: 0x8E
+    stack:
+      before:
+        - Double
+        - Double
+      after:
+        - Integer
+d2l:
+    op: 0x8F
+    stack:
+      before:
+        - Double
+        - Double
+      after:
+        - Long
+        - Long
+dadd:
+    op: 0x63
+    stack:
+      before:
+        - Double
+        - Double
+        - Double
+        - Double
+      after:
+        - Double
+        - Double
+daload:
+    op: 0x31
+    stack:
+      before:
+        - ArrayRef
+        - Index
+      after:
+        - Double
+        - Double
+dastore:
+    op: 0x52
+    stack:
+      before:
+        - ArrayRef
+        - Index
+        - Double
+        - Double
+dcmpg:
+    op: 0x98
+    stack:
+      before:
+        - Double
+        - Double
+        - Double
+        - Double
+      after:
+        - Integer
+dcmpl:
+    op: 0x97
+    stack:
+      before:
+        - Double
+        - Double
+        - Double
+        - Double
+      after:
+        - Integer
+dconst_0:
+    op: 0x0E
+    stack:
+      after:
+        - Double
+        - Double
+dconst_1:
+    op: 0x0F
+    stack:
+      after:
+        - Double
+        - Double
+ddiv:
+    op: 0x6F
+    stack:
+      before:
+        - Double
+        - Double
+        - Double
+        - Double
+      after:
+        - Double
+        - Double
+dload:
+    op: 0x18
+    operands:
+        - ['UBYTE', 'LOCAL_INDEX']
+    can_be_wide: True
+    stack:
+      after:
+        - Double
+        - Double
+dload_0:
+    op: 0x26
+    transform:
+      simple_swap:
+        op: 0x18
+        operands:
+          - 0
+    stack:
+      after:
+        - Double
+        - Double
+dload_1:
+    op: 0x27
+    transform:
+      simple_swap:
+        op: 0x18
+        operands:
+          - 1
+    stack:
+      after:
+        - Double
+        - Double
+dload_2:
+    op: 0x28
+    transform:
+      simple_swap:
+        op: 0x18
+        operands:
+          - 2
+    stack:
+      after:
+        - Double
+        - Double
+dload_3:
+    op: 0x29
+    transform:
+      simple_swap:
+        op: 0x18
+        operands:
+          - 3
+    stack:
+      after:
+        - Double
+        - Double
+dmul:
+    op: 0x6B
+    stack:
+      before:
+        - Double
+        - Double
+        - Double
+        - Double
+      after:
+        - Double
+        - Double
+dneg:
+    op: 0x77
+    stack:
+      before:
+        - Double
+        - Double
+      after:
+        - Double
+        - Double
+drem:
+    op: 0x73
+    stack:
+      before:
+        - Double
+        - Double
+        - Double
+        - Double
+      after:
+        - Double
+        - Double
+dreturn:
+    op: 0xAF
+    stack:
+      before:
+        - Double
+        - Double
+    causes_return: true
+dstore:
+    op: 0x39
+    operands:
+        - ['UBYTE', 'LOCAL_INDEX']
+    can_be_wide: True
+    stack:
+      before:
+        - Double
+        - Double
+dstore_0:
+    op: 0x47
+    transform:
+      simple_swap:
+        op: dstore
+        operands:
+          - 0
+    stack:
+      before:
+        - Double
+        - Double
+dstore_1:
+    op: 0x48
+    transform:
+      simple_swap:
+        op: dstore
+        operands:
+          - 1
+    stack:
+      before:
+        - Double
+        - Double
+dstore_2:
+    op: 0x49
+    transform:
+      simple_swap:
+        op: dstore
+        operands:
+          - 2
+    stack:
+      before:
+        - Double
+        - Double
+dstore_3:
+    op: 0x4A
+    transform:
+      simple_swap:
+        op: dstore
+        operands:
+          - 3
+    stack:
+      before:
+        - Double
+        - Double
+dsub:
+    op: 0x67
+    stack:
+      before:
+        - Double
+        - Double
+        - Double
+        - Double
+      after:
+        - Double
+        - Double
+dup:
+    op: 0x59
+    stack:
+      before:
+        - Any
+      after:
+        - Any
+        - Any
+dup_x1:
+    op: 0x5A
+    stack:
+      before:
+        - Any
+        - Any
+      after:
+        - Any
+        - Any
+        - Any
+dup_x2:
+    op: 0x5B
+    stack:
+      before:
+        - Any
+        - Any
+        - Any
+      after:
+        - Any
+        - Any
+        - Any
+        - Any
+dup2:
+    op: 0x5C
+    stack:
+      before:
+        - Any
+        - Any
+      after:
+        - Any
+        - Any
+        - Any
+        - Any
+dup2_x1:
+    op: 0x5D
+    stack:
+      before:
+        - Any
+        - Any
+        - Any
+      after:
+        - Any
+        - Any
+        - Any
+        - Any
+        - Any
+dup2_x2:
+    op: 0x5E
+    stack:
+      before:
+        - Any
+        - Any
+        - Any
+        - Any
+      after:
+        - Any
+        - Any
+        - Any
+        - Any
+        - Any
+        - Any
+f2d:
+    op: 0x8D
+    stack:
+      before:
+        - Float
+      after:
+        - Double
+        - Double
+f2i:
+    op: 0x8B
+    stack:
+      before:
+        - Float
+      after:
+        - Integer
+f2l:
+    op: 0x8C
+    stack:
+      before:
+        - Float
+      after:
+        - Long
+        - Long
+fadd:
+    op: 0x62
+    stack:
+      before:
+        - Float
+        - Float
+      after:
+        - Float
+faload:
+    op: 0x30
+    stack:
+      before:
+        - ArrayRef
+        - Index
+      after:
+        - Float
+fastore:
+    op: 0x51
+    stack:
+      before:
+        - ArrayRef
+        - Index
+        - Float
+fcmpg:
+    op: 0x96
+    stack:
+      before:
+        - Float
+        - Float
+      after:
+        - Integer
+fcmpl:
+    op: 0x95
+    stack:
+      before:
+        - Float
+        - Float
+      after:
+        - Integer
+fconst_0:
+    op: 0x0B
+    stack:
+      after:
+        - Float
+fconst_1:
+    op: 0x0C
+    stack:
+      after:
+        - Float
+fconst_2:
+    op: 0x0D
+    stack:
+      after:
+        - Float
+fdiv:
+    op: 0x6E
+    stack:
+      before:
+        - Float
+        - Float
+      after:
+        - Float
+fload:
+    op: 0x17
+    operands:
+        - ['UBYTE', 'LOCAL_INDEX']
+    can_be_wide: True
+    stack:
+      after:
+        - Float
+fload_0:
+    op: 0x22
+    transform:
+      simple_swap:
+        op: fload
+        operands:
+          - 0
+    stack:
+      after:
+        - Float
+fload_1:
+    op: 0x23
+    transform:
+      simple_swap:
+        op: fload
+        operands:
+          - 1
+    stack:
+      after:
+        - Float
+fload_2:
+    op: 0x24
+    transform:
+      simple_swap:
+        op: fload
+        operands:
+          - 2
+    stack:
+      after:
+        - Float
+fload_3:
+    op: 0x25
+    transform:
+      simple_swap:
+        op: fload
+        operands:
+          - 3
+    stack:
+      after:
+        - Float
+fmul:
+    op: 0x6A
+    stack:
+      before:
+        - Float
+        - Float
+      after:
+        - Float
+fneg:
+    op: 0x76
+    stack:
+      before:
+        - Float
+      after:
+        - Float
+frem:
+    op: 0x72
+    stack:
+      before:
+        - Float
+        - Float
+      after:
+        - Float
+freturn:
+    op: 0xAE
+    stack:
+      before:
+        - Float
+    causes_return: true
+fstore:
+    op: 0x38
+    operands:
+        - ['UBYTE', 'LOCAL_INDEX']
+    can_be_wide: True
+    stack:
+      before:
+        - Float
+fstore_0:
+    op: 0x43
+    transform:
+      simple_swap:
+        op: fstore
+        operands:
+          - 0
+    stack:
+      before:
+        - Float
+fstore_1:
+    op: 0x44
+    transform:
+      simple_swap:
+        op: fstore
+        operands:
+          - 1
+    stack:
+      before:
+        - Float
+fstore_2:
+    op: 0x45
+    transform:
+      simple_swap:
+        op: fstore
+        operands:
+          - 2
+    stack:
+      before:
+        - Float
+fstore_3:
+    op: 0x46
+    transform:
+      simple_swap:
+        op: fstore
+        operands:
+          - 3
+    stack:
+      before:
+        - Float
+fsub:
+    op: 0x66
+    stack:
+      before:
+        - Float
+        - Float
+      after:
+        - Float
+getfield:
+    op: 0xB4
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+getstatic:
+    op: 0xB2
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+goto:
+    op: 0xA7
+    operands:
+        - ['SHORT', 'BRANCH']
+goto_w:
+    op: 0xC8
+    operands:
+        - ['INTEGER', 'BRANCH']
+i2b:
+    op: 0x91
+    stack:
+      before:
+        - Integer
+      after:
+        - Integer
+i2c:
+    op: 0x92
+    stack:
+      before:
+        - Integer
+      after:
+        - Integer
+i2d:
+    op: 0x87
+    stack:
+      before:
+        - Integer
+      after:
+        - Double
+        - Double
+i2f:
+    op: 0x86
+    stack:
+      before:
+        - Integer
+      after:
+        - Float
+i2l:
+    op: 0x85
+    stack:
+      before:
+        - Integer
+      after:
+        - Long
+        - Long
+i2s:
+    op: 0x93
+    stack:
+      before:
+        - Integer
+      after:
+        - Integer
+iadd:
+    op: 0x60
+    stack:
+      before:
+        - Integer
+        - Integer
+      after:
+        - Integer
+iaload:
+    op: 0x2E
+    stack:
+      before:
+        - ArrayRef
+        - Index
+      after:
+        - Integer
+iand:
+    op: 0x7E
+    stack:
+      before:
+        - Integer
+        - Integer
+      after:
+        - Integer
+iastore:
+    op: 0x4F
+    stack:
+      before:
+        - ArrayRef
+        - Index
+        - Integer
+iconst_m1:
+    op: 0x02
+    transform:
+      simple_swap:
+        op: bipush
+        operands:
+          - -1
+    stack:
+      after:
+        - Integer
+iconst_0:
+    op: 0x03
+    transform:
+      simple_swap:
+        op: bipush
+        operands:
+          - 0
+    stack:
+      after:
+        - Integer
+iconst_1:
+    op: 0x04
+    transform:
+      simple_swap:
+        op: bipush
+        operands:
+          - 1
+    stack:
+      after:
+        - Integer
+iconst_2:
+    op: 0x05
+    transform:
+      simple_swap:
+        op: bipush
+        operands:
+          - 2
+    stack:
+      after:
+        - Integer
+iconst_3:
+    op: 0x06
+    transform:
+      simple_swap:
+        op: bipush
+        operands:
+          - 3
+    stack:
+      after:
+        - Integer
+iconst_4:
+    op: 0x07
+    transform:
+      simple_swap:
+        op: bipush
+        operands:
+          - 4
+    stack:
+      after:
+        - Integer
+iconst_5:
+    op: 0x08
+    transform:
+      simple_swap:
+        op: bipush
+        operands:
+          - 5
+    stack:
+      after:
+        - Integer
+idiv:
+    op: 0x6C
+    stack:
+      before:
+        - Integer
+        - Integer
+      after:
+        - Integer
+if_acmpeq:
+    op: 0xA5
+    operands:
+        - ['SHORT', 'BRANCH']
+    stack:
+      before:
+        - ObjectRef
+        - ObjectRef
+if_acmpne:
+    op: 0xA6
+    operands:
+        - ['SHORT', 'BRANCH']
+    stack:
+      before:
+        - ObjectRef
+        - ObjectRef
+if_icmpeq:
+    op: 0x9F
+    operands:
+        - ['SHORT', 'BRANCH']
+    stack:
+      before:
+        - Integer
+        - Integer
+if_icmpne:
+    op: 0xA0
+    operands:
+        - ['SHORT', 'BRANCH']
+    stack:
+      before:
+        - Integer
+        - Integer
+if_icmplt:
+    op: 0xA1
+    operands:
+        - ['SHORT', 'BRANCH']
+    stack:
+      before:
+        - Integer
+        - Integer
+if_icmpge:
+    op: 0xA2
+    operands:
+        - ['SHORT', 'BRANCH']
+    stack:
+      before:
+        - Integer
+        - Integer
+if_icmpgt:
+    op: 0xA3
+    operands:
+        - ['SHORT', 'BRANCH']
+    stack:
+      before:
+        - Integer
+        - Integer
+if_icmple:
+    op: 0xA4
+    operands:
+        - ['SHORT', 'BRANCH']
+    stack:
+      before:
+        - Integer
+        - Integer
+ifeq:
+    op: 0x99
+    operands:
+        - ['SHORT', 'BRANCH']
+    stack:
+      before:
+        - Integer
+ifne:
+    op: 0x9A
+    operands:
+        - ['SHORT', 'BRANCH']
+    stack:
+      before:
+        - Integer
+iflt:
+    op: 0x9B
+    operands:
+        - ['SHORT', 'BRANCH']
+    stack:
+      before:
+        - Integer
+ifge:
+    op: 0x9C
+    operands:
+        - ['SHORT', 'BRANCH']
+    stack:
+      before:
+        - Integer
+ifgt:
+    op: 0x9D
+    operands:
+        - ['SHORT', 'BRANCH']
+    stack:
+      before:
+        - Integer
+ifle:
+    op: 0x9E
+    operands:
+        - ['SHORT', 'BRANCH']
+    stack:
+      before:
+        - Integer
+ifnonnull:
+    op: 0xC7
+    operands:
+        - ['SHORT', 'BRANCH']
+    stack:
+      before:
+        - ObjectRef
+ifnull:
+    op: 0xC6
+    operands:
+        - ['SHORT', 'BRANCH']
+    stack:
+      before:
+        - ObjectRef
+iinc:
+    op: 0x84
+    operands:
+        - ['UBYTE', 'LOCAL_INDEX']
+        - ['UBYTE', 'LITERAL']
+    can_be_wide: True
+iload:
+    op: 0x15
+    operands:
+        - ['UBYTE', 'LOCAL_INDEX']
+    can_be_wide: True
+    stack:
+      after:
+        - Integer
+iload_0:
+    op: 0x1A
+    transform:
+      simple_swap:
+        op: iload
+        operands:
+          - 0
+    stack:
+      after:
+        - Integer
+iload_1:
+    op: 0x1B
+    transform:
+      simple_swap:
+        op: iload
+        operands:
+          - 1
+    stack:
+      after:
+        - Integer
+iload_2:
+    op: 0x1C
+    transform:
+      simple_swap:
+        op: iload
+        operands:
+          - 2
+    stack:
+      after:
+        - Integer
+iload_3:
+    op: 0x1D
+    transform:
+      simple_swap:
+        op: iload
+        operands:
+          - 3
+    stack:
+      after:
+        - Integer
+imul:
+    op: 0x68
+    stack:
+      before:
+        - Integer
+        - Integer
+      after:
+        - Integer
+ineg:
+    op: 0x74
+    stack:
+      before:
+        - Integer
+      after:
+        - Integer
+instanceof:
+    op: 0xC1
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+    stack:
+      before:
+        - ObjectRef
+      after:
+        - Integer
+invokedynamic:
+    op: 0xBA
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+        - ['UBYTE', 'PADDING']
+        - ['UBYTE', 'PADDING']
+invokeinterface:
+    op: 0xB9
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+        - ['UBYTE', 'LITERAL']
+        - ['UBYTE', 'PADDING']
+invokespecial:
+    op: 0xB7
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+invokestatic:
+    op: 0xB8
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+invokevirtual:
+    op: 0xB6
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+ior:
+    op: 0x80
+    stack:
+      before:
+        - Integer
+        - Integer
+      after:
+        - Integer
+irem:
+    op: 0x70
+    stack:
+      before:
+        - Integer
+        - Integer
+      after:
+        - Integer
+ireturn:
+    op: 0xAC
+    stack:
+      before:
+        - Integer
+    causes_return: true
+ishl:
+    op: 0x78
+    stack:
+      before:
+        - Integer
+        - Integer
+      after:
+        - Integer
+ishr:
+    op: 0x7A
+    stack:
+      before:
+        - Integer
+        - Integer
+      after:
+        - Integer
+istore:
+    op: 0x36
+    operands:
+        - ['UBYTE', 'LOCAL_INDEX']
+    can_be_wide: True
+    stack:
+      before:
+        - Integer
+istore_0:
+    op: 0x3B
+    transform:
+      simple_swap:
+        op: istore
+        operands:
+          - 0
+    stack:
+      before:
+        - Integer
+istore_1:
+    op: 0x3C
+    transform:
+      simple_swap:
+        op: istore
+        operands:
+          - 1
+    stack:
+      before:
+        - Integer
+istore_2:
+    op: 0x3D
+    transform:
+      simple_swap:
+        op: istore
+        operands:
+          - 2
+    stack:
+      before:
+        - Integer
+istore_3:
+    op: 0x3E
+    transform:
+      simple_swap:
+        op: istore
+        operands:
+          - 3
+    stack:
+      before:
+        - Integer
+isub:
+    op: 0x64
+    stack:
+      before:
+        - Integer
+        - Integer
+      after:
+        - Integer
+iushr:
+    op: 0x7C
+    stack:
+      before:
+        - Integer
+        - Integer
+      after:
+        - Integer
+ixor:
+    op: 0x82
+    stack:
+      before:
+        - Integer
+        - Integer
+      after:
+        - Integer
+jsr:
+    op: 0xA8
+    operands:
+        - ['SHORT', 'BRANCH']
+    stack:
+      after:
+        - PC
+jsr_w:
+    op: 0xC9
+    operands:
+        - ['INTEGER', 'BRANCH']
+    stack:
+      after:
+        - PC
+l2d:
+    op: 0x8A
+    stack:
+      before:
+        - Long
+        - Long
+      after:
+        - Double
+        - Double
+l2f:
+    op: 0x89
+    stack:
+      before:
+        - Long
+        - Long
+      after:
+        - Float
+l2i:
+    op: 0x88
+    stack:
+      before:
+        - Long
+        - Long
+      after:
+        - Integer
+ladd:
+    op: 0x61
+    stack:
+      before:
+        - Long
+        - Long
+        - Long
+        - Long
+      after:
+        - Long
+        - Long
+laload:
+    op: 0x2F
+    stack:
+      before:
+        - ArrayRef
+        - Index
+      after:
+        - Long
+        - Long
+land:
+    op: 0x7F
+    stack:
+      before:
+        - Long
+        - Long
+        - Long
+        - Long
+      after:
+        - Long
+        - Long
+lastore:
+    op: 0x50
+    stack:
+      before:
+        - ArrayRef
+        - Index
+        - Long
+        - Long
+lcmp:
+    op: 0x94
+    stack:
+      before:
+        - Long
+        - Long
+        - Long
+        - Long
+      after:
+        - Integer
+lconst_0:
+    op: 0x09
+    stack:
+      after:
+        - Long
+        - Long
+lconst_1:
+    op: 0x0A
+    stack:
+      after:
+        - Long
+        - Long
+ldc:
+    op: 0x12
+    operands:
+        - ['UBYTE', 'CONSTANT_INDEX']
+    stack:
+      after:
+        - Any
+ldc_w:
+    op: 0x13
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+    stack:
+      after:
+        - Any
+ldc2_w:
+    op: 0x14
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+    stack:
+      after:
+        - Any
+        - Any
+ldiv:
+    op: 0x6D
+    stack:
+      before:
+        - Long
+        - Long
+        - Long
+        - Long
+      after:
+        - Long
+        - Long
+lload:
+    op: 0x16
+    operands:
+        - ['UBYTE', 'LOCAL_INDEX']
+    can_be_wide: True
+    stack:
+      after:
+        - Long
+        - Long
+lload_0:
+    op: 0x1E
+    transform:
+      simple_swap:
+        op: lload
+        operands:
+          - 0
+    stack:
+      after:
+        - Long
+        - Long
+lload_1:
+    op: 0x1F
+    transform:
+      simple_swap:
+        op: lload
+        operands:
+          - 1
+    stack:
+      after:
+        - Long
+        - Long
+lload_2:
+    op: 0x20
+    transform:
+      simple_swap:
+        op: lload
+        operands:
+          - 2
+    stack:
+      after:
+        - Long
+        - Long
+lload_3:
+    op: 0x21
+    transform:
+      simple_swap:
+        op: lload
+        operands:
+          - 3
+    stack:
+      after:
+        - Long
+        - Long
+lmul:
+    op: 0x69
+    stack:
+      before:
+        - Long
+        - Long
+        - Long
+        - Long
+      after:
+        - Long
+        - Long
+lneg:
+    op: 0x75
+    stack:
+      before:
+        - Long
+        - Long
+      after:
+        - Long
+        - Long
+lookupswitch:
+    op: 0xAB
+    stack:
+      before:
+        - Value
+lor:
+    op: 0x81
+    stack:
+      before:
+        - Long
+        - Long
+        - Long
+        - Long
+      after:
+        - Long
+        - Long
+lrem:
+    op: 0x71
+    stack:
+      before:
+        - Long
+        - Long
+        - Long
+        - Long
+      after:
+        - Long
+        - Long
+lreturn:
+    op: 0xAD
+    stack:
+      before:
+        - Long
+        - Long
+    causes_return: true
+lshl:
+    op: 0x79
+    stack:
+      before:
+        - Long
+        - Long
+        - Integer
+      after:
+        - Long
+        - Long
+lshr:
+    op: 0x7B
+    stack:
+      before:
+        - Long
+        - Long
+        - Integer
+      after:
+        - Long
+        - Long
+lstore:
+    op: 0x37
+    operands:
+        - ['UBYTE', 'LOCAL_INDEX']
+    can_be_wide: True
+    stack:
+      before:
+        - Long
+        - Long
+lstore_0:
+    op: 0x3F
+    transform:
+      simple_swap:
+        op: lstore
+        operands:
+          - 0
+    stack:
+      before:
+        - Long
+        - Long
+lstore_1:
+    op: 0x40
+    transform:
+      simple_swap:
+        op: lstore
+        operands:
+          - 1
+    stack:
+      before:
+        - Long
+        - Long
+lstore_2:
+    op: 0x41
+    transform:
+      simple_swap:
+        op: lstore
+        operands:
+          - 2
+    stack:
+      before:
+        - Long
+        - Long
+lstore_3:
+    op: 0x42
+    transform:
+      simple_swap:
+        op: lstore
+        operands:
+          - 3
+    stack:
+      before:
+        - Long
+        - Long
+lsub:
+    op: 0x65
+    stack:
+      before:
+        - Long
+        - Long
+        - Long
+        - Long
+      after:
+        - Long
+        - Long
+lushr:
+    op: 0x7D
+    stack:
+      before:
+        - Long
+        - Long
+        - Integer
+      after:
+        - Long
+        - Long
+lxor:
+    op: 0x83
+    stack:
+      before:
+        - Long
+        - Long
+        - Long
+        - Long
+      after:
+        - Long
+        - Long
+monitorenter:
+    op: 0xC2
+    stack:
+      before:
+        - ObjectRef
+monitorexit:
+    op: 0xC3
+    stack:
+      before:
+        - ObjectRef
+multianewarray:
+    op: 0xC5
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+        - ['UBYTE', 'LITERAL']
+new:
+    op: 0xBB
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+    stack:
+      after:
+        - ObjectRef
+newarray:
+    op: 0xBC
+    operands:
+        - ['UBYTE', 'LITERAL']
+    stack:
+      before:
+        - Integer
+      after:
+        - ArrayRef
+nop:
+    op: 0x00
+pop:
+    op: 0x57
+    stack:
+      before:
+        - Any
+pop2:
+    op: 0x58
+    stack:
+      before:
+        - Any
+        - Any
+putfield:
+    op: 0xB5
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+putstatic:
+    op: 0xB3
+    operands:
+        - ['USHORT', 'CONSTANT_INDEX']
+ret:
+    op: 0xA9
+    operands:
+        - ['UBYTE', 'LOCAL_INDEX']
+    can_be_wide: True
+return:
+    op: 0xB1
+    causes_return: true
+saload:
+    op: 0x35
+    stack:
+      before:
+        - ArrayRef
+        - Index
+      after:
+        - Integer
+sastore:
+    op: 0x56
+    stack:
+      before:
+        - ArrayRef
+        - Index
+        - Integer
+sipush:
+    op: 0x11
+    operands:
+        - ['SHORT', 'LITERAL']
+    stack:
+      after:
+        - Integer
+swap:
+    op: 0x5F
+    stack:
+      before:
+        - Any
+        - Any
+      after:
+        - Any
+        - Any
+tableswitch:
+    op: 0xAA
+    stack:
+      before:
+        - Any
+wide:
+    op: 0xC4
+breakpoint:
+    op: 0xCA
+impdep1:
+    op: 0xFE
+impdep2:
+    op: 0xFF

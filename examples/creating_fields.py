@@ -1,7 +1,7 @@
 """
 An example showing how to create fields on a new class.
 """
-from jawa import ClassFile
+from lawu import ClassFile
 
 if __name__ == '__main__':
     cf = ClassFile.create('HelloWorld')

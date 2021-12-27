@@ -1,4 +1,4 @@
-from jawa.util.verifier import VerificationTypes
+from lawu.util.verifier import VerificationTypes
 
 
 def test_stack_map_table_read(loader):

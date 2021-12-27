@@ -1,4 +1,4 @@
-from jawa.attributes.inner_classes import InnerClass
+from lawu.attributes.inner_classes import InnerClass
 
 
 def test_inner_classes_read(loader):

@@ -1,7 +1,7 @@
 from io import BytesIO
 
-from jawa.cf import ClassFile
-from jawa.attributes.source_file import SourceFileAttribute
+from lawu.cf import ClassFile
+from lawu.attributes.source_file import SourceFileAttribute
 
 
 def test_sourcefile_read(loader):

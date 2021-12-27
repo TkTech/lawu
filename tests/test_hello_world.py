@@ -1,4 +1,4 @@
-from jawa.util.bytecode import Instruction, Operand
+from lawu.util.bytecode import Instruction, Operand
 
 
 def test_hello_world(loader):

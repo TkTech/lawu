@@ -1,4 +1,4 @@
-from jawa.util.utf import encode_modified_utf8, decode_modified_utf8
+from lawu.util.utf import encode_modified_utf8, decode_modified_utf8
 
 
 def test_decode_modified_utf8(loader):

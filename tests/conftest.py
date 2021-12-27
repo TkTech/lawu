@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from jawa.classloader import ClassLoader
+from lawu.classloader import ClassLoader
 
 
 @pytest.fixture(scope='session')
