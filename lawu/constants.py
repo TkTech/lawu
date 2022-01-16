@@ -1,4 +1,5 @@
 from struct import unpack, pack
+from typing import List, Union, Tuple
 
 from mutf8 import decode_modified_utf8, encode_modified_utf8
 
@@ -333,10 +334,18 @@ _constant_fmts = (
     ('>HH', 4)
 )
 
+# The pool can contain padding entries (stored as a None), a tuple of the
+# (constant_type, data) or a resolved Constant.
+ConstantPoolType = List[Union[
+    None,
+    Tuple[int, Tuple[int, ...]],
+    Constant
+]]
+
 
 class ConstantPool(object):
     def __init__(self):
-        self._pool = [None]
+        self._pool: ConstantPoolType = [None]
 
     def append(self, constant):
         """
@@ -355,9 +364,28 @@ class ConstantPool(object):
         does not exist.
         """
         constant = self._pool[index]
+
+        # Doubles and Longs take two entries in the pool, and the second
+        # entry is always a None.
+        if constant is None:
+            raise ValueError(
+                f'Attempted to access a ConstantPool index containing a padding'
+                f' entry. This usually indicates an off-by-one bug. (index =='
+                f' {index!r})'
+            )
+
+        # If the item in the pool hasn't already been resolved, do so now.
         if not isinstance(constant, Constant):
-            constant = _constant_types[constant[0]](self, index, *constant[1:])
+            constant_type = _constant_types[constant[0]]
+            if constant_type is None:
+                raise ValueError(
+                    f'Attempted to access a ConstantPool index whose type is'
+                    f' unknown (type == {constant[0]!r})'
+                )
+
+            constant = constant_type(self, index, *constant[1:])
             self._pool[index] = constant
+
         return constant
 
     def __getitem__(self, idx):
@@ -560,15 +588,9 @@ class ConstantPool(object):
             tag = ord(read(1))
 
             if tag == 1:
-                # CONSTANT_Utf8_info, a length prefixed UTF-8-ish string.
-                # Only attempt to properly decode the MUTF8 if it fails
-                # regular UTF8 decoding, which overs huge time savings over
-                # large JARs.
+                # CONSTANT_Utf8_info, a length prefixed mutf8 string.
                 utf8_str = read(unpack('>H', read(2))[0])
-                try:
-                    utf8_str = utf8_str.decode('utf8')
-                except UnicodeDecodeError:
-                    utf8_str = decode_modified_utf8(utf8_str)
+                utf8_str = decode_modified_utf8(utf8_str)
                 self.append((tag, utf8_str))
             else:
                 # Every other constant type is trivial.
