@@ -1,4 +1,4 @@
-from typing import Optional, Callable, Iterator, IO, List
+from typing import Optional, Callable, Iterator, BinaryIO, List
 from struct import unpack, pack
 from itertools import repeat
 from enum import IntFlag
@@ -71,7 +71,7 @@ class Method(object):
     def __repr__(self):
         return f'<Method(name={self.name})>'
 
-    def unpack(self, source: IO):
+    def unpack(self, source: BinaryIO):
         """
         Read the Method from the file-like object `fio`.
 
@@ -86,7 +86,7 @@ class Method(object):
         self._name_index, self._descriptor_index = unpack('>HH', source.read(4))
         self.attributes.unpack(source)
 
-    def pack(self, out: IO):
+    def pack(self, out: BinaryIO):
         """
         Write the Method to the file-like object `out`.
 
@@ -149,7 +149,7 @@ class MethodTable(object):
         for method in self._table:
             yield method
 
-    def unpack(self, source: IO):
+    def unpack(self, source: BinaryIO):
         """
         Read the MethodTable from the file-like object `source`.
 
@@ -166,7 +166,7 @@ class MethodTable(object):
             method.unpack(source)
             self.append(method)
 
-    def pack(self, out: IO):
+    def pack(self, out: BinaryIO):
         """
         Write the MethodTable to the file-like object `out`.
 

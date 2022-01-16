@@ -171,9 +171,9 @@ class StackMapTableAttribute(Attribute):
         for _ in repeat(None, count):
             tag = info.u1()
             if tag in TYPES_WITH_EXTRA:
-                yield (tag, info.u2())
+                yield tag, info.u2()
             else:
-                yield (tag,)
+                yield tag,
 
     def pack(self):
         raise NotImplementedError()

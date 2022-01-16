@@ -46,7 +46,6 @@ def main(class_path, classes):
                 ', '.join(a.name + ('[]' * a.dimensions) for a in method.args)
             ).strip())
 
-            r = []
             if method.code:
                 for ins in method.code.disassemble():
                     line = [

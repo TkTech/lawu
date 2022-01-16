@@ -54,18 +54,18 @@ def test_default_bytecode_transforms():
 
 def test_load_from_directory():
     """Ensure we can load a ClassFile from a simple directory."""
-    with tempfile.TemporaryDirectory() as dir:
+    with tempfile.TemporaryDirectory() as directory:
         shutil.copy(
             os.path.join(
                 os.path.dirname(__file__),
                 'data',
                 'HelloWorld.class'
             ),
-            dir
+            directory
         )
 
         cl = ClassLoader()
-        cl.update(dir)
+        cl.update(directory)
 
         assert isinstance(cl.load('HelloWorld'), cl.klass)
 

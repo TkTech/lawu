@@ -1,4 +1,4 @@
-from typing import IO, Callable, Iterator, Optional
+from typing import BinaryIO, Callable, Iterator, Optional
 from struct import unpack, pack
 from itertools import repeat
 from enum import IntFlag
@@ -57,7 +57,7 @@ class Field(object):
         """
         return self.attributes.find_one(name='ConstantValue')
 
-    def unpack(self, source: IO):
+    def unpack(self, source: BinaryIO):
         """
         Read the Field from the file-like object `fio`.
 
@@ -72,7 +72,7 @@ class Field(object):
         self._name_index, self._descriptor_index = unpack('>HH', source.read(4))
         self.attributes.unpack(source)
 
-    def pack(self, out: IO):
+    def pack(self, out: BinaryIO):
         """
         Write the Field to the file-like object `out`.
 
@@ -108,7 +108,8 @@ class FieldTable(object):
         """
         self._table = [fld for fld in self._table if fld is not field]
 
-    def create(self, name: str, descriptor: str, value: Constant=None) -> Field:
+    def create(self, name: str, descriptor: str, value: Constant = None) \
+            -> Field:
         """
         Creates a new field from `name` and `descriptor`. For example::
 
@@ -148,7 +149,7 @@ class FieldTable(object):
         for field in self._table:
             yield field
 
-    def unpack(self, source: IO):
+    def unpack(self, source: BinaryIO):
         """
         Read the FieldTable from the file-like object `source`.
 
@@ -165,7 +166,7 @@ class FieldTable(object):
             field.unpack(source)
             self.append(field)
 
-    def pack(self, out: IO):
+    def pack(self, out: BinaryIO):
         """
         Write the FieldTable to the file-like object `out`.
 

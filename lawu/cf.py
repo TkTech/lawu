@@ -4,7 +4,7 @@ ClassFile reader & writer.
 The :mod:`lawu.cf` module provides tools for working with JVM ``.class``
 ClassFiles.
 """
-from typing import IO, Iterable, Union, Sequence, Optional
+from typing import BinaryIO, Iterable, Union, Sequence, Optional
 from struct import pack, unpack
 from collections import namedtuple
 from enum import IntFlag
@@ -78,7 +78,7 @@ class ClassFile(object):
         ENUM = 0x4000
         MODULE = 0x8000
     
-    def __init__(self, source: Optional[IO] = None):
+    def __init__(self, source: Optional[BinaryIO] = None):
         # Default to J2SE_7
         self._version = ClassVersion(0x32, 0)
         self._constants = ConstantPool()
@@ -96,7 +96,8 @@ class ClassFile(object):
             self._from_io(source)
 
     @classmethod
-    def create(cls, this: str, super_: str = u'java/lang/Object') -> 'ClassFile':
+    def create(cls, this: str, super_: str = u'java/lang/Object')\
+            -> 'ClassFile':
         """
         A utility which sets up reasonable defaults for a new public class.
 
@@ -113,7 +114,7 @@ class ClassFile(object):
 
         return cf
 
-    def save(self, source: IO):
+    def save(self, source: BinaryIO):
         """
         Saves the class to the file-like object `source`.
 
@@ -143,7 +144,7 @@ class ClassFile(object):
         self.methods.pack(source)
         self.attributes.pack(source)
 
-    def _from_io(self, source: IO):
+    def _from_io(self, source: BinaryIO):
         """
         Loads an existing JVM ClassFile from any file-like object.
         """

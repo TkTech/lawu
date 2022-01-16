@@ -1,7 +1,7 @@
 import inspect
 import pkgutil
 import importlib
-from typing import IO, Callable, Iterator, Union, Dict, Any, Tuple
+from typing import BinaryIO, Callable, Iterator, Union, Dict, Any, Tuple
 from struct import unpack, pack
 from itertools import repeat
 
@@ -49,7 +49,7 @@ class UnknownAttribute(Attribute):
         super().__init__(parent, name_index)
         self.info = None
 
-    def unpack(self, info: Union[bytes, BufferStreamReader]):
+    def unpack(self, info: BufferStreamReader):
         self.info = info
 
     def pack(self) -> bytes:
@@ -57,14 +57,14 @@ class UnknownAttribute(Attribute):
 
 
 class AttributeTable(object):
-    def __init__(self, cf, parent: Attribute=None):
+    def __init__(self, cf, parent: Attribute = None):
         #: The ClassFile that ultimately owns this AttributeTable.
         self.cf = cf
         #: The parent Attribute, if one exists.
         self.parent = parent
         self._table = []
 
-    def unpack(self, source: IO):
+    def unpack(self, source: BinaryIO):
         """
         Read the ConstantPool from the file-like object `source`.
 
@@ -90,17 +90,14 @@ class AttributeTable(object):
 
             attribute_type = ATTRIBUTE_CLASSES.get(name, UnknownAttribute)
             self._table[key] = attr = attribute_type(self, name_index)
-            if attribute_type is UnknownAttribute:
-                attr.unpack(info)
-            else:
-                attr.unpack(BufferStreamReader(info))
+            attr.unpack(BufferStreamReader(info))
 
         return attr
 
     def __len__(self):
         return len(self._table)
 
-    def pack(self, out: IO):
+    def pack(self, out: BinaryIO):
         """
         Write the AttributeTable to the file-like object `out`.
 
@@ -130,7 +127,7 @@ class AttributeTable(object):
         self._table.append(attribute)
         return attribute
 
-    def find(self, *, name: str=None, f: Callable=None) -> Iterator[Any]:
+    def find(self, *, name: str = None, f: Callable = None) -> Iterator[Any]:
         for idx, attribute in enumerate(self._table):
             if name is not None:
                 # Optimization to filter solely on name without causing
@@ -172,8 +169,8 @@ def get_attribute_classes() -> Dict[str, Attribute]:
         classes = inspect.getmembers(
             importlib.import_module(name),
             lambda c: (
-                inspect.isclass(c) and issubclass(c, Attribute) and
-                c is not Attribute
+                    inspect.isclass(c) and issubclass(c, Attribute) and
+                    c is not Attribute
             )
         )
 

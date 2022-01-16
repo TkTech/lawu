@@ -1,7 +1,7 @@
 """
 An example showing how to create fields on a new class.
 """
-from lawu import ClassFile
+from lawu.cf import ClassFile
 
 if __name__ == '__main__':
     cf = ClassFile.create('HelloWorld')
@@ -9,7 +9,7 @@ if __name__ == '__main__':
     # Creating a field from a field name and descriptor
     field = cf.fields.create('BeerCount', 'I')
 
-    # A convienience shortcut for creating static fields.
+    # A convenience shortcut for creating static fields.
     field = cf.fields.create_static(
         'HelloWorld',
         'Ljava/lang/String;',
