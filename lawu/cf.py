@@ -4,15 +4,15 @@ ClassFile reader & writer.
 The :mod:`lawu.cf` module provides tools for working with JVM ``.class``
 ClassFiles.
 """
-from typing import IO, Iterable, Union, Sequence
+from typing import IO, Iterable, Union, Sequence, Optional
 from struct import pack, unpack
 from collections import namedtuple
+from enum import IntFlag
 
 from lawu.constants import ConstantPool, ConstantClass
 from lawu.fields import FieldTable
 from lawu.methods import MethodTable
 from lawu.attribute import AttributeTable, ATTRIBUTE_CLASSES
-from lawu.util.flags import Flags
 from lawu.attributes.bootstrap import BootstrapMethod
 
 
@@ -66,21 +66,23 @@ class ClassFile(object):
 
     #: The JVM ClassFile magic number.
     MAGIC = 0xCAFEBABE
-
-    def __init__(self, source: IO=None):
+    
+    class AccessFlags(IntFlag):
+        PUBLIC = 0x0001
+        FINAL = 0x0010
+        SUPER = 0x0020
+        INTERFACE = 0x0200
+        ABSTRACT = 0x0400
+        SYNTHETIC = 0x1000
+        ANNOTATION = 0x2000
+        ENUM = 0x4000
+        MODULE = 0x8000
+    
+    def __init__(self, source: Optional[IO] = None):
         # Default to J2SE_7
         self._version = ClassVersion(0x32, 0)
         self._constants = ConstantPool()
-        self.access_flags = Flags('>H', {
-            'acc_public': 0x0001,
-            'acc_final': 0x0010,
-            'acc_super': 0x0020,
-            'acc_interface': 0x0200,
-            'acc_abstract': 0x0400,
-            'acc_synthetic': 0x1000,
-            'acc_annotation': 0x2000,
-            'acc_enum': 0x4000
-        })
+        self.access_flags = ClassFile.AccessFlags(0)
         self._this = 0
         self._super = 0
         self._interfaces = []
@@ -94,7 +96,7 @@ class ClassFile(object):
             self._from_io(source)
 
     @classmethod
-    def create(cls, this: str, super_: str=u'java/lang/Object') -> 'ClassFile':
+    def create(cls, this: str, super_: str = u'java/lang/Object') -> 'ClassFile':
         """
         A utility which sets up reasonable defaults for a new public class.
 
@@ -102,8 +104,9 @@ class ClassFile(object):
         :param super_: The name of this class's superclass.
         """
         cf = ClassFile()
-        cf.access_flags.acc_public = True
-        cf.access_flags.acc_super = True
+
+        cf.access_flags.PUBLIC = True
+        cf.access_flags.SUPER = True
 
         cf.this = cf.constants.create_class(this)
         cf.super_ = cf.constants.create_class(super_)
@@ -127,7 +130,7 @@ class ClassFile(object):
 
         self._constants.pack(source)
 
-        write(self.access_flags.pack())
+        write(pack('>H', int(self.access_flags)))
         write(pack(
             f'>HHH{len(self._interfaces)}H',
             self._this,
@@ -155,7 +158,7 @@ class ClassFile(object):
         self._constants.unpack(source)
 
         # ClassFile access_flags, see section #4.1 of the JVM specs.
-        self.access_flags.unpack(read(2))
+        self.access_flags = unpack('>H', read(2))
 
         # The CONSTANT_Class indexes for "this" class and its superclass.
         # Interfaces are a simple list of CONSTANT_Class indexes.
@@ -230,8 +233,8 @@ class ClassFile(object):
     @property
     def bootstrap_methods(self) -> BootstrapMethod:
         """
-        Returns the bootstrap methods table from the BootstrapMethods attribute,
-        if one exists. If it does not, one will be created.
+        Returns the bootstrap methods' table from the BootstrapMethods
+        attribute, if one exists. If it does not, one will be created.
 
         :returns: Table of `BootstrapMethod` objects.
         """

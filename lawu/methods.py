@@ -1,31 +1,32 @@
 from typing import Optional, Callable, Iterator, IO, List
 from struct import unpack, pack
 from itertools import repeat
+from enum import IntFlag
 
 from lawu.constants import UTF8
-from lawu.util.flags import Flags
 from lawu.util.descriptor import method_descriptor, JVMType
 from lawu.attribute import AttributeTable
 from lawu.attributes.code import CodeAttribute
 
 
 class Method(object):
+    class AccessFlags(IntFlag):
+        PUBLIC = 0x0001
+        PRIVATE = 0x0002
+        PROTECTED = 0x0004
+        STATIC = 0x0008
+        FINAL = 0x0010
+        SYNCHRONIZED = 0x0020
+        BRIDGE = 0x0040
+        VARARGS = 0x0080
+        NATIVE = 0x0100
+        ABSTRACT = 0x0400
+        STRICT = 0x0800
+        SYNTHETIC = 0x1000
+
     def __init__(self, cf):
         self._cf = cf
-        self.access_flags = Flags('>H', {
-            'acc_public': 0x0001,
-            'acc_private': 0x0002,
-            'acc_protected': 0x0004,
-            'acc_static': 0x0008,
-            'acc_final': 0x0010,
-            'acc_synchronized': 0x0020,
-            'acc_bridge': 0x0040,
-            'acc_varargs': 0x0080,
-            'acc_native': 0x0100,
-            'acc_abstract': 0x0400,
-            'acc_strict': 0x0800,
-            'acc_synthetic': 0x1000
-        })
+        self.access_flags = Method.AccessFlags(0)
         self._name_index = 0
         self._descriptor_index = 0
         self.attributes = AttributeTable(cf)
@@ -81,7 +82,7 @@ class Method(object):
 
         :param source: Any file-like object providing `read()`
         """
-        self.access_flags.unpack(source.read(2))
+        self.access_flags = Method.AccessFlags(unpack('>H', source.read(2))[0])
         self._name_index, self._descriptor_index = unpack('>HH', source.read(4))
         self.attributes.unpack(source)
 
@@ -96,7 +97,7 @@ class Method(object):
 
         :param out: Any file-like object providing `write()`
         """
-        out.write(self.access_flags.pack())
+        out.write(pack('>H', int(self.access_flags)))
         out.write(pack(
             '>HH',
             self._name_index,
@@ -126,7 +127,7 @@ class MethodTable(object):
         self._table = [fld for fld in self._table if fld is not method]
 
     def create(self, name: str, descriptor: str,
-               code: CodeAttribute=None) -> Method:
+               code: CodeAttribute = None) -> Method:
         """
         Creates a new method from `name` and `descriptor`. If `code` is not
         ``None``, add a `Code` attribute to this method.
@@ -136,7 +137,7 @@ class MethodTable(object):
         descriptor = self._cf.constants.create_utf8(descriptor)
         method._name_index = name.index
         method._descriptor_index = descriptor.index
-        method.access_flags.acc_public = True
+        method.access_flags.PUBLIC = True
 
         if code is not None:
             method.attributes.create(CodeAttribute)
@@ -180,8 +181,9 @@ class MethodTable(object):
         for method in self._table:
             method.pack(out)
 
-    def find(self, *, name: str=None, args: str=None, returns: str=None,
-             f: Callable=None) -> Iterator[Method]:
+    def find(self, *, name: Optional[str] = None, args: Optional[str] = None,
+             returns: Optional[str] = None, f: Optional[Callable] = None
+             ) -> Iterator[Method]:
         """
         Iterates over the methods table, yielding each matching method. Calling
         without any arguments is equivalent to iterating over the table. For
@@ -197,8 +199,8 @@ class MethodTable(object):
                 print method.name.value
 
         :param name: The name of the method(s) to find.
-        :param args: The arguments descriptor (ex: ``III``)
-        :param returns: The returns descriptor (Ex: ``V``)
+        :param args: The argument descriptor (ex: ``III``)
+        :param returns: The return descriptor (Ex: ``V``)
         :param f: Any callable which takes one argument (the method).
         """
         for method in self._table:

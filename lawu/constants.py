@@ -1,6 +1,6 @@
 from struct import unpack, pack
 
-from lawu.util.utf import decode_modified_utf8, encode_modified_utf8
+from mutf8 import decode_modified_utf8, encode_modified_utf8
 
 
 class Constant(object):

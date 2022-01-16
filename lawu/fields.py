@@ -1,8 +1,8 @@
 from typing import IO, Callable, Iterator, Optional
 from struct import unpack, pack
 from itertools import repeat
+from enum import IntFlag
 
-from lawu.util.flags import Flags
 from lawu.attribute import AttributeTable
 from lawu.constants import Constant, UTF8
 from lawu.attributes.constant_value import ConstantValueAttribute
@@ -10,19 +10,20 @@ from lawu.util.descriptor import field_descriptor
 
 
 class Field(object):
+    class AccessFlags(IntFlag):
+        PUBLIC = 0x0001
+        PRIVATE = 0x0002
+        PROTECTED = 0x0004
+        STATIC = 0x0008
+        FINAL = 0x0010
+        VOLATILE = 0x0040
+        TRANSIENT = 0x0080
+        SYNTHETIC = 0x1000
+        ENUM = 0x4000
+
     def __init__(self, cf):
         self._cf = cf
-        self.access_flags = Flags('>H', {
-            'acc_public': 0x0001,
-            'acc_private': 0x0002,
-            'acc_protected': 0x0004,
-            'acc_static': 0x0008,
-            'acc_final': 0x0010,
-            'acc_volatile': 0x0040,
-            'acc_transient': 0x0080,
-            'acc_synthetic': 0x1000,
-            'acc_enum': 0x4000
-        })
+        self.access_flags = Field.AccessFlags(0)
         self._name_index = 0
         self._descriptor_index = 0
         self.attributes = AttributeTable(cf)
@@ -67,7 +68,7 @@ class Field(object):
 
         :param source: Any file-like object providing `read()`
         """
-        self.access_flags.unpack(source.read(2))
+        self.access_flags = Field.AccessFlags(unpack('>H', source.read(2))[0])
         self._name_index, self._descriptor_index = unpack('>HH', source.read(4))
         self.attributes.unpack(source)
 
@@ -82,7 +83,7 @@ class Field(object):
 
         :param out: Any file-like object providing `write()`
         """
-        out.write(self.access_flags.pack())
+        out.write(pack('>H', int(self.access_flags)))
         out.write(pack('>HH', self._name_index, self._descriptor_index))
         self.attributes.pack(out)
 
@@ -134,11 +135,11 @@ class FieldTable(object):
         descriptor = self._cf.constants.create_utf8(descriptor)
         field._name_index = name.index
         field._descriptor_index = descriptor.index
-        field.access_flags.acc_public = True
+        field.access_flags.PUBLIC = True
 
         if value is not None:
             field.attributes.create(ConstantValueAttribute, value)
-            field.access_flags.acc_static = True
+            field.access_flags.STATIC = True
 
         self.append(field)
         return field
@@ -182,8 +183,8 @@ class FieldTable(object):
     def __len__(self):
         return len(self._table)
 
-    def find(self, *, name: str=None, type_: str=None,
-             f: Callable=None) -> Iterator[Field]:
+    def find(self, *, name: Optional[str] = None, type_: Optional[str] = None,
+             f: Optional[Callable] = None) -> Iterator[Field]:
         """
         Iterates over the fields table, yielding each matching method. Calling
         without any arguments is equivalent to iterating over the table.
