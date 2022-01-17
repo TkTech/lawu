@@ -4,7 +4,7 @@ ClassFile reader & writer.
 The :mod:`lawu.cf` module provides tools for working with JVM ``.class``
 ClassFiles.
 """
-from typing import BinaryIO, Iterable, Union, Sequence, Optional, List
+from typing import BinaryIO, Iterable, Union, Sequence, Optional
 from struct import pack, unpack
 from collections import namedtuple
 from enum import IntFlag

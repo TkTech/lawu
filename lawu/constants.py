@@ -1,13 +1,15 @@
 """
 Utilities for working with the ConstantPool found in JVM ClassFiles.
 """
-from typing import Dict, Any, Deque, BinaryIO, Union
+from typing import Dict, Optional, Deque, BinaryIO, Union, TypeVar
 from collections import deque
 from struct import unpack, pack
 
 from mutf8 import decode_modified_utf8, encode_modified_utf8
 
 from lawu import context
+
+R = TypeVar('R', bound='Constant')
 
 
 def _missing_elements(lst, start, end):
@@ -53,7 +55,7 @@ class Constant(object):
             if cf:
                 self.pool = cf.constants
 
-        if self.pool:
+        if self.pool is not None:
             self.pool.add(self, index=index)
 
     def pack(self) -> bytes:
@@ -174,7 +176,7 @@ class ConstantClass(Constant):
             self.name = name
 
     @property
-    def name(self):
+    def name(self) -> UTF8:
         return self.pool[self.name_index]
 
     @name.setter
@@ -182,7 +184,7 @@ class ConstantClass(Constant):
         if isinstance(value, UTF8):
             self.name_index = self.pool.add(value).index
         else:
-            self.name_index = UTF8(pool=self.pool, value=value).index
+            self.name_index = UTF8(value, pool=self.pool).index
 
     def pack(self):
         return pack('>H', self.name_index)
@@ -446,48 +448,27 @@ CONSTANTS = {
 }
 
 
-# The size (in bytes) of each type of Constant in the pool, except the UTF8
-# type which must be handled dynamically.
-SIZE = (
-    None,
-    None,
-    None,
-    4,
-    4,
-    8,
-    8,
-    2,
-    2,
-    4,
-    4,
-    4,
-    4,
-    None,
-    None,
-    3,
-    2,
-    None,
-    4
-)
-
-
 class ConstantPool(object):
     """
     This class can be used to read, modify, and write the JVM ClassFile
     constant pool with a high-level interface.
-    """
-    def __init__(self, *, source: BinaryIO = None):
-        # We use a dict as our basic pool container because the pool can be
-        # built out-of-order. For example when loading a Jasmin file, it's
-        # possible to explicitly set the position of constants in the pool,
-        # even if earlier elements don't exist yet. In general pool operations
-        # are not thread-safe.
 
+    :param source: If provided, the ConstantPool will be loaded from this
+                   file-like object providing read().
+    """
+    pool: Dict[int, Optional[Constant]]
+    sparse_map: Deque[int]
+
+    # We use a dict as our basic pool container because the pool can be
+    # built out-of-order. For example when loading a Jasmin file, it's
+    # possible to explicitly set the position of constants in the pool,
+    # even if earlier elements don't exist yet.
+    def __init__(self, *, source: BinaryIO = None):
         #: The internal constant pool. It's not recommended using this
         #: directly.
-        self.pool: Dict[int, Any] = {}
+        self.pool = {}
         #: A list of free indexes in the constant pool where gaps occur.
-        self.sparse_map: Deque[int] = deque()
+        self.sparse_map = deque()
 
         if source is not None:
             self.unpack(source)
@@ -561,7 +542,7 @@ class ConstantPool(object):
     def highest_unused_index(self) -> int:
         return max(self.pool.keys(), default=0) + 1
 
-    def add(self, constant, index: int = None) -> int:
+    def add(self, constant: R, index: int = None) -> R:
         """Add a new entry to the constant pool.
 
         If no index is provided, this method will first attempt to fill in any
