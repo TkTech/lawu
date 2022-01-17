@@ -114,13 +114,13 @@ class FieldTable(object):
         Creates a new field from `name` and `descriptor`. For example::
 
             >>> from lawu.cf import ClassFile
-            >>> cf = ClassFile.create('BeerCounter')
+            >>> cf = ClassFile(this='BeerCounter')
             >>> field = cf.fields.create('BeerCount', 'I')
 
         To automatically create a static field, pass a value::
 
             >>> from lawu.cf import ClassFile
-            >>> cf = ClassFile.create('BeerCounter')
+            >>> cf = ClassFile(this='BeerCounter')
             >>> field = cf.fields.create(
             ...     'MaxBeer',
             ...     'I',

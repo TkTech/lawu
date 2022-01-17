@@ -6,6 +6,7 @@ from struct import pack
 from itertools import repeat
 from collections import namedtuple
 
+from lawu.constants import UTF8
 from lawu.attribute import Attribute, AttributeTable
 from lawu.util.bytecode import (
     read_instruction,
@@ -30,7 +31,7 @@ class CodeAttribute(Attribute):
         from lawu import ClassFile
         from lawu.util.bytecode import Instruction
 
-        cf = ClassFile.create('HelloWorld')
+        cf = ClassFile(name='HelloWorld')
 
         main = cf.methods.create(
             # The name of the method
@@ -55,10 +56,11 @@ class CodeAttribute(Attribute):
     MINIMUM_CLASS_VERSION = (45, 3)
 
     def __init__(self, table, name_index=None):
-        super(CodeAttribute, self).__init__(
+        super().__init__(
             table,
-            name_index or table.cf.constants.create_utf8(
-                'Code'
+            name_index or UTF8(
+                pool=table.cf.constants,
+                value='Code'
             ).index
         )
         self.max_stack = 0

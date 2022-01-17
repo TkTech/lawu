@@ -133,10 +133,10 @@ class MethodTable(object):
         ``None``, add a `Code` attribute to this method.
         """
         method = Method(self._cf)
-        name = self._cf.constants.create_utf8(name)
-        descriptor = self._cf.constants.create_utf8(descriptor)
-        method._name_index = name.index
-        method._descriptor_index = descriptor.index
+        with self._cf:
+            method._name_index = UTF8(value=name).index
+            method._descriptor_index = UTF8(value=descriptor).index
+
         method.access_flags.PUBLIC = True
 
         if code is not None:

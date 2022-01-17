@@ -1,7 +1,34 @@
+"""
+Utilities for working with the ConstantPool found in JVM ClassFiles.
+"""
+from typing import Dict, Any, Deque, BinaryIO, Union
+from collections import deque
 from struct import unpack, pack
-from typing import List, Union, Tuple
 
 from mutf8 import decode_modified_utf8, encode_modified_utf8
+
+from lawu import context
+
+
+def _missing_elements(lst, start, end):
+    """Sublinear solution for finding gaps in a list of integers."""
+    # From Lie Ryan, Stackoverflow.
+    if end - start <= 1:
+        if lst[end] - lst[start] > 1:
+            yield from range(lst[start] + 1, lst[end])
+        return
+
+    index = start + (end - start) // 2
+
+    # is the lower half consecutive?
+    consecutive_low = lst[index] == lst[start] + (index - start)
+    if not consecutive_low:
+        yield from _missing_elements(lst, start, index)
+
+    # is the upper part consecutive?
+    consecutive_high = lst[index] == lst[end] - (end - index)
+    if not consecutive_high:
+        yield from _missing_elements(lst, index, end)
 
 
 class Constant(object):
@@ -10,16 +37,46 @@ class Constant(object):
     """
     __slots__ = ('pool', 'index')
 
-    def __init__(self, pool, index):
-        self.pool = pool
+    #: The "tag" or leading byte of a constant that identifies its type.
+    TAG: int = None
+
+    def __init__(self, *, pool=None, index=None):
+        #: The constants index in the pool that owns it.
         self.index = index
+        #: The ConstantPool that owns this constant.
+        self.pool = pool
+
+        # If no pool was specified, try to see if one is already pushed
+        # on the stack.
+        if pool is None:
+            cf = context.current_class_context()
+            if cf:
+                self.pool = cf.constants
+
+        if self.pool:
+            self.pool.add(self, index=index)
+
+    def pack(self) -> bytes:
+        """
+        Pack the constant into a binary string, minus the tag.
+        """
+        raise NotImplementedError()
+
+    def unpack(self, source: BinaryIO):
+        """
+        Unpack the constant from `source`, minus the tag.
+        """
+        raise NotImplementedError()
 
 
 class Number(Constant):
+    """
+    The base class for all numeric constant types.
+    """
     __slots__ = ('value',)
 
-    def __init__(self, pool, index, value):
-        super().__init__(pool, index)
+    def __init__(self, *, pool=None, index=None, value=0):
+        super().__init__(pool=pool, index=index)
         self.value = value
 
     def __repr__(self):
@@ -29,25 +86,40 @@ class Number(Constant):
         )
 
     def __eq__(self, other):
+        if isinstance(other, Number):
+            return other.value == self.value
         return other == self.value
+
+    def pack(self):
+        raise NotImplementedError()
+
+    def unpack(self, source: BinaryIO):
+        raise NotImplementedError()
 
 
 class UTF8(Constant):
     __slots__ = ('value',)
     TAG = 1
 
-    def __init__(self, pool, index, value):
-        super().__init__(pool, index)
+    def __init__(self, value=None, *, pool=None, index=None):
+        super().__init__(pool=pool, index=index)
         self.value = value
 
     def pack(self):
         encoded_value = encode_modified_utf8(self.value)
-        return pack('>BH', self.TAG, len(encoded_value)) + encoded_value
+        return pack('>H', len(encoded_value)) + encoded_value
+
+    def unpack(self, source: BinaryIO):
+        self.value = decode_modified_utf8(
+            source.read(unpack('>H', source.read(2))[0])
+        )
 
     def __repr__(self):
         return f'<UTF8(index={self.index}, value={self.value!r}>)'
 
     def __eq__(self, other):
+        if isinstance(other, UTF8):
+            return other.value == self.value
         return other == self.value
 
 
@@ -55,44 +127,68 @@ class Integer(Number):
     TAG = 3
 
     def pack(self):
-        return pack('>Bi', self.TAG, self.value)
+        return pack('>i', self.value)
+
+    def unpack(self, source: BinaryIO):
+        self.value = unpack('>i', source.read(4))[0]
 
 
 class Float(Number):
     TAG = 4
 
     def pack(self):
-        return pack('>Bf', self.TAG, self.value)
+        return pack('>f', self.value)
+
+    def unpack(self, source: BinaryIO):
+        self.value = unpack('>f', source.read(4))[0]
 
 
 class Long(Number):
     TAG = 5
 
     def pack(self):
-        return pack('>Bq', self.TAG, self.value)
+        return pack('>q', self.value)
+
+    def unpack(self, source: BinaryIO):
+        self.value = unpack('>q', source.read(8))[0]
 
 
 class Double(Number):
     TAG = 6
 
     def pack(self):
-        return pack('>Bd', self.TAG, self.value)
+        return pack('>d', self.value)
+
+    def unpack(self, source: BinaryIO):
+        self.value = unpack('>d', source.read(8))[0]
 
 
 class ConstantClass(Constant):
     __slots__ = ('name_index',)
     TAG = 7
 
-    def __init__(self, pool, index, name_index):
-        super().__init__(pool, index)
-        self.name_index = name_index
+    def __init__(self, *, pool=None, index=None, name=None):
+        super().__init__(pool=pool, index=index)
+        self.name_index = 0
+        if name is not None:
+            self.name = name
 
     @property
     def name(self):
-        return self.pool.get(self.name_index)
+        return self.pool[self.name_index]
+
+    @name.setter
+    def name(self, value: Union[str, UTF8]):
+        if isinstance(value, UTF8):
+            self.name_index = self.pool.add(value).index
+        else:
+            self.name_index = UTF8(pool=self.pool, value=value).index
 
     def pack(self):
-        return pack('>BH', self.TAG, self.name_index)
+        return pack('>H', self.name_index)
+
+    def unpack(self, source: BinaryIO):
+        self.name_index = unpack('>H', source.read(2))[0]
 
     def __repr__(self):
         return f'<ConstantClass(index={self.index}, name={self.name!r})>'
@@ -102,47 +198,57 @@ class String(Constant):
     __slots__ = ('string_index',)
     TAG = 8
 
-    def __init__(self, pool, index, string_index):
-        super().__init__(pool, index)
-        self.string_index = string_index
+    def __init__(self, string=None, *, pool=None, index=None):
+        super().__init__(pool=pool, index=index)
+        self.string_index = None
+        if string is not None:
+            self.string = string
 
     @property
     def string(self):
-        return self.pool.get(self.string_index)
+        return self.pool[self.string_index]
+
+    @string.setter
+    def string(self, value):
+        if isinstance(value, UTF8):
+            self.string_index = self.pool.add(value).index
+        else:
+            self.string_index = UTF8(value, pool=self.pool).index
 
     def pack(self):
-        return pack('>BH', self.TAG, self.string_index)
+        return pack('>H', self.string_index)
+
+    def unpack(self, source: BinaryIO):
+        self.string_index = unpack('>H', source.read(2))[0]
 
     def __repr__(self):
         return f'<String(index={self.index}, string={self.string!r})>'
-
-    def __eq__(self, other):
-        return other == self.string.value
 
 
 class Reference(Constant):
     __slots__ = ('class_index', 'name_and_type_index')
     TAG = None
 
-    def __init__(self, pool, index, class_index, name_and_type_index):
-        super().__init__(pool, index)
-        self.class_index = class_index
-        self.name_and_type_index = name_and_type_index
+    def __init__(self, *, pool=None, index=None):
+        super().__init__(pool=pool, index=index)
+        self.class_index = 0
+        self.name_and_type_index = 0
 
     @property
     def class_(self):
-        return self.pool.get(self.class_index)
+        return self.pool[self.class_index]
 
     @property
     def name_and_type(self):
-        return self.pool.get(self.name_and_type_index)
+        return self.pool[self.name_and_type_index]
 
     def pack(self):
-        return pack(
-            '>BHH',
-            self.TAG,
-            self.class_index,
-            self.name_and_type_index
+        return pack('>HH', self.class_index, self.name_and_type_index)
+
+    def unpack(self, source: BinaryIO):
+        self.class_index, self.name_and_type_index = unpack(
+            '>HH',
+            source.read(4)
         )
 
     def __repr__(self):
@@ -170,21 +276,27 @@ class NameAndType(Constant):
     __slots__ = ('name_index', 'descriptor_index')
     TAG = 12
 
-    def __init__(self, pool, index, name_index, descriptor_index):
-        super().__init__(pool, index)
-        self.name_index = name_index
-        self.descriptor_index = descriptor_index
+    def __init__(self, *, pool=None, index=None):
+        super().__init__(pool=pool, index=index)
+        self.name_index = 0
+        self.descriptor_index = 0
 
     @property
     def name(self):
-        return self.pool.get(self.name_index)
+        return self.pool[self.name_index]
 
     @property
     def descriptor(self):
-        return self.pool.get(self.descriptor_index)
+        return self.pool[self.descriptor_index]
 
     def pack(self):
-        return pack('>BHH', self.TAG, self.name_index, self.descriptor_index)
+        return pack('>HH', self.name_index, self.descriptor_index)
+
+    def unpack(self, source: BinaryIO):
+        self.name_index, self.descriptor_index = unpack(
+            '>HH',
+            source.read(4)
+        )
 
     def __repr__(self):
         return (
@@ -199,17 +311,23 @@ class MethodHandle(Constant):
     __slots__ = ('reference_kind', 'reference_index')
     TAG = 15
 
-    def __init__(self, pool, index, reference_kind, reference_index):
-        super().__init__(pool, index)
-        self.reference_kind = reference_kind
-        self.reference_index = reference_index
+    def __init__(self, *, pool=None, index=None):
+        super().__init__(pool=pool, index=index)
+        self.reference_kind = None
+        self.reference_index = 0
 
     @property
     def reference(self):
         return self.pool.get(self.reference_index)
 
     def pack(self):
-        return pack('>BBH', self.TAG, self.reference_kind, self.reference_index)
+        return pack('>BH', self.reference_kind, self.reference_index)
+
+    def unpack(self, source: BinaryIO):
+        self.reference_kind, self.reference_index = unpack(
+            '>BH',
+            source.read(3)
+        )
 
     def __repr__(self):
         return (
@@ -221,30 +339,32 @@ class MethodType(Constant):
     __slots__ = ('descriptor_index',)
     TAG = 16
 
-    def __init__(self, pool, index, descriptor_index):
-        super().__init__(pool, index)
-        self.descriptor_index = descriptor_index
+    def __init__(self, *, pool=None, index=None):
+        super().__init__(pool=pool, index=index)
+        self.descriptor_index = 0
 
     @property
     def descriptor(self):
         return self.pool.get(self.descriptor_index)
 
     def pack(self):
-        return pack('>BH', self.TAG, self.descriptor_index)
+        return pack('>H', self.descriptor_index)
+
+    def unpack(self, source: BinaryIO):
+        self.descriptor_index = unpack('>H', source.read(2))[0]
 
     def __repr__(self):
         return f'<MethodType(index={self.index},descriptor={self.descriptor})>'
 
 
-class InvokeDynamic(Constant):
+class Dynamic(Constant):
     __slots__ = ('bootstrap_method_attr_index', 'name_and_type_index')
-    TAG = 18
+    TAG = 17
 
-    def __init__(self, pool, index, bootstrap_method_attr_index,
-                 name_and_type_index):
-        super().__init__(pool, index)
-        self.bootstrap_method_attr_index = bootstrap_method_attr_index
-        self.name_and_type_index = name_and_type_index
+    def __init__(self, *, pool=None, index=None):
+        super().__init__(pool=pool, index=index)
+        self.bootstrap_method_attr_index = 0
+        self.name_and_type_index = 0
 
     @property
     def method_attr_index(self):
@@ -256,11 +376,29 @@ class InvokeDynamic(Constant):
 
     def pack(self):
         return pack(
-            '>BHH',
-            self.TAG,
+            '>HH',
             self.bootstrap_method_attr_index,
             self.name_and_type_index
         )
+
+    def unpack(self, source: BinaryIO):
+        self.bootstrap_method_attr_index, self.name_and_type_index = unpack(
+            '>HH',
+            source.read(4)
+        )
+
+    def __repr__(self):
+        return (
+            f'<Dynamic('
+            f'index={self.index},'
+            f'method_attr_index={self.method_attr_index},'
+            f'name_and_type={self.name_and_type!r})>'
+        )
+
+
+class InvokeDynamic(Dynamic):
+    __slots__ = ('bootstrap_method_attr_index', 'name_and_type_index')
+    TAG = 18
 
     def __repr__(self):
         return (
@@ -287,112 +425,217 @@ class PackageInfo(ConstantClass):
         return f'<PackageInfo(index={self.index}, name={self.name!r})>'
 
 
-_constant_types = (
+CONSTANTS = {
+    1: UTF8,
+    3: Integer,
+    4: Float,
+    5: Long,
+    6: Double,
+    7: ConstantClass,
+    8: String,
+    9: FieldReference,
+    10: MethodReference,
+    11: InterfaceMethodRef,
+    12: NameAndType,
+    15: MethodHandle,
+    16: MethodType,
+    17: Dynamic,
+    18: InvokeDynamic,
+    19: Module,
+    20: PackageInfo
+}
+
+
+# The size (in bytes) of each type of Constant in the pool, except the UTF8
+# type which must be handled dynamically.
+SIZE = (
     None,
-    UTF8,
-    None,
-    Integer,
-    Float,
-    Long,
-    Double,
-    ConstantClass,
-    String,
-    FieldReference,
-    MethodReference,
-    InterfaceMethodRef,
-    NameAndType,
     None,
     None,
-    MethodHandle,
-    MethodType,
+    4,
+    4,
+    8,
+    8,
+    2,
+    2,
+    4,
+    4,
+    4,
+    4,
     None,
-    InvokeDynamic,
-    Module,
-    PackageInfo
+    None,
+    3,
+    2,
+    None,
+    4
 )
-
-
-# The format and size-on-disk of each type of constant
-# in the constant pool.
-_constant_fmts = (
-    None, None, None,
-    ('>i', 4),
-    ('>f', 4),
-    ('>q', 8),
-    ('>d', 8),
-    ('>H', 2),
-    ('>H', 2),
-    ('>HH', 4),
-    ('>HH', 4),
-    ('>HH', 4),
-    ('>HH', 4),
-    None,
-    None,
-    ('>BH', 3),
-    ('>H', 2),
-    None,
-    ('>HH', 4)
-)
-
-# The pool can contain padding entries (stored as a None), a tuple of the
-# (constant_type, data) or a resolved Constant.
-ConstantPoolType = List[Union[
-    None,
-    Tuple[int, Tuple[int, ...]],
-    Constant
-]]
 
 
 class ConstantPool(object):
-    def __init__(self):
-        self._pool: ConstantPoolType = [None]
+    """
+    This class can be used to read, modify, and write the JVM ClassFile
+    constant pool with a high-level interface.
+    """
+    def __init__(self, *, source: BinaryIO = None):
+        # We use a dict as our basic pool container because the pool can be
+        # built out-of-order. For example when loading a Jasmin file, it's
+        # possible to explicitly set the position of constants in the pool,
+        # even if earlier elements don't exist yet. In general pool operations
+        # are not thread-safe.
 
-    def append(self, constant):
-        """
-        Appends a new constant to the end of the pool.
-        """
-        self._pool.append(constant)
+        #: The internal constant pool. It's not recommended using this
+        #: directly.
+        self.pool: Dict[int, Any] = {}
+        #: A list of free indexes in the constant pool where gaps occur.
+        self.sparse_map: Deque[int] = deque()
 
-    def __iter__(self):
-        for index, constant in enumerate(self._pool):
+        if source is not None:
+            self.unpack(source)
+
+    def clear(self):
+        """Completely erase the ConstantPool.
+
+        Any existing Constants will be disassociated from this pool, and may
+        still be referenced from elsewhere.
+        """
+        # Disassociate any existing Constants in the pool.
+        for constant in self.pool.values():
             if constant is not None:
-                yield self.get(index)
+                constant.pool = None
 
-    def get(self, index):
-        """
-        Returns the `Constant` at `index`, raising a KeyError if it
-        does not exist.
-        """
-        constant = self._pool[index]
+        self.pool.clear()
+        self.sparse_map.clear()
 
-        # Doubles and Longs take two entries in the pool, and the second
-        # entry is always a None.
-        if constant is None:
-            raise ValueError(
-                f'Attempted to access a ConstantPool index containing a padding'
-                f' entry. This usually indicates an off-by-one bug. (index =='
-                f' {index!r})'
+    def unpack(self, source: BinaryIO):
+        """Unpack a constant pool from a ClassFile."""
+        read = source.read
+        constant_pool_count = unpack('>H', read(2))[0]
+
+        index_iter = iter(range(1, constant_pool_count))
+        for index in index_iter:
+            tag = ord(read(1))
+            c = CONSTANTS[tag]()
+            c.unpack(source)
+            c.index = index
+            c.pool = self
+            self.pool[index] = c
+            if tag == 5 or tag == 6:
+                self.pool[index + 1] = None
+                next(index_iter)
+
+    def pack(self, out: BinaryIO):
+        """Write the ConstantPool to the file-like object `out`."""
+        write = out.write
+        write(pack('>H', len(self) + 1))
+
+        for index, constant in sorted(self.pool.items()):
+            # Skip over double-width padding (Doubles & Longs)
+            if constant is None:
+                continue
+            write(constant.TAG.to_bytes(1, byteorder='big'))
+            write(constant.pack())
+
+    def update_trackers(self):
+        """Update the internal tracking lists and counters to update free
+        indexes.
+
+        .. note::
+
+            This is a fairly expensive operation, you should avoid calling it
+            except when necessary. If you are not updating the pool manually
+            you should never need to use this method.
+        """
+        if not self.pool:
+            self.sparse_map = deque()
+            return
+
+        self.sparse_map = deque(
+            _missing_elements(
+                sorted(self.pool.keys()),
+                0,
+                len(self.pool) - 1
             )
+        )
 
-        # If the item in the pool hasn't already been resolved, do so now.
-        if not isinstance(constant, Constant):
-            constant_type = _constant_types[constant[0]]
-            if constant_type is None:
-                raise ValueError(
-                    f'Attempted to access a ConstantPool index whose type is'
-                    f' unknown (type == {constant[0]!r})'
-                )
+    @property
+    def highest_unused_index(self) -> int:
+        return max(self.pool.keys(), default=0) + 1
 
-            constant = constant_type(self, index, *constant[1:])
-            self._pool[index] = constant
+    def add(self, constant, index: int = None) -> int:
+        """Add a new entry to the constant pool.
+
+        If no index is provided, this method will first attempt to fill in any
+        gaps in the constant pool. If no room is found, it'll instead append to
+        the end of the pool.
+
+        :param constant: The constant to be added to the pool.
+        :param index: Optionally, an explicit index to use for the
+                      new constant. [default: None]
+        :returns: The index used for the constant.
+        """
+        if index is None and self.sparse_map:
+            # No explicit spot in the pool was requested, so lets try to find
+            # room for it.
+            desired_index = self.sparse_map.popleft()
+            if constant.TAG in (5, 6):
+                # ... however, we want to add a LONG or DOUBLE, so we
+                # really need two adjacent slots.
+                if desired_index + 1 not in self.pool:
+                    index = desired_index
+                    # Make sure it's removed from the sparse map if the
+                    # neighbouring index happened to also be free.
+                    try:
+                        self.sparse_map.remove(desired_index + 1)
+                    except ValueError:
+                        pass
+                else:
+                    # We can't use this slot, add it back to the sparse map,
+                    # so it can be reused.
+                    self.sparse_map.appendleft(desired_index)
+            else:
+                # Single-slot constant, we can put it anywhere.
+                index = desired_index
+
+        # Still no usable index, append it to the pool instead.
+        if index is None:
+            index = self.highest_unused_index
+
+        self.pool[index] = constant
+        constant.index = index
+        constant.pool = self
+        if constant.TAG in (5, 6):
+            self.pool[index + 1] = None
 
         return constant
 
-    def __getitem__(self, idx):
-        return self.get(idx)
+    def remove(self, index: int):
+        """Remove the constant at `index` from the pool.
 
-    def __setitem__(self, idx, value):
-        self._pool[idx] = value
+        ..note::
+
+            If the constant being removed at `index` is a LONG or DOUBLE, the
+            adjacent padding constant will also be removed.
+
+        :param index: Index in the pool to be removed.
+        """
+        const = self.pool.pop(index)
+        if const.TAG in (5, 6):
+            # If this was a double-width LONG or DOUBLE cleanup the adjacent
+            # padding.
+            del self.pool[index + 1]
+        self.update_trackers()
+
+    def __iter__(self):
+        yield from (
+            (k, v) for k, v in sorted(self.pool.items())
+            if v is not None
+        )
+
+    def __getitem__(self, index):
+        return self.pool[index]
+
+    def __len__(self):
+        return sum(1 for v in self.pool.values() if v is not None)
 
     def find(self, type_=None, f=None):
         """
@@ -402,7 +645,7 @@ class ConstantPool(object):
         :param type_: Any subclass of :class:`Constant` or ``None``.
         :param f: Any callable which takes one argument (the constant).
         """
-        for constant in self:
+        for index, constant in self:
             if type_ is not None and not isinstance(constant, type_):
                 continue
 
@@ -420,218 +663,3 @@ class ConstantPool(object):
             return next(self.find(*args, **kwargs))
         except StopIteration:
             return None
-
-    def create_utf8(self, value):
-        """
-        Creates a new :class:`ConstantUTF8`, adding it to the pool and
-        returning it.
-
-        :param value: The value of the new UTF8 string.
-        """
-        self.append((1, value))
-        return self.get(self.raw_count - 1)
-
-    def create_integer(self, value: int) -> Integer:
-        """
-        Creates a new :class:`ConstantInteger`, adding it to the pool and
-        returning it.
-
-        :param value: The value of the new integer.
-        """
-        self.append((3, value))
-        return self.get(self.raw_count - 1)
-
-    def create_float(self, value: float) -> Float:
-        """
-        Creates a new :class:`ConstantFloat`, adding it to the pool and
-        returning it.
-
-        :param value: The value of the new float.
-        """
-        self.append((4, value))
-        return self.get(self.raw_count - 1)
-
-    def create_long(self, value: int) -> Long:
-        """
-        Creates a new :class:`ConstantLong`, adding it to the pool and
-        returning it.
-
-        :param value: The value of the new long.
-        """
-        self.append((5, value))
-        self.append(None)
-        return self.get(self.raw_count - 2)
-
-    def create_double(self, value: float) -> Double:
-        """
-        Creates a new :class:`ConstantDouble`, adding it to the pool and
-        returning it.
-
-        :param value: The value of the new Double.
-        """
-        self.append((6, value))
-        self.append(None)
-        return self.get(self.raw_count - 2)
-
-    def create_class(self, name: str) -> ConstantClass:
-        """
-        Creates a new :class:`ConstantClass`, adding it to the pool and
-        returning it.
-
-        :param name: The name of the new class.
-        """
-        self.append((
-            7,
-            self.create_utf8(name).index
-        ))
-        return self.get(self.raw_count - 1)
-
-    def create_string(self, value: str) -> String:
-        """
-        Creates a new :class:`ConstantString`, adding it to the pool and
-        returning it.
-
-        :param value: The value of the new string as a UTF8 string.
-        """
-        self.append((
-            8,
-            self.create_utf8(value).index
-        ))
-        return self.get(self.raw_count - 1)
-
-    def create_name_and_type(self, name: str, descriptor: str) -> NameAndType:
-        """
-        Creates a new :class:`ConstantNameAndType`, adding it to the pool and
-        returning it.
-
-        :param name: The name of the class.
-        :param descriptor: The descriptor for `name`.
-        """
-        self.append((
-            12,
-            self.create_utf8(name).index,
-            self.create_utf8(descriptor).index
-        ))
-        return self.get(self.raw_count - 1)
-
-    def create_field_ref(self, class_: str, field: str, descriptor: str) \
-            -> FieldReference:
-        """
-        Creates a new :class:`ConstantFieldRef`, adding it to the pool and
-        returning it.
-
-        :param class_: The name of the class to which `field` belongs.
-        :param field: The name of the field.
-        :param descriptor: The descriptor for `field`.
-        """
-        self.append((
-            9,
-            self.create_class(class_).index,
-            self.create_name_and_type(field, descriptor).index
-        ))
-        return self.get(self.raw_count - 1)
-
-    def create_method_ref(self, class_: str, method: str, descriptor: str) \
-            -> MethodReference:
-        """
-        Creates a new :class:`ConstantMethodRef`, adding it to the pool and
-        returning it.
-
-        :param class_: The name of the class to which `method` belongs.
-        :param method: The name of the method.
-        :param descriptor: The descriptor for `method`.
-        """
-        self.append((
-            10,
-            self.create_class(class_).index,
-            self.create_name_and_type(method, descriptor).index
-        ))
-        return self.get(self.raw_count - 1)
-
-    def create_interface_method_ref(self, class_: str, if_method: str,
-                                    descriptor: str) -> InterfaceMethodRef:
-        """
-        Creates a new :class:`ConstantInterfaceMethodRef`, adding it to the
-        pool and returning it.
-
-        :param class_: The name of the class to which `if_method` belongs.
-        :param if_method: The name of the interface method.
-        :param descriptor: The descriptor for `if_method`.
-        """
-        self.append((
-            11,
-            self.create_class(class_).index,
-            self.create_name_and_type(if_method, descriptor).index
-        ))
-        return self.get(self.raw_count - 1)
-
-    def unpack(self, fio):
-        """
-        Read the ConstantPool from the file-like object `fio`.
-
-        .. note::
-
-            Advanced usage only. You will typically never need to call this
-            method as it will be called for you when loading a ClassFile.
-
-        :param fio: Any file-like object providing `read()`
-        """
-        # Reads in the ConstantPool (constant_pool in the JVM Spec)
-        constant_pool_count = unpack('>H', fio.read(2))[0]
-
-        # Pull this locally so CPython doesn't do a lookup each time.
-        read = fio.read
-
-        while constant_pool_count > 1:
-            constant_pool_count -= 1
-            # The 1-byte prefix identifies the type of constant.
-            tag = ord(read(1))
-
-            if tag == 1:
-                # CONSTANT_Utf8_info, a length prefixed mutf8 string.
-                utf8_str = read(unpack('>H', read(2))[0])
-                utf8_str = decode_modified_utf8(utf8_str)
-                self.append((tag, utf8_str))
-            else:
-                # Every other constant type is trivial.
-                fmt, size = _constant_fmts[tag]
-                self.append((tag, *unpack(fmt, read(size))))
-                if tag == 5 or tag == 6:
-                    # LONG (5) and DOUBLE (6) count as two entries in the
-                    # pool.
-                    self.append(None)
-                    constant_pool_count -= 1
-
-    def pack(self, fout):
-        """
-        Write the ConstantPool to the file-like object `fout`.
-
-        .. note::
-
-            Advanced usage only. You will typically never need to call this
-            method as it will be calle=d for you when saving a ClassFile.
-
-        :param fout: Any file-like object providing `write()`
-        """
-        write = fout.write
-        write(pack('>H', self.raw_count))
-
-        for constant in self:
-            write(constant.pack())
-
-    def __len__(self) -> int:
-        """
-        The number of `Constants` in the `ConstantPool`, excluding padding.
-        """
-        count = 0
-        for constant in self._pool:
-            if constant is not None:
-                count += 1
-        return count
-
-    @property
-    def raw_count(self) -> int:
-        """
-        The number of `Constants` in the `ConstantPool`, including padding.
-        """
-        return len(self._pool)

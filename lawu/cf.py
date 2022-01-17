@@ -4,16 +4,17 @@ ClassFile reader & writer.
 The :mod:`lawu.cf` module provides tools for working with JVM ``.class``
 ClassFiles.
 """
-from typing import BinaryIO, Iterable, Union, Sequence, Optional
+from typing import BinaryIO, Iterable, Union, Sequence, Optional, List
 from struct import pack, unpack
 from collections import namedtuple
 from enum import IntFlag
 
-from lawu.constants import ConstantPool, ConstantClass
+from lawu.constants import ConstantPool, ConstantClass, UTF8
 from lawu.fields import FieldTable
 from lawu.methods import MethodTable
 from lawu.attribute import AttributeTable, ATTRIBUTE_CLASSES
 from lawu.attributes.bootstrap import BootstrapMethod
+from lawu.context import class_context
 
 
 class ClassVersion(namedtuple('ClassVersion', ['major', 'minor'])):
@@ -50,11 +51,11 @@ class ClassFile(object):
 
     To save a newly created or modified ClassFile::
 
-        >>> cf = ClassFile.create('HelloWorld')
+        >>> cf = ClassFile()
         >>> with open('HelloWorld.class', 'wb') as out:
         ...    cf.save(out)
 
-    :meth:`~ClassFile.create` sets up some reasonable defaults equivalent to:
+    :meth:`~ClassFile()` sets up some reasonable defaults equivalent to:
 
     .. code-block:: java
 
@@ -66,8 +67,11 @@ class ClassFile(object):
 
     #: The JVM ClassFile magic number.
     MAGIC = 0xCAFEBABE
-    
+
     class AccessFlags(IntFlag):
+        """
+        Possible values for the ClassFile.access_flags field.
+        """
         PUBLIC = 0x0001
         FINAL = 0x0010
         SUPER = 0x0020
@@ -77,42 +81,72 @@ class ClassFile(object):
         ANNOTATION = 0x2000
         ENUM = 0x4000
         MODULE = 0x8000
-    
-    def __init__(self, source: Optional[BinaryIO] = None):
+
+    def __init__(self, source: Optional[BinaryIO] = None, *,
+                 this: str = 'HelloWorld', super_: str = 'java/lang/Object'):
         # Default to J2SE_7
         self._version = ClassVersion(0x32, 0)
-        self._constants = ConstantPool()
-        self.access_flags = ClassFile.AccessFlags(0)
-        self._this = 0
-        self._super = 0
+        self.constants = ConstantPool()
+        self.access_flags = (
+            ClassFile.AccessFlags.PUBLIC |
+            ClassFile.AccessFlags.SUPER
+        )
+        self.this = self.constants.add(
+            ConstantClass(
+                pool=self.constants,
+                name=self.constants.add(UTF8(this))
+            )
+        )
+        self.super_ = self.constants.add(
+            ConstantClass(
+                pool=self.constants,
+                name=self.constants.add(UTF8(super_))
+            )
+        )
         self._interfaces = []
         self.fields = FieldTable(self)
         self.methods = MethodTable(self)
         self.attributes = AttributeTable(self)
-        #: The ClassLoader bound to this ClassFile, if any.
+        #: The ClassLoader instance bound to this ClassFile, if any.
         self.classloader = None
 
         if source:
             self._from_io(source)
 
-    @classmethod
-    def create(cls, this: str, super_: str = u'java/lang/Object')\
-            -> 'ClassFile':
+    def push_context(self):
+        """Push this ClassFile to the top of the class context.
+
+        It's generally better to use the ClassFile as a context manager using
+        'with' then to manage the stack manually::
+
+            >>> cf = ClassFile()
+            >>> with cf:
+            ...     print('Context is automatically managed.')
         """
-        A utility which sets up reasonable defaults for a new public class.
+        class_context().append(self)
 
-        :param this: The name of this class.
-        :param super_: The name of this class's superclass.
+    def pop_context(self):
+        """Pop this ClassFile off the top of the class context.
+
+        It is a RuntimeError if the ClassFile popped off the top of the stack
+        is not _this_ ClassFile.
         """
-        cf = ClassFile()
+        cont = class_context()
+        if cont:
+            ctx = cont.pop()
+            if ctx is not self:
+                # This should never happen unless a user is manually managing
+                # the context stack instead of using the ClassFile as a context
+                # manager.
+                raise RuntimeError(
+                    'A ClassFile tried to pop a context which was not itself.'
+                )
 
-        cf.access_flags.PUBLIC = True
-        cf.access_flags.SUPER = True
+    def __enter__(self):
+        self.push_context()
 
-        cf.this = cf.constants.create_class(this)
-        cf.super_ = cf.constants.create_class(super_)
-
-        return cf
+    def __exit__(self, _, __, ___):
+        self.pop_context()
 
     def save(self, source: BinaryIO):
         """
@@ -129,13 +163,13 @@ class ClassFile(object):
             self.version.major
         ))
 
-        self._constants.pack(source)
+        self.constants.pack(source)
 
         write(pack('>H', int(self.access_flags)))
         write(pack(
             f'>HHH{len(self._interfaces)}H',
-            self._this,
-            self._super,
+            self.this.index,
+            self.super_.index,
             len(self._interfaces),
             *self._interfaces
         ))
@@ -156,14 +190,20 @@ class ClassFile(object):
         # The version is swapped on disk to (minor, major), so swap it back.
         self.version = unpack('>HH', source.read(4))[::-1]
 
-        self._constants.unpack(source)
+        # We created some default values when the class was constructed, just
+        # purge them.
+        self.constants.clear()
+        self.constants.unpack(source)
 
         # ClassFile access_flags, see section #4.1 of the JVM specs.
         self.access_flags = unpack('>H', read(2))
 
         # The CONSTANT_Class indexes for "this" class and its superclass.
         # Interfaces are a simple list of CONSTANT_Class indexes.
-        self._this, self._super, interfaces_count = unpack('>HHH', read(6))
+        this_, super_, interfaces_count = unpack('>HHH', read(6))
+        self.this = self.constants[this_]
+        self.super_ = self.constants[super_]
+
         self._interfaces = unpack(
             f'>{interfaces_count}H',
             read(2 * interfaces_count)
@@ -180,7 +220,7 @@ class ClassFile(object):
 
         Example::
 
-            >>> cf = ClassFile.create('HelloWorld')
+            >>> cf = ClassFile(this='HelloWorld')
             >>> cf.version = 51, 0
             >>> print(cf.version)
             ClassVersion(major=51, minor=0)
@@ -194,42 +234,12 @@ class ClassFile(object):
         self._version = ClassVersion(*major_minor)
 
     @property
-    def constants(self) -> ConstantPool:
-        """
-        The :class:`~lawu.cp.ConstantPool` for this class.
-        """
-        return self._constants
-
-    @property
-    def this(self) -> ConstantClass:
-        """
-        The :class:`~lawu.constants.ConstantClass` which represents this class.
-        """
-        return self.constants.get(self._this)
-
-    @this.setter
-    def this(self, value):
-        self._this = value.index
-
-    @property
-    def super_(self) -> ConstantClass:
-        """
-        The :class:`~lawu.constants.ConstantClass` which represents this
-        class's superclass.
-        """
-        return self.constants.get(self._super)
-
-    @super_.setter
-    def super_(self, value: ConstantClass):
-        self._super = value.index
-
-    @property
     def interfaces(self) -> Iterable[ConstantClass]:
         """
         A list of direct superinterfaces of this class as indexes into
         the constant pool, in left-to-right order.
         """
-        return [self._constants[idx] for idx in self._interfaces]
+        return [self.constants[idx] for idx in self._interfaces]
 
     @property
     def bootstrap_methods(self) -> BootstrapMethod:

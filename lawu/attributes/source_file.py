@@ -1,5 +1,7 @@
 from struct import pack
+
 from lawu.attribute import Attribute
+from lawu.constants import UTF8
 
 
 class SourceFileAttribute(Attribute):
@@ -9,8 +11,9 @@ class SourceFileAttribute(Attribute):
     def __init__(self, table, name_index=None):
         super(SourceFileAttribute, self).__init__(
             table,
-            name_index or table.cf.constants.create_utf8(
-                u'SourceFile'
+            name_index or UTF8(
+                pool=table.cf.constants,
+                value='SourceFile'
             ).index
         )
         self.source_file_index = None

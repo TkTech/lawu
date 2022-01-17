@@ -13,7 +13,7 @@ def test_load_from_class():
     """Ensure we can add ClassFile's directly to the ClassLoader."""
     cl = ClassLoader()
 
-    cf = ClassFile.create('TestClass')
+    cf = ClassFile(this='TestClass')
     cl.update(cf)
 
     assert cl.load('TestClass') is cf
@@ -22,7 +22,7 @@ def test_load_from_class():
 def test_default_bytecode_transforms():
     cl = ClassLoader(bytecode_transforms=[simple_swap])
 
-    cf = ClassFile.create('TestClass')
+    cf = ClassFile(this='TestClass')
     cl.update(cf)
 
     test_method = cf.methods.create('test', '(V)V;', code=True)

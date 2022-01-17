@@ -2,6 +2,7 @@ from io import BytesIO
 
 from lawu.cf import ClassFile
 from lawu.attributes.source_file import SourceFileAttribute
+from lawu.constants import UTF8
 
 
 def test_sourcefile_read(loader):
@@ -17,10 +18,11 @@ def test_sourcefile_write():
     """
     Ensure SourceFileAttribute can be written and read back.
     """
-    cf_one = ClassFile.create(u'SourceFileTest')
+    cf_one = ClassFile(this='SourceFileTest')
 
-    sfa = cf_one.attributes.create(SourceFileAttribute)
-    sfa.source_file = cf_one.constants.create_utf8(u'SourceFileTest.java')
+    with cf_one:
+        sfa = cf_one.attributes.create(SourceFileAttribute)
+        sfa.source_file = UTF8(value='SourceFileTest.java')
 
     fout = BytesIO()
     cf_one.save(fout)
@@ -28,5 +30,5 @@ def test_sourcefile_write():
     fin = BytesIO(fout.getvalue())
     cf_two = ClassFile(fin)
 
-    source_file = cf_two.attributes.find_one(name=u'SourceFile')
-    assert(source_file.source_file.value == u'SourceFileTest.java')
+    source_file = cf_two.attributes.find_one(name='SourceFile')
+    assert(source_file.source_file.value == 'SourceFileTest.java')
