@@ -12,58 +12,48 @@ def test_load_from_class():
     cl = ClassLoader()
 
     cf = ClassFile()
-    cf.this = 'TestClass'
+    cf.this = "TestClass"
     cl.update(cf)
 
-    assert cl.load('TestClass') is cf
+    assert cl.load("TestClass") is cf
 
 
 def test_load_from_directory():
     """Ensure we can load a ClassFile from a simple directory."""
     with tempfile.TemporaryDirectory() as dir:
         shutil.copy(
-            os.path.join(
-                os.path.dirname(__file__),
-                'data',
-                'HelloWorld.class'
-            ),
-            dir
+            os.path.join(os.path.dirname(__file__), "data", "HelloWorld.class"), dir
         )
 
         cl = ClassLoader()
         cl.update(dir)
 
-        assert isinstance(cl.load('HelloWorld'), cl.klass)
+        assert isinstance(cl.load("HelloWorld"), cl.klass)
 
 
 def test_load_from_zipfile():
     """Ensure we can load a ClassFile from a ZipFile."""
-    with tempfile.NamedTemporaryFile(suffix='.jar') as tmp:
-        with zipfile.ZipFile(tmp, 'w') as zf:
+    with tempfile.NamedTemporaryFile(suffix=".jar") as tmp:
+        with zipfile.ZipFile(tmp, "w") as zf:
             zf.write(
-                os.path.join(
-                    os.path.dirname(__file__),
-                    'data',
-                    'HelloWorld.class'
-                ),
-                arcname='HelloWorld.class'
-
+                os.path.join(os.path.dirname(__file__), "data", "HelloWorld.class"),
+                arcname="HelloWorld.class",
             )
 
         cl = ClassLoader()
         cl.update(tmp.name)
 
-        assert isinstance(cl.load('HelloWorld'), cl.klass)
+        assert isinstance(cl.load("HelloWorld"), cl.klass)
 
 
 def test_contains(loader):
-    assert 'HelloWorld' in loader
+    assert "HelloWorld" in loader
 
 
 def test_dependencies(loader):
-    assert loader.dependencies('HelloWorld') == {
-        'java/lang/Object',
-        'java/io/PrintStream',
-        'HelloWorld',
-        'java/lang/System'
+    assert loader.dependencies("HelloWorld") == {
+        "java/lang/Object",
+        "java/io/PrintStream",
+        "HelloWorld",
+        "java/lang/System",
     }

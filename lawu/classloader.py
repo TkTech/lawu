@@ -38,8 +38,14 @@ class ClassLoader:
     :param bytecode_transforms: Default transforms to apply when disassembling
                                 a method.
     """
-    def __init__(self, *sources, max_cache: int = 50, klass=lawu.cf.ClassFile,
-                 bytecode_transforms: Iterable[Callable] = None):
+
+    def __init__(
+        self,
+        *sources,
+        max_cache: int = 50,
+        klass=lawu.cf.ClassFile,
+        bytecode_transforms: Iterable[Callable] = None,
+    ):
         self.path_map = {}
         self.max_cache = max_cache
         self.class_cache = OrderedDict()
@@ -55,12 +61,11 @@ class ClassLoader:
     def __contains__(self, path: str) -> bool:
         if path in self.path_map:
             return True
-        elif path + '.class' in self.path_map:
+        elif path + ".class" in self.path_map:
             return True
         return False
 
-    def update(self, *sources, follow_symlinks: bool = False,
-               maximum_depth: int = 20):
+    def update(self, *sources, follow_symlinks: bool = False, maximum_depth: int = 20):
         """Add one or more ClassFile sources to the class loader.
 
         If a given source is a directory path, it is traversed up to the
@@ -89,14 +94,12 @@ class ClassLoader:
 
             # Explicit cast to str to support Path objects.
             source = str(source)
-            if source.lower().endswith(('.zip', '.jar')):
-                zf = ZipFile(source, 'r')
+            if source.lower().endswith((".zip", ".jar")):
+                zf = ZipFile(source, "r")
                 self.path_map.update(zip(zf.namelist(), repeat(zf)))
             elif os.path.isdir(source):
                 walker = _walk(
-                    source,
-                    follow_links=follow_symlinks,
-                    maximum_depth=maximum_depth
+                    source, follow_links=follow_symlinks, maximum_depth=maximum_depth
                 )
                 for root, dirs, files in walker:
                     for file_ in files:
@@ -105,7 +108,7 @@ class ClassLoader:
                         self.path_map[path_suffix] = path_full
 
     @contextmanager
-    def open(self, path: str, mode: str = 'r') -> IO:
+    def open(self, path: str, mode: str = "r") -> IO:
         """Open an IO-like object for `path`.
 
         .. note::
@@ -121,7 +124,7 @@ class ClassLoader:
             raise FileNotFoundError()
 
         if isinstance(entry, str):
-            with open(entry, 'rb' if mode == 'r' else mode) as source:
+            with open(entry, "rb" if mode == "r" else mode) as source:
                 yield source
         elif isinstance(entry, ZipFile):
             yield io.BytesIO(entry.read(path))
@@ -141,7 +144,7 @@ class ClassLoader:
         try:
             r = self.class_cache.pop(path)
         except KeyError:
-            with self.open(f'{path}.class') as source:
+            with self.open(f"{path}.class") as source:
                 r = self.klass(source, loader=self)
 
         # Even if it was found re-set the key to update the OrderedDict
@@ -171,10 +174,10 @@ class ClassLoader:
 
         :param path: Fully-qualified path to a ClassFile.
         """
-        return set(c.name.value for c in self.search_constant_pool(
-            path=path,
-            type_=ConstantClass
-        ))
+        return set(
+            c.name.value
+            for c in self.search_constant_pool(path=path, type_=ConstantClass)
+        )
 
     def search_constant_pool(self, *, path: str, **options):
         """Partially load the class at `path`, yield all matching constants
@@ -186,7 +189,7 @@ class ClassLoader:
         :param path: Fully-qualified path to a ClassFile.
         :param options: A list of options to pass into `ConstantPool.find()`
         """
-        with self.open(f'{path}.class') as source:
+        with self.open(f"{path}.class") as source:
             # Skip over the magic, minor, and major version.
             source.read(8)
             pool = ConstantPool()
@@ -196,7 +199,4 @@ class ClassLoader:
     @property
     def classes(self) -> Iterator[str]:
         """Yield the name of all classes discovered in the path map."""
-        yield from (
-            c[:-6]
-            for c in self.path_map.keys() if c.endswith('.class')
-        )
+        yield from (c[:-6] for c in self.path_map.keys() if c.endswith(".class"))

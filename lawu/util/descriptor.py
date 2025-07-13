@@ -1,22 +1,16 @@
 """
 Methods for parsing standard JVM type descriptors for fields and methods.
 """
+
 from collections import namedtuple
 
 
-JVMType = namedtuple('JVMType', [
-    'base_type',
-    'dimensions',
-    'name'
-])
+JVMType = namedtuple("JVMType", ["base_type", "dimensions", "name"])
 
-MethodDescriptor = namedtuple('MethodDescriptor', [
-    'returns',
-    'args',
-    'returns_descriptor',
-    'args_descriptor',
-    'descriptor'
-])
+MethodDescriptor = namedtuple(
+    "MethodDescriptor",
+    ["returns", "args", "returns_descriptor", "args_descriptor", "descriptor"],
+)
 
 
 def method_descriptor(descriptor: str) -> MethodDescriptor:
@@ -24,16 +18,12 @@ def method_descriptor(descriptor: str) -> MethodDescriptor:
     Parses a Method descriptor as described in section 4.3.3 of the JVM
     specification.
     """
-    end_para = descriptor.find(')')
-    returns = descriptor[end_para + 1:]
+    end_para = descriptor.find(")")
+    returns = descriptor[end_para + 1 :]
     args = descriptor[1:end_para]
 
     return MethodDescriptor(
-        parse_descriptor(returns)[0],
-        parse_descriptor(args),
-        returns,
-        args,
-        descriptor
+        parse_descriptor(returns)[0], parse_descriptor(args), returns, args, descriptor
     )
 
 
@@ -48,16 +38,16 @@ def field_descriptor(descriptor: str) -> str:
 # JVM Descriptor "BaseType" characters to their
 # full simple type.
 _HUMAN_NAMES = {
-    'L': 'reference',
-    'B': 'byte',
-    'C': 'char',
-    'D': 'double',
-    'F': 'float',
-    'I': 'int',
-    'J': 'long',
-    'S': 'short',
-    'Z': 'boolean',
-    'V': 'void'
+    "L": "reference",
+    "B": "byte",
+    "C": "char",
+    "D": "double",
+    "F": "float",
+    "I": "int",
+    "J": "long",
+    "S": "short",
+    "Z": "boolean",
+    "V": "void",
 }
 
 
@@ -75,15 +65,15 @@ def parse_descriptor(descriptor: str) -> list:
     token = []
     dimensions = 0
     for char in descriptor:
-        if state == 10 and char == 'L':
+        if state == 10 and char == "L":
             state = 20
-        elif state == 10 and char == '[':
+        elif state == 10 and char == "[":
             dimensions += 1
         elif state == 10:
             tokens.append(JVMType(char, dimensions, _HUMAN_NAMES[char]))
             dimensions = 0
-        elif state == 20 and char == ';':
-            tokens.append(JVMType('L', dimensions, ''.join(token)))
+        elif state == 20 and char == ";":
+            tokens.append(JVMType("L", dimensions, "".join(token)))
             dimensions = 0
             state = 10
             del token[:]

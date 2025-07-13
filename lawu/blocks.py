@@ -3,39 +3,32 @@ from typing import List, Iterable
 from lawu.instructions import Instruction, OperandTypes
 
 
-RETURN_INS = (
-    'ireturn',
-    'lreturn',
-    'freturn',
-    'dreturn',
-    'areturn',
-    'return'
-)
+RETURN_INS = ("ireturn", "lreturn", "freturn", "dreturn", "areturn", "return")
 
 BRANCH_INS = (
     # Unconditional
-    'goto',
-    'goto_w',
-    'jsr',
-    'jsr_w',
-    'ret',
+    "goto",
+    "goto_w",
+    "jsr",
+    "jsr_w",
+    "ret",
     # Conditional
-    'ifeq',
-    'iflt',
-    'ifle',
-    'ifne',
-    'ifgt',
-    'ifge',
-    'ifnull',
-    'ifnonnull',
-    'if_icmpeq',
-    'if_icmpne',
-    'if_icmplt',
-    'if_icmpgt',
-    'if_icmple',
-    'if_icmpge',
-    'if_acmpeq',
-    'if_acmpne'
+    "ifeq",
+    "iflt",
+    "ifle",
+    "ifne",
+    "ifgt",
+    "ifge",
+    "ifnull",
+    "ifnonnull",
+    "if_icmpeq",
+    "if_icmpne",
+    "if_icmplt",
+    "if_icmpgt",
+    "if_icmple",
+    "if_icmpge",
+    "if_acmpeq",
+    "if_acmpne",
 )
 
 
@@ -65,13 +58,13 @@ def blocks(instructions: List[Instruction]):
     # Our first pass through the instructions finds us all the possible
     # branches.
     for i, ins in enumerate(instructions):
-        if ins.mnemonic == 'tableswitch':
+        if ins.mnemonic == "tableswitch":
             # The default branch
             block_starts.add(ins.pos + ins.operands[0].value)
             # The table branches
             for operand in ins.operands[3:]:
                 block_starts.add(ins.pos + operand.value)
-        elif ins.mnemonic == 'lookupswitch':
+        elif ins.mnemonic == "lookupswitch":
             # The default branch
             block_starts.add(ins.pos + ins.operands[1].value)
             # The lookup branches
@@ -94,7 +87,7 @@ def blocks(instructions: List[Instruction]):
     start = 0
     for i, ins in enumerate(instructions):
         if ins.pos in block_starts:
-            yield (start, instructions[i-1].pos)
+            yield (start, instructions[i - 1].pos)
             start = ins.pos
             # Handle the typical case where the last instruction is a
             # [x]return but wasn't the target of a branch.
@@ -111,13 +104,13 @@ def jump_targets(instructions: Iterable[Instruction]):
     :return: An iterator of absolute jump positions.
     """
     for ins in instructions:
-        if ins.name == 'tableswitch':
+        if ins.name == "tableswitch":
             # The default branch
             yield ins.pos + ins.operands[0].value
             # The table branches
             for operand in ins.operands[3:]:
                 yield ins.pos + operand.value
-        elif ins.name == 'lookupswitch':
+        elif ins.name == "lookupswitch":
             # The default branch
             yield ins.pos + ins.operands[1].value
             # The lookup branches

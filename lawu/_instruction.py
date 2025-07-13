@@ -8,15 +8,15 @@ from dataclasses import dataclass
 
 class OperandTypes(enum.Enum):
     #: A literal numerical value.
-    LITERAL = 'L'
+    LITERAL = "L"
     #: An index into the locals table.
-    LOCAL = 'I'
+    LOCAL = "I"
     #: An absolutel or relative offset for the target of a jump.
-    BRANCH = 'B'
+    BRANCH = "B"
     #: An index into the constants pool.
-    CONSTANT = 'C'
+    CONSTANT = "C"
     #: A padding byte, usually used for alignment.
-    PADDING = 'P'
+    PADDING = "P"
 
 
 @dataclass
@@ -27,16 +27,16 @@ class Operand:
 
 class InstructionMeta(type):
     def __repr__(cls):
-        return f'<{cls.__name__}(op={cls.op:#04x}, name={cls.name!r})>'
+        return f"<{cls.__name__}(op={cls.op:#04x}, name={cls.name!r})>"
 
     def __eq__(cls, other):
         return cls is other
 
 
 class Instruction(metaclass=InstructionMeta):
-    """Represents a single Instruction in the JVM specification.
-    """
-    __slots__ = ('pos', 'operands')
+    """Represents a single Instruction in the JVM specification."""
+
+    __slots__ = ("pos", "operands")
 
     op: int
     name: str
@@ -52,12 +52,12 @@ class Instruction(metaclass=InstructionMeta):
 
     def __repr__(self):
         return (
-            f'<{self.__class__.__name__}(op={self.op:#04x},'
-            f' name={self.name!r}, operands={self.operands!r})>'
+            f"<{self.__class__.__name__}(op={self.op:#04x},"
+            f" name={self.name!r}, operands={self.operands!r})>"
         )
 
     @staticmethod
-    def read(source: BinaryIO, *, offset=0) -> 'Instruction':
+    def read(source: BinaryIO, *, offset=0) -> "Instruction":
         """Read and return a single Instruction from `source`.
 
         If `offset` is provided, it is the offset from the start of the Code
@@ -89,11 +89,11 @@ class Instruction(metaclass=InstructionMeta):
             source.read(padding)
 
             # Default branch address and branch count.
-            default, npairs = unpack('>ii', source.read(8))
+            default, npairs = unpack(">ii", source.read(8))
 
             pairs = {}
             for _ in repeat(None, npairs):
-                match, p_offset = unpack('>ii', source.read(8))
+                match, p_offset = unpack(">ii", source.read(8))
                 pairs[match] = p_offset
 
             ins_operands.append(pairs)
@@ -107,35 +107,33 @@ class Instruction(metaclass=InstructionMeta):
                 padding = 4 - padding
             source.read(padding)
 
-            default, low, high = unpack('>iii', source.read(12))
+            default, low, high = unpack(">iii", source.read(12))
             ins_operands.append(Operand(OperandTypes.BRANCH, default))
             ins_operands.append(Operand(OperandTypes.LITERAL, low))
             ins_operands.append(Operand(OperandTypes.LITERAL, high))
 
             for _ in repeat(None, high - low + 1):
-                p_offset = unpack('>i', source.read(4))[0]
+                p_offset = unpack(">i", source.read(4))[0]
                 ins_operands.append(Operand(OperandTypes.BRANCH, p_offset))
         # Special case for the wide prefix
         elif ins.op == 0xC4:
-            real_op = unpack('>B', source.read(1))[0]
+            real_op = unpack(">B", source.read(1))[0]
             ins = BY_OP[real_op]
 
-            ins_operands.append(Operand(
-                OperandTypes.LOCAL,
-                unpack('>H', source.read(2))[0]
-            ))
+            ins_operands.append(
+                Operand(OperandTypes.LOCAL, unpack(">H", source.read(2))[0])
+            )
             # Further special case for iinc.
             if real_op == 0x84:
-                ins_operands.append(Operand(
-                    OperandTypes.LITERAL,
-                    unpack('>H', source.read(2))[0]
-                ))
+                ins_operands.append(
+                    Operand(OperandTypes.LITERAL, unpack(">H", source.read(2))[0])
+                )
         elif ins.operands:
             for size, of_type in ins.fmt:
                 ins_operands.append(
                     Operand(
                         OperandTypes(of_type),
-                        unpack(size, source.read(calcsize(size)))[0]
+                        unpack(size, source.read(calcsize(size)))[0],
                     )
                 )
 

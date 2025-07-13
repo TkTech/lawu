@@ -20,7 +20,7 @@ class CodeException:
 
 
 class CodeAttribute(Attribute):
-    ADDED_IN = '1.0.2'
+    ADDED_IN = "1.0.2"
     MINIMUM_CLASS_VERSION = (45, 3)
 
     @staticmethod
@@ -28,27 +28,24 @@ class CodeAttribute(Attribute):
         """Given a list of instructions and exceptions, return a mapping
         of PC -> label."""
         labels = {
-            target: f'label_{i}'
-            for i, target in enumerate(
-                sorted(jump_targets(instructions)),
-                1
-            )
+            target: f"label_{i}"
+            for i, target in enumerate(sorted(jump_targets(instructions)), 1)
         }
 
         for excs in exceptions.values():
             for exc in excs:
                 if exc.target not in labels:
-                    labels[exc.target] = f'catch_{len(labels) + 1}'
+                    labels[exc.target] = f"catch_{len(labels) + 1}"
 
         return labels
 
     @staticmethod
     def exceptions_from_binary(source: BinaryIO) -> Dict[int, List[Exception]]:
         """Read an ExceptionTable from a binary Code attribute."""
-        exception_table_length = unpack('>H', source.read(2))[0]
+        exception_table_length = unpack(">H", source.read(2))[0]
         exceptions = {}
         for _ in repeat(None, exception_table_length):
-            exc = CodeException(*unpack('>HHHH', source.read(8)))
+            exc = CodeException(*unpack(">HHHH", source.read(8)))
             exceptions.setdefault(exc.start_pc, []).append(exc)
 
         return exceptions
@@ -56,7 +53,7 @@ class CodeAttribute(Attribute):
     @classmethod
     def from_binary(cls, pool, source: BinaryIO) -> ast.Code:
         code = ast.Code()
-        max_stack, max_locals, c_len = unpack('>HHI', source.read(8))
+        max_stack, max_locals, c_len = unpack(">HHI", source.read(8))
         code.max_stack = max_stack
         code.max_locals = max_locals
         blob = source.read(c_len)
@@ -66,10 +63,9 @@ class CodeAttribute(Attribute):
         exceptions = cls.exceptions_from_binary(source)
 
         with io.BytesIO(blob) as code_io:
-            instructions = list(iter(
-                lambda: Instruction.read(code_io, offset=code_io.tell()),
-                None
-            ))
+            instructions = list(
+                iter(lambda: Instruction.read(code_io, offset=code_io.tell()), None)
+            )
 
         labels = cls.get_labels(instructions, exceptions)
 
@@ -97,7 +93,7 @@ class CodeAttribute(Attribute):
                     if exc.handles != 0:
                         block += ast.TryCatch(
                             target=labels[exc.target],
-                            handles=pool[exc.handles].name.value
+                            handles=pool[exc.handles].name.value,
                         )
                     else:
                         block += ast.Finally(target=labels[exc.target])
@@ -111,16 +107,13 @@ class CodeAttribute(Attribute):
                     # dict of value -> [relative] offset.
                     for match, offset in operand.items():
                         ins_node += ast.ConditionalJump(
-                            match=match,
-                            target=labels[ins.pos + offset]
+                            match=match, target=labels[ins.pos + offset]
                         )
                 elif operand.op_type == OperandTypes.BRANCH:
                     # Replace relative branch offsets with the branch
                     # label, since we lose the packed offset of
                     # instructions when converting to the AST.
-                    ins_node += ast.Jump(
-                        target=labels[ins.pos + operand.value]
-                    )
+                    ins_node += ast.Jump(target=labels[ins.pos + operand.value])
                 elif operand.op_type == OperandTypes.CONSTANT:
                     # Decompose a Constant subclass into a higher-level AST
                     # object with no external references.

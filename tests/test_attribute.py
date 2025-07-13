@@ -5,7 +5,7 @@ def test_discovery():
     """Ensure our basic attribute discovery mechanism works."""
     attributes = get_attribute_classes()
 
-    assert 'code' in attributes
+    assert "code" in attributes
 
 
 def test_mandatory_properties():

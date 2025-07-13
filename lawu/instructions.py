@@ -2,17 +2,19 @@
 Machine-generated from bytecode.yaml. This file aids with typing and
 autocompletion in IDEs by providing types for every instruction.
 """
-from lawu._instruction import Instruction, OperandTypes
+
+from lawu._instruction import Instruction
 
 
 class aaload(Instruction):
     """load onto the stack a reference from an array"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x32
     #: The JVM instruction name as appears in the specification.
-    name = 'aaload'
+    name = "aaload"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -23,12 +25,13 @@ class aaload(Instruction):
 
 class aastore(Instruction):
     """store into a reference in an array"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x53
     #: The JVM instruction name as appears in the specification.
-    name = 'aastore'
+    name = "aastore"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -39,12 +42,13 @@ class aastore(Instruction):
 
 class aconst_null(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x01
     #: The JVM instruction name as appears in the specification.
-    name = 'aconst_null'
+    name = "aconst_null"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -55,28 +59,30 @@ class aconst_null(Instruction):
 
 class aload(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x19
     #: The JVM instruction name as appears in the specification.
-    name = 'aload'
+    name = "aload"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>B', 'I'),)
+    fmt = ((">B", "I"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = True
 
 
 class aload_0(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x2a
+    op = 0x2A
     #: The JVM instruction name as appears in the specification.
-    name = 'aload_0'
+    name = "aload_0"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -87,12 +93,13 @@ class aload_0(Instruction):
 
 class aload_1(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x2b
+    op = 0x2B
     #: The JVM instruction name as appears in the specification.
-    name = 'aload_1'
+    name = "aload_1"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -103,12 +110,13 @@ class aload_1(Instruction):
 
 class aload_2(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x2c
+    op = 0x2C
     #: The JVM instruction name as appears in the specification.
-    name = 'aload_2'
+    name = "aload_2"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -119,12 +127,13 @@ class aload_2(Instruction):
 
 class aload_3(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x2d
+    op = 0x2D
     #: The JVM instruction name as appears in the specification.
-    name = 'aload_3'
+    name = "aload_3"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -135,28 +144,30 @@ class aload_3(Instruction):
 
 class anewarray(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xbd
+    op = 0xBD
     #: The JVM instruction name as appears in the specification.
-    name = 'anewarray'
+    name = "anewarray"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>H', 'C'),)
+    fmt = ((">H", "C"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class areturn(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xb0
+    op = 0xB0
     #: The JVM instruction name as appears in the specification.
-    name = 'areturn'
+    name = "areturn"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -167,12 +178,13 @@ class areturn(Instruction):
 
 class arraylength(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xbe
+    op = 0xBE
     #: The JVM instruction name as appears in the specification.
-    name = 'arraylength'
+    name = "arraylength"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -183,28 +195,30 @@ class arraylength(Instruction):
 
 class astore(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x3a
+    op = 0x3A
     #: The JVM instruction name as appears in the specification.
-    name = 'astore'
+    name = "astore"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>B', 'I'),)
+    fmt = ((">B", "I"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = True
 
 
 class astore_0(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x4b
+    op = 0x4B
     #: The JVM instruction name as appears in the specification.
-    name = 'astore_0'
+    name = "astore_0"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -215,12 +229,13 @@ class astore_0(Instruction):
 
 class astore_1(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x4c
+    op = 0x4C
     #: The JVM instruction name as appears in the specification.
-    name = 'astore_1'
+    name = "astore_1"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -231,12 +246,13 @@ class astore_1(Instruction):
 
 class astore_2(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x4d
+    op = 0x4D
     #: The JVM instruction name as appears in the specification.
-    name = 'astore_2'
+    name = "astore_2"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -247,12 +263,13 @@ class astore_2(Instruction):
 
 class astore_3(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x4e
+    op = 0x4E
     #: The JVM instruction name as appears in the specification.
-    name = 'astore_3'
+    name = "astore_3"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -263,12 +280,13 @@ class astore_3(Instruction):
 
 class athrow(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xbf
+    op = 0xBF
     #: The JVM instruction name as appears in the specification.
-    name = 'athrow'
+    name = "athrow"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -279,12 +297,13 @@ class athrow(Instruction):
 
 class baload(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x33
     #: The JVM instruction name as appears in the specification.
-    name = 'baload'
+    name = "baload"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -295,12 +314,13 @@ class baload(Instruction):
 
 class bastore(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x54
     #: The JVM instruction name as appears in the specification.
-    name = 'bastore'
+    name = "bastore"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -311,28 +331,30 @@ class bastore(Instruction):
 
 class bipush(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x10
     #: The JVM instruction name as appears in the specification.
-    name = 'bipush'
+    name = "bipush"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>b', 'L'),)
+    fmt = ((">b", "L"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class caload(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x34
     #: The JVM instruction name as appears in the specification.
-    name = 'caload'
+    name = "caload"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -343,12 +365,13 @@ class caload(Instruction):
 
 class castore(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x55
     #: The JVM instruction name as appears in the specification.
-    name = 'castore'
+    name = "castore"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -359,28 +382,30 @@ class castore(Instruction):
 
 class checkcast(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xc0
+    op = 0xC0
     #: The JVM instruction name as appears in the specification.
-    name = 'checkcast'
+    name = "checkcast"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>H', 'C'),)
+    fmt = ((">H", "C"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class d2f(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x90
     #: The JVM instruction name as appears in the specification.
-    name = 'd2f'
+    name = "d2f"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -391,12 +416,13 @@ class d2f(Instruction):
 
 class d2i(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x8e
+    op = 0x8E
     #: The JVM instruction name as appears in the specification.
-    name = 'd2i'
+    name = "d2i"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -407,12 +433,13 @@ class d2i(Instruction):
 
 class d2l(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x8f
+    op = 0x8F
     #: The JVM instruction name as appears in the specification.
-    name = 'd2l'
+    name = "d2l"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -423,12 +450,13 @@ class d2l(Instruction):
 
 class dadd(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x63
     #: The JVM instruction name as appears in the specification.
-    name = 'dadd'
+    name = "dadd"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -439,12 +467,13 @@ class dadd(Instruction):
 
 class daload(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x31
     #: The JVM instruction name as appears in the specification.
-    name = 'daload'
+    name = "daload"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -455,12 +484,13 @@ class daload(Instruction):
 
 class dastore(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x52
     #: The JVM instruction name as appears in the specification.
-    name = 'dastore'
+    name = "dastore"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -471,12 +501,13 @@ class dastore(Instruction):
 
 class dcmpg(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x98
     #: The JVM instruction name as appears in the specification.
-    name = 'dcmpg'
+    name = "dcmpg"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -487,12 +518,13 @@ class dcmpg(Instruction):
 
 class dcmpl(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x97
     #: The JVM instruction name as appears in the specification.
-    name = 'dcmpl'
+    name = "dcmpl"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -503,12 +535,13 @@ class dcmpl(Instruction):
 
 class dconst_0(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x0e
+    op = 0x0E
     #: The JVM instruction name as appears in the specification.
-    name = 'dconst_0'
+    name = "dconst_0"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -519,12 +552,13 @@ class dconst_0(Instruction):
 
 class dconst_1(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x0f
+    op = 0x0F
     #: The JVM instruction name as appears in the specification.
-    name = 'dconst_1'
+    name = "dconst_1"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -535,12 +569,13 @@ class dconst_1(Instruction):
 
 class ddiv(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x6f
+    op = 0x6F
     #: The JVM instruction name as appears in the specification.
-    name = 'ddiv'
+    name = "ddiv"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -551,28 +586,30 @@ class ddiv(Instruction):
 
 class dload(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x18
     #: The JVM instruction name as appears in the specification.
-    name = 'dload'
+    name = "dload"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>B', 'I'),)
+    fmt = ((">B", "I"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = True
 
 
 class dload_0(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x26
     #: The JVM instruction name as appears in the specification.
-    name = 'dload_0'
+    name = "dload_0"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -583,12 +620,13 @@ class dload_0(Instruction):
 
 class dload_1(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x27
     #: The JVM instruction name as appears in the specification.
-    name = 'dload_1'
+    name = "dload_1"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -599,12 +637,13 @@ class dload_1(Instruction):
 
 class dload_2(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x28
     #: The JVM instruction name as appears in the specification.
-    name = 'dload_2'
+    name = "dload_2"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -615,12 +654,13 @@ class dload_2(Instruction):
 
 class dload_3(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x29
     #: The JVM instruction name as appears in the specification.
-    name = 'dload_3'
+    name = "dload_3"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -631,12 +671,13 @@ class dload_3(Instruction):
 
 class dmul(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x6b
+    op = 0x6B
     #: The JVM instruction name as appears in the specification.
-    name = 'dmul'
+    name = "dmul"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -647,12 +688,13 @@ class dmul(Instruction):
 
 class dneg(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x77
     #: The JVM instruction name as appears in the specification.
-    name = 'dneg'
+    name = "dneg"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -663,12 +705,13 @@ class dneg(Instruction):
 
 class drem(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x73
     #: The JVM instruction name as appears in the specification.
-    name = 'drem'
+    name = "drem"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -679,12 +722,13 @@ class drem(Instruction):
 
 class dreturn(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xaf
+    op = 0xAF
     #: The JVM instruction name as appears in the specification.
-    name = 'dreturn'
+    name = "dreturn"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -695,28 +739,30 @@ class dreturn(Instruction):
 
 class dstore(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x39
     #: The JVM instruction name as appears in the specification.
-    name = 'dstore'
+    name = "dstore"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>B', 'I'),)
+    fmt = ((">B", "I"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = True
 
 
 class dstore_0(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x47
     #: The JVM instruction name as appears in the specification.
-    name = 'dstore_0'
+    name = "dstore_0"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -727,12 +773,13 @@ class dstore_0(Instruction):
 
 class dstore_1(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x48
     #: The JVM instruction name as appears in the specification.
-    name = 'dstore_1'
+    name = "dstore_1"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -743,12 +790,13 @@ class dstore_1(Instruction):
 
 class dstore_2(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x49
     #: The JVM instruction name as appears in the specification.
-    name = 'dstore_2'
+    name = "dstore_2"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -759,12 +807,13 @@ class dstore_2(Instruction):
 
 class dstore_3(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x4a
+    op = 0x4A
     #: The JVM instruction name as appears in the specification.
-    name = 'dstore_3'
+    name = "dstore_3"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -775,12 +824,13 @@ class dstore_3(Instruction):
 
 class dsub(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x67
     #: The JVM instruction name as appears in the specification.
-    name = 'dsub'
+    name = "dsub"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -791,12 +841,13 @@ class dsub(Instruction):
 
 class dup(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x59
     #: The JVM instruction name as appears in the specification.
-    name = 'dup'
+    name = "dup"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -807,12 +858,13 @@ class dup(Instruction):
 
 class dup_x1(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x5a
+    op = 0x5A
     #: The JVM instruction name as appears in the specification.
-    name = 'dup_x1'
+    name = "dup_x1"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -823,12 +875,13 @@ class dup_x1(Instruction):
 
 class dup_x2(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x5b
+    op = 0x5B
     #: The JVM instruction name as appears in the specification.
-    name = 'dup_x2'
+    name = "dup_x2"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -839,12 +892,13 @@ class dup_x2(Instruction):
 
 class dup2(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x5c
+    op = 0x5C
     #: The JVM instruction name as appears in the specification.
-    name = 'dup2'
+    name = "dup2"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -855,12 +909,13 @@ class dup2(Instruction):
 
 class dup2_x1(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x5d
+    op = 0x5D
     #: The JVM instruction name as appears in the specification.
-    name = 'dup2_x1'
+    name = "dup2_x1"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -871,12 +926,13 @@ class dup2_x1(Instruction):
 
 class dup2_x2(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x5e
+    op = 0x5E
     #: The JVM instruction name as appears in the specification.
-    name = 'dup2_x2'
+    name = "dup2_x2"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -887,12 +943,13 @@ class dup2_x2(Instruction):
 
 class f2d(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x8d
+    op = 0x8D
     #: The JVM instruction name as appears in the specification.
-    name = 'f2d'
+    name = "f2d"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -903,12 +960,13 @@ class f2d(Instruction):
 
 class f2i(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x8b
+    op = 0x8B
     #: The JVM instruction name as appears in the specification.
-    name = 'f2i'
+    name = "f2i"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -919,12 +977,13 @@ class f2i(Instruction):
 
 class f2l(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x8c
+    op = 0x8C
     #: The JVM instruction name as appears in the specification.
-    name = 'f2l'
+    name = "f2l"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -935,12 +994,13 @@ class f2l(Instruction):
 
 class fadd(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x62
     #: The JVM instruction name as appears in the specification.
-    name = 'fadd'
+    name = "fadd"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -951,12 +1011,13 @@ class fadd(Instruction):
 
 class faload(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x30
     #: The JVM instruction name as appears in the specification.
-    name = 'faload'
+    name = "faload"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -967,12 +1028,13 @@ class faload(Instruction):
 
 class fastore(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x51
     #: The JVM instruction name as appears in the specification.
-    name = 'fastore'
+    name = "fastore"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -983,12 +1045,13 @@ class fastore(Instruction):
 
 class fcmpg(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x96
     #: The JVM instruction name as appears in the specification.
-    name = 'fcmpg'
+    name = "fcmpg"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -999,12 +1062,13 @@ class fcmpg(Instruction):
 
 class fcmpl(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x95
     #: The JVM instruction name as appears in the specification.
-    name = 'fcmpl'
+    name = "fcmpl"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1015,12 +1079,13 @@ class fcmpl(Instruction):
 
 class fconst_0(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x0b
+    op = 0x0B
     #: The JVM instruction name as appears in the specification.
-    name = 'fconst_0'
+    name = "fconst_0"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1031,12 +1096,13 @@ class fconst_0(Instruction):
 
 class fconst_1(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x0c
+    op = 0x0C
     #: The JVM instruction name as appears in the specification.
-    name = 'fconst_1'
+    name = "fconst_1"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1047,12 +1113,13 @@ class fconst_1(Instruction):
 
 class fconst_2(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x0d
+    op = 0x0D
     #: The JVM instruction name as appears in the specification.
-    name = 'fconst_2'
+    name = "fconst_2"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1063,12 +1130,13 @@ class fconst_2(Instruction):
 
 class fdiv(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x6e
+    op = 0x6E
     #: The JVM instruction name as appears in the specification.
-    name = 'fdiv'
+    name = "fdiv"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1079,28 +1147,30 @@ class fdiv(Instruction):
 
 class fload(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x17
     #: The JVM instruction name as appears in the specification.
-    name = 'fload'
+    name = "fload"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>B', 'I'),)
+    fmt = ((">B", "I"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = True
 
 
 class fload_0(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x22
     #: The JVM instruction name as appears in the specification.
-    name = 'fload_0'
+    name = "fload_0"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1111,12 +1181,13 @@ class fload_0(Instruction):
 
 class fload_1(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x23
     #: The JVM instruction name as appears in the specification.
-    name = 'fload_1'
+    name = "fload_1"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1127,12 +1198,13 @@ class fload_1(Instruction):
 
 class fload_2(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x24
     #: The JVM instruction name as appears in the specification.
-    name = 'fload_2'
+    name = "fload_2"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1143,12 +1215,13 @@ class fload_2(Instruction):
 
 class fload_3(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x25
     #: The JVM instruction name as appears in the specification.
-    name = 'fload_3'
+    name = "fload_3"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1159,12 +1232,13 @@ class fload_3(Instruction):
 
 class fmul(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x6a
+    op = 0x6A
     #: The JVM instruction name as appears in the specification.
-    name = 'fmul'
+    name = "fmul"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1175,12 +1249,13 @@ class fmul(Instruction):
 
 class fneg(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x76
     #: The JVM instruction name as appears in the specification.
-    name = 'fneg'
+    name = "fneg"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1191,12 +1266,13 @@ class fneg(Instruction):
 
 class frem(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x72
     #: The JVM instruction name as appears in the specification.
-    name = 'frem'
+    name = "frem"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1207,12 +1283,13 @@ class frem(Instruction):
 
 class freturn(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xae
+    op = 0xAE
     #: The JVM instruction name as appears in the specification.
-    name = 'freturn'
+    name = "freturn"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1223,28 +1300,30 @@ class freturn(Instruction):
 
 class fstore(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x38
     #: The JVM instruction name as appears in the specification.
-    name = 'fstore'
+    name = "fstore"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>B', 'I'),)
+    fmt = ((">B", "I"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = True
 
 
 class fstore_0(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x43
     #: The JVM instruction name as appears in the specification.
-    name = 'fstore_0'
+    name = "fstore_0"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1255,12 +1334,13 @@ class fstore_0(Instruction):
 
 class fstore_1(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x44
     #: The JVM instruction name as appears in the specification.
-    name = 'fstore_1'
+    name = "fstore_1"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1271,12 +1351,13 @@ class fstore_1(Instruction):
 
 class fstore_2(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x45
     #: The JVM instruction name as appears in the specification.
-    name = 'fstore_2'
+    name = "fstore_2"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1287,12 +1368,13 @@ class fstore_2(Instruction):
 
 class fstore_3(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x46
     #: The JVM instruction name as appears in the specification.
-    name = 'fstore_3'
+    name = "fstore_3"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1303,12 +1385,13 @@ class fstore_3(Instruction):
 
 class fsub(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x66
     #: The JVM instruction name as appears in the specification.
-    name = 'fsub'
+    name = "fsub"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1319,76 +1402,81 @@ class fsub(Instruction):
 
 class getfield(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xb4
+    op = 0xB4
     #: The JVM instruction name as appears in the specification.
-    name = 'getfield'
+    name = "getfield"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>H', 'C'),)
+    fmt = ((">H", "C"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class getstatic(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xb2
+    op = 0xB2
     #: The JVM instruction name as appears in the specification.
-    name = 'getstatic'
+    name = "getstatic"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>H', 'C'),)
+    fmt = ((">H", "C"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class goto(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xa7
+    op = 0xA7
     #: The JVM instruction name as appears in the specification.
-    name = 'goto'
+    name = "goto"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>h', 'B'),)
+    fmt = ((">h", "B"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class goto_w(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xc8
+    op = 0xC8
     #: The JVM instruction name as appears in the specification.
-    name = 'goto_w'
+    name = "goto_w"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>i', 'B'),)
+    fmt = ((">i", "B"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class i2b(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x91
     #: The JVM instruction name as appears in the specification.
-    name = 'i2b'
+    name = "i2b"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1399,12 +1487,13 @@ class i2b(Instruction):
 
 class i2c(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x92
     #: The JVM instruction name as appears in the specification.
-    name = 'i2c'
+    name = "i2c"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1415,12 +1504,13 @@ class i2c(Instruction):
 
 class i2d(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x87
     #: The JVM instruction name as appears in the specification.
-    name = 'i2d'
+    name = "i2d"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1431,12 +1521,13 @@ class i2d(Instruction):
 
 class i2f(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x86
     #: The JVM instruction name as appears in the specification.
-    name = 'i2f'
+    name = "i2f"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1447,12 +1538,13 @@ class i2f(Instruction):
 
 class i2l(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x85
     #: The JVM instruction name as appears in the specification.
-    name = 'i2l'
+    name = "i2l"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1463,12 +1555,13 @@ class i2l(Instruction):
 
 class i2s(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x93
     #: The JVM instruction name as appears in the specification.
-    name = 'i2s'
+    name = "i2s"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1479,12 +1572,13 @@ class i2s(Instruction):
 
 class iadd(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x60
     #: The JVM instruction name as appears in the specification.
-    name = 'iadd'
+    name = "iadd"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1495,12 +1589,13 @@ class iadd(Instruction):
 
 class iaload(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x2e
+    op = 0x2E
     #: The JVM instruction name as appears in the specification.
-    name = 'iaload'
+    name = "iaload"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1511,12 +1606,13 @@ class iaload(Instruction):
 
 class iand(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x7e
+    op = 0x7E
     #: The JVM instruction name as appears in the specification.
-    name = 'iand'
+    name = "iand"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1527,12 +1623,13 @@ class iand(Instruction):
 
 class iastore(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x4f
+    op = 0x4F
     #: The JVM instruction name as appears in the specification.
-    name = 'iastore'
+    name = "iastore"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1543,12 +1640,13 @@ class iastore(Instruction):
 
 class iconst_m1(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x02
     #: The JVM instruction name as appears in the specification.
-    name = 'iconst_m1'
+    name = "iconst_m1"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1559,12 +1657,13 @@ class iconst_m1(Instruction):
 
 class iconst_0(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x03
     #: The JVM instruction name as appears in the specification.
-    name = 'iconst_0'
+    name = "iconst_0"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1575,12 +1674,13 @@ class iconst_0(Instruction):
 
 class iconst_1(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x04
     #: The JVM instruction name as appears in the specification.
-    name = 'iconst_1'
+    name = "iconst_1"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1591,12 +1691,13 @@ class iconst_1(Instruction):
 
 class iconst_2(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x05
     #: The JVM instruction name as appears in the specification.
-    name = 'iconst_2'
+    name = "iconst_2"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1607,12 +1708,13 @@ class iconst_2(Instruction):
 
 class iconst_3(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x06
     #: The JVM instruction name as appears in the specification.
-    name = 'iconst_3'
+    name = "iconst_3"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1623,12 +1725,13 @@ class iconst_3(Instruction):
 
 class iconst_4(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x07
     #: The JVM instruction name as appears in the specification.
-    name = 'iconst_4'
+    name = "iconst_4"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1639,12 +1742,13 @@ class iconst_4(Instruction):
 
 class iconst_5(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x08
     #: The JVM instruction name as appears in the specification.
-    name = 'iconst_5'
+    name = "iconst_5"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1655,12 +1759,13 @@ class iconst_5(Instruction):
 
 class idiv(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x6c
+    op = 0x6C
     #: The JVM instruction name as appears in the specification.
-    name = 'idiv'
+    name = "idiv"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1671,300 +1776,319 @@ class idiv(Instruction):
 
 class if_acmpeq(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xa5
+    op = 0xA5
     #: The JVM instruction name as appears in the specification.
-    name = 'if_acmpeq'
+    name = "if_acmpeq"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>h', 'B'),)
+    fmt = ((">h", "B"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class if_acmpne(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xa6
+    op = 0xA6
     #: The JVM instruction name as appears in the specification.
-    name = 'if_acmpne'
+    name = "if_acmpne"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>h', 'B'),)
+    fmt = ((">h", "B"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class if_icmpeq(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x9f
+    op = 0x9F
     #: The JVM instruction name as appears in the specification.
-    name = 'if_icmpeq'
+    name = "if_icmpeq"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>h', 'B'),)
+    fmt = ((">h", "B"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class if_icmpne(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xa0
+    op = 0xA0
     #: The JVM instruction name as appears in the specification.
-    name = 'if_icmpne'
+    name = "if_icmpne"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>h', 'B'),)
+    fmt = ((">h", "B"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class if_icmplt(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xa1
+    op = 0xA1
     #: The JVM instruction name as appears in the specification.
-    name = 'if_icmplt'
+    name = "if_icmplt"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>h', 'B'),)
+    fmt = ((">h", "B"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class if_icmpge(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xa2
+    op = 0xA2
     #: The JVM instruction name as appears in the specification.
-    name = 'if_icmpge'
+    name = "if_icmpge"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>h', 'B'),)
+    fmt = ((">h", "B"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class if_icmpgt(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xa3
+    op = 0xA3
     #: The JVM instruction name as appears in the specification.
-    name = 'if_icmpgt'
+    name = "if_icmpgt"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>h', 'B'),)
+    fmt = ((">h", "B"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class if_icmple(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xa4
+    op = 0xA4
     #: The JVM instruction name as appears in the specification.
-    name = 'if_icmple'
+    name = "if_icmple"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>h', 'B'),)
+    fmt = ((">h", "B"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class ifeq(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x99
     #: The JVM instruction name as appears in the specification.
-    name = 'ifeq'
+    name = "ifeq"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>h', 'B'),)
+    fmt = ((">h", "B"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class ifne(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x9a
+    op = 0x9A
     #: The JVM instruction name as appears in the specification.
-    name = 'ifne'
+    name = "ifne"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>h', 'B'),)
+    fmt = ((">h", "B"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class iflt(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x9b
+    op = 0x9B
     #: The JVM instruction name as appears in the specification.
-    name = 'iflt'
+    name = "iflt"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>h', 'B'),)
+    fmt = ((">h", "B"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class ifge(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x9c
+    op = 0x9C
     #: The JVM instruction name as appears in the specification.
-    name = 'ifge'
+    name = "ifge"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>h', 'B'),)
+    fmt = ((">h", "B"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class ifgt(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x9d
+    op = 0x9D
     #: The JVM instruction name as appears in the specification.
-    name = 'ifgt'
+    name = "ifgt"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>h', 'B'),)
+    fmt = ((">h", "B"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class ifle(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x9e
+    op = 0x9E
     #: The JVM instruction name as appears in the specification.
-    name = 'ifle'
+    name = "ifle"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>h', 'B'),)
+    fmt = ((">h", "B"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class ifnonnull(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xc7
+    op = 0xC7
     #: The JVM instruction name as appears in the specification.
-    name = 'ifnonnull'
+    name = "ifnonnull"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>h', 'B'),)
+    fmt = ((">h", "B"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class ifnull(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xc6
+    op = 0xC6
     #: The JVM instruction name as appears in the specification.
-    name = 'ifnull'
+    name = "ifnull"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>h', 'B'),)
+    fmt = ((">h", "B"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class iinc(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x84
     #: The JVM instruction name as appears in the specification.
-    name = 'iinc'
+    name = "iinc"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>B', 'I'), ('>B', 'L'))
+    fmt = ((">B", "I"), (">B", "L"))
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = True
 
 
 class iload(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x15
     #: The JVM instruction name as appears in the specification.
-    name = 'iload'
+    name = "iload"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>B', 'I'),)
+    fmt = ((">B", "I"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = True
 
 
 class iload_0(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x1a
+    op = 0x1A
     #: The JVM instruction name as appears in the specification.
-    name = 'iload_0'
+    name = "iload_0"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1975,12 +2099,13 @@ class iload_0(Instruction):
 
 class iload_1(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x1b
+    op = 0x1B
     #: The JVM instruction name as appears in the specification.
-    name = 'iload_1'
+    name = "iload_1"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -1991,12 +2116,13 @@ class iload_1(Instruction):
 
 class iload_2(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x1c
+    op = 0x1C
     #: The JVM instruction name as appears in the specification.
-    name = 'iload_2'
+    name = "iload_2"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2007,12 +2133,13 @@ class iload_2(Instruction):
 
 class iload_3(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x1d
+    op = 0x1D
     #: The JVM instruction name as appears in the specification.
-    name = 'iload_3'
+    name = "iload_3"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2023,12 +2150,13 @@ class iload_3(Instruction):
 
 class imul(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x68
     #: The JVM instruction name as appears in the specification.
-    name = 'imul'
+    name = "imul"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2039,12 +2167,13 @@ class imul(Instruction):
 
 class ineg(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x74
     #: The JVM instruction name as appears in the specification.
-    name = 'ineg'
+    name = "ineg"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2055,108 +2184,115 @@ class ineg(Instruction):
 
 class instanceof(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xc1
+    op = 0xC1
     #: The JVM instruction name as appears in the specification.
-    name = 'instanceof'
+    name = "instanceof"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>H', 'C'),)
+    fmt = ((">H", "C"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class invokedynamic(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xba
+    op = 0xBA
     #: The JVM instruction name as appears in the specification.
-    name = 'invokedynamic'
+    name = "invokedynamic"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>H', 'C'), ('>B', 'P'), ('>B', 'P'))
+    fmt = ((">H", "C"), (">B", "P"), (">B", "P"))
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class invokeinterface(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xb9
+    op = 0xB9
     #: The JVM instruction name as appears in the specification.
-    name = 'invokeinterface'
+    name = "invokeinterface"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>H', 'C'), ('>B', 'L'), ('>B', 'P'))
+    fmt = ((">H", "C"), (">B", "L"), (">B", "P"))
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class invokespecial(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xb7
+    op = 0xB7
     #: The JVM instruction name as appears in the specification.
-    name = 'invokespecial'
+    name = "invokespecial"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>H', 'C'),)
+    fmt = ((">H", "C"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class invokestatic(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xb8
+    op = 0xB8
     #: The JVM instruction name as appears in the specification.
-    name = 'invokestatic'
+    name = "invokestatic"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>H', 'C'),)
+    fmt = ((">H", "C"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class invokevirtual(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xb6
+    op = 0xB6
     #: The JVM instruction name as appears in the specification.
-    name = 'invokevirtual'
+    name = "invokevirtual"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>H', 'C'),)
+    fmt = ((">H", "C"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class ior(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x80
     #: The JVM instruction name as appears in the specification.
-    name = 'ior'
+    name = "ior"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2167,12 +2303,13 @@ class ior(Instruction):
 
 class irem(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x70
     #: The JVM instruction name as appears in the specification.
-    name = 'irem'
+    name = "irem"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2183,12 +2320,13 @@ class irem(Instruction):
 
 class ireturn(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xac
+    op = 0xAC
     #: The JVM instruction name as appears in the specification.
-    name = 'ireturn'
+    name = "ireturn"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2199,12 +2337,13 @@ class ireturn(Instruction):
 
 class ishl(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x78
     #: The JVM instruction name as appears in the specification.
-    name = 'ishl'
+    name = "ishl"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2215,12 +2354,13 @@ class ishl(Instruction):
 
 class ishr(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x7a
+    op = 0x7A
     #: The JVM instruction name as appears in the specification.
-    name = 'ishr'
+    name = "ishr"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2231,28 +2371,30 @@ class ishr(Instruction):
 
 class istore(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x36
     #: The JVM instruction name as appears in the specification.
-    name = 'istore'
+    name = "istore"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>B', 'I'),)
+    fmt = ((">B", "I"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = True
 
 
 class istore_0(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x3b
+    op = 0x3B
     #: The JVM instruction name as appears in the specification.
-    name = 'istore_0'
+    name = "istore_0"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2263,12 +2405,13 @@ class istore_0(Instruction):
 
 class istore_1(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x3c
+    op = 0x3C
     #: The JVM instruction name as appears in the specification.
-    name = 'istore_1'
+    name = "istore_1"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2279,12 +2422,13 @@ class istore_1(Instruction):
 
 class istore_2(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x3d
+    op = 0x3D
     #: The JVM instruction name as appears in the specification.
-    name = 'istore_2'
+    name = "istore_2"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2295,12 +2439,13 @@ class istore_2(Instruction):
 
 class istore_3(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x3e
+    op = 0x3E
     #: The JVM instruction name as appears in the specification.
-    name = 'istore_3'
+    name = "istore_3"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2311,12 +2456,13 @@ class istore_3(Instruction):
 
 class isub(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x64
     #: The JVM instruction name as appears in the specification.
-    name = 'isub'
+    name = "isub"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2327,12 +2473,13 @@ class isub(Instruction):
 
 class iushr(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x7c
+    op = 0x7C
     #: The JVM instruction name as appears in the specification.
-    name = 'iushr'
+    name = "iushr"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2343,12 +2490,13 @@ class iushr(Instruction):
 
 class ixor(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x82
     #: The JVM instruction name as appears in the specification.
-    name = 'ixor'
+    name = "ixor"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2359,44 +2507,47 @@ class ixor(Instruction):
 
 class jsr(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xa8
+    op = 0xA8
     #: The JVM instruction name as appears in the specification.
-    name = 'jsr'
+    name = "jsr"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>h', 'B'),)
+    fmt = ((">h", "B"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class jsr_w(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xc9
+    op = 0xC9
     #: The JVM instruction name as appears in the specification.
-    name = 'jsr_w'
+    name = "jsr_w"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>i', 'B'),)
+    fmt = ((">i", "B"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class l2d(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x8a
+    op = 0x8A
     #: The JVM instruction name as appears in the specification.
-    name = 'l2d'
+    name = "l2d"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2407,12 +2558,13 @@ class l2d(Instruction):
 
 class l2f(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x89
     #: The JVM instruction name as appears in the specification.
-    name = 'l2f'
+    name = "l2f"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2423,12 +2575,13 @@ class l2f(Instruction):
 
 class l2i(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x88
     #: The JVM instruction name as appears in the specification.
-    name = 'l2i'
+    name = "l2i"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2439,12 +2592,13 @@ class l2i(Instruction):
 
 class ladd(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x61
     #: The JVM instruction name as appears in the specification.
-    name = 'ladd'
+    name = "ladd"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2455,12 +2609,13 @@ class ladd(Instruction):
 
 class laload(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x2f
+    op = 0x2F
     #: The JVM instruction name as appears in the specification.
-    name = 'laload'
+    name = "laload"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2471,12 +2626,13 @@ class laload(Instruction):
 
 class land(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x7f
+    op = 0x7F
     #: The JVM instruction name as appears in the specification.
-    name = 'land'
+    name = "land"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2487,12 +2643,13 @@ class land(Instruction):
 
 class lastore(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x50
     #: The JVM instruction name as appears in the specification.
-    name = 'lastore'
+    name = "lastore"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2503,12 +2660,13 @@ class lastore(Instruction):
 
 class lcmp(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x94
     #: The JVM instruction name as appears in the specification.
-    name = 'lcmp'
+    name = "lcmp"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2519,12 +2677,13 @@ class lcmp(Instruction):
 
 class lconst_0(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x09
     #: The JVM instruction name as appears in the specification.
-    name = 'lconst_0'
+    name = "lconst_0"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2535,12 +2694,13 @@ class lconst_0(Instruction):
 
 class lconst_1(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x0a
+    op = 0x0A
     #: The JVM instruction name as appears in the specification.
-    name = 'lconst_1'
+    name = "lconst_1"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2551,60 +2711,64 @@ class lconst_1(Instruction):
 
 class ldc(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x12
     #: The JVM instruction name as appears in the specification.
-    name = 'ldc'
+    name = "ldc"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>B', 'C'),)
+    fmt = ((">B", "C"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class ldc_w(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x13
     #: The JVM instruction name as appears in the specification.
-    name = 'ldc_w'
+    name = "ldc_w"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>H', 'C'),)
+    fmt = ((">H", "C"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class ldc2_w(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x14
     #: The JVM instruction name as appears in the specification.
-    name = 'ldc2_w'
+    name = "ldc2_w"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>H', 'C'),)
+    fmt = ((">H", "C"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class ldiv(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x6d
+    op = 0x6D
     #: The JVM instruction name as appears in the specification.
-    name = 'ldiv'
+    name = "ldiv"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2615,28 +2779,30 @@ class ldiv(Instruction):
 
 class lload(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x16
     #: The JVM instruction name as appears in the specification.
-    name = 'lload'
+    name = "lload"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>B', 'I'),)
+    fmt = ((">B", "I"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = True
 
 
 class lload_0(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x1e
+    op = 0x1E
     #: The JVM instruction name as appears in the specification.
-    name = 'lload_0'
+    name = "lload_0"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2647,12 +2813,13 @@ class lload_0(Instruction):
 
 class lload_1(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x1f
+    op = 0x1F
     #: The JVM instruction name as appears in the specification.
-    name = 'lload_1'
+    name = "lload_1"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2663,12 +2830,13 @@ class lload_1(Instruction):
 
 class lload_2(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x20
     #: The JVM instruction name as appears in the specification.
-    name = 'lload_2'
+    name = "lload_2"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2679,12 +2847,13 @@ class lload_2(Instruction):
 
 class lload_3(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x21
     #: The JVM instruction name as appears in the specification.
-    name = 'lload_3'
+    name = "lload_3"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2695,12 +2864,13 @@ class lload_3(Instruction):
 
 class lmul(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x69
     #: The JVM instruction name as appears in the specification.
-    name = 'lmul'
+    name = "lmul"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2711,12 +2881,13 @@ class lmul(Instruction):
 
 class lneg(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x75
     #: The JVM instruction name as appears in the specification.
-    name = 'lneg'
+    name = "lneg"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2727,12 +2898,13 @@ class lneg(Instruction):
 
 class lookupswitch(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xab
+    op = 0xAB
     #: The JVM instruction name as appears in the specification.
-    name = 'lookupswitch'
+    name = "lookupswitch"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2743,12 +2915,13 @@ class lookupswitch(Instruction):
 
 class lor(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x81
     #: The JVM instruction name as appears in the specification.
-    name = 'lor'
+    name = "lor"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2759,12 +2932,13 @@ class lor(Instruction):
 
 class lrem(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x71
     #: The JVM instruction name as appears in the specification.
-    name = 'lrem'
+    name = "lrem"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2775,12 +2949,13 @@ class lrem(Instruction):
 
 class lreturn(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xad
+    op = 0xAD
     #: The JVM instruction name as appears in the specification.
-    name = 'lreturn'
+    name = "lreturn"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2791,12 +2966,13 @@ class lreturn(Instruction):
 
 class lshl(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x79
     #: The JVM instruction name as appears in the specification.
-    name = 'lshl'
+    name = "lshl"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2807,12 +2983,13 @@ class lshl(Instruction):
 
 class lshr(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x7b
+    op = 0x7B
     #: The JVM instruction name as appears in the specification.
-    name = 'lshr'
+    name = "lshr"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2823,28 +3000,30 @@ class lshr(Instruction):
 
 class lstore(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x37
     #: The JVM instruction name as appears in the specification.
-    name = 'lstore'
+    name = "lstore"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>B', 'I'),)
+    fmt = ((">B", "I"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = True
 
 
 class lstore_0(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x3f
+    op = 0x3F
     #: The JVM instruction name as appears in the specification.
-    name = 'lstore_0'
+    name = "lstore_0"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2855,12 +3034,13 @@ class lstore_0(Instruction):
 
 class lstore_1(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x40
     #: The JVM instruction name as appears in the specification.
-    name = 'lstore_1'
+    name = "lstore_1"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2871,12 +3051,13 @@ class lstore_1(Instruction):
 
 class lstore_2(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x41
     #: The JVM instruction name as appears in the specification.
-    name = 'lstore_2'
+    name = "lstore_2"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2887,12 +3068,13 @@ class lstore_2(Instruction):
 
 class lstore_3(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x42
     #: The JVM instruction name as appears in the specification.
-    name = 'lstore_3'
+    name = "lstore_3"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2903,12 +3085,13 @@ class lstore_3(Instruction):
 
 class lsub(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x65
     #: The JVM instruction name as appears in the specification.
-    name = 'lsub'
+    name = "lsub"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2919,12 +3102,13 @@ class lsub(Instruction):
 
 class lushr(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x7d
+    op = 0x7D
     #: The JVM instruction name as appears in the specification.
-    name = 'lushr'
+    name = "lushr"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2935,12 +3119,13 @@ class lushr(Instruction):
 
 class lxor(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x83
     #: The JVM instruction name as appears in the specification.
-    name = 'lxor'
+    name = "lxor"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2951,12 +3136,13 @@ class lxor(Instruction):
 
 class monitorenter(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xc2
+    op = 0xC2
     #: The JVM instruction name as appears in the specification.
-    name = 'monitorenter'
+    name = "monitorenter"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2967,12 +3153,13 @@ class monitorenter(Instruction):
 
 class monitorexit(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xc3
+    op = 0xC3
     #: The JVM instruction name as appears in the specification.
-    name = 'monitorexit'
+    name = "monitorexit"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -2983,60 +3170,64 @@ class monitorexit(Instruction):
 
 class multianewarray(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xc5
+    op = 0xC5
     #: The JVM instruction name as appears in the specification.
-    name = 'multianewarray'
+    name = "multianewarray"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>H', 'C'), ('>B', 'L'))
+    fmt = ((">H", "C"), (">B", "L"))
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class new(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xbb
+    op = 0xBB
     #: The JVM instruction name as appears in the specification.
-    name = 'new'
+    name = "new"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>H', 'C'),)
+    fmt = ((">H", "C"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class newarray(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xbc
+    op = 0xBC
     #: The JVM instruction name as appears in the specification.
-    name = 'newarray'
+    name = "newarray"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>B', 'L'),)
+    fmt = ((">B", "L"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class nop(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x00
     #: The JVM instruction name as appears in the specification.
-    name = 'nop'
+    name = "nop"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -3047,12 +3238,13 @@ class nop(Instruction):
 
 class pop(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x57
     #: The JVM instruction name as appears in the specification.
-    name = 'pop'
+    name = "pop"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -3063,12 +3255,13 @@ class pop(Instruction):
 
 class pop2(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x58
     #: The JVM instruction name as appears in the specification.
-    name = 'pop2'
+    name = "pop2"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -3079,60 +3272,64 @@ class pop2(Instruction):
 
 class putfield(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xb5
+    op = 0xB5
     #: The JVM instruction name as appears in the specification.
-    name = 'putfield'
+    name = "putfield"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>H', 'C'),)
+    fmt = ((">H", "C"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class putstatic(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xb3
+    op = 0xB3
     #: The JVM instruction name as appears in the specification.
-    name = 'putstatic'
+    name = "putstatic"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>H', 'C'),)
+    fmt = ((">H", "C"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class ret(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xa9
+    op = 0xA9
     #: The JVM instruction name as appears in the specification.
-    name = 'ret'
+    name = "ret"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>B', 'I'),)
+    fmt = ((">B", "I"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = True
 
 
 class return_(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xb1
+    op = 0xB1
     #: The JVM instruction name as appears in the specification.
-    name = 'return'
+    name = "return"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -3143,12 +3340,13 @@ class return_(Instruction):
 
 class saload(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x35
     #: The JVM instruction name as appears in the specification.
-    name = 'saload'
+    name = "saload"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -3159,12 +3357,13 @@ class saload(Instruction):
 
 class sastore(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x56
     #: The JVM instruction name as appears in the specification.
-    name = 'sastore'
+    name = "sastore"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -3175,28 +3374,30 @@ class sastore(Instruction):
 
 class sipush(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
     op = 0x11
     #: The JVM instruction name as appears in the specification.
-    name = 'sipush'
+    name = "sipush"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
-    fmt = (('>h', 'L'),)
+    fmt = ((">h", "L"),)
     #: True if this instruction can be prefixed by WIDE.
     can_be_wide = False
 
 
 class swap(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0x5f
+    op = 0x5F
     #: The JVM instruction name as appears in the specification.
-    name = 'swap'
+    name = "swap"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -3207,12 +3408,13 @@ class swap(Instruction):
 
 class tableswitch(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xaa
+    op = 0xAA
     #: The JVM instruction name as appears in the specification.
-    name = 'tableswitch'
+    name = "tableswitch"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -3223,12 +3425,13 @@ class tableswitch(Instruction):
 
 class wide(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xc4
+    op = 0xC4
     #: The JVM instruction name as appears in the specification.
-    name = 'wide'
+    name = "wide"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -3239,12 +3442,13 @@ class wide(Instruction):
 
 class breakpoint(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xca
+    op = 0xCA
     #: The JVM instruction name as appears in the specification.
-    name = 'breakpoint'
+    name = "breakpoint"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -3255,12 +3459,13 @@ class breakpoint(Instruction):
 
 class impdep1(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xfe
+    op = 0xFE
     #: The JVM instruction name as appears in the specification.
-    name = 'impdep1'
+    name = "impdep1"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -3271,12 +3476,13 @@ class impdep1(Instruction):
 
 class impdep2(Instruction):
     """"""
+
     __slots__ = ()
 
     #: Numerical opcode for this instruction.
-    op = 0xff
+    op = 0xFF
     #: The JVM instruction name as appears in the specification.
-    name = 'impdep2'
+    name = "impdep2"
     #: Alias for the `name` property.
     mnemonic = name
     #: List of operands this instruction takes, if any.
@@ -3490,212 +3696,212 @@ BY_OP = {
     201: jsr_w,
     202: breakpoint,
     254: impdep1,
-    255: impdep2
+    255: impdep2,
 }
 BY_NAME = {
-    'aaload': aaload,
-    'aastore': aastore,
-    'aconst_null': aconst_null,
-    'aload': aload,
-    'aload_0': aload_0,
-    'aload_1': aload_1,
-    'aload_2': aload_2,
-    'aload_3': aload_3,
-    'anewarray': anewarray,
-    'areturn': areturn,
-    'arraylength': arraylength,
-    'astore': astore,
-    'astore_0': astore_0,
-    'astore_1': astore_1,
-    'astore_2': astore_2,
-    'astore_3': astore_3,
-    'athrow': athrow,
-    'baload': baload,
-    'bastore': bastore,
-    'bipush': bipush,
-    'breakpoint': breakpoint,
-    'caload': caload,
-    'castore': castore,
-    'checkcast': checkcast,
-    'd2f': d2f,
-    'd2i': d2i,
-    'd2l': d2l,
-    'dadd': dadd,
-    'daload': daload,
-    'dastore': dastore,
-    'dcmpg': dcmpg,
-    'dcmpl': dcmpl,
-    'dconst_0': dconst_0,
-    'dconst_1': dconst_1,
-    'ddiv': ddiv,
-    'dload': dload,
-    'dload_0': dload_0,
-    'dload_1': dload_1,
-    'dload_2': dload_2,
-    'dload_3': dload_3,
-    'dmul': dmul,
-    'dneg': dneg,
-    'drem': drem,
-    'dreturn': dreturn,
-    'dstore': dstore,
-    'dstore_0': dstore_0,
-    'dstore_1': dstore_1,
-    'dstore_2': dstore_2,
-    'dstore_3': dstore_3,
-    'dsub': dsub,
-    'dup': dup,
-    'dup2': dup2,
-    'dup2_x1': dup2_x1,
-    'dup2_x2': dup2_x2,
-    'dup_x1': dup_x1,
-    'dup_x2': dup_x2,
-    'f2d': f2d,
-    'f2i': f2i,
-    'f2l': f2l,
-    'fadd': fadd,
-    'faload': faload,
-    'fastore': fastore,
-    'fcmpg': fcmpg,
-    'fcmpl': fcmpl,
-    'fconst_0': fconst_0,
-    'fconst_1': fconst_1,
-    'fconst_2': fconst_2,
-    'fdiv': fdiv,
-    'fload': fload,
-    'fload_0': fload_0,
-    'fload_1': fload_1,
-    'fload_2': fload_2,
-    'fload_3': fload_3,
-    'fmul': fmul,
-    'fneg': fneg,
-    'frem': frem,
-    'freturn': freturn,
-    'fstore': fstore,
-    'fstore_0': fstore_0,
-    'fstore_1': fstore_1,
-    'fstore_2': fstore_2,
-    'fstore_3': fstore_3,
-    'fsub': fsub,
-    'getfield': getfield,
-    'getstatic': getstatic,
-    'goto': goto,
-    'goto_w': goto_w,
-    'i2b': i2b,
-    'i2c': i2c,
-    'i2d': i2d,
-    'i2f': i2f,
-    'i2l': i2l,
-    'i2s': i2s,
-    'iadd': iadd,
-    'iaload': iaload,
-    'iand': iand,
-    'iastore': iastore,
-    'iconst_0': iconst_0,
-    'iconst_1': iconst_1,
-    'iconst_2': iconst_2,
-    'iconst_3': iconst_3,
-    'iconst_4': iconst_4,
-    'iconst_5': iconst_5,
-    'iconst_m1': iconst_m1,
-    'idiv': idiv,
-    'if_acmpeq': if_acmpeq,
-    'if_acmpne': if_acmpne,
-    'if_icmpeq': if_icmpeq,
-    'if_icmpge': if_icmpge,
-    'if_icmpgt': if_icmpgt,
-    'if_icmple': if_icmple,
-    'if_icmplt': if_icmplt,
-    'if_icmpne': if_icmpne,
-    'ifeq': ifeq,
-    'ifge': ifge,
-    'ifgt': ifgt,
-    'ifle': ifle,
-    'iflt': iflt,
-    'ifne': ifne,
-    'ifnonnull': ifnonnull,
-    'ifnull': ifnull,
-    'iinc': iinc,
-    'iload': iload,
-    'iload_0': iload_0,
-    'iload_1': iload_1,
-    'iload_2': iload_2,
-    'iload_3': iload_3,
-    'impdep1': impdep1,
-    'impdep2': impdep2,
-    'imul': imul,
-    'ineg': ineg,
-    'instanceof': instanceof,
-    'invokedynamic': invokedynamic,
-    'invokeinterface': invokeinterface,
-    'invokespecial': invokespecial,
-    'invokestatic': invokestatic,
-    'invokevirtual': invokevirtual,
-    'ior': ior,
-    'irem': irem,
-    'ireturn': ireturn,
-    'ishl': ishl,
-    'ishr': ishr,
-    'istore': istore,
-    'istore_0': istore_0,
-    'istore_1': istore_1,
-    'istore_2': istore_2,
-    'istore_3': istore_3,
-    'isub': isub,
-    'iushr': iushr,
-    'ixor': ixor,
-    'jsr': jsr,
-    'jsr_w': jsr_w,
-    'l2d': l2d,
-    'l2f': l2f,
-    'l2i': l2i,
-    'ladd': ladd,
-    'laload': laload,
-    'land': land,
-    'lastore': lastore,
-    'lcmp': lcmp,
-    'lconst_0': lconst_0,
-    'lconst_1': lconst_1,
-    'ldc': ldc,
-    'ldc2_w': ldc2_w,
-    'ldc_w': ldc_w,
-    'ldiv': ldiv,
-    'lload': lload,
-    'lload_0': lload_0,
-    'lload_1': lload_1,
-    'lload_2': lload_2,
-    'lload_3': lload_3,
-    'lmul': lmul,
-    'lneg': lneg,
-    'lookupswitch': lookupswitch,
-    'lor': lor,
-    'lrem': lrem,
-    'lreturn': lreturn,
-    'lshl': lshl,
-    'lshr': lshr,
-    'lstore': lstore,
-    'lstore_0': lstore_0,
-    'lstore_1': lstore_1,
-    'lstore_2': lstore_2,
-    'lstore_3': lstore_3,
-    'lsub': lsub,
-    'lushr': lushr,
-    'lxor': lxor,
-    'monitorenter': monitorenter,
-    'monitorexit': monitorexit,
-    'multianewarray': multianewarray,
-    'new': new,
-    'newarray': newarray,
-    'nop': nop,
-    'pop': pop,
-    'pop2': pop2,
-    'putfield': putfield,
-    'putstatic': putstatic,
-    'ret': ret,
-    'return': return_,
-    'saload': saload,
-    'sastore': sastore,
-    'sipush': sipush,
-    'swap': swap,
-    'tableswitch': tableswitch,
-    'wide': wide
+    "aaload": aaload,
+    "aastore": aastore,
+    "aconst_null": aconst_null,
+    "aload": aload,
+    "aload_0": aload_0,
+    "aload_1": aload_1,
+    "aload_2": aload_2,
+    "aload_3": aload_3,
+    "anewarray": anewarray,
+    "areturn": areturn,
+    "arraylength": arraylength,
+    "astore": astore,
+    "astore_0": astore_0,
+    "astore_1": astore_1,
+    "astore_2": astore_2,
+    "astore_3": astore_3,
+    "athrow": athrow,
+    "baload": baload,
+    "bastore": bastore,
+    "bipush": bipush,
+    "breakpoint": breakpoint,
+    "caload": caload,
+    "castore": castore,
+    "checkcast": checkcast,
+    "d2f": d2f,
+    "d2i": d2i,
+    "d2l": d2l,
+    "dadd": dadd,
+    "daload": daload,
+    "dastore": dastore,
+    "dcmpg": dcmpg,
+    "dcmpl": dcmpl,
+    "dconst_0": dconst_0,
+    "dconst_1": dconst_1,
+    "ddiv": ddiv,
+    "dload": dload,
+    "dload_0": dload_0,
+    "dload_1": dload_1,
+    "dload_2": dload_2,
+    "dload_3": dload_3,
+    "dmul": dmul,
+    "dneg": dneg,
+    "drem": drem,
+    "dreturn": dreturn,
+    "dstore": dstore,
+    "dstore_0": dstore_0,
+    "dstore_1": dstore_1,
+    "dstore_2": dstore_2,
+    "dstore_3": dstore_3,
+    "dsub": dsub,
+    "dup": dup,
+    "dup2": dup2,
+    "dup2_x1": dup2_x1,
+    "dup2_x2": dup2_x2,
+    "dup_x1": dup_x1,
+    "dup_x2": dup_x2,
+    "f2d": f2d,
+    "f2i": f2i,
+    "f2l": f2l,
+    "fadd": fadd,
+    "faload": faload,
+    "fastore": fastore,
+    "fcmpg": fcmpg,
+    "fcmpl": fcmpl,
+    "fconst_0": fconst_0,
+    "fconst_1": fconst_1,
+    "fconst_2": fconst_2,
+    "fdiv": fdiv,
+    "fload": fload,
+    "fload_0": fload_0,
+    "fload_1": fload_1,
+    "fload_2": fload_2,
+    "fload_3": fload_3,
+    "fmul": fmul,
+    "fneg": fneg,
+    "frem": frem,
+    "freturn": freturn,
+    "fstore": fstore,
+    "fstore_0": fstore_0,
+    "fstore_1": fstore_1,
+    "fstore_2": fstore_2,
+    "fstore_3": fstore_3,
+    "fsub": fsub,
+    "getfield": getfield,
+    "getstatic": getstatic,
+    "goto": goto,
+    "goto_w": goto_w,
+    "i2b": i2b,
+    "i2c": i2c,
+    "i2d": i2d,
+    "i2f": i2f,
+    "i2l": i2l,
+    "i2s": i2s,
+    "iadd": iadd,
+    "iaload": iaload,
+    "iand": iand,
+    "iastore": iastore,
+    "iconst_0": iconst_0,
+    "iconst_1": iconst_1,
+    "iconst_2": iconst_2,
+    "iconst_3": iconst_3,
+    "iconst_4": iconst_4,
+    "iconst_5": iconst_5,
+    "iconst_m1": iconst_m1,
+    "idiv": idiv,
+    "if_acmpeq": if_acmpeq,
+    "if_acmpne": if_acmpne,
+    "if_icmpeq": if_icmpeq,
+    "if_icmpge": if_icmpge,
+    "if_icmpgt": if_icmpgt,
+    "if_icmple": if_icmple,
+    "if_icmplt": if_icmplt,
+    "if_icmpne": if_icmpne,
+    "ifeq": ifeq,
+    "ifge": ifge,
+    "ifgt": ifgt,
+    "ifle": ifle,
+    "iflt": iflt,
+    "ifne": ifne,
+    "ifnonnull": ifnonnull,
+    "ifnull": ifnull,
+    "iinc": iinc,
+    "iload": iload,
+    "iload_0": iload_0,
+    "iload_1": iload_1,
+    "iload_2": iload_2,
+    "iload_3": iload_3,
+    "impdep1": impdep1,
+    "impdep2": impdep2,
+    "imul": imul,
+    "ineg": ineg,
+    "instanceof": instanceof,
+    "invokedynamic": invokedynamic,
+    "invokeinterface": invokeinterface,
+    "invokespecial": invokespecial,
+    "invokestatic": invokestatic,
+    "invokevirtual": invokevirtual,
+    "ior": ior,
+    "irem": irem,
+    "ireturn": ireturn,
+    "ishl": ishl,
+    "ishr": ishr,
+    "istore": istore,
+    "istore_0": istore_0,
+    "istore_1": istore_1,
+    "istore_2": istore_2,
+    "istore_3": istore_3,
+    "isub": isub,
+    "iushr": iushr,
+    "ixor": ixor,
+    "jsr": jsr,
+    "jsr_w": jsr_w,
+    "l2d": l2d,
+    "l2f": l2f,
+    "l2i": l2i,
+    "ladd": ladd,
+    "laload": laload,
+    "land": land,
+    "lastore": lastore,
+    "lcmp": lcmp,
+    "lconst_0": lconst_0,
+    "lconst_1": lconst_1,
+    "ldc": ldc,
+    "ldc2_w": ldc2_w,
+    "ldc_w": ldc_w,
+    "ldiv": ldiv,
+    "lload": lload,
+    "lload_0": lload_0,
+    "lload_1": lload_1,
+    "lload_2": lload_2,
+    "lload_3": lload_3,
+    "lmul": lmul,
+    "lneg": lneg,
+    "lookupswitch": lookupswitch,
+    "lor": lor,
+    "lrem": lrem,
+    "lreturn": lreturn,
+    "lshl": lshl,
+    "lshr": lshr,
+    "lstore": lstore,
+    "lstore_0": lstore_0,
+    "lstore_1": lstore_1,
+    "lstore_2": lstore_2,
+    "lstore_3": lstore_3,
+    "lsub": lsub,
+    "lushr": lushr,
+    "lxor": lxor,
+    "monitorenter": monitorenter,
+    "monitorexit": monitorexit,
+    "multianewarray": multianewarray,
+    "new": new,
+    "newarray": newarray,
+    "nop": nop,
+    "pop": pop,
+    "pop2": pop2,
+    "putfield": putfield,
+    "putstatic": putstatic,
+    "ret": ret,
+    "return": return_,
+    "saload": saload,
+    "sastore": sastore,
+    "sipush": sipush,
+    "swap": swap,
+    "tableswitch": tableswitch,
+    "wide": wide,
 }

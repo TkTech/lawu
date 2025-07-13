@@ -6,9 +6,9 @@ def test_basics():
     pool = ConstantPool()
 
     # Simple add.
-    pool.add(UTF8(value='test string'))
+    pool.add(UTF8(value="test string"))
 
-    assert pool.pool == {1: UTF8(value='test string')}
+    assert pool.pool == {1: UTF8(value="test string")}
 
     # Ensure we can remove a simple constant.
     pool.remove(1)
@@ -24,12 +24,7 @@ def test_double():
     pool.add(Double(value=5.5))
     pool.add(Long(value=6.6))
 
-    assert pool.pool == {
-        1: Double(value=5.5),
-        2: None,
-        3: Long(value=6.6),
-        4: None
-    }
+    assert pool.pool == {1: Double(value=5.5), 2: None, 3: Long(value=6.6), 4: None}
 
     # Test adding double-width constant at specific index at the end of the
     # pool.
@@ -56,5 +51,5 @@ def test_double():
         6: Double(value=7.7),
         7: None,
         8: Long(value=8.8),
-        9: None
+        9: None,
     }

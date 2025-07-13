@@ -27,8 +27,7 @@ def get_attribute_classes() -> Dict[str, Attribute]:
     attribute name -> class.
     """
     attribute_children = pkgutil.iter_modules(
-        importlib.import_module('lawu.attributes').__path__,
-        prefix='lawu.attributes.'
+        importlib.import_module("lawu.attributes").__path__, prefix="lawu.attributes."
     )
 
     result = {}
@@ -36,13 +35,12 @@ def get_attribute_classes() -> Dict[str, Attribute]:
         classes = inspect.getmembers(
             importlib.import_module(name),
             lambda c: (
-                inspect.isclass(c) and issubclass(c, Attribute) and
-                c is not Attribute
-            )
+                inspect.isclass(c) and issubclass(c, Attribute) and c is not Attribute
+            ),
         )
 
         for class_name, class_ in classes:
-            attribute_name = getattr(class_, 'ATTRIBUTE_NAME', class_name[:-9])
+            attribute_name = getattr(class_, "ATTRIBUTE_NAME", class_name[:-9])
             result[attribute_name.lower()] = class_
 
     return result
@@ -51,9 +49,9 @@ def get_attribute_classes() -> Dict[str, Attribute]:
 def read_attribute_table(pool, source: BinaryIO) -> Iterable[Attribute]:
     attributes = get_attribute_classes()
 
-    size = unpack('>H', source.read(2))[0]
+    size = unpack(">H", source.read(2))[0]
     for _ in repeat(None, size):
-        name_idx, length = unpack('>HI', source.read(6))
+        name_idx, length = unpack(">HI", source.read(6))
         name = pool[name_idx].value
 
         attr_parser = attributes.get(name.lower())
