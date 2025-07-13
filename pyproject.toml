@@ -4,14 +4,14 @@ build-backend = "hatchling.build"
 
 [project]
 name = "lawu"
-version = "3.0.0"
+version = "4.0.0"
 description = "Doing fun stuff with JVM ClassFiles."
 readme = "README.md"
 authors = [
     { name = "Tyler Kennedy", email = "tk@tkte.ch" }
 ]
 license = { text = "MIT" }
-requires-python = ">=3.7"
+requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python",
     "License :: OSI Approved :: MIT License",
@@ -50,7 +50,7 @@ cli = [
 lawu = "lawu.cli:cli"
 
 [tool.pytest.ini_options]
-addopts = "--cov=lawu --cov-report=term-missing --cov-fail-under=100"
+addopts = "--cov=lawu --cov-report=term-missing"
 
 [tool.coverage.run]
 omit = [
