@@ -3,7 +3,7 @@ Machine-generated from bytecode.yaml. This file aids with typing and
 autocompletion in IDEs by providing types for every instruction.
 """
 
-from lawu._instruction import Instruction
+from lawu._instruction import Instruction, OperandTypes  # noqa
 
 
 class aaload(Instruction):
