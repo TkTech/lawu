@@ -36,7 +36,7 @@ def test_jump_targets(loader):
     cf = loader['LookupSwitch']
     main = cf.methods.find_one(name='main')
 
-    assert main.code.same(ast.Code(
+    assert main.code == ast.Code(
         max_stack=1,
         max_locals=1,
         children=[
@@ -53,4 +53,4 @@ def test_jump_targets(loader):
             ast.Label('label_3'),
             ast.Instruction('return')
         ]
-    ))
+    )

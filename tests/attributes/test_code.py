@@ -6,7 +6,7 @@ def test_try_catch(loader):
 
     m = cf.methods.find_one(name='test')
 
-    assert m.code.same(ast.Code(
+    assert m.code == ast.Code(
         max_locals=3,
         max_stack=2,
         children=[
@@ -42,4 +42,4 @@ def test_try_catch(loader):
             ast.Instruction('astore_2'),
             ast.Instruction('return')
         ]
-    ))
+    )

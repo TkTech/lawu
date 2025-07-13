@@ -2,50 +2,79 @@
 Regardless of the origin of a Class (Jasmin, .class, .java, API, etc...) it is
 interally structured as a hierarchy of Node objects.
 """
+import io
 import sys
 from typing import List
 from enum import IntFlag
+from abc import ABC, abstractmethod
 
 from lawu.util.descriptor import method_descriptor, field_descriptor
 
 
-class Node:
-    __slots__ = ('parent', 'children', 'line_no', 'uuid')
+class Node(ABC):
+    __slots__ = ('parent', 'children', 'line_no', 'col_no', 'col_end_no')
 
-    def __init__(self, *, line_no=0, children=None):
+    def __init__(self, *, line_no=0, col_no=0, col_end_no=0, children=None):
         #: List of children for this Node.
         self.children: List[Node] = []
         #: The parent node.
         self.parent: 'Node' = None
         #: The source line number, if known.
         self.line_no = line_no
+        #: The starting column number, if known.
+        self.col_no = col_no
+        #: The ending column number, if known.
+        self.col_end_no = col_end_no
 
         if children:
             self.extend(children)
 
-    def pprint(self, indent='', file=sys.stdout, is_last=False):
-        """Pretty-print this node and all of its children.
+    def pretty(self, *, indent='', show_line_no=True):
+        """Pretty-print this node and all of its children, returning the
+        result as a string.
 
-        :param file: IO object for output, defaults to STDOUT.
+        :param indent: The indent to apply at the start of each line.
+                       [default: '']
+        :param show_line_no: True if source line numbers should be shown.
+                             [default: True]
+        """
+        with io.StringIO() as out:
+            self.pprint(indent=indent, show_line_no=show_line_no, file=out)
+            return out.getvalue()
+
+    def pprint(self, *, indent='', file=sys.stdout, is_last=False,
+               show_line_no=True):
+        """Pretty-print this node and all of its children to a file-like
+        object.
+
+        :param indent: The indent to apply at the start of each line.
+                       [default: '']
+        :param file: IO object for output. [default: sys.stdout]
+        :param is_last: True if this is the last child in a sequence.
+                        [default: False]
+        :param show_line_no: True if source line numbers should be shown.
+                             [default: True]
         """
         fork = '\u251C'
         dash = '\u2500'
         end = '\u2514'
         pipe = '\u2502'
 
-        file.write(f'[{self.line_no:04}]')
+        if show_line_no:
+            file.write(f'[{self.line_no or 0:04}]')
         file.write(f'{indent}{end if is_last else fork}{dash}')
 
         file.write(repr(self))
         file.write('\n')
         file.flush()
 
-        child_count = len(self.children) - 1
-        for i, child in enumerate(self.children):
+        child_count = len(self) - 1
+        for i, child in enumerate(self):
             child.pprint(
                 indent=f'{indent}{" " if is_last else pipe} ',
                 file=file,
-                is_last=child_count == i
+                is_last=child_count == i,
+                show_line_no=show_line_no
             )
 
     @property
@@ -93,16 +122,6 @@ class Node:
             child.parent = self
             self.children.append(child)
 
-    def __iter__(self):
-        yield from self.children
-
-    def __repr__(self):
-        return f'<{self.__class__.__name__}()>'
-
-    def __iadd__(self, value: 'Node'):
-        self.extend([value])
-        return self
-
     def fix_missing_locations(self):
         """Recursively populates line_no values on child nodes using the parent
         value."""
@@ -116,23 +135,39 @@ class Node:
         for child in self.children:
             child.descend(f)
 
-    def same(self, other):
-        """Compare the entire AST of `other` to this one.
-
-        Unlike simple equality (left == right) this checks all children
-        as well.
-        """
-        if len(other.children) != len(self.children):
+    def _re_eq(self, other) -> bool:
+        # Recurisive equality check. Used by nodes implementations of __eq__
+        # when it's possible for them to have children.
+        if len(other) != len(self) or other is self:
             return False
 
-        for i, own_child in enumerate(self.children):
-            if other.children[i] != own_child:
+        other_children = iter(other)
+        for own_child in self:
+            other_child = next(other_children)
+            if other_child != own_child:
                 return False
 
-            if not other.children[i].same(own_child):
+            if not other_child._re_eq(own_child):
                 return False
 
         return True
+
+    def __iter__(self):
+        yield from self.children
+
+    def __repr__(self):
+        return f'<{self.__class__.__name__}()>'
+
+    def __iadd__(self, value: 'Node'):
+        self.extend([value])
+        return self
+
+    def __len__(self):
+        return len(self.children)
+
+    @abstractmethod
+    def __eq__(self, other) -> bool:
+        pass
 
 
 class Root(Node):
@@ -140,8 +175,6 @@ class Root(Node):
     Every node in a typical project is an [indirect] child of the Root Node,
     which can contain some top-level directives as well as multiple Classes.
     """
-    def __eq__(self, other):
-        return isinstance(other, self.__class__)
 
 
 class Bytecode(Node):
@@ -187,7 +220,12 @@ class Bytecode(Node):
         return f'<Bytecode(major={self.major!r}, minor={self.minor!r})>'
 
     def __eq__(self, other):
-        return self.major == other.major and self.minor == other.minor
+        return (
+            isinstance(self, other.__class__) and
+            self.major == other.major and
+            self.minor == other.minor and
+            self._re_eq(other)
+        )
 
 
 class Class(Node):
@@ -215,8 +253,10 @@ class Class(Node):
 
     def __eq__(self, other):
         return (
-            self.descriptor == other.descriptor
-            and self.access_flags == other.access_flags
+            isinstance(self, other.__class__) and
+            self.descriptor == other.descriptor and
+            self.access_flags == other.access_flags and
+            self._re_eq(other)
         )
 
 
@@ -231,7 +271,11 @@ class Super(Node):
         return f'<Super({self.descriptor!r})>'
 
     def __eq__(self, other):
-        return self.descriptor == other.descriptor
+        return (
+            isinstance(self, other.__class__) and
+            self.descriptor == other.descriptor and
+            self._re_eq(other)
+        )
 
 
 class Method(Node):
@@ -280,6 +324,14 @@ class Method(Node):
     def code(self):
         return self.find_one(name='code')
 
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class__) and
+            self.name == other.name and
+            self.descriptor == other.descriptor and
+            self._re_eq(other)
+        )
+
 
 class Label(Node):
     __slots__ = ('name',)
@@ -292,7 +344,11 @@ class Label(Node):
         return f'<Label({self.name!r})>'
 
     def __eq__(self, other):
-        return self.name == other.name
+        return (
+            isinstance(self, other.__class__) and
+            self.name == other.name and
+            self._re_eq(other)
+        )
 
 
 class Instruction(Node):
@@ -310,7 +366,11 @@ class Instruction(Node):
         return list(self.find(f=lambda n: isinstance(n, Operand)))
 
     def __eq__(self, other):
-        return self.name == other.name
+        return (
+            isinstance(self, other.__class__) and
+            self.name == other.name and
+            self._re_eq(other)
+        )
 
 
 class Operand(Node):
@@ -328,7 +388,11 @@ class Jump(Operand):
         return f'<Jump({self.target!r})>'
 
     def __eq__(self, other):
-        return self.target == other.target
+        return (
+            isinstance(self, other.__class__) and
+            self.target == other.target and
+            self._re_eq(other)
+        )
 
 
 class ConditionalJump(Operand):
@@ -345,7 +409,12 @@ class ConditionalJump(Operand):
         )
 
     def __eq__(self, other):
-        return self.target == other.target and self.match == other.match
+        return (
+            isinstance(self, other.__class__) and
+            self.target == other.target and
+            self.match == other.match and
+            self._re_eq(other)
+        )
 
 
 class Local(Operand):
@@ -358,6 +427,13 @@ class Local(Operand):
     def __repr__(self):
         return f'<Local({self.slot!r})>'
 
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class__) and
+            self.slot == other.slot and
+            self._re_eq(other)
+        )
+
 
 class String(Operand):
     __slots__ = ('value',)
@@ -369,6 +445,13 @@ class String(Operand):
     def __repr__(self):
         return f'<String({self.value!r})>'
 
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class__) and
+            self.value == other.value and
+            self._re_eq(other)
+        )
+
 
 class Number(Operand):
     __slots__ = ('value',)
@@ -379,6 +462,13 @@ class Number(Operand):
 
     def __repr__(self):
         return f'<Number({self.value!r})>'
+
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class__) and
+            self.value == other.value and
+            self._re_eq(other)
+        )
 
 
 class Reference(Operand):
@@ -395,6 +485,15 @@ class Reference(Operand):
         return (
             f'<{self.__class__.__name__}({self.class_!r},'
             f' {self.target!r}, {self.is_type!r})>'
+        )
+
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class__) and
+            self.class_ == other.class_ and
+            self.target == other.target and
+            self.is_type == other.is_type and
+            self._re_eq(other)
         )
 
 
@@ -420,6 +519,13 @@ class ClassReference(Operand):
     def __repr__(self):
         return f'<ClassReference({self.descriptor!r})>'
 
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class__) and
+            self.descriptor == other.descriptor and
+            self._re_eq(other)
+        )
+
 
 class InvokeDynamic(Operand):
     __slots__ = ('bootstrap_index', 'name', 'is_type')
@@ -437,6 +543,15 @@ class InvokeDynamic(Operand):
             f' {self.is_type!r})>'
         )
 
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class__) and
+            self.bootstrap_index == other.bootstrap_index and
+            self.name == other.name and
+            self.is_type == other.is_type and
+            self._re_eq(other)
+        )
+
 
 class Implements(Node):
     __slots__ = ('descriptor',)
@@ -447,6 +562,13 @@ class Implements(Node):
 
     def __repr__(self):
         return f'<Implements({self.descriptor!r})>'
+
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class__) and
+            self.descriptor == other.descriptor and
+            self._re_eq(other)
+        )
 
 
 class Field(Node):
@@ -476,6 +598,15 @@ class Field(Node):
             f' {self.access_flags!r})>'
         )
 
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class__) and
+            self.name == other.name and
+            self.descriptor == other.descriptor and
+            self.access_flags == other.access_flags and
+            self._re_eq(other)
+        )
+
     @property
     def parsed_descriptor(self):
         return field_descriptor(self.descriptor)
@@ -493,7 +624,12 @@ class TryCatch(Node):
         return f'<TryCatch({self.target!r}, {self.handles!r})>'
 
     def __eq__(self, other):
-        return self.target == other.target and self.handles == other.handles
+        return (
+            isinstance(self, other.__class__) and
+            self.target == other.target and
+            self.handles == other.handles and
+            self._re_eq(other)
+        )
 
 
 class Finally(TryCatch):
@@ -520,6 +656,14 @@ class UnknownAttribute(Attribute):
             f' payload={len(self.payload)} bytes)>'
         )
 
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class__) and
+            self.name == other.name and
+            self.payload == other.payload and
+            self._re_eq(other)
+        )
+
 
 class Code(Attribute):
     def __init__(self, *, max_locals=0, max_stack=0, line_no=0, children=None):
@@ -534,6 +678,14 @@ class Code(Attribute):
             f' max_stack={self.max_stack!r})>'
         )
 
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class__) and
+            self.max_locals == other.max_locals and
+            self.max_stack == other.max_stack and
+            self._re_eq(other)
+        )
+
 
 class Signature(Attribute):
     __slots__ = ('signature',)
@@ -544,3 +696,10 @@ class Signature(Attribute):
 
     def __repr__(self):
         return f'<Signature({self.signature!r})>'
+
+    def __eq__(self, other):
+        return (
+            isinstance(self, other.__class) and
+            self.signature == other.signature and
+            self._re_eq(other)
+        )
