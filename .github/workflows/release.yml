@@ -1,0 +1,148 @@
+name: Test and Release
+
+on:
+  release:
+    types:
+      - published
+  pull_request:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build:
+    name: Build Package
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4.1.6
+
+    - name: Set up Python
+      uses: actions/setup-python@v5.1.0
+      with:
+        python-version: "3.13"
+
+    - name: Install uv
+      run: pip install uv
+
+    - name: Checking for code smells
+      run: uvx ruff check
+
+    - name: Checking for formatting issues
+      run: uvx ruff format --check
+
+    - name: Build package
+      run: uv build
+
+    - name: Upload wheel artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: wheel-package
+        path: dist/*.whl
+        retention-days: 1
+
+    - name: Upload source artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: source-package
+        path: dist/*.tar.gz
+        retention-days: 1
+
+  test:
+    name: "${{ matrix.os }} - Py${{ matrix.python-version }}"
+    needs: [build]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+        os: ["ubuntu-24.04"]
+    env:
+      OS: ${{ matrix.os }}
+      PYTHON: ${{ matrix.python-version }}
+
+    steps:
+      - uses: actions/checkout@v4.1.6
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5.1.0
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Installing uv
+        run: pip install uv
+
+      - name: Installing dependencies (Python)
+        run: uv sync --all-extras
+
+      - name: Running tests
+        run: |
+          uv run pytest -s -vvvvv --cov=lawu --cov-report=xml
+
+      - name: Uploading coverage
+        uses: codecov/codecov-action@v4
+        with:
+          env_vars: OS,PYTHON
+          fail_ci_if_error: true
+          flags: unittests
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: true
+          slug: TkTech/lawu
+
+  docs:
+    name: Building Documentation
+    needs: [build]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4.1.6
+
+      - name: Set up Python
+        uses: actions/setup-python@v5.1.0
+        with:
+          python-version: "3.13"
+
+      - name: Installing uv
+        run: pip install uv
+
+      - name: Installing dependencies (Python)
+        run: uv sync --all-extras
+
+      - name: Building docs
+        run: |
+          cd docs && uv run make clean html
+
+      - name: Publishing documentation
+        if: github.event_name == 'release'
+        run: |
+          uv run ghp-import -f -n -p docs/_build/html
+
+  release:
+    name: Release to PyPI
+    needs: [test, docs]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+          path: dist
+
+      - name: Set up Python
+        uses: actions/setup-python@v5.1.0
+        with:
+          python-version: "3.13"
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Publishing to PyPI
+        run: |
+          uv publish
