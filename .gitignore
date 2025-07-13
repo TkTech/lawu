@@ -9,3 +9,6 @@ venv
 .vscode
 *.egg-info
 dist
+build/
+.venv
+.idea
