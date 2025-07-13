@@ -83,9 +83,7 @@ class Number(Constant):
         self.value = value
 
     def __repr__(self):
-        return (
-            f"{self.__class__.__name__}(" f"index={self.index}, value={self.value!r})"
-        )
+        return f"{self.__class__.__name__}(index={self.index}, value={self.value!r})"
 
     def __eq__(self, other):
         if isinstance(other, Number):

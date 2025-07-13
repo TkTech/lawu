@@ -71,7 +71,7 @@ class Node(ABC):
         child_count = len(self) - 1
         for i, child in enumerate(self):
             child.pprint(
-                indent=f'{indent}{" " if is_last else pipe} ',
+                indent=f"{indent}{' ' if is_last else pipe} ",
                 file=file,
                 is_last=child_count == i,
                 show_line_no=show_line_no,
@@ -299,9 +299,7 @@ class Method(Node):
         self.access_flags = access_flags
 
     def __repr__(self):
-        return (
-            f"<Method({self.name!r}, {self.descriptor!r})," f" {self.access_flags!r}>"
-        )
+        return f"<Method({self.name!r}, {self.descriptor!r}), {self.access_flags!r}>"
 
     @property
     def parsed_descriptor(self):
@@ -585,7 +583,7 @@ class Field(Node):
         self.access_flags = access_flags
 
     def __repr__(self):
-        return f"<Field({self.name!r}, {self.descriptor!r}," f" {self.access_flags!r})>"
+        return f"<Field({self.name!r}, {self.descriptor!r}, {self.access_flags!r})>"
 
     def __eq__(self, other):
         return (
@@ -641,8 +639,7 @@ class UnknownAttribute(Attribute):
 
     def __repr__(self):
         return (
-            f"<UnknownAttribute(name={self.name!r},"
-            f" payload={len(self.payload)} bytes)>"
+            f"<UnknownAttribute(name={self.name!r}, payload={len(self.payload)} bytes)>"
         )
 
     def __eq__(self, other):
@@ -662,9 +659,7 @@ class Code(Attribute):
         self.max_stack = max_stack
 
     def __repr__(self):
-        return (
-            f"<Code(max_locals={self.max_locals!r}," f" max_stack={self.max_stack!r})>"
-        )
+        return f"<Code(max_locals={self.max_locals!r}, max_stack={self.max_stack!r})>"
 
     def __eq__(self, other):
         return (

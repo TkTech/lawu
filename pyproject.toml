@@ -33,13 +33,10 @@ dev = [
     "pytest",
     "pytest-cov",
     "sphinx",
-    "sphinxcontrib-googleanalytics",
-    "sphinx-click",
     "furo",
     "ghp-import",
     "pyyaml",
-    "twine",
-    "wheel",
+    "ruff"
 ]
 cli = [
     "click",
