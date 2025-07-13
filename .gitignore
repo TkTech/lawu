@@ -5,3 +5,10 @@ test.py
 docs/_build/
 .DS_Store
 *.un~
+venv
+.vscode
+*.egg-info
+dist
+build/
+.venv
+.idea

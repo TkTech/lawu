@@ -9,7 +9,7 @@ JVM class files. It's highly suitable for automation tasks.
 
 ## Documentation
 
-API documentation & examples are available at https://lawu.dev
+API documentation & examples are available at https://tkte.ch/lawu/
 
 ## Licence
 

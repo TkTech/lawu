@@ -1,0 +1,58 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "lawu"
+version = "3.0.0"
+description = "Doing fun stuff with JVM ClassFiles."
+readme = "README.md"
+authors = [
+    { name = "Tyler Kennedy", email = "tk@tkte.ch" }
+]
+license = { text = "MIT" }
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Disassemblers",
+]
+keywords = ["java", "disassembly", "disassembler", "assembly"]
+dependencies = [
+    "mutf8",
+]
+
+[project.urls]
+Homepage = "https://tkte.ch/lawu/"
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "sphinx",
+    "sphinxcontrib-googleanalytics",
+    "sphinx-click",
+    "furo",
+    "ghp-import",
+    "pyyaml",
+    "twine",
+    "wheel",
+]
+cli = [
+    "click",
+    "rich",
+]
+
+[project.scripts]
+lawu = "lawu.cli:cli"
+
+[tool.pytest.ini_options]
+addopts = "--cov=lawu --cov-report=term-missing --cov-fail-under=100"
+
+[tool.coverage.run]
+omit = [
+    "lawu/util/shell.py",
+]
