@@ -1,20 +1,21 @@
 """
 An example showing how to create fields on a new class.
 """
-from jawa import ClassFile
 
-if __name__ == '__main__':
-    cf = ClassFile.create('HelloWorld')
+from lawu.cf import ClassFile
+from lawu.constants import String
 
-    # Creating a field from a field name and descriptor
-    field = cf.fields.create('BeerCount', 'I')
+if __name__ == "__main__":
+    cf = ClassFile(this="HelloWorld")
 
-    # A convienience shortcut for creating static fields.
-    field = cf.fields.create_static(
-        'HelloWorld',
-        'Ljava/lang/String;',
-        cf.constants.create_string('Hello World!')
-    )
+    with cf:
+        # Creating a field from a field name and descriptor
+        field = cf.fields.create("BeerCount", "I")
 
-    with open('HelloWorld.class', 'wb') as fout:
+        # A convenience shortcut for creating static fields.
+        field = cf.fields.create_static(
+            "HelloWorld", "Ljava/lang/String;", String("Hello World!")
+        )
+
+    with open("HelloWorld.class", "wb") as fout:
         cf.save(fout)
