@@ -3,6 +3,7 @@ Transforms are simple Instruction modifiers that can be called on each
 Instruction by the :func:`~lawu.attributes.code.CodeAttribute.disassemble`
 function.
 """
+
 from lawu.util.bytecode import Instruction, Operand, OperandTypes, opcode_table
 
 
@@ -34,18 +35,18 @@ def simple_swap(ins: Instruction) -> Instruction:
     :return: Potentially modified instruction.
     """
     try:
-        rule = ins.details['transform']['simple_swap']
+        rule = ins.details["transform"]["simple_swap"]
     except KeyError:
         return ins
 
-    replacement_ins = opcode_table[rule['op']]
+    replacement_ins = opcode_table[rule["op"]]
 
     return Instruction(
-        replacement_ins['mnemonic'],
-        replacement_ins['op'],
-        [Operand(
-            replacement_ins['operands'][i][1],
-            r
-        ) for i, r in enumerate(rule['operands'])],
-        ins.pos
+        replacement_ins["mnemonic"],
+        replacement_ins["op"],
+        [
+            Operand(replacement_ins["operands"][i][1], r)
+            for i, r in enumerate(rule["operands"])
+        ],
+        ins.pos,
     )

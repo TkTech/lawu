@@ -8,15 +8,11 @@ from collections import namedtuple
 
 from lawu.constants import UTF8
 from lawu.attribute import Attribute, AttributeTable
-from lawu.util.bytecode import (
-    read_instruction,
-    write_instruction,
-    Instruction
-)
+from lawu.util.bytecode import read_instruction, write_instruction, Instruction
 
-CodeException = namedtuple('CodeException', [
-    'start_pc', 'end_pc', 'handler_pc', 'catch_type'
-])
+CodeException = namedtuple(
+    "CodeException", ["start_pc", "end_pc", "handler_pc", "catch_type"]
+)
 
 
 class CodeAttribute(Attribute):
@@ -52,22 +48,19 @@ class CodeAttribute(Attribute):
         with open('HelloWorld.class', 'wb') as fout:
             cf.save(fout)
     """
-    ADDED_IN = '1.0.2'
+
+    ADDED_IN = "1.0.2"
     MINIMUM_CLASS_VERSION = (45, 3)
 
     def __init__(self, table, name_index=None):
         super().__init__(
-            table,
-            name_index or UTF8(
-                pool=table.cf.constants,
-                value='Code'
-            ).index
+            table, name_index or UTF8(pool=table.cf.constants, value="Code").index
         )
         self.max_stack = 0
         self.max_locals = 0
         self.exception_table = []
         self.attributes = AttributeTable(table.cf, parent=self)
-        self._code = b''
+        self._code = b""
 
     def unpack(self, info):
         """
@@ -80,15 +73,13 @@ class CodeAttribute(Attribute):
 
         :param info: A byte string containing an unparsed CodeAttribute.
         """
-        self.max_stack, self.max_locals, c_len = info.unpack('>HHI')
+        self.max_stack, self.max_locals, c_len = info.unpack(">HHI")
         self._code = info.read(c_len)
 
         # The exception table
         ex_table_len = info.u2()
         for _ in repeat(None, ex_table_len):
-            self.exception_table.append(CodeException(
-                *info.unpack('>HHHH')
-            ))
+            self.exception_table.append(CodeException(*info.unpack(">HHHH")))
 
         self.attributes = AttributeTable(self.cf, parent=self)
         self.attributes.unpack(info)
@@ -98,17 +89,14 @@ class CodeAttribute(Attribute):
         The `CodeAttribute` in packed byte string form.
         """
         with io.BytesIO() as file_out:
-            file_out.write(pack(
-                '>HHI',
-                self.max_stack,
-                self.max_locals,
-                len(self._code)
-            ))
+            file_out.write(
+                pack(">HHI", self.max_stack, self.max_locals, len(self._code))
+            )
             file_out.write(self._code)
 
-            file_out.write(pack('>H', len(self.exception_table)))
+            file_out.write(pack(">H", len(self.exception_table)))
             for exception in self.exception_table:
-                file_out.write(pack('>HHHH', *exception))
+                file_out.write(pack(">HHHH", *exception))
 
             self.attributes.pack(file_out)
             return file_out.getvalue()
@@ -147,8 +135,9 @@ class CodeAttribute(Attribute):
         sig = inspect.signature(transform, follow_wrapped=True)
         return functools.partial(
             transform,
-            **{k: v for k, v in {
-                'cf': self.cf,
-                'attribute': self
-            }.items() if k in sig.parameters}
+            **{
+                k: v
+                for k, v in {"cf": self.cf, "attribute": self}.items()
+                if k in sig.parameters
+            },
         )

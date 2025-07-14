@@ -1,15 +1,10 @@
 from collections import namedtuple
 
 from lawu.constants import Constant
-from lawu.util.bytecode import (
-    Operand,
-    OperandTypes,
-    Instruction,
-    opcode_table
-)
+from lawu.util.bytecode import Operand, OperandTypes, Instruction, opcode_table
 
 
-Label = namedtuple('Label', ['name'])
+Label = namedtuple("Label", ["name"])
 
 
 def assemble(code):
@@ -45,7 +40,7 @@ def assemble(code):
             continue
 
         mnemonic, operands = line[0], line[1:]
-        operand_fmts = opcode_table[mnemonic]['operands']
+        operand_fmts = opcode_table[mnemonic]["operands"]
 
         # We need to coerce each opcodes operands into their
         # final `Operand` form.
@@ -56,10 +51,9 @@ def assemble(code):
                 final_operands.append(operand)
             elif isinstance(operand, Constant):
                 # Convert constants into CONSTANT_INDEX'es
-                final_operands.append(Operand(
-                    OperandTypes.CONSTANT_INDEX,
-                    operand.index
-                ))
+                final_operands.append(
+                    Operand(OperandTypes.CONSTANT_INDEX, operand.index)
+                )
             elif isinstance(operand, dict):
                 # lookupswitch's operand is a dict as
                 # a special usability case.
@@ -69,10 +63,7 @@ def assemble(code):
             else:
                 # For anything else, lookup that opcode's operand
                 # type from its definition.
-                final_operands.append(Operand(
-                    operand_fmts[i][1],
-                    operand
-                ))
+                final_operands.append(Operand(operand_fmts[i][1], operand))
 
         # Build the final, immutable `Instruction`.
         final.append(Instruction.create(mnemonic, final_operands))
@@ -105,10 +96,7 @@ def assemble(code):
                     if isinstance(v, Label):
                         operand[k] = Operand(40, label_pcs[v.name] - current_pc)
             elif isinstance(operand, Label):
-                ins.operands[i] = Operand(
-                    40,
-                    label_pcs[operand.name] - current_pc
-                )
+                ins.operands[i] = Operand(40, label_pcs[operand.name] - current_pc)
 
         current_pc += ins.size_on_disk(current_pc)
 

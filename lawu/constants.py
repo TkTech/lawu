@@ -1,6 +1,7 @@
 """
 Utilities for working with the ConstantPool found in JVM ClassFiles.
 """
+
 from typing import Dict, Any, Deque, BinaryIO, Union
 from collections import deque
 from struct import unpack, pack
@@ -35,7 +36,8 @@ class Constant(object):
     """
     The base class for all ``Constant*`` types.
     """
-    __slots__ = ('pool', 'index')
+
+    __slots__ = ("pool", "index")
 
     #: The "tag" or leading byte of a constant that identifies its type.
     TAG: int = None
@@ -73,17 +75,15 @@ class Number(Constant):
     """
     The base class for all numeric constant types.
     """
-    __slots__ = ('value',)
+
+    __slots__ = ("value",)
 
     def __init__(self, *, pool=None, index=None, value=0):
         super().__init__(pool=pool, index=index)
         self.value = value
 
     def __repr__(self):
-        return (
-            f'{self.__class__.__name__}('
-            f'index={self.index}, value={self.value!r})'
-        )
+        return f"{self.__class__.__name__}(index={self.index}, value={self.value!r})"
 
     def __eq__(self, other):
         if isinstance(other, Number):
@@ -98,7 +98,7 @@ class Number(Constant):
 
 
 class UTF8(Constant):
-    __slots__ = ('value',)
+    __slots__ = ("value",)
     TAG = 1
 
     def __init__(self, value=None, *, pool=None, index=None):
@@ -107,15 +107,13 @@ class UTF8(Constant):
 
     def pack(self):
         encoded_value = encode_modified_utf8(self.value)
-        return pack('>H', len(encoded_value)) + encoded_value
+        return pack(">H", len(encoded_value)) + encoded_value
 
     def unpack(self, source: BinaryIO):
-        self.value = decode_modified_utf8(
-            source.read(unpack('>H', source.read(2))[0])
-        )
+        self.value = decode_modified_utf8(source.read(unpack(">H", source.read(2))[0]))
 
     def __repr__(self):
-        return f'<UTF8(index={self.index}, value={self.value!r}>)'
+        return f"<UTF8(index={self.index}, value={self.value!r}>)"
 
     def __eq__(self, other):
         if isinstance(other, UTF8):
@@ -127,44 +125,44 @@ class Integer(Number):
     TAG = 3
 
     def pack(self):
-        return pack('>i', self.value)
+        return pack(">i", self.value)
 
     def unpack(self, source: BinaryIO):
-        self.value = unpack('>i', source.read(4))[0]
+        self.value = unpack(">i", source.read(4))[0]
 
 
 class Float(Number):
     TAG = 4
 
     def pack(self):
-        return pack('>f', self.value)
+        return pack(">f", self.value)
 
     def unpack(self, source: BinaryIO):
-        self.value = unpack('>f', source.read(4))[0]
+        self.value = unpack(">f", source.read(4))[0]
 
 
 class Long(Number):
     TAG = 5
 
     def pack(self):
-        return pack('>q', self.value)
+        return pack(">q", self.value)
 
     def unpack(self, source: BinaryIO):
-        self.value = unpack('>q', source.read(8))[0]
+        self.value = unpack(">q", source.read(8))[0]
 
 
 class Double(Number):
     TAG = 6
 
     def pack(self):
-        return pack('>d', self.value)
+        return pack(">d", self.value)
 
     def unpack(self, source: BinaryIO):
-        self.value = unpack('>d', source.read(8))[0]
+        self.value = unpack(">d", source.read(8))[0]
 
 
 class ConstantClass(Constant):
-    __slots__ = ('name_index',)
+    __slots__ = ("name_index",)
     TAG = 7
 
     def __init__(self, *, pool=None, index=None, name=None):
@@ -185,17 +183,17 @@ class ConstantClass(Constant):
             self.name_index = UTF8(pool=self.pool, value=value).index
 
     def pack(self):
-        return pack('>H', self.name_index)
+        return pack(">H", self.name_index)
 
     def unpack(self, source: BinaryIO):
-        self.name_index = unpack('>H', source.read(2))[0]
+        self.name_index = unpack(">H", source.read(2))[0]
 
     def __repr__(self):
-        return f'<ConstantClass(index={self.index}, name={self.name!r})>'
+        return f"<ConstantClass(index={self.index}, name={self.name!r})>"
 
 
 class String(Constant):
-    __slots__ = ('string_index',)
+    __slots__ = ("string_index",)
     TAG = 8
 
     def __init__(self, string=None, *, pool=None, index=None):
@@ -216,17 +214,17 @@ class String(Constant):
             self.string_index = UTF8(value, pool=self.pool).index
 
     def pack(self):
-        return pack('>H', self.string_index)
+        return pack(">H", self.string_index)
 
     def unpack(self, source: BinaryIO):
-        self.string_index = unpack('>H', source.read(2))[0]
+        self.string_index = unpack(">H", source.read(2))[0]
 
     def __repr__(self):
-        return f'<String(index={self.index}, string={self.string!r})>'
+        return f"<String(index={self.index}, string={self.string!r})>"
 
 
 class Reference(Constant):
-    __slots__ = ('class_index', 'name_and_type_index')
+    __slots__ = ("class_index", "name_and_type_index")
     TAG = None
 
     def __init__(self, *, pool=None, index=None):
@@ -243,20 +241,17 @@ class Reference(Constant):
         return self.pool[self.name_and_type_index]
 
     def pack(self):
-        return pack('>HH', self.class_index, self.name_and_type_index)
+        return pack(">HH", self.class_index, self.name_and_type_index)
 
     def unpack(self, source: BinaryIO):
-        self.class_index, self.name_and_type_index = unpack(
-            '>HH',
-            source.read(4)
-        )
+        self.class_index, self.name_and_type_index = unpack(">HH", source.read(4))
 
     def __repr__(self):
         return (
-            f'<{self.__class__.__name__}('
-            f'index={self.index},'
-            f'class_={self.class_!r},'
-            f'name_and_type={self.name_and_type!r})>'
+            f"<{self.__class__.__name__}("
+            f"index={self.index},"
+            f"class_={self.class_!r},"
+            f"name_and_type={self.name_and_type!r})>"
         )
 
 
@@ -273,7 +268,7 @@ class InterfaceMethodRef(Reference):
 
 
 class NameAndType(Constant):
-    __slots__ = ('name_index', 'descriptor_index')
+    __slots__ = ("name_index", "descriptor_index")
     TAG = 12
 
     def __init__(self, *, pool=None, index=None):
@@ -290,25 +285,22 @@ class NameAndType(Constant):
         return self.pool[self.descriptor_index]
 
     def pack(self):
-        return pack('>HH', self.name_index, self.descriptor_index)
+        return pack(">HH", self.name_index, self.descriptor_index)
 
     def unpack(self, source: BinaryIO):
-        self.name_index, self.descriptor_index = unpack(
-            '>HH',
-            source.read(4)
-        )
+        self.name_index, self.descriptor_index = unpack(">HH", source.read(4))
 
     def __repr__(self):
         return (
-            f'<NameAndType('
-            f'index={self.index},'
-            f'name={self.name!r},'
-            f'descriptor={self.descriptor!r})>'
+            f"<NameAndType("
+            f"index={self.index},"
+            f"name={self.name!r},"
+            f"descriptor={self.descriptor!r})>"
         )
 
 
 class MethodHandle(Constant):
-    __slots__ = ('reference_kind', 'reference_index')
+    __slots__ = ("reference_kind", "reference_index")
     TAG = 15
 
     def __init__(self, *, pool=None, index=None):
@@ -321,22 +313,17 @@ class MethodHandle(Constant):
         return self.pool.get(self.reference_index)
 
     def pack(self):
-        return pack('>BH', self.reference_kind, self.reference_index)
+        return pack(">BH", self.reference_kind, self.reference_index)
 
     def unpack(self, source: BinaryIO):
-        self.reference_kind, self.reference_index = unpack(
-            '>BH',
-            source.read(3)
-        )
+        self.reference_kind, self.reference_index = unpack(">BH", source.read(3))
 
     def __repr__(self):
-        return (
-            f'<MethodHandle(index={self.index}, reference={self.reference!r})>'
-        )
+        return f"<MethodHandle(index={self.index}, reference={self.reference!r})>"
 
 
 class MethodType(Constant):
-    __slots__ = ('descriptor_index',)
+    __slots__ = ("descriptor_index",)
     TAG = 16
 
     def __init__(self, *, pool=None, index=None):
@@ -348,17 +335,17 @@ class MethodType(Constant):
         return self.pool.get(self.descriptor_index)
 
     def pack(self):
-        return pack('>H', self.descriptor_index)
+        return pack(">H", self.descriptor_index)
 
     def unpack(self, source: BinaryIO):
-        self.descriptor_index = unpack('>H', source.read(2))[0]
+        self.descriptor_index = unpack(">H", source.read(2))[0]
 
     def __repr__(self):
-        return f'<MethodType(index={self.index},descriptor={self.descriptor})>'
+        return f"<MethodType(index={self.index},descriptor={self.descriptor})>"
 
 
 class Dynamic(Constant):
-    __slots__ = ('bootstrap_method_attr_index', 'name_and_type_index')
+    __slots__ = ("bootstrap_method_attr_index", "name_and_type_index")
     TAG = 17
 
     def __init__(self, *, pool=None, index=None):
@@ -375,54 +362,49 @@ class Dynamic(Constant):
         return self.pool[self.name_and_type_index]
 
     def pack(self):
-        return pack(
-            '>HH',
-            self.bootstrap_method_attr_index,
-            self.name_and_type_index
-        )
+        return pack(">HH", self.bootstrap_method_attr_index, self.name_and_type_index)
 
     def unpack(self, source: BinaryIO):
         self.bootstrap_method_attr_index, self.name_and_type_index = unpack(
-            '>HH',
-            source.read(4)
+            ">HH", source.read(4)
         )
 
     def __repr__(self):
         return (
-            f'<Dynamic('
-            f'index={self.index},'
-            f'method_attr_index={self.method_attr_index},'
-            f'name_and_type={self.name_and_type!r})>'
+            f"<Dynamic("
+            f"index={self.index},"
+            f"method_attr_index={self.method_attr_index},"
+            f"name_and_type={self.name_and_type!r})>"
         )
 
 
 class InvokeDynamic(Dynamic):
-    __slots__ = ('bootstrap_method_attr_index', 'name_and_type_index')
+    __slots__ = ("bootstrap_method_attr_index", "name_and_type_index")
     TAG = 18
 
     def __repr__(self):
         return (
-            f'<InvokeDynamic('
-            f'index={self.index},'
-            f'method_attr_index={self.method_attr_index},'
-            f'name_and_type={self.name_and_type!r})>'
+            f"<InvokeDynamic("
+            f"index={self.index},"
+            f"method_attr_index={self.method_attr_index},"
+            f"name_and_type={self.name_and_type!r})>"
         )
 
 
 class Module(ConstantClass):
-    __slots__ = ('name_index',)
+    __slots__ = ("name_index",)
     TAG = 19
 
     def __repr__(self):
-        return f'<Module(index={self.index}, name={self.name!r})>'
+        return f"<Module(index={self.index}, name={self.name!r})>"
 
 
 class PackageInfo(ConstantClass):
-    __slots__ = ('name_index',)
+    __slots__ = ("name_index",)
     TAG = 20
 
     def __repr__(self):
-        return f'<PackageInfo(index={self.index}, name={self.name!r})>'
+        return f"<PackageInfo(index={self.index}, name={self.name!r})>"
 
 
 CONSTANTS = {
@@ -442,33 +424,13 @@ CONSTANTS = {
     17: Dynamic,
     18: InvokeDynamic,
     19: Module,
-    20: PackageInfo
+    20: PackageInfo,
 }
 
 
 # The size (in bytes) of each type of Constant in the pool, except the UTF8
 # type which must be handled dynamically.
-SIZE = (
-    None,
-    None,
-    None,
-    4,
-    4,
-    8,
-    8,
-    2,
-    2,
-    4,
-    4,
-    4,
-    4,
-    None,
-    None,
-    3,
-    2,
-    None,
-    4
-)
+SIZE = (None, None, None, 4, 4, 8, 8, 2, 2, 4, 4, 4, 4, None, None, 3, 2, None, 4)
 
 
 class ConstantPool(object):
@@ -476,6 +438,7 @@ class ConstantPool(object):
     This class can be used to read, modify, and write the JVM ClassFile
     constant pool with a high-level interface.
     """
+
     def __init__(self, *, source: BinaryIO = None):
         # We use a dict as our basic pool container because the pool can be
         # built out-of-order. For example when loading a Jasmin file, it's
@@ -509,7 +472,7 @@ class ConstantPool(object):
     def unpack(self, source: BinaryIO):
         """Unpack a constant pool from a ClassFile."""
         read = source.read
-        constant_pool_count = unpack('>H', read(2))[0]
+        constant_pool_count = unpack(">H", read(2))[0]
 
         index_iter = iter(range(1, constant_pool_count))
         for index in index_iter:
@@ -526,13 +489,13 @@ class ConstantPool(object):
     def pack(self, out: BinaryIO):
         """Write the ConstantPool to the file-like object `out`."""
         write = out.write
-        write(pack('>H', len(self) + 1))
+        write(pack(">H", len(self) + 1))
 
         for index, constant in sorted(self.pool.items()):
             # Skip over double-width padding (Doubles & Longs)
             if constant is None:
                 continue
-            write(constant.TAG.to_bytes(1, byteorder='big'))
+            write(constant.TAG.to_bytes(1, byteorder="big"))
             write(constant.pack())
 
     def update_trackers(self):
@@ -550,11 +513,7 @@ class ConstantPool(object):
             return
 
         self.sparse_map = deque(
-            _missing_elements(
-                sorted(self.pool.keys()),
-                0,
-                len(self.pool) - 1
-            )
+            _missing_elements(sorted(self.pool.keys()), 0, len(self.pool) - 1)
         )
 
     @property
@@ -626,10 +585,7 @@ class ConstantPool(object):
         self.update_trackers()
 
     def __iter__(self):
-        yield from (
-            (k, v) for k, v in sorted(self.pool.items())
-            if v is not None
-        )
+        yield from ((k, v) for k, v in sorted(self.pool.items()) if v is not None)
 
     def __getitem__(self, index):
         return self.pool[index]

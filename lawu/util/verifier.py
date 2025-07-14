@@ -1,5 +1,3 @@
-
-
 class VerificationTypes(object):
     ITEM_Top = 0
     ITEM_Integer = 1

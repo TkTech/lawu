@@ -55,7 +55,7 @@ class Field(object):
         """
         A shortcut for the field's ConstantValue attribute, should one exist.
         """
-        return self.attributes.find_one(name='ConstantValue')
+        return self.attributes.find_one(name="ConstantValue")
 
     def unpack(self, source: BinaryIO):
         """
@@ -68,8 +68,8 @@ class Field(object):
 
         :param source: Any file-like object providing `read()`
         """
-        self.access_flags = Field.AccessFlags(unpack('>H', source.read(2))[0])
-        self._name_index, self._descriptor_index = unpack('>HH', source.read(4))
+        self.access_flags = Field.AccessFlags(unpack(">H", source.read(2))[0])
+        self._name_index, self._descriptor_index = unpack(">HH", source.read(4))
         self.attributes.unpack(source)
 
     def pack(self, out: BinaryIO):
@@ -83,8 +83,8 @@ class Field(object):
 
         :param out: Any file-like object providing `write()`
         """
-        out.write(pack('>H', int(self.access_flags)))
-        out.write(pack('>HH', self._name_index, self._descriptor_index))
+        out.write(pack(">H", int(self.access_flags)))
+        out.write(pack(">HH", self._name_index, self._descriptor_index))
         self.attributes.pack(out)
 
 
@@ -108,8 +108,7 @@ class FieldTable(object):
         """
         self._table = [fld for fld in self._table if fld is not field]
 
-    def create(self, name: str, descriptor: str, value: Constant = None) \
-            -> Field:
+    def create(self, name: str, descriptor: str, value: Constant = None) -> Field:
         """
         Creates a new field from `name` and `descriptor`. For example::
 
@@ -160,7 +159,7 @@ class FieldTable(object):
 
         :param source: Any file-like object providing `read()`
         """
-        field_count = unpack('>H', source.read(2))[0]
+        field_count = unpack(">H", source.read(2))[0]
         for _ in repeat(None, field_count):
             field = Field(self._cf)
             field.unpack(source)
@@ -177,15 +176,20 @@ class FieldTable(object):
 
         :param out: Any file-like object providing `write()`
         """
-        out.write(pack('>H', len(self)))
+        out.write(pack(">H", len(self)))
         for field in self._table:
             field.pack(out)
 
     def __len__(self):
         return len(self._table)
 
-    def find(self, *, name: Optional[str] = None, type_: Optional[str] = None,
-             f: Optional[Callable] = None) -> Iterator[Field]:
+    def find(
+        self,
+        *,
+        name: Optional[str] = None,
+        type_: Optional[str] = None,
+        f: Optional[Callable] = None,
+    ) -> Iterator[Field]:
         """
         Iterates over the fields table, yielding each matching method. Calling
         without any arguments is equivalent to iterating over the table.

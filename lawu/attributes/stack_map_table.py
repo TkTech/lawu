@@ -4,19 +4,11 @@ from lawu.attribute import Attribute
 from lawu.util.verifier import VerificationTypes
 
 # These types are followed by an additional u2.
-TYPES_WITH_EXTRA = (
-    VerificationTypes.ITEM_Object,
-    VerificationTypes.ITEM_Uninitialized
-)
+TYPES_WITH_EXTRA = (VerificationTypes.ITEM_Object, VerificationTypes.ITEM_Uninitialized)
 
 
 class StackMapFrame(object):
-    __slots__ = (
-        'frame_type',
-        'frame_offset',
-        'frame_locals',
-        'frame_stack'
-    )
+    __slots__ = ("frame_type", "frame_offset", "frame_locals", "frame_stack")
 
     def __init__(self, frame_type):
         self.frame_type = frame_type
@@ -26,10 +18,10 @@ class StackMapFrame(object):
 
     def __repr__(self):
         return (
-            u'<StackMapFrame(type={s.frame_type!r},'
-            u'offset={s.frame_offset!r},'
-            u'locals={s.frame_locals!r},'
-            u'stack={s.frame_stack!r})>'
+            "<StackMapFrame(type={s.frame_type!r},"
+            "offset={s.frame_offset!r},"
+            "locals={s.frame_locals!r},"
+            "stack={s.frame_stack!r})>"
         ).format(s=self)
 
 
@@ -42,15 +34,13 @@ class StackMapTableAttribute(Attribute):
         generation of a StackMapTableAttribute requires a complete class
         hierarchy among other things.
     """
-    ADDED_IN = '6.0.0'
+
+    ADDED_IN = "6.0.0"
     MINIMUM_CLASS_VERSION = (50, 0)
 
     def __init__(self, table, name_index=None):
         super(StackMapTableAttribute, self).__init__(
-            table,
-            name_index or table.cf.constants.create_utf8(
-                'StackMapTable'
-            ).index
+            table, name_index or table.cf.constants.create_utf8("StackMapTable").index
         )
         self.frames = []
 
@@ -67,8 +57,7 @@ class StackMapTableAttribute(Attribute):
                 if i == 0:
                     frame.frame_offset = frame_type
                 else:
-                    frame.frame_offset = previous_frame.frame_offset + \
-                            frame_type + 1
+                    frame.frame_offset = previous_frame.frame_offset + frame_type + 1
                     frame.frame_locals = previous_frame.frame_locals
 
                 self.frames.append(frame)
@@ -79,13 +68,10 @@ class StackMapTableAttribute(Attribute):
                 if i == 0:
                     frame.frame_offset = frame_type - 64
                 else:
-                    frame.frame_offset = previous_frame.frame_offset + \
-                            frame_type - 63
+                    frame.frame_offset = previous_frame.frame_offset + frame_type - 63
                     frame.frame_locals = previous_frame.frame_locals
 
-                frame.frame_stack = list(
-                    self._unpack_verification_type_info(info, 1)
-                )
+                frame.frame_stack = list(self._unpack_verification_type_info(info, 1))
 
                 self.frames.append(frame)
                 previous_frame = frame
@@ -103,63 +89,48 @@ class StackMapTableAttribute(Attribute):
                 if i == 0:
                     frame.frame_offset = frame_offset
                 else:
-                    frame.frame_offset = previous_frame.frame_offset + \
-                            frame_offset + 1
+                    frame.frame_offset = previous_frame.frame_offset + frame_offset + 1
                 frame.frame_locals = previous_frame.frame_locals
-                frame.frame_stack = list(
-                    self._unpack_verification_type_info(
-                        info,
-                        1
-                    )
-                )
+                frame.frame_stack = list(self._unpack_verification_type_info(info, 1))
             elif frame_type < 251:
                 # CHOP
                 if i == 0:
                     frame.frame_offset = frame_offset
                 else:
-                    frame.frame_offset = previous_frame.frame_offset + \
-                            frame_offset + 1
+                    frame.frame_offset = previous_frame.frame_offset + frame_offset + 1
                     frame.frame_locals = previous_frame.frame_locals[
-                        0:251 - frame_type
+                        0 : 251 - frame_type
                     ]
             elif frame_type == 251:
                 # SAME_FRAME_EXTENDED
                 if i == 0:
                     frame.frame_offset = frame_offset
                 else:
-                    frame.frame_offset = previous_frame.frame_offset + \
-                            frame_offset + 1
+                    frame.frame_offset = previous_frame.frame_offset + frame_offset + 1
                     frame.frame_locals = previous_frame.frame_locals
             elif frame_type < 255:
                 # APPEND
                 if i == 0:
                     frame.frame_offset = frame_offset
                 else:
-                    frame.frame_offset = previous_frame.frame_offset + \
-                            frame_offset + 1
+                    frame.frame_offset = previous_frame.frame_offset + frame_offset + 1
 
                 frame.frame_locals = previous_frame.frame_locals + list(
-                    self._unpack_verification_type_info(
-                        info,
-                        frame_type - 251
-                    )
+                    self._unpack_verification_type_info(info, frame_type - 251)
                 )
             elif frame_type == 255:
                 # FULL_FRAME
                 if i == 0:
                     frame.frame_offset = frame_offset
                 else:
-                    frame.frame_offset = previous_frame.frame_offset + \
-                            frame_offset + 1
+                    frame.frame_offset = previous_frame.frame_offset + frame_offset + 1
 
-                frame.frame_locals = list(self._unpack_verification_type_info(
-                    info,
-                    info.u2()
-                ))
-                frame.frame_stack = list(self._unpack_verification_type_info(
-                    info,
-                    info.u2()
-                ))
+                frame.frame_locals = list(
+                    self._unpack_verification_type_info(info, info.u2())
+                )
+                frame.frame_stack = list(
+                    self._unpack_verification_type_info(info, info.u2())
+                )
 
             self.frames.append(frame)
             previous_frame = frame
@@ -173,7 +144,7 @@ class StackMapTableAttribute(Attribute):
             if tag in TYPES_WITH_EXTRA:
                 yield tag, info.u2()
             else:
-                yield tag,
+                yield (tag,)
 
     def pack(self):
         raise NotImplementedError()

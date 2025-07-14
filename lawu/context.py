@@ -1,6 +1,6 @@
 from contextvars import ContextVar
 
-_class_context: ContextVar = ContextVar('class_context')
+_class_context: ContextVar = ContextVar("class_context")
 
 
 def class_context():

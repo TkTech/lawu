@@ -13,7 +13,7 @@ class Attribute(object):
     ADDED_IN: int = None
     MINIMUM_CLASS_VERSION: Tuple[int, int] = None
 
-    def __init__(self, parent: 'AttributeTable', name_index: int):
+    def __init__(self, parent: "AttributeTable", name_index: int):
         self.parent = parent
         self.name_index = name_index
 
@@ -45,7 +45,7 @@ class Attribute(object):
 
 
 class UnknownAttribute(Attribute):
-    def __init__(self, parent: 'AttributeTable', name_index: int):
+    def __init__(self, parent: "AttributeTable", name_index: int):
         super().__init__(parent, name_index)
         self.info = None
 
@@ -75,9 +75,9 @@ class AttributeTable(object):
 
         :param source: Any file-like object providing `read()`
         """
-        count = unpack('>H', source.read(2))[0]
+        count = unpack(">H", source.read(2))[0]
         for _ in repeat(None, count):
-            name_index, length = unpack('>HI', source.read(6))
+            name_index, length = unpack(">HI", source.read(6))
             info_blob = source.read(length)
             self._table.append((name_index, info_blob))
 
@@ -108,14 +108,10 @@ class AttributeTable(object):
 
         :param out: Any file-like object providing `write()`
         """
-        out.write(pack('>H', len(self._table)))
+        out.write(pack(">H", len(self._table)))
         for attribute in self:
             info = attribute.pack()
-            out.write(pack(
-                '>HI',
-                attribute.name.index,
-                len(info)
-            ))
+            out.write(pack(">HI", attribute.name.index, len(info)))
             out.write(info)
 
     def create(self, type_, *args, **kwargs) -> Any:
@@ -160,8 +156,7 @@ def get_attribute_classes() -> Dict[str, Attribute]:
     Lookup all builtin Attribute subclasses, load them, and return a dict
     """
     attribute_children = pkgutil.iter_modules(
-        importlib.import_module('lawu.attributes').__path__,
-        prefix='lawu.attributes.'
+        importlib.import_module("lawu.attributes").__path__, prefix="lawu.attributes."
     )
 
     result = {}
@@ -169,13 +164,12 @@ def get_attribute_classes() -> Dict[str, Attribute]:
         classes = inspect.getmembers(
             importlib.import_module(name),
             lambda c: (
-                    inspect.isclass(c) and issubclass(c, Attribute) and
-                    c is not Attribute
-            )
+                inspect.isclass(c) and issubclass(c, Attribute) and c is not Attribute
+            ),
         )
 
         for class_name, class_ in classes:
-            attribute_name = getattr(class_, 'ATTRIBUTE_NAME', class_name[:-9])
+            attribute_name = getattr(class_, "ATTRIBUTE_NAME", class_name[:-9])
             result[attribute_name] = class_
 
     return result

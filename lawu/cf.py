@@ -4,7 +4,8 @@ ClassFile reader & writer.
 The :mod:`lawu.cf` module provides tools for working with JVM ``.class``
 ClassFiles.
 """
-from typing import BinaryIO, Iterable, Union, Sequence, Optional, List
+
+from typing import BinaryIO, Iterable, Union, Sequence, Optional
 from struct import pack, unpack
 from collections import namedtuple
 from enum import IntFlag
@@ -17,7 +18,7 @@ from lawu.attributes.bootstrap import BootstrapMethod
 from lawu.context import class_context
 
 
-class ClassVersion(namedtuple('ClassVersion', ['major', 'minor'])):
+class ClassVersion(namedtuple("ClassVersion", ["major", "minor"])):
     """ClassFile file format version."""
 
     __slots__ = ()
@@ -30,13 +31,13 @@ class ClassVersion(namedtuple('ClassVersion', ['major', 'minor'])):
         If the version is unknown, `None` is returned instead.
         """
         return {
-            0x33: 'J2SE_7',
-            0x32: 'J2SE_6',
-            0x31: 'J2SE_5',
-            0x30: 'JDK1_4',
-            0x2F: 'JDK1_3',
-            0x2E: 'JDK1_2',
-            0x2D: 'JDK1_1',
+            0x33: "J2SE_7",
+            0x32: "J2SE_6",
+            0x31: "J2SE_5",
+            0x30: "JDK1_4",
+            0x2F: "JDK1_3",
+            0x2E: "JDK1_2",
+            0x2D: "JDK1_1",
         }.get(self.major, None)
 
 
@@ -72,6 +73,7 @@ class ClassFile(object):
         """
         Possible values for the ClassFile.access_flags field.
         """
+
         PUBLIC = 0x0001
         FINAL = 0x0010
         SUPER = 0x0020
@@ -82,26 +84,22 @@ class ClassFile(object):
         ENUM = 0x4000
         MODULE = 0x8000
 
-    def __init__(self, source: Optional[BinaryIO] = None, *,
-                 this: str = 'HelloWorld', super_: str = 'java/lang/Object'):
+    def __init__(
+        self,
+        source: Optional[BinaryIO] = None,
+        *,
+        this: str = "HelloWorld",
+        super_: str = "java/lang/Object",
+    ):
         # Default to J2SE_7
         self._version = ClassVersion(0x32, 0)
         self.constants = ConstantPool()
-        self.access_flags = (
-            ClassFile.AccessFlags.PUBLIC |
-            ClassFile.AccessFlags.SUPER
-        )
+        self.access_flags = ClassFile.AccessFlags.PUBLIC | ClassFile.AccessFlags.SUPER
         self.this = self.constants.add(
-            ConstantClass(
-                pool=self.constants,
-                name=self.constants.add(UTF8(this))
-            )
+            ConstantClass(pool=self.constants, name=self.constants.add(UTF8(this)))
         )
         self.super_ = self.constants.add(
-            ConstantClass(
-                pool=self.constants,
-                name=self.constants.add(UTF8(super_))
-            )
+            ConstantClass(pool=self.constants, name=self.constants.add(UTF8(super_)))
         )
         self._interfaces = []
         self.fields = FieldTable(self)
@@ -139,7 +137,7 @@ class ClassFile(object):
                 # the context stack instead of using the ClassFile as a context
                 # manager.
                 raise RuntimeError(
-                    'A ClassFile tried to pop a context which was not itself.'
+                    "A ClassFile tried to pop a context which was not itself."
                 )
 
     def __enter__(self):
@@ -156,23 +154,20 @@ class ClassFile(object):
         """
         write = source.write
 
-        write(pack(
-            '>IHH',
-            ClassFile.MAGIC,
-            self.version.minor,
-            self.version.major
-        ))
+        write(pack(">IHH", ClassFile.MAGIC, self.version.minor, self.version.major))
 
         self.constants.pack(source)
 
-        write(pack('>H', int(self.access_flags)))
-        write(pack(
-            f'>HHH{len(self._interfaces)}H',
-            self.this.index,
-            self.super_.index,
-            len(self._interfaces),
-            *self._interfaces
-        ))
+        write(pack(">H", int(self.access_flags)))
+        write(
+            pack(
+                f">HHH{len(self._interfaces)}H",
+                self.this.index,
+                self.super_.index,
+                len(self._interfaces),
+                *self._interfaces,
+            )
+        )
 
         self.fields.pack(source)
         self.methods.pack(source)
@@ -184,11 +179,11 @@ class ClassFile(object):
         """
         read = source.read
 
-        if unpack('>I', source.read(4))[0] != ClassFile.MAGIC:
-            raise ValueError('invalid magic number')
+        if unpack(">I", source.read(4))[0] != ClassFile.MAGIC:
+            raise ValueError("invalid magic number")
 
         # The version is swapped on disk to (minor, major), so swap it back.
-        self.version = unpack('>HH', source.read(4))[::-1]
+        self.version = unpack(">HH", source.read(4))[::-1]
 
         # We created some default values when the class was constructed, just
         # purge them.
@@ -196,18 +191,15 @@ class ClassFile(object):
         self.constants.unpack(source)
 
         # ClassFile access_flags, see section #4.1 of the JVM specs.
-        self.access_flags = unpack('>H', read(2))
+        self.access_flags = unpack(">H", read(2))
 
         # The CONSTANT_Class indexes for "this" class and its superclass.
         # Interfaces are a simple list of CONSTANT_Class indexes.
-        this_, super_, interfaces_count = unpack('>HHH', read(6))
+        this_, super_, interfaces_count = unpack(">HHH", read(6))
         self.this = self.constants[this_]
         self.super_ = self.constants[super_]
 
-        self._interfaces = unpack(
-            f'>{interfaces_count}H',
-            read(2 * interfaces_count)
-        )
+        self._interfaces = unpack(f">{interfaces_count}H", read(2 * interfaces_count))
 
         self.fields.unpack(source)
         self.methods.unpack(source)
@@ -249,14 +241,12 @@ class ClassFile(object):
 
         :returns: Table of `BootstrapMethod` objects.
         """
-        bootstrap = self.attributes.find_one(name='BootstrapMethods')
+        bootstrap = self.attributes.find_one(name="BootstrapMethods")
 
         if bootstrap is None:
-            bootstrap = self.attributes.create(
-                ATTRIBUTE_CLASSES['BootstrapMethods']
-            )
+            bootstrap = self.attributes.create(ATTRIBUTE_CLASSES["BootstrapMethods"])
 
         return bootstrap.table
 
     def __repr__(self):
-        return f'<ClassFile(this={self.this.name.value!r})>'
+        return f"<ClassFile(this={self.this.name.value!r})>"
